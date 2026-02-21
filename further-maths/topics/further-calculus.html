@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Further Calculus — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 04</div>
+  <a href="#improper" class="sidebar-link active"><span class="sidebar-num">4.1</span> Improper Integrals</a>
+  <a href="#mean" class="sidebar-link"><span class="sidebar-num">4.2</span> Mean Value of a Function</a>
+  <a href="#maclaurin" class="sidebar-link"><span class="sidebar-num">4.3</span> Maclaurin Series</a>
+  <a href="#standard" class="sidebar-link"><span class="sidebar-num">4.4</span> Standard Maclaurin Series</a>
+  <a href="#combining" class="sidebar-link"><span class="sidebar-num">4.5</span> Combining Series</a>
+  <a href="#diffunder" class="sidebar-link"><span class="sidebar-num">4.6</span> Differentiating Inverse Trig</a>
+  <a href="#intinvtrig" class="sidebar-link"><span class="sidebar-num">4.7</span> Integrating Inverse Trig Forms</a>
+  <a href="#reduction" class="sidebar-link"><span class="sidebar-num">4.8</span> Reduction Formulae</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 04</div>
+    <div class="topic-num-badge">Topic 04 · Core Pure</div>
+    <h1 class="topic-title">Further Calculus</h1>
+    <p class="topic-intro">Improper integrals, Maclaurin series, inverse trig derivatives, and reduction formulae. Calculus pushed to its limits — and beyond.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 2, Chapters 1–3</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#improper">4.1 — Improper Integrals</a></li>
+      <li><a href="#mean">4.2 — Mean Value of a Function</a></li>
+      <li><a href="#maclaurin">4.3 — Maclaurin Series</a></li>
+      <li><a href="#standard">4.4 — Standard Maclaurin Series</a></li>
+      <li><a href="#combining">4.5 — Combining Series</a></li>
+      <li><a href="#diffunder">4.6 — Differentiating Inverse Trig</a></li>
+      <li><a href="#intinvtrig">4.7 — Integrating Inverse Trig Forms</a></li>
+      <li><a href="#reduction">4.8 — Reduction Formulae</a></li>
+    </ul>
+  </div>
+
+  <!-- 4.1 IMPROPER INTEGRALS -->
+  <div class="lesson-section" id="improper">
+    <h2 class="section-title">4.1 Improper Integrals</h2>
+    <p>A <strong>definite integral is improper</strong> if either the interval of integration is infinite, or the integrand has a discontinuity within the interval. To evaluate them, replace the problematic limit with a parameter and take a limit.</p>
+
+    <div class="formula-box">
+      $$\int_a^{\infty} f(x)\,dx = \lim_{t\to\infty}\int_a^t f(x)\,dx$$
+      $$\int_a^b f(x)\,dx = \lim_{t\to a^+}\int_t^b f(x)\,dx \quad \text{(if } f \text{ discontinuous at } a\text{)}$$
+    </div>
+
+    <p>If the limit exists and is finite, the integral <strong>converges</strong>. If not, it <strong>diverges</strong>.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Always check for discontinuities</strong>
+      Before integrating, check whether $f(x)$ is continuous on $[a,b]$. An integrand like $\frac{1}{x}$ is discontinuous at $x=0$ — integrating across it without care gives the wrong answer.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.1a</div>
+      <div class="example-q">Determine whether $\displaystyle\int_1^{\infty} \frac{1}{x^2}\,dx$ converges, and find its value if so.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\displaystyle\int_1^t \frac{1}{x^2}\,dx = \left[-\frac{1}{x}\right]_1^t = -\frac{1}{t} + 1$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Take the limit: $\displaystyle\lim_{t\to\infty}\left(1 - \frac{1}{t}\right) = 1$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">The integral converges to $1$.</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.1b</div>
+      <div class="example-q">Show that $\displaystyle\int_1^{\infty}\frac{1}{x}\,dx$ diverges.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\displaystyle\int_1^t \frac{1}{x}\,dx = [\ln x]_1^t = \ln t$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\displaystyle\lim_{t\to\infty}\ln t = \infty$. The integral diverges.<div class="step-comment">$\frac{1}{x}$ and $\frac{1}{x^2}$ look similar but behave very differently at infinity — a key contrast to remember.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.1c</div>
+      <div class="example-q">Evaluate $\displaystyle\int_0^1 \frac{1}{\sqrt{x}}\,dx$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">The integrand blows up at $x=0$. Replace lower limit: $\displaystyle\int_t^1 x^{-1/2}\,dx = [2\sqrt{x}]_t^1 = 2 - 2\sqrt{t}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\displaystyle\lim_{t\to 0^+}(2 - 2\sqrt{t}) = 2$. Converges to $2$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.2 MEAN VALUE -->
+  <div class="lesson-section" id="mean">
+    <h2 class="section-title">4.2 Mean Value of a Function</h2>
+    <p>The <strong>mean value</strong> of $f(x)$ over $[a,b]$ is the constant that, if $f$ were replaced by it, would give the same area under the curve.</p>
+
+    <div class="formula-box">
+      $$\bar{f} = \frac{1}{b-a}\int_a^b f(x)\,dx$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.2a</div>
+      <div class="example-q">Find the mean value of $f(x) = \sin x$ over $[0, \pi]$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\bar{f} = \dfrac{1}{\pi - 0}\displaystyle\int_0^{\pi}\sin x\,dx = \frac{1}{\pi}[-\cos x]_0^{\pi}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$= \dfrac{1}{\pi}(-\cos\pi + \cos 0) = \dfrac{1}{\pi}(1+1) = \dfrac{2}{\pi}$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.3 MACLAURIN SERIES -->
+  <div class="lesson-section" id="maclaurin">
+    <h2 class="section-title">4.3 Maclaurin Series</h2>
+    <p>A <strong>Maclaurin series</strong> expresses a function as an infinite polynomial in powers of $x$, centred at $x = 0$. It is derived by repeatedly differentiating and evaluating at $x=0$.</p>
+
+    <div class="formula-box">
+      $$f(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \frac{f'''(0)}{3!}x^3 + \cdots = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}x^n$$
+    </div>
+
+    <div class="key-point">
+      <strong>When is it valid?</strong>
+      A Maclaurin series is only valid for values of $x$ within its <strong>radius of convergence</strong>. For $e^x$, $\sin x$, $\cos x$ this is all $x\in\mathbb{R}$. For $\ln(1+x)$ it is $-1 < x \leq 1$. For $(1+x)^n$ it is $|x| < 1$ (when $n$ is not a positive integer).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.3a</div>
+      <div class="example-q">Derive the Maclaurin series for $f(x) = e^x$ up to and including the $x^4$ term.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$f(x)=e^x$, so $f^{(n)}(x)=e^x$ for all $n$. At $x=0$: $f^{(n)}(0)=1$ for all $n$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$e^x = 1 + x + \dfrac{x^2}{2!} + \dfrac{x^3}{3!} + \dfrac{x^4}{4!} + \cdots = \displaystyle\sum_{n=0}^{\infty}\frac{x^n}{n!}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.3b</div>
+      <div class="example-q">Find the Maclaurin series for $\ln(1+x)$ up to and including $x^4$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$f(x) = \ln(1+x)$, $f(0)=0$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$f'(x)=\frac{1}{1+x}$, $f'(0)=1$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$f''(x)=-\frac{1}{(1+x)^2}$, $f''(0)=-1$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$f'''(x)=\frac{2}{(1+x)^3}$, $f'''(0)=2$; $\quad f^{(4)}(x)=-\frac{6}{(1+x)^4}$, $f^{(4)}(0)=-6$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$\ln(1+x) = x - \dfrac{x^2}{2} + \dfrac{x^3}{3} - \dfrac{x^4}{4} + \cdots$ &nbsp; (valid for $-1 < x \leq 1$)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.4 STANDARD SERIES -->
+  <div class="lesson-section" id="standard">
+    <h2 class="section-title">4.4 Standard Maclaurin Series</h2>
+    <p>These are given in the Edexcel formula booklet but you must be able to use them fluently.</p>
+
+    <div class="formula-box">
+      $$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots \quad \text{all } x$$
+      $$\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \cdots \quad \text{all } x$$
+      $$\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \cdots \quad \text{all } x$$
+      $$\ln(1+x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots \quad -1 < x \leq 1$$
+      $$(1+x)^n = 1 + nx + \frac{n(n-1)}{2!}x^2 + \cdots \quad |x|<1 \text{ (non-integer } n\text{)}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Patterns to Notice</strong>
+      $\sin x$ has only odd powers with alternating signs. $\cos x$ has only even powers with alternating signs. $e^x$ has all powers with positive signs. These patterns help you spot errors quickly.
+    </div>
+  </div>
+
+  <!-- 4.5 COMBINING SERIES -->
+  <div class="lesson-section" id="combining">
+    <h2 class="section-title">4.5 Combining Series</h2>
+    <p>You can build new Maclaurin series by substituting, adding, multiplying, or differentiating existing ones — without going back to first principles.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.5a</div>
+      <div class="example-q">Find the series expansion of $e^x \cos x$ up to and including the $x^3$ term.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$e^x = 1 + x + \dfrac{x^2}{2} + \dfrac{x^3}{6} + \cdots$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\cos x = 1 - \dfrac{x^2}{2} + \cdots$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Multiply, collecting terms up to $x^3$:
+          <br>Constant: $1 \times 1 = 1$
+          <br>$x$: $x \times 1 = x$
+          <br>$x^2$: $\frac{x^2}{2}\times 1 + 1\times(-\frac{x^2}{2}) = 0$
+          <br>$x^3$: $\frac{x^3}{6}\times 1 + x\times(-\frac{x^2}{2}) = \frac{x^3}{6} - \frac{x^3}{2} = -\frac{x^3}{3}$
+        </div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$e^x\cos x = 1 + x - \dfrac{x^3}{3} + \cdots$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.5b</div>
+      <div class="example-q">Use the series for $\ln(1+x)$ to find the series for $\ln(1-x)$ and hence $\ln\!\left(\dfrac{1+x}{1-x}\right)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Replace $x$ with $-x$: $\ln(1-x) = -x - \dfrac{x^2}{2} - \dfrac{x^3}{3} - \dfrac{x^4}{4} - \cdots$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\ln\!\left(\dfrac{1+x}{1-x}\right) = \ln(1+x) - \ln(1-x)$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Subtracting: all even powers cancel, odd powers double:
+          $$= 2x + \frac{2x^3}{3} + \frac{2x^5}{5} + \cdots = 2\sum_{n=0}^{\infty}\frac{x^{2n+1}}{2n+1}$$
+          <div class="step-comment">Valid for $|x| < 1$. This series converges much faster than $\ln(1+x)$ for computing $\ln$ values.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.6 INVERSE TRIG DERIVATIVES -->
+  <div class="lesson-section" id="diffunder">
+    <h2 class="section-title">4.6 Differentiating Inverse Trig Functions</h2>
+    <p>The derivatives of $\arcsin$, $\arccos$, and $\arctan$ are derived using implicit differentiation and the Pythagorean identity.</p>
+
+    <div class="formula-box">
+      $$\frac{d}{dx}(\arcsin x) = \frac{1}{\sqrt{1-x^2}}$$
+      $$\frac{d}{dx}(\arccos x) = -\frac{1}{\sqrt{1-x^2}}$$
+      $$\frac{d}{dx}(\arctan x) = \frac{1}{1+x^2}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.6a — Derivation</div>
+      <div class="example-q">Derive $\dfrac{d}{dx}(\arcsin x) = \dfrac{1}{\sqrt{1-x^2}}$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $y = \arcsin x$, so $\sin y = x$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Differentiate both sides with respect to $x$: $\cos y \cdot \dfrac{dy}{dx} = 1$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\dfrac{dy}{dx} = \dfrac{1}{\cos y}$. Since $\cos y = \sqrt{1-\sin^2 y} = \sqrt{1-x^2}$:</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\dfrac{d}{dx}(\arcsin x) = \dfrac{1}{\sqrt{1-x^2}}$ $\quad\square$</div></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Chain Rule Extensions</h3>
+    <div class="formula-box">
+      $$\frac{d}{dx}\!\left(\arcsin\frac{x}{a}\right) = \frac{1}{\sqrt{a^2-x^2}} \qquad \frac{d}{dx}\!\left(\arctan\frac{x}{a}\right) = \frac{a}{a^2+x^2}$$
+    </div>
+  </div>
+
+  <!-- 4.7 INTEGRATING INVERSE TRIG FORMS -->
+  <div class="lesson-section" id="intinvtrig">
+    <h2 class="section-title">4.7 Integrating Inverse Trig Forms</h2>
+    <p>The derivatives above give us new integration results — among the most important in Further Maths.</p>
+
+    <div class="formula-box">
+      $$\int \frac{1}{\sqrt{a^2-x^2}}\,dx = \arcsin\frac{x}{a} + c$$
+      $$\int \frac{1}{a^2+x^2}\,dx = \frac{1}{a}\arctan\frac{x}{a} + c$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.7a</div>
+      <div class="example-q">Find (a) $\displaystyle\int\frac{1}{\sqrt{9-x^2}}\,dx$, (b) $\displaystyle\int_0^2\frac{1}{4+x^2}\,dx$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $a=3$: $\displaystyle\int\frac{1}{\sqrt{9-x^2}}\,dx = \arcsin\frac{x}{3} + c$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $a=2$: $\displaystyle\int_0^2\frac{1}{4+x^2}\,dx = \left[\frac{1}{2}\arctan\frac{x}{2}\right]_0^2 = \frac{1}{2}\arctan 1 - \frac{1}{2}\arctan 0 = \frac{1}{2}\cdot\frac{\pi}{4} - 0 = \frac{\pi}{8}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.7b — Completing the Square</div>
+      <div class="example-q">Find $\displaystyle\int\frac{1}{x^2+4x+13}\,dx$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Complete the square: $x^2+4x+13 = (x+2)^2 + 9$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\displaystyle\int\frac{1}{(x+2)^2+9}\,dx = \frac{1}{3}\arctan\frac{x+2}{3} + c$<div class="step-comment">Use the formula with $a=3$ and $x$ replaced by $x+2$.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.8 REDUCTION FORMULAE -->
+  <div class="lesson-section" id="reduction">
+    <h2 class="section-title">4.8 Reduction Formulae</h2>
+    <p>A <strong>reduction formula</strong> expresses $I_n$ (an integral involving a parameter $n$) in terms of $I_{n-1}$ or $I_{n-2}$. This lets you evaluate complicated integrals by stepping down through simpler cases. They are always derived using integration by parts.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.8a</div>
+      <div class="example-q">Show that $I_n = \displaystyle\int_0^{\pi/2}\sin^n x\,dx$ satisfies $I_n = \dfrac{n-1}{n}I_{n-2}$, and hence find $I_5$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Write $\sin^n x = \sin^{n-1}x \cdot \sin x$ and integrate by parts:
+          <br>$u = \sin^{n-1}x$, $\dfrac{dv}{dx} = \sin x \Rightarrow v = -\cos x$
+        </div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$I_n = [-\sin^{n-1}x\cos x]_0^{\pi/2} + (n-1)\displaystyle\int_0^{\pi/2}\sin^{n-2}x\cos^2 x\,dx$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">The bracket evaluates to $0$ at both limits. Substitute $\cos^2 x = 1-\sin^2 x$:
+          <br>$I_n = (n-1)\displaystyle\int_0^{\pi/2}\sin^{n-2}x\,dx - (n-1)\int_0^{\pi/2}\sin^n x\,dx$
+          <br>$I_n = (n-1)I_{n-2} - (n-1)I_n$
+        </div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$I_n + (n-1)I_n = (n-1)I_{n-2} \Rightarrow nI_n = (n-1)I_{n-2} \Rightarrow I_n = \dfrac{n-1}{n}I_{n-2}$ $\quad\square$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$I_1 = \displaystyle\int_0^{\pi/2}\sin x\,dx = 1$. Step down:
+          <br>$I_3 = \dfrac{2}{3}I_1 = \dfrac{2}{3}$
+          <br>$I_5 = \dfrac{4}{5}I_3 = \dfrac{4}{5}\cdot\dfrac{2}{3} = \dfrac{8}{15}$
+        </div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.8b</div>
+      <div class="example-q">Find the reduction formula for $I_n = \displaystyle\int x^n e^x\,dx$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Integration by parts: $u=x^n$, $\frac{dv}{dx}=e^x \Rightarrow v=e^x$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$I_n = x^n e^x - n\displaystyle\int x^{n-1}e^x\,dx = x^n e^x - nI_{n-1}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">With $I_0 = \displaystyle\int e^x\,dx = e^x + c$, we can step up: $I_1 = xe^x - e^x$, $I_2 = x^2e^x - 2xe^x + 2e^x$, etc.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Determine whether each integral converges and find its value if so: (a) $\displaystyle\int_1^{\infty}\frac{1}{x^3}\,dx$, (b) $\displaystyle\int_0^1 \frac{1}{x^{1/3}}\,dx$, (c) $\displaystyle\int_1^{\infty}\frac{1}{\sqrt{x}}\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\left[-\frac{1}{2x^2}\right]_1^{\infty}=\frac{1}{2}$. Converges. (b) $\left[\frac{3}{2}x^{2/3}\right]_0^1=\frac{3}{2}$. Converges. (c) $[2\sqrt{x}]_1^t=2\sqrt{t}-2\to\infty$. Diverges.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Find the mean value of $f(x) = x^2 + 1$ over the interval $[0, 3]$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\bar{f}=\frac{1}{3}\int_0^3(x^2+1)\,dx=\frac{1}{3}\left[\frac{x^3}{3}+x\right]_0^3=\frac{1}{3}(9+3)=4$.</div>
+      </div>
+      <div class="q-marks">[3 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Write down the Maclaurin series for $\sin(2x)$ and $\cos(x^2)$ up to and including the $x^4$ term.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\sin(2x)$: substitute $2x$ for $x$ in $\sin x$: $2x-\frac{(2x)^3}{6}+\cdots=2x-\frac{4x^3}{3}+\cdots$ (no $x^4$ term since $\sin$ has odd powers only). $\cos(x^2)$: substitute $x^2$ for $x$ in $\cos x$: $1-\frac{x^4}{2}+\cdots$</div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Find: (a) $\displaystyle\int\frac{3}{\sqrt{16-x^2}}\,dx$, (b) $\displaystyle\int_0^3\frac{1}{9+x^2}\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $3\arcsin\frac{x}{4}+c$. (b) $\left[\frac{1}{3}\arctan\frac{x}{3}\right]_0^3=\frac{1}{3}\arctan 1=\frac{1}{3}\cdot\frac{\pi}{4}=\frac{\pi}{12}$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Given $I_n = \displaystyle\int_0^1 x^n e^x\,dx$, show that $I_n = e - nI_{n-1}$ and hence find $I_2$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">IBP: $u=x^n$, $v'=e^x$: $I_n=[x^ne^x]_0^1-n\int_0^1 x^{n-1}e^x\,dx=e-nI_{n-1}$ ✓. $I_0=[e^x]_0^1=e-1$. $I_1=e-1\cdot I_0=e-(e-1)=1$. $I_2=e-2I_1=e-2$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Find the Maclaurin series for $f(x) = \dfrac{1}{\sqrt{1+x}}$ up to and including $x^3$. Hence write down the series for $\dfrac{1}{\sqrt{1-x^2}}$ and integrate term by term to find the Maclaurin series for $\arcsin x$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$(1+x)^{-1/2}=1-\frac{1}{2}x+\frac{3}{8}x^2-\frac{5}{16}x^3+\cdots$. Substitute $-x^2$: $\frac{1}{\sqrt{1-x^2}}=1+\frac{1}{2}x^2+\frac{3}{8}x^4+\cdots$. Integrate (noting $\arcsin 0=0$): $\arcsin x = x+\frac{x^3}{6}+\frac{3x^5}{40}+\cdots$</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Find $\displaystyle\int\frac{2x+1}{x^2+2x+5}\,dx$ and $\displaystyle\int\frac{1}{x^2+2x+5}\,dx$. Hence evaluate $\displaystyle\int\frac{3x+4}{x^2+2x+5}\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\int\frac{2x+2}{x^2+2x+5}dx=\ln|x^2+2x+5|+c$. Complete square: $x^2+2x+5=(x+1)^2+4$, so $\int\frac{1}{(x+1)^2+4}dx=\frac{1}{2}\arctan\frac{x+1}{2}+c$. For last integral: write $3x+4=\frac{3}{2}(2x+2)+1$, so answer $=\frac{3}{2}\ln|x^2+2x+5|+\frac{1}{2}\arctan\frac{x+1}{2}+c$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Find the reduction formula for $I_n = \displaystyle\int_0^{\pi/2}\cos^n x\,dx$ and hence evaluate $I_6$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">By identical method to $\sin^n$: $I_n=\frac{n-1}{n}I_{n-2}$. $I_0=\frac{\pi}{2}$. $I_2=\frac{1}{2}\cdot\frac{\pi}{2}=\frac{\pi}{4}$. $I_4=\frac{3}{4}I_2=\frac{3\pi}{16}$. $I_6=\frac{5}{6}I_4=\frac{5}{6}\cdot\frac{3\pi}{16}=\frac{5\pi}{32}$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Hard / STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">(i) By differentiating the Maclaurin series for $\ln(1+x)$, verify the series for $\frac{1}{1+x}$. (ii) Use the series $\ln\!\left(\frac{1+x}{1-x}\right) = 2x+\frac{2x^3}{3}+\frac{2x^5}{5}+\cdots$ with a suitable value of $x$ to show that $\ln 2 = 2\left(\frac{1}{3}+\frac{1}{81}+\frac{1}{1215}+\cdots\right)$. (iii) Explain why this series converges faster than $\ln 2 = 1 - \frac{1}{2}+\frac{1}{3}-\cdots$</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $\frac{d}{dx}\ln(1+x)=\frac{1}{1+x}$; differentiating the series: $\frac{d}{dx}(x-\frac{x^2}{2}+\frac{x^3}{3}-\cdots)=1-x+x^2-\cdots$ ✓. (ii) Set $\frac{1+x}{1-x}=2 \Rightarrow x=\frac{1}{3}$. Then $\ln 2=2\left(\frac{1}{3}+\frac{1}{3\cdot3^3}+\frac{1}{5\cdot3^5}+\cdots\right)=2\left(\frac{1}{3}+\frac{1}{81}+\frac{1}{1215}+\cdots\right)$ ✓. (iii) Terms decrease as $\frac{1}{(2n+1)\cdot3^{2n+1}}$, which shrinks much faster than $\frac{1}{n}$ (the terms of the alternating series).</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">Let $I_n = \displaystyle\int_0^1 \frac{x^n}{\sqrt{1-x^2}}\,dx$. (i) Show that $I_n = \dfrac{n-1}{n}I_{n-2}$. (ii) Find $I_0$ and $I_1$. (iii) Hence evaluate $I_4$ and $I_5$, and conjecture a general closed form for $I_{2n}$ and $I_{2n+1}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) IBP: $u=x^{n-1}$, $v'=\frac{x}{\sqrt{1-x^2}} \Rightarrow v=-\sqrt{1-x^2}$. Then $I_n=[- x^{n-1}\sqrt{1-x^2}]_0^1+(n-1)\int_0^1 x^{n-2}\sqrt{1-x^2}\,dx=0+(n-1)\int_0^1 x^{n-2}(1-x^2)/\sqrt{1-x^2}\,dx=(n-1)I_{n-2}-(n-1)I_n$. So $nI_n=(n-1)I_{n-2}$ ✓. (ii) $I_0=[\arcsin x]_0^1=\frac{\pi}{2}$. $I_1=[-\sqrt{1-x^2}]_0^1=1$. (iii) $I_2=\frac{1}{2}\cdot\frac{\pi}{2}=\frac{\pi}{4}$; $I_4=\frac{3}{4}I_2=\frac{3\pi}{16}$. $I_3=\frac{2}{3}$; $I_5=\frac{4}{5}I_3=\frac{8}{15}$. Conjecture: $I_{2n}=\frac{(2n-1)!!}{(2n)!!}\cdot\frac{\pi}{2}$, $I_{2n+1}=\frac{(2n)!!}{(2n+1)!!}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="further-algebra.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Further Algebra</div></a>
+    <a href="polar-coordinates.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Polar Coordinates</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
