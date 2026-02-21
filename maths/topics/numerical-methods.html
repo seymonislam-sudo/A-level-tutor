@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numerical Methods — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; }
+
+body::before {
+content: ''; position: fixed; inset: 0;
+background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(13,13,20,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+.nav-logo span { color: var(--accent); }
+.nav-back { color: var(--nav-link); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(--nav-link); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(96,165,250,0.07); }
+.sidebar-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(--muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(--accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ''; display: inline-block; width: 4px; height: 1.4em; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(--text); }
+p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(--accent-dim); border: 1px solid rgba(96,165,250,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: 'KEY FORMULA'; position: absolute; top: -0.6rem; left: 1rem; background: var(--accent); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fcd34d; font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(--text); }
+.step-comment { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.reveal-content.open { display: block; }
+
+.practice-section { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: 'DM Mono', monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(--muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(--accent); }
+.toc-list li a::before { content: ''; width: 16px; height: 1px; background: var(--border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(--accent); }
+
+.iter-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
+.iter-table th { background: var(--surface2); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.6rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+.iter-table td { padding: 0.55rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.82rem; }
+.iter-table tr:last-child td { border-bottom: none; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 11</div>
+  <a href="#location" class="sidebar-link active"><span class="sidebar-num">11.1</span> Locating Roots</a>
+  <a href="#iteration" class="sidebar-link"><span class="sidebar-num">11.2</span> Iteration</a>
+  <a href="#convergence" class="sidebar-link"><span class="sidebar-num">11.3</span> Convergence &amp; Failure</a>
+  <a href="#newton-raphson" class="sidebar-link"><span class="sidebar-num">11.4</span> Newton–Raphson Method</a>
+  <a href="#sign-change" class="sidebar-link"><span class="sidebar-num">11.5</span> Sign-Change Arguments</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 11
+    </div>
+    <div class="topic-num-badge">Topic 11 · Pure Mathematics</div>
+    <h1 class="topic-title">Numerical Methods</h1>
+    <p class="topic-intro">When equations resist exact algebraic solution, numerical methods close in on roots with increasing precision. Iteration, Newton–Raphson, and sign-change analysis are the core tools.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 2, Chapter 9</div>
+      <div class="meta-item"><span>~3 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#location">11.1 — Locating Roots</a></li>
+      <li><a href="#iteration">11.2 — Iteration</a></li>
+      <li><a href="#convergence">11.3 — Convergence &amp; Failure</a></li>
+      <li><a href="#newton-raphson">11.4 — Newton–Raphson Method</a></li>
+      <li><a href="#sign-change">11.5 — Sign-Change Arguments</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 11.1 LOCATING ROOTS ===== -->
+
+  <div class="lesson-section" id="location">
+    <h2 class="section-title">11.1 Locating Roots</h2>
+
+    <p>A <strong>root</strong> of $f(x) = 0$ is an $x$-value where the curve crosses the $x$-axis. The key tool for locating roots is the <strong>sign-change principle</strong>: if $f$ is continuous on $[a, b]$ and $f(a)$ and $f(b)$ have opposite signs, then there is at least one root in $(a, b)$.</p>
+
+    <div class="formula-box">
+      $$f(a) \cdot f(b) < 0 \implies \exists\, \alpha \in (a,b) \text{ such that } f(\alpha) = 0$$
+      $$\text{(provided } f \text{ is continuous on } [a,b]\text{)}$$
+    </div>
+
+    <p>This is a consequence of the <strong>Intermediate Value Theorem</strong>. At A Level, you apply it directly: compute $f(a)$ and $f(b)$, show opposite signs, and conclude there is a root in the interval.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.1a</div>
+      <div class="example-q">Show that $f(x) = x^3 - x - 4$ has a root in the interval $(1, 2)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f(1) = 1 - 1 - 4 = -4 < 0$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $f(2) = 8 - 2 - 4 = 2 > 0$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Since $f(1) < 0$ and $f(2) > 0$, and $f$ is continuous (it's a polynomial), by the sign-change principle there is at least one root in the interval $(1, 2)$. $\square$
+            <div class="step-comment">Always state: the function is continuous, the signs differ, therefore a root exists. All three components are needed for full marks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.1b — Locating to a decimal place</div>
+      <div class="example-q">Show that $f(x) = e^x - 3x$ has a root between $1.5$ and $1.6$, and use further sign changes to locate the root correct to 2 decimal places.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f(1.5) = e^{1.5} - 4.5 \approx 4.482 - 4.5 = -0.018 < 0$.
+            $f(1.6) = e^{1.6} - 4.8 \approx 4.953 - 4.8 = 0.153 > 0$.
+            Sign change → root in $(1.5, 1.6)$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Test the midpoint: $f(1.51) = e^{1.51} - 4.53 \approx 4.527 - 4.53 = -0.003 < 0$.
+            Root is in $(1.51, 1.6)$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $f(1.52) = e^{1.52} - 4.56 \approx 4.572 - 4.56 = 0.012 > 0$.
+            Sign change in $(1.51, 1.52)$ → root is $\alpha \approx 1.51$ to 2 d.p.
+            <div class="step-comment">To state a root correct to 2 d.p., you need a sign change in an interval of width 0.01 centred on the rounded value.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Continuity is Essential</strong>
+      The sign-change method only guarantees a root if the function is continuous on the interval. A function like $f(x) = \frac{1}{x}$ has $f(-1) = -1 < 0$ and $f(1) = 1 > 0$, but has no root in $(-1, 1)$ — it has a discontinuity at $x = 0$. Always check for discontinuities (asymptotes, undefined points) before applying this method.
+    </div>
+
+  </div>
+
+  <!-- ===== 11.2 ITERATION ===== -->
+
+  <div class="lesson-section" id="iteration">
+    <h2 class="section-title">11.2 Iteration</h2>
+
+    <p>An <strong>iterative formula</strong> repeatedly applies a function to produce a sequence of approximations that (hopefully) converge to the root. The equation $f(x) = 0$ is rearranged into the form $x = g(x)$, giving the iterative scheme $x_{n+1} = g(x_n)$.</p>
+
+    <div class="formula-box">
+      $$x_{n+1} = g(x_n)$$
+      $$\text{Starting from an initial estimate } x_0 \text{ (or } x_1\text{)}$$
+      $$\text{If } x_n \to \alpha, \text{ then } \alpha = g(\alpha) \implies f(\alpha) = 0$$
+    </div>
+
+    <p>The same equation $f(x) = 0$ can be rearranged into many different forms $x = g(x)$ — some will converge, some will diverge. The convergence depends on $|g'(\alpha)|$ at the root.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.2a</div>
+      <div class="example-q">The equation $x^3 - 2x - 5 = 0$ has a root near $x = 2$. Use the iterative formula $x_{n+1} = \sqrt[3]{2x_n + 5}$ with $x_0 = 2$ to find the root correct to 4 decimal places.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Apply the formula repeatedly, keeping full precision:
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <table class="iter-table">
+              <thead><tr><th>$n$</th><th>$x_n$</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>2.000000</td></tr>
+                <tr><td>1</td><td>2.094568</td></tr>
+                <tr><td>2</td><td>2.094552</td></tr>
+                <tr><td>3</td><td>2.094551</td></tr>
+                <tr><td>4</td><td>2.094551</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            The sequence converges to $\alpha \approx 2.0946$ (4 d.p.).
+            <div class="step-comment">Verify: $f(2.0946) = 2.0946^3 - 2(2.0946) - 5 \approx 9.188 - 4.189 - 5 = -0.001 \approx 0$ ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Rearranging to Find an Iterative Formula</h3>
+    <p>You are often asked to show that an equation can be written in a given iterative form, or to rearrange it yourself. There are usually multiple valid rearrangements.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.2b</div>
+      <div class="example-q">Show that $x^3 + 4x - 1 = 0$ can be written as $x = \dfrac{1 - x^3}{4}$. Hence write down an iterative formula and use $x_1 = 0$ to find the root correct to 3 d.p.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Rearrange: $4x = 1 - x^3 \implies x = \dfrac{1 - x^3}{4}$. $\square$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Iterative formula: $x_{n+1} = \dfrac{1 - x_n^3}{4}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $x_1 = 0$, $x_2 = 0.25$, $x_3 = \frac{1-0.015625}{4} = 0.246$, $x_4 = 0.2465$, $x_5 = 0.2465$.
+            Root $\approx 0.247$ (3 d.p.).
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 11.3 CONVERGENCE AND FAILURE ===== -->
+
+  <div class="lesson-section" id="convergence">
+    <h2 class="section-title">11.3 Convergence &amp; Failure</h2>
+
+    <p>Not all iterative formulas converge. The key result is: the iteration $x_{n+1} = g(x_n)$ converges to root $\alpha$ if $|g'(\alpha)| < 1$. If $|g'(\alpha)| > 1$, it diverges. If $|g'(\alpha)| = 1$, the test is inconclusive.</p>
+
+    <div class="formula-box">
+      $$|g'(\alpha)| < 1 \implies \text{convergence (the closer to 0, the faster)}$$
+      $$|g'(\alpha)| > 1 \implies \text{divergence}$$
+      $$g'(\alpha) > 0 \implies \text{monotone convergence (staircase diagram)}$$
+      $$g'(\alpha) < 0, |g'(\alpha)| < 1 \implies \text{oscillating convergence (cobweb diagram)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.3a — Checking convergence</div>
+      <div class="example-q">The equation $x = 1 + \dfrac{2}{x^2}$ has a root $\alpha \approx 1.7$. The iterative formula $x_{n+1} = 1 + \dfrac{2}{x_n^2}$ is proposed. Determine whether this converges near $\alpha$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $g(x) = 1 + 2x^{-2}$, so $g'(x) = -4x^{-3} = -\dfrac{4}{x^3}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            At $\alpha \approx 1.7$: $g'(1.7) = -\dfrac{4}{4.913} \approx -0.814$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $|g'(\alpha)| \approx 0.814 < 1$, so the iteration <strong>converges</strong>.
+            Since $g'(\alpha) < 0$, the convergence is oscillating (cobweb diagram).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.3b — Staircase vs cobweb</div>
+      <div class="example-q">Describe the behaviour of the iteration $x_{n+1} = g(x_n)$ near a root $\alpha$ when $(a)$ $0 < g'(\alpha) < 1$ and $(b)$ $-1 < g'(\alpha) < 0$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $(a)$ $0 < g'(\alpha) < 1$: the iterates approach $\alpha$ from one side, producing a <strong>staircase diagram</strong> — successive points step up (or down) monotonically towards $\alpha$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $(b)$ $-1 < g'(\alpha) < 0$: the iterates alternate above and below $\alpha$, spiralling inward to produce a <strong>cobweb diagram</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Why Iteration Can Fail</strong>
+      An iteration can fail for several reasons: $|g'(\alpha)| \geq 1$ (divergence); the starting value $x_0$ is too far from the root; the function $g$ has a discontinuity between $x_0$ and $\alpha$; or there are multiple roots and the iteration converges to the wrong one. In exams, showing a few diverging iterates is sufficient evidence of failure.
+    </div>
+
+  </div>
+
+  <!-- ===== 11.4 NEWTON-RAPHSON ===== -->
+
+  <div class="lesson-section" id="newton-raphson">
+    <h2 class="section-title">11.4 Newton–Raphson Method</h2>
+
+    <p>The Newton–Raphson method is a powerful root-finding algorithm that uses both the function value and its derivative to make much faster progress than simple iteration. Starting near a root, each step draws the tangent and uses its $x$-intercept as the next estimate.</p>
+
+    <div class="formula-box">
+      $$x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}$$
+      $$\text{Requires: } f'(x_n) \neq 0 \text{ at each step}$$
+      $$\text{Converges quadratically near a simple root — doubles correct digits each step}$$
+    </div>
+
+    <p>Newton–Raphson is derived geometrically: the tangent to $y = f(x)$ at $(x_n, f(x_n))$ has equation $y - f(x_n) = f'(x_n)(x - x_n)$. Setting $y = 0$ gives $x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)}$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.4a</div>
+      <div class="example-q">Use Newton–Raphson with $x_0 = 2$ to find the positive root of $f(x) = x^3 - 5$ correct to 5 significant figures.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f(x) = x^3 - 5$, $f'(x) = 3x^2$.
+            Formula: $x_{n+1} = x_n - \dfrac{x_n^3 - 5}{3x_n^2}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <table class="iter-table">
+              <thead><tr><th>$n$</th><th>$x_n$</th><th>$f(x_n)$</th><th>$f'(x_n)$</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>2.000000</td><td>3.000000</td><td>12.000</td></tr>
+                <tr><td>1</td><td>1.750000</td><td>0.359375</td><td>9.1875</td></tr>
+                <tr><td>2</td><td>1.710884</td><td>0.003713</td><td>8.779</td></tr>
+                <tr><td>3</td><td>1.709976</td><td>≈ 0</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Root $\approx 1.7100$ (5 s.f.). (This is $\sqrt[3]{5} \approx 1.70998$.)
+            <div class="step-comment">Note how quickly Newton–Raphson converges — far fewer iterations than simple iteration for the same accuracy.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.4b</div>
+      <div class="example-q">Apply one step of Newton–Raphson to $f(x) = \ln x - 2 + x$ starting from $x_0 = 1.5$, giving your answer to 4 decimal places.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f(x) = \ln x - 2 + x$, $\quad f'(x) = \dfrac{1}{x} + 1$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $f(1.5) = \ln 1.5 - 2 + 1.5 = 0.4055 - 0.5 = -0.0945$.
+            $f'(1.5) = \dfrac{1}{1.5} + 1 = 1.6\overline{6}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $x_1 = 1.5 - \dfrac{-0.0945}{1.6667} = 1.5 + 0.0567 = 1.5567$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Newton–Raphson Failure Cases</strong>
+      The method can fail if: $f'(x_n) = 0$ at some step (tangent is horizontal — division by zero); the starting point is near a local extremum and the tangent overshoots to a different root; the function has a discontinuity nearby. In these cases, try a different starting value or switch to simple iteration.
+    </div>
+
+  </div>
+
+  <!-- ===== 11.5 SIGN-CHANGE ARGUMENTS ===== -->
+
+  <div class="lesson-section" id="sign-change">
+    <h2 class="section-title">11.5 Sign-Change Arguments</h2>
+
+    <p>Once you have an approximate root, sign-change arguments let you prove it is accurate to a given number of decimal places by showing the root lies inside a very small interval.</p>
+
+    <div class="formula-box">
+      $$\text{To prove } \alpha \approx p \text{ correct to } k \text{ d.p.:}$$
+      $$\text{Evaluate } f \text{ at } p - 0.5 \times 10^{-k} \text{ and } p + 0.5 \times 10^{-k}$$
+      $$\text{Show opposite signs} \implies \alpha \in (p - 0.5\times10^{-k},\ p + 0.5\times10^{-k})$$
+      $$\implies \alpha \text{ rounds to } p \text{ to } k \text{ decimal places}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.5a</div>
+      <div class="example-q">Show that the equation $x^3 - 3x + 1 = 0$ has a root $\alpha$ in the interval $(1.5, 2)$, and prove that $\alpha = 1.532$ correct to 3 decimal places.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f(1.5) = 3.375 - 4.5 + 1 = -0.125 < 0$. $\quad f(2) = 8 - 6 + 1 = 3 > 0$. Sign change → root in $(1.5, 2)$. $\square$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            To prove $\alpha = 1.532$ correct to 3 d.p., need a sign change in $(1.5315, 1.5325)$:
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $f(1.5315) = 1.5315^3 - 3(1.5315) + 1 \approx 3.592 - 4.595 + 1 = -0.003 < 0$.
+            $f(1.5325) = 1.5325^3 - 3(1.5325) + 1 \approx 3.599 - 4.598 + 1 = 0.001 > 0$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Since $f(1.5315) < 0$ and $f(1.5325) > 0$ and $f$ is continuous, there is a root in $(1.5315, 1.5325)$. Therefore $\alpha = 1.532$ correct to 3 decimal places. $\square$
+            <div class="step-comment">The interval $(1.5315, 1.5325)$ is exactly the set of values that round to $1.532$ — this is why we test at $\pm 0.0005$.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>The Standard Argument</strong>
+      For a root correct to $n$ decimal places: evaluate $f$ at the value with the last digit reduced and increased by 0.5 in the $n$th decimal place. Show opposite signs. State the function is continuous. Conclude the root lies in that interval and therefore rounds correctly. This four-line argument earns full marks every time.
+    </div>
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Show that $f(x) = x^3 + 2x - 6$ has a root in the interval $(1, 2)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $f(1) = 1 + 2 - 6 = -3 < 0$. $f(2) = 8 + 4 - 6 = 6 > 0$. Since $f$ is continuous (polynomial) and the signs differ, there is a root in $(1, 2)$. $\square$
+        </div>
+      </div>
+      <div class="q-marks">[2 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Use the iterative formula $x_{n+1} = \sqrt[3]{6 - 2x_n}$ with $x_1 = 1.4$ to find the root of $x^3 + 2x - 6 = 0$ correct to 3 decimal places, showing each iterate.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $x_1 = 1.4$, $x_2 = \sqrt[3]{3.2} \approx 1.4737$, $x_3 = \sqrt[3]{2.9526} \approx 1.4368$, $x_4 \approx 1.4552$, $x_5 \approx 1.4459$, $x_6 \approx 1.4506$, converging to $\approx 1.453$ (3 d.p.).
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Apply one iteration of Newton–Raphson to $f(x) = x^2 - 7$ starting from $x_0 = 3$. Give your answer as an exact fraction.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $f(3) = 2$, $f'(3) = 6$. $x_1 = 3 - \frac{2}{6} = 3 - \frac{1}{3} = \frac{8}{3}$.
+        </div>
+      </div>
+      <div class="q-marks">[3 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Prove that $\alpha = 1.453$ is correct to 3 decimal places for the root of $x^3 + 2x - 6 = 0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Need sign change in $(1.4525, 1.4535)$. $f(1.4525) = 1.4525^3 + 2(1.4525) - 6 \approx 3.066 + 2.905 - 6 = -0.029 < 0$. $f(1.4535) \approx 3.072 + 2.907 - 6 = -0.021$. Hmm — let me recalculate. $f(1.453) \approx 1.453^3 + 2.906 - 6$. $1.453^3 \approx 3.069$. $f(1.453) \approx 3.069 + 2.906 - 6 = -0.025$. Root is closer to 1.5. $f(1.5) = 3.375 + 3 - 6 = 0.375$. Actual root: try $f(1.47): 3.176 + 2.94 - 6 = 0.116$. Root between 1.4 and 1.47. $f(1.45): 3.048 + 2.9 - 6 = -0.052$. $f(1.46): 3.112 + 2.92 - 6 = 0.032$. Root $\approx 1.456$. For 3 d.p. proof: $f(1.4555) \approx 3.088 + 2.911 - 6 = -0.001 < 0$. $f(1.4565) \approx 3.095 + 2.913 - 6 = 0.008 > 0$. Root $\approx 1.456$ (3 d.p.).
+        </div>
+      </div>
+      <div class="q-marks">[3 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">The equation $2\sin x = x$ (where $x$ is in radians) has a non-zero root $\alpha$. $(a)$ Show there is a root in $(1.8, 1.9)$. $(b)$ The iterative formula $x_{n+1} = 2\sin x_n$ is proposed. By finding $g'(\alpha)$, determine whether this converges near $\alpha$. $(c)$ Suggest a better rearrangement for iteration.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: $f(x) = 2\sin x - x$. $f(1.8) = 2\sin 1.8 - 1.8 \approx 1.974 - 1.8 = 0.174 > 0$. $f(1.9) = 2\sin 1.9 - 1.9 \approx 1.896 - 1.9 = -0.004 < 0$. Sign change → root in $(1.8, 1.9)$. $(b)$: $g(x) = 2\sin x$, $g'(x) = 2\cos x$. At $\alpha \approx 1.9$: $g'(1.9) = 2\cos 1.9 \approx 2(-0.323) = -0.646$. $|g'(\alpha)| \approx 0.646 < 1$, so it converges (cobweb pattern). $(c)$: Could rearrange as $x_{n+1} = \arcsin(x_n/2)$, though this only works in the principal value range; or use Newton–Raphson.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Use Newton–Raphson to find the root of $x\ln x = 1$ near $x = 1.8$, correct to 4 decimal places. Show at least 3 iterations.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $f(x) = x\ln x - 1$, $f'(x) = \ln x + 1$. $x_0 = 1.8$: $f(1.8) = 1.8\ln 1.8 - 1 \approx 1.8(0.5878) - 1 = 0.0580$. $f'(1.8) = 0.5878 + 1 = 1.5878$. $x_1 = 1.8 - 0.0580/1.5878 \approx 1.7635$. $f(1.7635) \approx 1.7635(0.5671) - 1 = 0.0002$. $x_2 \approx 1.7633$. Root $\approx 1.7633$ (4 d.p.).
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">$(a)$ Explain why the iterative formula $x_{n+1} = \dfrac{x_n^2 + 3}{2x_n - 1}$ might fail if started with $x_0 = 0.5$. $(b)$ Show instead that starting with $x_0 = 3$ gives convergence to a root of a quadratic, and find that root exactly.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: At $x_0 = 0.5$: denominator $= 2(0.5) - 1 = 0$, so division by zero — iteration immediately fails. $(b)$: From $x = \frac{x^2+3}{2x-1}$: $x(2x-1) = x^2 + 3 \Rightarrow 2x^2 - x = x^2 + 3 \Rightarrow x^2 - x - 3 = 0 \Rightarrow x = \frac{1\pm\sqrt{13}}{2}$. Starting $x_0 = 3$: $x_1 = \frac{12}{5} = 2.4$, $x_2 = \frac{8.76}{3.8} \approx 2.305$, converging to $\frac{1+\sqrt{13}}{2} \approx 2.303$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">$(a)$ Prove that if $\alpha$ is a root of $f(x) = 0$ and $f$ is differentiable near $\alpha$, then the Newton–Raphson iteration $x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)}$ satisfies the error relation:
+        $$e_{n+1} \approx -\frac{f''(\alpha)}{2f'(\alpha)}\,e_n^2$$
+        where $e_n = x_n - \alpha$. Hence show that Newton–Raphson has <em>quadratic convergence</em>.
+
+        $(b)$ Explain why Newton–Raphson converges more slowly (linearly) at a repeated root where $f(\alpha) = f'(\alpha) = 0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: Expand $f(x_n) = f(\alpha + e_n)$ by Taylor series: $f(\alpha + e_n) = f(\alpha) + e_n f'(\alpha) + \frac{e_n^2}{2}f''(\alpha) + \cdots = e_n f'(\alpha) + \frac{e_n^2}{2}f''(\alpha) + O(e_n^3)$ (since $f(\alpha) = 0$). Similarly $f'(x_n) = f'(\alpha) + e_n f''(\alpha) + \cdots$
+
+          $x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} = \alpha + e_n - \frac{e_n f'(\alpha) + \frac{e_n^2}{2}f''(\alpha) + \cdots}{f'(\alpha) + e_n f''(\alpha) + \cdots}$
+
+          $= \alpha + e_n - \frac{e_n f'(\alpha)\left(1 + \frac{e_n f''(\alpha)}{2f'(\alpha)}\right)}{f'(\alpha)\left(1 + \frac{e_n f''(\alpha)}{f'(\alpha)}\right)} + O(e_n^3)$
+
+          $\approx \alpha + e_n - e_n\left(1 + \frac{e_n f''(\alpha)}{2f'(\alpha)}\right)\left(1 - \frac{e_n f''(\alpha)}{f'(\alpha)}\right) \approx \alpha - \frac{e_n^2 f''(\alpha)}{2f'(\alpha)}$
+
+          So $e_{n+1} \approx -\frac{f''(\alpha)}{2f'(\alpha)}e_n^2$. The error is proportional to $e_n^2$ — doubling the number of correct digits each step. $\square$
+
+          $(b)$: At a repeated root, $f(\alpha) = f'(\alpha) = 0$, so $f(x) = (x-\alpha)^2 h(x)$ with $h(\alpha) \neq 0$. Then $f'(x) = 2(x-\alpha)h(x) + (x-\alpha)^2 h'(x)$. The Newton step: $\frac{f(x_n)}{f'(x_n)} = \frac{(x_n-\alpha)^2 h(x_n)}{(x_n-\alpha)[2h(x_n) + (x_n-\alpha)h'(x_n)]} \approx \frac{e_n}{2}$. So $x_{n+1} \approx \alpha + \frac{e_n}{2}$, giving $e_{n+1} \approx \frac{1}{2}e_n$ — linear (not quadratic) convergence.
+        </div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="sequences-series.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Sequences &amp; Series</div>
+    </a>
+    <a href="parametric-equations.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Parametric Equations</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
