@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Differentiation — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; }
+
+body::before {
+content: ''; position: fixed; inset: 0;
+background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(13,13,20,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+.nav-logo span { color: var(--accent); }
+.nav-back { color: var(--nav-link); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(--nav-link); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(96,165,250,0.07); }
+.sidebar-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(--muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(--accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ''; display: inline-block; width: 4px; height: 1.4em; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(--text); }
+p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(--accent-dim); border: 1px solid rgba(96,165,250,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: 'KEY FORMULA'; position: absolute; top: -0.6rem; left: 1rem; background: var(--accent); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fcd34d; font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(--text); }
+.step-comment { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.reveal-content.open { display: block; }
+
+.practice-section { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: 'DM Mono', monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(--muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(--accent); }
+.toc-list li a::before { content: ''; width: 16px; height: 1px; background: var(--border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 07</div>
+  <a href="#gradient" class="sidebar-link active"><span class="sidebar-num">7.1</span> Gradient from First Principles</a>
+  <a href="#power-rule" class="sidebar-link"><span class="sidebar-num">7.2</span> The Power Rule</a>
+  <a href="#tangents-normals" class="sidebar-link"><span class="sidebar-num">7.3</span> Tangents &amp; Normals</a>
+  <a href="#stationary" class="sidebar-link"><span class="sidebar-num">7.4</span> Stationary Points</a>
+  <a href="#increasing-decreasing" class="sidebar-link"><span class="sidebar-num">7.5</span> Increasing &amp; Decreasing</a>
+  <a href="#second-derivative" class="sidebar-link"><span class="sidebar-num">7.6</span> Second Derivative</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 07
+    </div>
+    <div class="topic-num-badge">Topic 07 · Pure Mathematics</div>
+    <h1 class="topic-title">Differentiation</h1>
+    <p class="topic-intro">The mathematics of instantaneous rate of change. Differentiation reveals gradients, turning points, and the behaviour of functions — the engine behind all of calculus.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 12–13</div>
+      <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#gradient">7.1 — Gradient from First Principles</a></li>
+      <li><a href="#power-rule">7.2 — The Power Rule</a></li>
+      <li><a href="#tangents-normals">7.3 — Tangents &amp; Normals</a></li>
+      <li><a href="#stationary">7.4 — Stationary Points</a></li>
+      <li><a href="#increasing-decreasing">7.5 — Increasing &amp; Decreasing Functions</a></li>
+      <li><a href="#second-derivative">7.6 — The Second Derivative</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 7.1 GRADIENT FROM FIRST PRINCIPLES ===== -->
+
+  <div class="lesson-section" id="gradient">
+    <h2 class="section-title">7.1 Gradient from First Principles</h2>
+
+    <p>The gradient of a curve at a point is defined as the limit of the gradient of a chord as the chord length tends to zero. This idea — the derivative — is one of the most profound in all of mathematics.</p>
+
+    <div class="formula-box">
+      $$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+      $$\text{Also written: } \frac{dy}{dx} = \lim_{\delta x \to 0}\frac{\delta y}{\delta x}$$
+    </div>
+
+    <p>The notation $f'(x)$, $\dfrac{dy}{dx}$, and $\dot{y}$ all mean the same thing: the derivative of $y$ with respect to $x$. At A Level you need to be able to derive simple results from first principles, and then use the faster rules for everything else.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.1a</div>
+      <div class="example-q">Differentiate $f(x) = x^2$ from first principles.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Write $f(x+h) = (x+h)^2 = x^2 + 2xh + h^2$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Form the difference quotient:
+            $$\frac{f(x+h)-f(x)}{h} = \frac{x^2 + 2xh + h^2 - x^2}{h} = \frac{2xh + h^2}{h} = 2x + h$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Take the limit as $h \to 0$:
+            $$f'(x) = \lim_{h \to 0}(2x + h) = 2x$$
+            <div class="step-comment">So the gradient of $y = x^2$ at any point $x$ is $2x$. At $x = 3$, for instance, the gradient is 6.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.1b</div>
+      <div class="example-q">Differentiate $f(x) = x^3$ from first principles.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Expand $(x+h)^3 = x^3 + 3x^2h + 3xh^2 + h^3$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $$\frac{(x+h)^3 - x^3}{h} = \frac{3x^2h + 3xh^2 + h^3}{h} = 3x^2 + 3xh + h^2$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $$\lim_{h\to 0}(3x^2 + 3xh + h^2) = 3x^2$$
+            <div class="step-comment">Therefore $\frac{d}{dx}(x^3) = 3x^2$. The pattern $nx^{n-1}$ is emerging.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>What First Principles Shows</strong>
+      You're asked to use first principles for simple polynomials (usually $x^2$, $x^3$, or $\frac{1}{x}$) in exams. The key steps are always: expand $f(x+h)$, subtract $f(x)$, divide by $h$, cancel the $h$, then take the limit. The cancellation step is crucial — without it you'd be dividing by zero.
+    </div>
+
+  </div>
+
+  <!-- ===== 7.2 THE POWER RULE ===== -->
+
+  <div class="lesson-section" id="power-rule">
+    <h2 class="section-title">7.2 The Power Rule</h2>
+
+    <p>For any power of $x$, the derivative follows a simple rule. This works for all rational powers — positive, negative, and fractional.</p>
+
+    <div class="formula-box">
+      $$\frac{d}{dx}(x^n) = nx^{n-1}$$
+      $$\frac{d}{dx}(ax^n) = anx^{n-1}$$
+      $$\frac{d}{dx}(f + g) = f' + g' \quad \text{(sum rule)}$$
+      $$\frac{d}{dx}(k) = 0 \quad \text{(constants vanish)}$$
+    </div>
+
+    <p>Before differentiating, always rewrite the function so every term is of the form $ax^n$. This means expanding brackets and rewriting roots and fractions as powers.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.2a</div>
+      <div class="example-q">Differentiate $(a)$ $y = 3x^4 - 5x^2 + 7$ &nbsp; $(b)$ $y = \dfrac{4}{x^3}$ &nbsp; $(c)$ $y = 2\sqrt{x}$ &nbsp; $(d)$ $y = \dfrac{x^3 - 3x}{x}$</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $(a)$: Apply the power rule term by term:
+            $$\frac{dy}{dx} = 12x^3 - 10x$$
+            <div class="step-comment">The constant $+7$ differentiates to $0$.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $(b)$: Rewrite as $y = 4x^{-3}$, then:
+            $$\frac{dy}{dx} = 4 \times (-3)x^{-4} = -\frac{12}{x^4}$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $(c)$: Rewrite as $y = 2x^{1/2}$, then:
+            $$\frac{dy}{dx} = 2 \times \tfrac{1}{2}x^{-1/2} = \frac{1}{\sqrt{x}}$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $(d)$: Simplify first — divide each term: $y = x^2 - 3$. Then:
+            $$\frac{dy}{dx} = 2x$$
+            <div class="step-comment">Never try to differentiate a fraction directly — simplify or use the quotient rule.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Rewrite Before Differentiating</strong>
+      You cannot apply the power rule to $y = \sqrt{x+1}$ or $y = (2x+3)^4$ directly — those require the chain rule (Year 2). At this stage, only differentiate expressions that are already sums of $ax^n$ terms. If you see a bracket, check whether it can be expanded first.
+    </div>
+
+  </div>
+
+  <!-- ===== 7.3 TANGENTS AND NORMALS ===== -->
+
+  <div class="lesson-section" id="tangents-normals">
+    <h2 class="section-title">7.3 Tangents &amp; Normals</h2>
+
+    <p>The derivative at a point gives the gradient of the <strong>tangent</strong> — the straight line that just touches the curve at that point. The <strong>normal</strong> is perpendicular to the tangent at the same point.</p>
+
+    <div class="formula-box">
+      $$\text{Gradient of tangent at } x = a: \quad m_T = f'(a)$$
+      $$\text{Gradient of normal at } x = a: \quad m_N = -\frac{1}{f'(a)}$$
+      $$\text{Equation of tangent: } y - f(a) = f'(a)(x - a)$$
+      $$\text{Equation of normal: } y - f(a) = -\frac{1}{f'(a)}(x - a)$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.3a</div>
+      <div class="example-q">Find the equations of the tangent and normal to $y = x^3 - 4x + 1$ at the point where $x = 2$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Find the $y$-coordinate: $y(2) = 8 - 8 + 1 = 1$. Point is $(2, 1)$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Differentiate: $\dfrac{dy}{dx} = 3x^2 - 4$. At $x = 2$: $m_T = 3(4) - 4 = 8$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Tangent: $y - 1 = 8(x - 2) \implies y = 8x - 15$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Normal gradient: $m_N = -\dfrac{1}{8}$.
+            Normal: $y - 1 = -\dfrac{1}{8}(x - 2) \implies y = -\dfrac{x}{8} + \dfrac{5}{4}$.
+            <div class="step-comment">Or: $8y = -x + 10$, i.e. $x + 8y - 10 = 0$.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.3b</div>
+      <div class="example-q">The tangent to $y = x^2 + bx + c$ at the point $(1, 3)$ has gradient $4$. Find $b$ and $c$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Since $(1, 3)$ is on the curve: $1 + b + c = 3 \implies b + c = 2 \quad \cdots (1)$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dfrac{dy}{dx} = 2x + b$. At $x = 1$, gradient $= 4$: $2 + b = 4 \implies b = 2$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            From (1): $c = 2 - b = 0$. So $b = 2$, $c = 0$, and $y = x^2 + 2x$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 7.4 STATIONARY POINTS ===== -->
+
+  <div class="lesson-section" id="stationary">
+    <h2 class="section-title">7.4 Stationary Points</h2>
+
+    <p>A <strong>stationary point</strong> is where the gradient is zero — the tangent is horizontal. These are the peaks, troughs, and saddle points of a curve.</p>
+
+    <div class="formula-box">
+      $$\text{Stationary point where } \frac{dy}{dx} = 0$$
+      $$\text{Local maximum: gradient changes } + \to 0 \to -$$
+      $$\text{Local minimum: gradient changes } - \to 0 \to +$$
+      $$\text{Point of inflection: gradient changes } + \to 0 \to + \text{ (or } - \to 0 \to -)$$
+    </div>
+
+    <h3 class="subsection">Nature of Stationary Points: Sign Analysis</h3>
+    <p>To determine the type of a stationary point, check the sign of $\dfrac{dy}{dx}$ just before and just after it. A table of signs is the clearest way to present this in exams.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.4a</div>
+      <div class="example-q">Find and classify all stationary points of $y = 2x^3 - 9x^2 + 12x - 3$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\dfrac{dy}{dx} = 6x^2 - 18x + 12 = 6(x^2 - 3x + 2) = 6(x-1)(x-2)$.
+            Set to zero: $x = 1$ or $x = 2$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Find $y$-coordinates:
+            $y(1) = 2 - 9 + 12 - 3 = 2$. &nbsp; $y(2) = 16 - 36 + 24 - 3 = 1$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Sign table for $6(x-1)(x-2)$:
+            <div class="step-comment">$x < 1$: both factors negative → product positive (+). Between 1 and 2: $(x-1) > 0$, $(x-2) < 0$ → negative (−). $x > 2$: both positive → positive (+).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            At $x = 1$: gradient changes $+ \to -$, so $(1, 2)$ is a <strong>local maximum</strong>.
+            At $x = 2$: gradient changes $- \to +$, so $(2, 1)$ is a <strong>local minimum</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Exam Technique</strong>
+      Always show a sign diagram or state explicitly: "gradient changes from positive to negative, therefore local maximum." Just writing "because $f''(x) < 0$" without the second derivative test introduced is not enough context — use whichever method you've been taught and show your working clearly.
+    </div>
+
+  </div>
+
+  <!-- ===== 7.5 INCREASING AND DECREASING ===== -->
+
+  <div class="lesson-section" id="increasing-decreasing">
+    <h2 class="section-title">7.5 Increasing &amp; Decreasing Functions</h2>
+
+    <p>The sign of the derivative tells us whether a function is increasing or decreasing on any interval.</p>
+
+    <div class="formula-box">
+      $$f'(x) > 0 \implies f \text{ is increasing on that interval}$$
+      $$f'(x) < 0 \implies f \text{ is decreasing on that interval}$$
+      $$f'(x) = 0 \implies \text{stationary point (or point of inflection)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.5a</div>
+      <div class="example-q">Find the values of $x$ for which $f(x) = x^3 - 3x^2 - 9x + 5$ is increasing.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $f'(x) = 3x^2 - 6x - 9 = 3(x^2 - 2x - 3) = 3(x-3)(x+1)$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $f'(x) > 0$ when $(x-3)(x+1) > 0$, i.e. when both factors have the same sign.
+            This occurs when $x < -1$ or $x > 3$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            The function is increasing for $x < -1$ and $x > 3$.
+            <div class="step-comment">It is decreasing for $-1 < x < 3$, since $f'(x) < 0$ there.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.5b — Optimisation</div>
+      <div class="example-q">A farmer has 120 m of fencing to enclose a rectangular pen against a straight wall (the wall forms one side). Find the dimensions that maximise the area.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Let the width perpendicular to the wall be $x$ m. Two widths and one length use the fencing: $2x + l = 120 \implies l = 120 - 2x$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Area: $A = xl = x(120 - 2x) = 120x - 2x^2$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\dfrac{dA}{dx} = 120 - 4x = 0 \implies x = 30$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Check: $\dfrac{d^2A}{dx^2} = -4 < 0$, confirming a maximum. Dimensions: $30\text{ m} \times 60\text{ m}$, area $= 1800\text{ m}^2$.
+            <div class="step-comment">Always check the nature of the stationary point and state the final answer with units.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 7.6 SECOND DERIVATIVE ===== -->
+
+  <div class="lesson-section" id="second-derivative">
+    <h2 class="section-title">7.6 The Second Derivative</h2>
+
+    <p>Differentiating $f'(x)$ again gives the <strong>second derivative</strong> $f''(x)$, written $\dfrac{d^2y}{dx^2}$. It measures the rate of change of the gradient — in other words, the <em>concavity</em> of the curve.</p>
+
+    <div class="formula-box">
+      $$f''(x) = \frac{d^2y}{dx^2} = \frac{d}{dx}\!\left(\frac{dy}{dx}\right)$$
+      $$f''(a) > 0 \implies \text{concave up (U-shape) at } a \implies \text{local minimum}$$
+      $$f''(a) < 0 \implies \text{concave down (∩-shape) at } a \implies \text{local maximum}$$
+      $$f''(a) = 0 \implies \text{inconclusive — use sign diagram instead}$$
+    </div>
+
+    <p>The second derivative test is a quick alternative to the sign diagram for classifying stationary points. If $f'(a) = 0$ and $f''(a) \neq 0$, you can classify immediately.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.6a</div>
+      <div class="example-q">Use the second derivative to classify the stationary points of $y = x^4 - 8x^2 + 3$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\dfrac{dy}{dx} = 4x^3 - 16x = 4x(x^2 - 4) = 4x(x-2)(x+2)$.
+            Stationary points at $x = 0, \pm 2$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dfrac{d^2y}{dx^2} = 12x^2 - 16$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            At $x = 0$: $f''(0) = -16 < 0$ → <strong>local maximum</strong>. $y(0) = 3$.
+            At $x = 2$: $f''(2) = 48 - 16 = 32 > 0$ → <strong>local minimum</strong>. $y(2) = 16 - 32 + 3 = -13$.
+            At $x = -2$: $f''(-2) = 32 > 0$ → <strong>local minimum</strong>. $y(-2) = -13$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.6b — Second Derivative in Context</div>
+      <div class="example-q">The displacement of a particle is $s = t^3 - 6t^2 + 9t$, where $t \geq 0$ is in seconds and $s$ in metres. Find when the particle is stationary and determine whether it is a maximum or minimum displacement at each time.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Velocity: $v = \dfrac{ds}{dt} = 3t^2 - 12t + 9 = 3(t-1)(t-3)$.
+            Particle stationary when $v = 0$: $t = 1$ and $t = 3$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Acceleration: $a = \dfrac{d^2s}{dt^2} = 6t - 12$.
+            At $t = 1$: $a = -6 < 0$ → local maximum displacement. $s(1) = 1 - 6 + 9 = 4$ m.
+            At $t = 3$: $a = 6 > 0$ → local minimum displacement. $s(3) = 27 - 54 + 27 = 0$ m.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            The particle reaches a furthest point of 4 m at $t = 1$ s, then returns to the origin at $t = 3$ s.
+            <div class="step-comment">In kinematics, $\frac{ds}{dt}$ is velocity and $\frac{d^2s}{dt^2}$ is acceleration — the same maths has a physical meaning.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ When $f''(a) = 0$</strong>
+      If the second derivative is zero at a stationary point, the test is <em>inconclusive</em> — you cannot conclude anything. You must fall back on the sign diagram. For example, $y = x^4$ has $f'(0) = 0$ and $f''(0) = 0$, but it's still a minimum. And $y = x^3$ also has $f'(0) = f''(0) = 0$, but it's a point of inflection.
+    </div>
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Differentiate with respect to $x$: $(a)$ $y = 5x^3 - 4x + 2$ &nbsp; $(b)$ $y = \dfrac{3}{x^2}$ &nbsp; $(c)$ $y = 4\sqrt{x} - \dfrac{2}{x}$</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: $\frac{dy}{dx} = 15x^2 - 4$. &nbsp; $(b)$: $y = 3x^{-2}$, so $\frac{dy}{dx} = -6x^{-3} = -\frac{6}{x^3}$. &nbsp; $(c)$: $y = 4x^{1/2} - 2x^{-1}$, so $\frac{dy}{dx} = 2x^{-1/2} + 2x^{-2} = \frac{2}{\sqrt{x}} + \frac{2}{x^2}$.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Find the gradient of the curve $y = x^3 - 5x + 3$ at the point $(2, 1)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dy}{dx} = 3x^2 - 5$. At $x = 2$: gradient $= 12 - 5 = 7$.
+        </div>
+      </div>
+      <div class="q-marks">[2 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Find the equation of the tangent to $y = x^2 - 3x + 4$ at the point where $x = 3$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $y(3) = 9 - 9 + 4 = 4$. Point: $(3, 4)$. $\frac{dy}{dx} = 2x - 3$. At $x = 3$: $m = 3$. Tangent: $y - 4 = 3(x - 3) \implies y = 3x - 5$.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Differentiate $f(x) = x^2$ from first principles, showing all steps clearly.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $f'(x) = \lim_{h\to 0}\frac{(x+h)^2 - x^2}{h} = \lim_{h\to 0}\frac{2xh+h^2}{h} = \lim_{h\to 0}(2x+h) = 2x$.
+        </div>
+      </div>
+      <div class="q-marks">[3 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Find the stationary points of $y = x^3 - 3x$ and determine their nature using a sign diagram.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dy}{dx} = 3x^2 - 3 = 3(x-1)(x+1) = 0 \Rightarrow x = \pm 1$. At $x = -1$: gradient changes $+ \to -$ → local max $(-1, 2)$. At $x = 1$: gradient changes $- \to +$ → local min $(1, -2)$.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">The curve $C$ has equation $y = x^3 + ax^2 + bx - 4$. The point $P(2, 0)$ lies on $C$, and the gradient of $C$ at $P$ is $-1$. Find $a$ and $b$, then find the coordinates of any other stationary points.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $P$ on $C$: $8 + 4a + 2b - 4 = 0 \Rightarrow 4a + 2b = -4 \Rightarrow 2a + b = -2 \cdots(1)$. Gradient: $\frac{dy}{dx} = 3x^2 + 2ax + b$. At $x=2$: $12 + 4a + b = -1 \Rightarrow 4a + b = -13 \cdots(2)$. (2)−(1): $2a = -11 \Rightarrow a = -5.5$, $b = -2 - 2(-5.5) = 9$. Then $\frac{dy}{dx} = 3x^2 - 11x + 9 - 4 = 0$... actually $\frac{dy}{dx} = 3x^2 - 11x + 9$. Set to 0: $x = \frac{11 \pm \sqrt{121-108}}{6} = \frac{11 \pm \sqrt{13}}{6}$. Two further stationary points at those $x$-values.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">A closed cylindrical tin has volume $V = 250\text{ cm}^3$. Show that the total surface area is $S = 2\pi r^2 + \dfrac{500}{r}$, and find the value of $r$ that minimises $S$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $V = \pi r^2 h = 250 \Rightarrow h = \frac{250}{\pi r^2}$. $S = 2\pi r^2 + 2\pi r h = 2\pi r^2 + 2\pi r \cdot \frac{250}{\pi r^2} = 2\pi r^2 + \frac{500}{r}$. $\frac{dS}{dr} = 4\pi r - \frac{500}{r^2} = 0 \Rightarrow 4\pi r^3 = 500 \Rightarrow r = \left(\frac{125}{\pi}\right)^{1/3} \approx 3.41$ cm. $\frac{d^2S}{dr^2} = 4\pi + \frac{1000}{r^3} > 0$ ✓ minimum.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Find the equation of the normal to $y = \dfrac{8}{x^2} + x$ at the point where $x = 2$. Find also where this normal meets the curve again.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $y(2) = 2 + 2 = 4$. $\frac{dy}{dx} = -16x^{-3} + 1$. At $x=2$: $m_T = -2 + 1 = -1$. Normal gradient $= 1$. Normal: $y - 4 = x - 2 \Rightarrow y = x + 2$. Intersect with curve: $\frac{8}{x^2} + x = x + 2 \Rightarrow \frac{8}{x^2} = 2 \Rightarrow x^2 = 4 \Rightarrow x = \pm 2$. The other intersection is at $x = -2$: $y = 0$. Point $(-2, 0)$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">Prove from first principles that $\dfrac{d}{dx}\!\left(\dfrac{1}{x}\right) = -\dfrac{1}{x^2}$. Hence, by writing $\sqrt{x} = \dfrac{x}{x^{1/2}}$ or otherwise, find $\dfrac{d}{dx}(\sqrt{x})$ from first principles.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{d}{dx}\left(\frac{1}{x}\right) = \lim_{h\to 0}\frac{\frac{1}{x+h}-\frac{1}{x}}{h} = \lim_{h\to 0}\frac{\frac{x-(x+h)}{x(x+h)}}{h} = \lim_{h\to 0}\frac{-1}{x(x+h)} = -\frac{1}{x^2}$. $\square$
+
+          For $\sqrt{x}$: $\frac{d}{dx}(\sqrt{x}) = \lim_{h\to 0}\frac{\sqrt{x+h}-\sqrt{x}}{h}$. Rationalise: multiply by $\frac{\sqrt{x+h}+\sqrt{x}}{\sqrt{x+h}+\sqrt{x}}$: $= \lim_{h\to 0}\frac{(x+h)-x}{h(\sqrt{x+h}+\sqrt{x})} = \lim_{h\to 0}\frac{1}{\sqrt{x+h}+\sqrt{x}} = \frac{1}{2\sqrt{x}}$. $\square$
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">A curve has equation $y = x^3 - kx$ for constant $k > 0$. Show that the tangent at the point $(a, a^3 - ka)$ meets the curve again at the point $(-2a, -8a^3 + 2ka)$. Hence find the condition on $k$ such that the tangent at $(a, a^3-ka)$ is also the tangent to the curve at the second intersection point.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Tangent at $(a, a^3-ka)$: gradient $= 3a^2 - k$. Equation: $y - (a^3-ka) = (3a^2-k)(x-a) \Rightarrow y = (3a^2-k)x - 2a^3$.
+
+          Substitute into $y = x^3 - kx$: $x^3 - kx = (3a^2-k)x - 2a^3 \Rightarrow x^3 - 3a^2 x + 2a^3 = 0$. Factor out $(x-a)$: $(x-a)^2(x+2a) = 0$. So the other intersection is $x = -2a$, giving $y = -8a^3 + 2ka$ ✓.
+
+          For the tangent to also be tangent at $x = -2a$, we need $x = -2a$ to also be a double root, i.e. $(x+2a)^2$ divides $x^3 - 3a^2x + 2a^3$. But $(x-a)^2(x+2a)$ already accounts for all three roots. This can only happen if $a = -2a$, i.e. $a = 0$, which is trivial. Instead, the condition is that the gradient of the curve at $x = -2a$ equals the gradient of the tangent: $3(-2a)^2 - k = 3a^2 - k \Rightarrow 12a^2 = 3a^2 \Rightarrow 9a^2 = 0 \Rightarrow a = 0$. So for $k > 0$ there is no non-trivial point where a single tangent line is tangent at two distinct points on this curve.
+        </div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="exponentials-logarithms.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Exponentials &amp; Logarithms</div>
+    </a>
+    <a href="integration.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Integration</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
