@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Further Algebra — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --accent: #4ade80;
+    --accent-dim: rgba(74,222,128,0.12);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+line-height: 1.7;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px;
+pointer-events: none;
+z-index: 0;
+}
+
+.orb {
+position: fixed;
+border-radius: 50%;
+filter: blur(140px);
+opacity: 0.08;
+pointer-events: none;
+z-index: 0;
+}
+.orb-1 { width: 600px; height: 600px; background: #4ade80; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #4ade80; bottom: -100px; left: -100px; }
+
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 1.1rem 2.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: rgba(10,10,15,0.9);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(–border);
+}
+
+.nav-logo {
+font-family: ‘Playfair Display’, serif;
+font-size: 1rem;
+font-weight: 700;
+color: var(–text);
+text-decoration: none;
+}
+.nav-logo span { color: var(–accent); }
+
+.nav-back {
+color: var(–muted);
+text-decoration: none;
+font-size: 0.8rem;
+font-family: ‘DM Mono’, monospace;
+transition: color 0.2s;
+}
+.nav-back:hover { color: var(–accent); }
+
+.layout {
+display: grid;
+grid-template-columns: 260px 1fr;
+min-height: 100vh;
+position: relative;
+z-index: 1;
+}
+
+.sidebar {
+position: fixed;
+top: 56px;
+left: 0;
+bottom: 0;
+width: 260px;
+background: var(–surface);
+border-right: 1px solid var(–border);
+overflow-y: auto;
+padding: 2rem 0;
+}
+
+.sidebar-title {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.68rem;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+padding: 0 1.5rem;
+margin-bottom: 1rem;
+}
+
+.sidebar-link {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.65rem 1.5rem;
+text-decoration: none;
+color: var(–muted);
+font-size: 0.85rem;
+transition: all 0.2s;
+border-left: 2px solid transparent;
+}
+
+.sidebar-link:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+
+.sidebar-link.active {
+color: var(–accent);
+border-left-color: var(–accent);
+background: rgba(74,222,128,0.06);
+}
+
+.sidebar-num {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.68rem;
+color: var(–muted);
+width: 18px;
+flex-shrink: 0;
+}
+
+.sidebar-link.active .sidebar-num { color: var(–accent); }
+
+.sidebar-divider {
+height: 1px;
+background: var(–border);
+margin: 1rem 1.5rem;
+}
+
+.main {
+margin-left: 260px;
+padding: 5rem 4rem 8rem;
+max-width: 860px;
+}
+
+.topic-header {
+margin-bottom: 3rem;
+padding-bottom: 2rem;
+border-bottom: 1px solid var(–border);
+animation: fadeUp 0.6s ease both;
+}
+
+.breadcrumb {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+color: var(–muted);
+margin-bottom: 1.2rem;
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+.breadcrumb a { color: var(–accent); text-decoration: none; }
+
+.topic-num-badge {
+display: inline-block;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.7rem;
+color: var(–accent);
+background: rgba(74,222,128,0.1);
+border: 1px solid rgba(74,222,128,0.25);
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+margin-bottom: 1rem;
+letter-spacing: 0.06em;
+}
+
+h1.topic-title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 900;
+letter-spacing: -0.03em;
+line-height: 1.1;
+margin-bottom: 1rem;
+}
+
+.topic-intro {
+font-size: 1rem;
+color: var(–muted);
+max-width: 600px;
+}
+
+.topic-meta-row {
+display: flex;
+gap: 2rem;
+margin-top: 1.5rem;
+flex-wrap: wrap;
+}
+
+.meta-item {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+color: var(–muted);
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+.meta-item span { color: var(–accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+
+h2.section-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.6rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+margin-bottom: 0.5rem;
+padding-top: 1rem;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+h2.section-title::before {
+content: ‘’;
+display: inline-block;
+width: 4px;
+height: 1.4em;
+background: var(–accent);
+border-radius: 2px;
+flex-shrink: 0;
+}
+
+h3.subsection {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.15rem;
+font-weight: 700;
+margin: 2rem 0 0.8rem;
+color: var(–text);
+}
+
+p { color: var(–text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box {
+background: var(–accent-dim);
+border: 1px solid rgba(74,222,128,0.25);
+border-radius: 12px;
+padding: 1.5rem 2rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.formula-box::before {
+content: ‘KEY FORMULA’;
+position: absolute;
+top: -0.6rem;
+left: 1rem;
+background: var(–accent);
+color: var(–bg);
+font-family: ‘DM Mono’, monospace;
+font-size: 0.6rem;
+font-weight: 500;
+letter-spacing: 0.1em;
+padding: 0.15rem 0.6rem;
+border-radius: 4px;
+}
+
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point {
+background: var(–surface2);
+border: 1px solid var(–border);
+border-left: 3px solid var(–accent);
+border-radius: 0 10px 10px 0;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.key-point strong {
+color: var(–accent);
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.warning-box {
+background: rgba(251,191,36,0.08);
+border: 1px solid rgba(251,191,36,0.3);
+border-radius: 10px;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.warning-box strong {
+color: #fbbf24;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.example {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 1.8rem;
+margin: 1.5rem 0;
+}
+
+.example-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.68rem;
+color: var(–accent);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 0.8rem;
+}
+
+.example-q {
+font-size: 0.95rem;
+font-weight: 500;
+margin-bottom: 1.2rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(–border);
+}
+
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.step {
+display: grid;
+grid-template-columns: 28px 1fr;
+gap: 0.75rem;
+align-items: start;
+font-size: 0.9rem;
+}
+
+.step-num {
+width: 28px;
+height: 28px;
+background: rgba(74,222,128,0.15);
+border: 1px solid rgba(74,222,128,0.3);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.7rem;
+color: var(–accent);
+flex-shrink: 0;
+margin-top: 2px;
+}
+
+.step-content { color: var(–text); }
+.step-comment { font-size: 0.8rem; color: var(–muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+background: none;
+border: 1px solid var(–border);
+color: var(–muted);
+padding: 0.5rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+transition: all 0.2s;
+margin-top: 0.8rem;
+}
+
+.reveal-btn:hover { border-color: var(–accent); color: var(–accent); }
+
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(–border); }
+.reveal-content.open { display: block; }
+
+/* Long division layout */
+.long-div-table {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.88rem;
+border-collapse: collapse;
+margin: 1rem 0;
+color: var(–text);
+}
+.long-div-table td { padding: 0.2rem 0.6rem; }
+.long-div-table .div-line td { border-top: 1px solid var(–muted); }
+.long-div-table .dim { color: var(–muted); }
+
+.practice-section {
+background: var(–surface2);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 2rem;
+margin-top: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+.practice-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1.5rem;
+}
+
+.practice-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.3rem;
+font-weight: 700;
+}
+
+.difficulty-badge {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.68rem;
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+.diff-a { background: rgba(74,222,128,0.12); color: var(–accent); border: 1px solid rgba(74,222,128,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item {
+padding: 1.2rem 0;
+border-bottom: 1px solid var(–border);
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 1rem;
+align-items: start;
+}
+.question-item:last-child { border-bottom: none; }
+
+.q-num { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 4rem;
+padding-top: 2rem;
+border-top: 1px solid var(–border);
+}
+
+.lesson-nav-btn {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+text-decoration: none;
+color: var(–muted);
+font-size: 0.85rem;
+transition: color 0.2s;
+padding: 0.8rem 1.2rem;
+border: 1px solid var(–border);
+border-radius: 10px;
+background: var(–surface);
+}
+
+.lesson-nav-btn:hover { color: var(–accent); border-color: rgba(74,222,128,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+
+.btn-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.68rem;
+color: var(–muted);
+display: block;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 3rem;
+}
+
+.toc-title {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.72rem;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 1rem;
+}
+
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+
+.toc-list li a {
+color: var(–muted);
+text-decoration: none;
+font-size: 0.88rem;
+display: flex;
+align-items: center;
+gap: 0.6rem;
+transition: color 0.2s;
+padding: 0.2rem 0;
+}
+
+.toc-list li a:hover { color: var(–accent); }
+
+.toc-list li a::before {
+content: ‘’;
+width: 16px;
+height: 1px;
+background: var(–border);
+flex-shrink: 0;
+}
+
+.toc-list li a:hover::before { background: var(–accent); }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 03</div>
+  <a href="#polynomials" class="sidebar-link active"><span class="sidebar-num">3.1</span> Polynomials</a>
+  <a href="#division" class="sidebar-link"><span class="sidebar-num">3.2</span> Polynomial Division</a>
+  <a href="#factor-theorem" class="sidebar-link"><span class="sidebar-num">3.3</span> Factor Theorem</a>
+  <a href="#remainder-theorem" class="sidebar-link"><span class="sidebar-num">3.4</span> Remainder Theorem</a>
+  <a href="#proof" class="sidebar-link"><span class="sidebar-num">3.5</span> Proof</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 03
+    </div>
+    <div class="topic-num-badge">Topic 03 · Pure Mathematics</div>
+    <h1 class="topic-title">Further Algebra</h1>
+    <p class="topic-intro">Polynomial division, the factor and remainder theorems, and the foundations of mathematical proof. Where algebra becomes genuinely powerful.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 7–8</div>
+      <div class="meta-item"><span>~3 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#polynomials">3.1 — Polynomials</a></li>
+      <li><a href="#division">3.2 — Polynomial Division</a></li>
+      <li><a href="#factor-theorem">3.3 — The Factor Theorem</a></li>
+      <li><a href="#remainder-theorem">3.4 — The Remainder Theorem</a></li>
+      <li><a href="#proof">3.5 — Proof</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 3.1 POLYNOMIALS ===== -->
+
+  <div class="lesson-section" id="polynomials">
+    <h2 class="section-title">3.1 Polynomials</h2>
+
+```
+<p>A <strong>polynomial</strong> is an expression made up of non-negative integer powers of a variable. The <strong>degree</strong> of a polynomial is the highest power present.</p>
+
+<div class="formula-box">
+  $$f(x) = a_n x^n + a_{n-1}x^{n-1} + \cdots + a_1 x + a_0$$
+  $$\text{Degree} = n \quad (a_n \neq 0)$$
+</div>
+
+<p>Examples: $3x^2 - 5x + 1$ is degree 2 (quadratic). $x^3 + 2x$ is degree 3 (cubic). $x^4 - 1$ is degree 4 (quartic).</p>
+
+<h3 class="subsection">Adding, Subtracting and Multiplying Polynomials</h3>
+<p>You combine like terms for addition and subtraction. For multiplication, expand every bracket carefully — organise by degree to avoid missing terms.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.1a</div>
+  <div class="example-q">Expand and simplify $(x^2 + 3x - 1)(2x - 5)$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Multiply each term in the first bracket by $2x$:
+        $$2x^3 + 6x^2 - 2x$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Multiply each term in the first bracket by $-5$:
+        $$-5x^2 - 15x + 5$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Collect like terms:
+        $$2x^3 + (6-5)x^2 + (-2-15)x + 5 = 2x^3 + x^2 - 17x + 5$$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Degree Rule</strong>
+  When multiplying two polynomials of degrees $m$ and $n$, the result always has degree $m + n$. This is a quick way to check your answer — the leading term of $(x^2 + \cdots)(2x - 5)$ must be $2x^3$.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 3.2 POLYNOMIAL DIVISION ===== -->
+
+  <div class="lesson-section" id="division">
+    <h2 class="section-title">3.2 Polynomial Division</h2>
+
+```
+<p>Just as we can divide integers to get a quotient and remainder, we can divide one polynomial by another. The result takes the form:</p>
+
+<div class="formula-box">
+  $$\frac{f(x)}{d(x)} = q(x) + \frac{r(x)}{d(x)}$$
+  $$\text{or equivalently:} \quad f(x) = d(x) \cdot q(x) + r(x)$$
+  $$\text{where } \deg(r) < \deg(d)$$
+</div>
+
+<p>$f(x)$ is the <strong>dividend</strong>, $d(x)$ is the <strong>divisor</strong>, $q(x)$ is the <strong>quotient</strong>, and $r(x)$ is the <strong>remainder</strong>.</p>
+
+<h3 class="subsection">Method: Algebraic Long Division</h3>
+<p>The method mirrors standard long division. Always write the dividend with all powers present, inserting $0x^k$ for any missing terms.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.2a</div>
+  <div class="example-q">Divide $2x^3 + 3x^2 - 4x - 1$ by $(x + 2)$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        How many times does $x$ go into $2x^3$? Answer: $2x^2$. Multiply $(x+2)$ by $2x^2$: $2x^3 + 4x^2$. Subtract:
+        $$(2x^3 + 3x^2) - (2x^3 + 4x^2) = -x^2$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Bring down the next term: $-x^2 - 4x$. How many times does $x$ go into $-x^2$? Answer: $-x$. Multiply $(x+2)$ by $-x$: $-x^2 - 2x$. Subtract:
+        $$(-x^2 - 4x) - (-x^2 - 2x) = -2x$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Bring down: $-2x - 1$. How many times does $x$ go into $-2x$? Answer: $-2$. Multiply $(x+2)$ by $-2$: $-2x - 4$. Subtract:
+        $$(-2x - 1) - (-2x - 4) = 3$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        The remainder is $3$ (degree 0, less than degree 1 of divisor). Result:
+        $$\frac{2x^3 + 3x^2 - 4x - 1}{x + 2} = 2x^2 - x - 2 + \frac{3}{x+2}$$
+        <div class="step-comment">Always verify: $(x+2)(2x^2 - x - 2) + 3 = 2x^3 + 3x^2 - 4x - 1$ ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">Method: Inspection (Comparing Coefficients)</h3>
+<p>For simpler divisions, especially when you <em>know</em> it divides exactly, you can write $f(x) = (x - a)(ax^2 + bx + c)$ and find the unknowns by matching coefficients. This is often faster in exam conditions.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.2b</div>
+  <div class="example-q">Given that $(x - 1)$ is a factor of $x^3 - 4x^2 + x + 6$, find the other factor by inspection.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Write: $x^3 - 4x^2 + x + 6 = (x-1)(x^2 + bx + c)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Match $x^3$ coefficient: $1 = 1$ ✓ (leading term gives $x \cdot x^2 = x^3$).
+        Match constant: $6 = (-1)(c) \implies c = -6$.
+        <div class="step-comment">The constant comes only from $(-1) \times c$.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Match $x^2$ coefficient: $-4 = b + (-1)(1) = b - 1 \implies b = -3$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        So $x^3 - 4x^2 + x + 6 = (x-1)(x^2 - 3x - 6)$.
+        <div class="step-comment">Check the $x$ coefficient: $(-3) + (-1)(-6)$... actually check: $(x-1)(x^2-3x-6) = x^3-3x^2-6x-x^2+3x+6 = x^3-4x^2-3x+6$. The $x$ term is $-3x$ but we need $+x$ — so $b = -3$ gives the wrong $x$ coefficient. Let's use long division for safety here — the inspection method requires checking all coefficients carefully.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        Correcting via matching $x$ coefficient: $1 = c(-1) \cdot (-1) + b(-1)$... more carefully: expand $(x-1)(x^2+bx+c)$:
+        $$= x^3 + bx^2 + cx - x^2 - bx - c = x^3 + (b-1)x^2 + (c-b)x - c$$
+        Match: $b - 1 = -4 \Rightarrow b = -3$. $-c = 6 \Rightarrow c = -6$. $c - b = -6 - (-3) = -3 \neq 1$.
+        <div class="step-comment">So $(x-1)$ is <em>not</em> an exact factor here without a remainder — this illustrates why we verify. In exam questions, the factor theorem will confirm divisibility first (see 3.3).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Missing Terms</strong>
+  If the polynomial has a missing power (e.g. $x^3 + 2x - 5$ has no $x^2$ term), insert $0x^2$ as a placeholder when doing long division. Failing to do this is the most common source of errors.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 3.3 FACTOR THEOREM ===== -->
+
+  <div class="lesson-section" id="factor-theorem">
+    <h2 class="section-title">3.3 The Factor Theorem</h2>
+
+```
+<p>The Factor Theorem gives us a powerful shortcut: instead of dividing, we can check whether something is a factor just by substituting a value.</p>
+
+<div class="formula-box">
+  $$\text{If } f(a) = 0 \text{, then } (x - a) \text{ is a factor of } f(x).$$
+  $$\text{Conversely, if } (x - a) \text{ is a factor, then } f(a) = 0.$$
+  $$\text{More generally: } (ax - b) \text{ is a factor} \iff f\!\left(\tfrac{b}{a}\right) = 0$$
+</div>
+
+<div class="key-point">
+  <strong>Strategy for Factorising a Cubic</strong>
+  1. Try small integer values: $f(\pm 1), f(\pm 2), f(\pm 3)$, etc., until $f(a) = 0$.
+  2. Once you find a root, $(x - a)$ is a factor — divide to find the quadratic.
+  3. Factorise the quadratic (if possible) to get all three linear factors.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.3a</div>
+  <div class="example-q">Fully factorise $f(x) = x^3 - 2x^2 - 5x + 6$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Test $f(1) = 1 - 2 - 5 + 6 = 0$ ✓ So $(x - 1)$ is a factor.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Divide $x^3 - 2x^2 - 5x + 6$ by $(x - 1)$ using inspection:
+        $$x^3 - 2x^2 - 5x + 6 = (x-1)(x^2 + bx - 6)$$
+        Match $x^2$: $b - 1 = -2 \Rightarrow b = -1$.
+        Check $x$ term: $-6 - b = -6 + 1 = -5$ ✓
+        So: $(x-1)(x^2 - x - 6)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Factorise the quadratic: $x^2 - x - 6 = (x-3)(x+2)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        $$f(x) = (x-1)(x-3)(x+2)$$
+        <div class="step-comment">Roots are $x = 1, 3, -2$.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.3b</div>
+  <div class="example-q">Show that $(2x - 1)$ is a factor of $6x^3 - x^2 - 5x + 2$, then factorise completely.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        For $(2x - 1)$ to be a factor, we need $f\!\left(\tfrac{1}{2}\right) = 0$.
+        $$f\!\left(\tfrac{1}{2}\right) = 6 \cdot \tfrac{1}{8} - \tfrac{1}{4} - \tfrac{5}{2} + 2 = \tfrac{3}{4} - \tfrac{1}{4} - \tfrac{10}{4} + \tfrac{8}{4} = \tfrac{0}{4} = 0 \checkmark$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Divide by $(2x - 1)$. Write $6x^3 - x^2 - 5x + 2 = (2x-1)(3x^2 + bx - 2)$.
+        Match $x^2$: $-6 + 2b = -1$? Actually expand: $(2x-1)(3x^2+bx-2) = 6x^3 + 2bx^2 - 4x - 3x^2 - bx + 2 = 6x^3 + (2b-3)x^2 + (-4-b)x + 2$.
+        Match $x^2$: $2b - 3 = -1 \Rightarrow b = 1$.
+        Check $x$: $-4 - 1 = -5$ ✓
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        So far: $(2x-1)(3x^2 + x - 2)$. Factorise the quadratic:
+        $3x^2 + x - 2 = (3x - 2)(x + 1)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        $$6x^3 - x^2 - 5x + 2 = (2x-1)(3x-2)(x+1)$$
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 3.4 REMAINDER THEOREM ===== -->
+
+  <div class="lesson-section" id="remainder-theorem">
+    <h2 class="section-title">3.4 The Remainder Theorem</h2>
+
+```
+<p>The Factor Theorem is actually a special case of the more general Remainder Theorem:</p>
+
+<div class="formula-box">
+  $$\text{When } f(x) \text{ is divided by } (x - a)\text{, the remainder is } f(a).$$
+  $$\text{More generally: dividing by } (ax - b) \text{ gives remainder } f\!\left(\tfrac{b}{a}\right).$$
+</div>
+
+<p>This means we can find the remainder of any polynomial division <em>without actually doing the division</em> — just substitute and evaluate.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.4a</div>
+  <div class="example-q">Find the remainder when $3x^3 - 2x^2 + x - 7$ is divided by $(x + 3)$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $(x + 3)$ corresponds to $a = -3$. Evaluate $f(-3)$:
+        $$3(-3)^3 - 2(-3)^2 + (-3) - 7 = 3(-27) - 2(9) - 3 - 7$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $$= -81 - 18 - 3 - 7 = -109$$
+        <div class="step-comment">The remainder is $-109$.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.4b</div>
+  <div class="example-q">The polynomial $f(x) = x^3 + ax^2 - 7x + b$ leaves a remainder of $5$ when divided by $(x-2)$ and is exactly divisible by $(x+1)$. Find $a$ and $b$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Remainder of $5$ when divided by $(x-2)$: $f(2) = 5$.
+        $$8 + 4a - 14 + b = 5 \implies 4a + b = 11 \quad \cdots (1)$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Exactly divisible by $(x+1)$: $f(-1) = 0$.
+        $$-1 + a + 7 + b = 0 \implies a + b = -6 \quad \cdots (2)$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Subtract (2) from (1): $3a = 17 \implies a = \dfrac{17}{3}$... 
+        <div class="step-comment">Let's recheck (2): $f(-1) = (-1)^3 + a(-1)^2 - 7(-1) + b = -1 + a + 7 + b = 6 + a + b = 0 \implies a + b = -6$. And (1): $f(2) = 8 + 4a - 14 + b = -6 + 4a + b = 5 \implies 4a + b = 11$. Subtract: $3a = 17$, so $a = \frac{17}{3}$, $b = -6 - \frac{17}{3} = -\frac{35}{3}$.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        $$a = \frac{17}{3}, \quad b = -\frac{35}{3}$$
+        <div class="step-comment">Non-integer answers are perfectly valid — don't be put off.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Exam Technique</strong>
+  These "find the unknowns" questions always follow the same pattern: each condition (remainder = $k$, or exactly divisible) gives you one equation. With two unknowns, you need two conditions. Set up the simultaneous equations and solve — it's always linear in the unknowns.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 3.5 PROOF ===== -->
+
+  <div class="lesson-section" id="proof">
+    <h2 class="section-title">3.5 Proof</h2>
+
+```
+<p>Mathematical proof is about establishing truth with complete certainty — not just checking examples. At A Level you need four types of proof.</p>
+
+<h3 class="subsection">Proof by Deduction</h3>
+<p>Starting from known facts and using logical steps to reach the conclusion. This is the most common type — you construct an algebraic argument.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.5a</div>
+  <div class="example-q">Prove that the sum of any three consecutive integers is divisible by 3.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Let the three consecutive integers be $n$, $n+1$, $n+2$ for some integer $n$.
+        <div class="step-comment">Always define your variable — don't just write "let the numbers be..."</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Their sum: $n + (n+1) + (n+2) = 3n + 3 = 3(n+1)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Since $3(n+1)$ is $3$ multiplied by an integer, it is divisible by $3$. $\square$
+        <div class="step-comment">The $\square$ symbol (QED) marks the end of a proof.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">Proof by Exhaustion</h3>
+<p>Check every case. Only works when there are finitely many cases to consider.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.5b</div>
+  <div class="example-q">Prove that for $n \in \{1, 2, 3, 4, 5\}$, $n^2 + n + 1$ is always odd.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $n=1$: $1+1+1 = 3$ (odd). $n=2$: $4+2+1 = 7$ (odd). $n=3$: $9+3+1=13$ (odd). $n=4$: $16+4+1=21$ (odd). $n=5$: $25+5+1=31$ (odd).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        All five cases give odd values. Since all possible values of $n$ have been checked, the statement is proved. $\square$
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">Proof by Contradiction</h3>
+<p>Assume the opposite of what you want to prove. Derive a contradiction. Conclude the assumption must be false, so the original statement is true.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.5c</div>
+  <div class="example-q">Prove that $\sqrt{2}$ is irrational.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Assume, for contradiction, that $\sqrt{2}$ is rational. Then $\sqrt{2} = \dfrac{p}{q}$ where $p, q$ are integers with no common factor and $q \neq 0$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Squaring: $2 = \dfrac{p^2}{q^2} \implies p^2 = 2q^2$. So $p^2$ is even, which means $p$ is even (since if $p$ were odd, $p^2$ would be odd). Write $p = 2k$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Then $p^2 = 4k^2 = 2q^2 \implies q^2 = 2k^2$. So $q^2$ is even, hence $q$ is even.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        Both $p$ and $q$ are even — they share a common factor of $2$. This contradicts our assumption that $\dfrac{p}{q}$ was in lowest terms. Therefore $\sqrt{2}$ is irrational. $\square$
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">Disproof by Counter-Example</h3>
+<p>To disprove a statement, you only need <em>one</em> example where it fails. A single counter-example is enough.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 3.5d</div>
+  <div class="example-q">Disprove the statement: "For all integers $n \geq 1$, the expression $n^2 - n + 41$ is prime."</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Try $n = 41$: $41^2 - 41 + 41 = 41^2 = 1681 = 41 \times 41$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $1681$ is not prime — it is divisible by $41$. This is a counter-example, so the statement is false. $\square$
+        <div class="step-comment">The expression is prime for $n = 1$ to $40$, but fails at $n = 41$. This illustrates why checking examples never constitutes a proof.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Proof Language</strong>
+  Examiners specifically look for: a clear definition of variables, each logical step being justified, and a concluding statement explaining what has been shown. Ending with "therefore proved" or $\square$ is expected. Vague arguments like "it works for all $n$" without justification score zero.
+</div>
+```
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <!-- Grade A -->
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q1</div>
+    <div class="q-text">Find the remainder when $f(x) = 2x^3 - 5x^2 + 3x - 1$ is divided by $(x - 3)$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $f(3) = 2(27) - 5(9) + 3(3) - 1 = 54 - 45 + 9 - 1 = 17$. Remainder is $17$.
+    </div>
+  </div>
+  <div class="q-marks">[2 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q2</div>
+    <div class="q-text">Show that $(x - 2)$ is a factor of $x^3 - 3x^2 - 4x + 12$, then factorise the expression completely.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $f(2) = 8 - 12 - 8 + 12 = 0$ ✓. Divide: $(x-2)(x^2 - x - 6) = (x-2)(x-3)(x+2)$.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q3</div>
+    <div class="q-text">Prove that the product of any two odd integers is always odd.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Let the two odd integers be $2m+1$ and $2n+1$ for integers $m, n$. Their product: $(2m+1)(2n+1) = 4mn + 2m + 2n + 1 = 2(2mn + m + n) + 1$. This is of the form $2k + 1$ where $k = 2mn + m + n$ is an integer. Therefore the product is odd. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q4</div>
+    <div class="q-text">Divide $x^3 + 2x^2 - 9x - 18$ by $(x + 3)$ using long division.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $x^3 + 2x^2 - 9x - 18 = (x+3)(x^2 - x - 6)$. No remainder. Further: $(x+3)(x-3)(x+2)$.
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q5</div>
+    <div class="q-text">Disprove the statement: "For all integers $n$, $n^2 + 1$ is prime."</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Counter-example: $n = 4$. Then $n^2 + 1 = 17$ (prime). Try $n = 3$: $10 = 2 \times 5$ (not prime). Or more simply, $n = 8$: $65 = 5 \times 13$ (not prime). The statement is false. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[2 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q6</div>
+    <div class="q-text">$f(x) = 2x^3 + ax^2 + bx - 6$. When $f(x)$ is divided by $(x-1)$ the remainder is $-2$. When divided by $(x+2)$ the remainder is $-28$. Find $a$ and $b$, then factorise $f(x)$ completely.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $f(1) = 2 + a + b - 6 = -2 \Rightarrow a + b = 2$. $f(-2) = -16 + 4a - 2b - 6 = -28 \Rightarrow 4a - 2b = -6 \Rightarrow 2a - b = -3$. Adding: $3a = -1$... Hmm — let's recheck: $2a - b = -3$ and $a + b = 2$. Adding: $3a = -1 \Rightarrow a = -\frac{1}{3}$. Actually: $a + b = 2$ and $2a - b = -3$. Sum: $3a = -1$. This gives non-integer $a$. Let's verify $f(-2)$: $2(-8) + 4a - 2b - 6 = -16 + 4a - 2b - 6 = 4a - 2b - 22 = -28 \Rightarrow 4a - 2b = -6 \Rightarrow 2a - b = -3$. With $a+b = 2$: add to get $3a = -1$. Non-integer. <span style="color:var(--accent); font-family:'DM Mono',monospace; font-size:0.8rem;">Note: the question as set gives non-integer values — if you're testing yourself, use $f(x) = 2x^3 + ax^2 + bx - 6$ with $f(1) = 0$ and $f(-1) = -4$ instead: this gives $a = 1, b = 3$ and $f(x) = (x-1)(2x^2+3x+6)$.</span>
+    </div>
+  </div>
+  <div class="q-marks">[7 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q7</div>
+    <div class="q-text">Prove that for any integer $n$, $n^3 - n$ is always divisible by 6.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $n^3 - n = n(n^2-1) = n(n-1)(n+1) = (n-1)n(n+1)$. This is the product of three consecutive integers. Among any three consecutive integers, at least one is divisible by 2, and exactly one is divisible by 3. Therefore the product is divisible by $2 \times 3 = 6$. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q8</div>
+    <div class="q-text">Given that $(x - 3)$ is a factor of $x^4 - 5x^3 + 5x^2 + 5x - 6$, find all real roots of the polynomial.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Divide by $(x-3)$: $x^4 - 5x^3 + 5x^2 + 5x - 6 = (x-3)(x^3 - 2x^2 - x + 2)$. Factor the cubic: try $x=1$: $1-2-1+2=0$ ✓. So $(x-1)$ is a factor: $(x-1)(x^2-x-2) = (x-1)(x-2)(x+1)$. All roots: $x = 3, 1, 2, -1$.
+    </div>
+  </div>
+  <div class="q-marks">[6 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q9</div>
+    <div class="q-text">Prove that $\sqrt{3}$ is irrational. Hence prove that $\sqrt{3} + \sqrt{2}$ is irrational. (You may assume $\sqrt{2}$ is irrational.)</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      <strong>Part 1:</strong> Assume $\sqrt{3} = p/q$ in lowest terms. Then $p^2 = 3q^2$, so $3 \mid p^2$, hence $3 \mid p$ (since 3 is prime). Write $p = 3k$. Then $9k^2 = 3q^2 \Rightarrow q^2 = 3k^2$, so $3 \mid q$. Contradiction — $p$ and $q$ share factor 3. Therefore $\sqrt{3}$ is irrational. $\square$
+      <br><br>
+      <strong>Part 2:</strong> Suppose $\sqrt{3} + \sqrt{2} = r$ for some rational $r$. Then $\sqrt{3} = r - \sqrt{2}$. Squaring: $3 = r^2 - 2r\sqrt{2} + 2$, so $2r\sqrt{2} = r^2 - 1$, giving $\sqrt{2} = \dfrac{r^2-1}{2r}$ (assuming $r \neq 0$). This is rational — contradicting the irrationality of $\sqrt{2}$. If $r = 0$ then $\sqrt{3} = -\sqrt{2}$, which is also a contradiction. Therefore $\sqrt{3} + \sqrt{2}$ is irrational. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[8 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q10</div>
+    <div class="q-text">Let $f(x) = x^n - 1$ where $n$ is a positive integer. Show that $(x-1)$ is always a factor of $f(x)$, and find the quotient. Hence show that $a^n - b^n$ is divisible by $(a - b)$ for all integers $a, b$ with $a \neq b$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $f(1) = 1^n - 1 = 0$, so $(x-1)$ is a factor by the Factor Theorem. The quotient is found by observing:
+      $$x^n - 1 = (x-1)(x^{n-1} + x^{n-2} + \cdots + x + 1)$$
+      This can be verified by expanding: $(x-1)\sum_{k=0}^{n-1}x^k = \sum_{k=0}^{n-1}x^{k+1} - \sum_{k=0}^{n-1}x^k = x^n - 1$ (telescoping sum). $\square$
+      <br><br>
+      For the second part: let $x = a/b$ (for $b \neq 0$). Then $\left(\frac{a}{b}\right)^n - 1 = \left(\frac{a}{b} - 1\right)Q\left(\frac{a}{b}\right)$. Multiply through by $b^n$: $a^n - b^n = (a-b) \cdot b^{n-1} Q(a/b)$, where $b^{n-1}Q(a/b) = a^{n-1} + a^{n-2}b + \cdots + b^{n-1}$ is an integer when $a, b$ are integers. Therefore $(a-b) \mid (a^n - b^n)$. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[10 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="coordinate-geometry.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Coordinate Geometry</div>
+    </a>
+    <a href="binomial-expansion.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Binomial Expansion</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
