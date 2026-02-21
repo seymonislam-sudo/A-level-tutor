@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrices — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #a78bfa;
+    --accent-dim: rgba(167,139,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; }
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #a78bfa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #a78bfa; bottom: -100px; left: -100px; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(13,13,20,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+.nav-logo span { color: var(--accent); }
+.nav-back { color: var(--muted); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(167,139,250,0.07); }
+.sidebar-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(167,139,250,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(--muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(--accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ''; display: inline-block; width: 4px; height: 1.4em; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(--text); }
+p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(--accent-dim); border: 1px solid rgba(167,139,250,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: 'KEY FORMULA'; position: absolute; top: -0.6rem; left: 1rem; background: var(--accent); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fcd34d; font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(--text); }
+.step-comment { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.reveal-content.open { display: block; }
+
+.practice-section { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 2rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: 'DM Mono', monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(167,139,250,0.12); color: var(--accent); border: 1px solid rgba(167,139,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(167,139,250,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(--muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(--accent); }
+.toc-list li a::before { content: ''; width: 16px; height: 1px; background: var(--border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(--accent); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 02</div>
+  <a href="#intro" class="sidebar-link active"><span class="sidebar-num">2.1</span> Introduction to Matrices</a>
+  <a href="#multiply" class="sidebar-link"><span class="sidebar-num">2.2</span> Matrix Multiplication</a>
+  <a href="#determinant" class="sidebar-link"><span class="sidebar-num">2.3</span> Determinant</a>
+  <a href="#inverse" class="sidebar-link"><span class="sidebar-num">2.4</span> Inverse Matrix</a>
+  <a href="#transformations" class="sidebar-link"><span class="sidebar-num">2.5</span> Linear Transformations</a>
+  <a href="#successive" class="sidebar-link"><span class="sidebar-num">2.6</span> Successive Transformations</a>
+  <a href="#invariance" class="sidebar-link"><span class="sidebar-num">2.7</span> Invariant Points & Lines</a>
+  <a href="#systems" class="sidebar-link"><span class="sidebar-num">2.8</span> Systems of Equations</a>
+  <a href="#eigenvalues" class="sidebar-link"><span class="sidebar-num">2.9</span> Eigenvalues & Eigenvectors</a>
+  <a href="#diagonalisation" class="sidebar-link"><span class="sidebar-num">2.10</span> Diagonalisation</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 02
+    </div>
+    <div class="topic-num-badge">Topic 02 · Core Pure</div>
+    <h1 class="topic-title">Matrices</h1>
+    <p class="topic-intro">Arrays of numbers that encode linear transformations, systems of equations, and geometric operations. Matrices are the language of modern mathematics, physics, and computer graphics.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>10</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 1, Chapters 5–6</div>
+      <div class="meta-item"><span>~6 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#intro">2.1 — Introduction to Matrices</a></li>
+      <li><a href="#multiply">2.2 — Matrix Multiplication</a></li>
+      <li><a href="#determinant">2.3 — Determinant</a></li>
+      <li><a href="#inverse">2.4 — Inverse Matrix</a></li>
+      <li><a href="#transformations">2.5 — Linear Transformations</a></li>
+      <li><a href="#successive">2.6 — Successive Transformations</a></li>
+      <li><a href="#invariance">2.7 — Invariant Points & Lines</a></li>
+      <li><a href="#systems">2.8 — Systems of Equations</a></li>
+      <li><a href="#eigenvalues">2.9 — Eigenvalues & Eigenvectors</a></li>
+      <li><a href="#diagonalisation">2.10 — Diagonalisation</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 2.1 INTRODUCTION ===== -->
+
+  <div class="lesson-section" id="intro">
+    <h2 class="section-title">2.1 Introduction to Matrices</h2>
+
+    <p>A <strong>matrix</strong> is a rectangular array of numbers arranged in rows and columns. An $m \times n$ matrix has $m$ rows and $n$ columns. We typically use capital letters for matrices.</p>
+
+    <p>Matrices of the same size can be added and subtracted by combining corresponding entries. Scalar multiplication multiplies every entry by the scalar.</p>
+
+    <div class="formula-box">
+      $$\mathbf{A} + \mathbf{B} = \begin{pmatrix} a_{11}+b_{11} & a_{12}+b_{12} \\ a_{21}+b_{21} & a_{22}+b_{22} \end{pmatrix}$$
+      $$k\mathbf{A} = \begin{pmatrix} ka_{11} & ka_{12} \\ ka_{21} & ka_{22} \end{pmatrix}$$
+    </div>
+
+    <h3 class="subsection">Special Matrices</h3>
+    <p>The <strong>zero matrix</strong> $\mathbf{0}$ has all entries zero. The <strong>identity matrix</strong> $\mathbf{I}$ is square with 1s on the diagonal and 0s elsewhere — it is the matrix equivalent of the number 1.</p>
+
+    <div class="formula-box">
+      $$\mathbf{I}_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} \qquad \mathbf{I}_3 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$$
+      $$\mathbf{AI} = \mathbf{IA} = \mathbf{A}$$
+    </div>
+
+    <p>The <strong>transpose</strong> $\mathbf{A}^T$ is formed by swapping rows and columns: $(\mathbf{A}^T)_{ij} = \mathbf{A}_{ji}$.</p>
+
+  </div>
+
+  <!-- ===== 2.2 MULTIPLICATION ===== -->
+
+  <div class="lesson-section" id="multiply">
+    <h2 class="section-title">2.2 Matrix Multiplication</h2>
+
+    <p>To multiply $\mathbf{A}\mathbf{B}$, the number of columns in $\mathbf{A}$ must equal the number of rows in $\mathbf{B}$. The entry in row $i$, column $j$ of $\mathbf{AB}$ is the <strong>dot product</strong> of row $i$ of $\mathbf{A}$ with column $j$ of $\mathbf{B}$.</p>
+
+    <div class="formula-box">
+      $$(\mathbf{AB})_{ij} = \sum_k a_{ik} b_{kj}$$
+      $$\begin{pmatrix}a & b \\ c & d\end{pmatrix}\begin{pmatrix}e & f \\ g & h\end{pmatrix} = \begin{pmatrix}ae+bg & af+bh \\ ce+dg & cf+dh\end{pmatrix}$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Matrix multiplication is NOT commutative</strong>
+      In general $\mathbf{AB} \neq \mathbf{BA}$. Always check the order. However, matrix multiplication IS associative: $(\mathbf{AB})\mathbf{C} = \mathbf{A}(\mathbf{BC})$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.2a</div>
+      <div class="example-q">Find $\mathbf{AB}$ and $\mathbf{BA}$ where $\mathbf{A} = \begin{pmatrix}2 & 1 \\ 3 & -1\end{pmatrix}$ and $\mathbf{B} = \begin{pmatrix}1 & 4 \\ 2 & -3\end{pmatrix}$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\mathbf{AB} = \begin{pmatrix}2(1)+1(2) & 2(4)+1(-3) \\ 3(1)+(-1)(2) & 3(4)+(-1)(-3)\end{pmatrix} = \begin{pmatrix}4 & 5 \\ 1 & 15\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\mathbf{BA} = \begin{pmatrix}1(2)+4(3) & 1(1)+4(-1) \\ 2(2)+(-3)(3) & 2(1)+(-3)(-1)\end{pmatrix} = \begin{pmatrix}14 & -3 \\ -5 & 5\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\mathbf{AB} \neq \mathbf{BA}$ — confirming multiplication is not commutative.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.3 DETERMINANT ===== -->
+
+  <div class="lesson-section" id="determinant">
+    <h2 class="section-title">2.3 Determinant</h2>
+
+    <p>The <strong>determinant</strong> is a scalar that encodes key information about a matrix — in particular, whether it is invertible and how it scales areas/volumes.</p>
+
+    <div class="formula-box">
+      $$\det\begin{pmatrix}a & b \\ c & d\end{pmatrix} = ad - bc$$
+      $$\det\begin{pmatrix}a & b & c \\ d & e & f \\ g & h & i\end{pmatrix} = a(ei-fh) - b(di-fg) + c(dh-eg)$$
+    </div>
+
+    <p>The $3\times3$ formula uses <strong>expansion along the first row</strong>. Each element is multiplied by its <strong>cofactor</strong> — the $(i,j)$ cofactor is $(-1)^{i+j}$ times the determinant of the $2\times2$ matrix left after deleting row $i$ and column $j$.</p>
+
+    <div class="key-point">
+      <strong>Geometric Meaning</strong>
+      $|\det(\mathbf{A})|$ is the scale factor for areas (2D) or volumes (3D) under the transformation represented by $\mathbf{A}$. If $\det(\mathbf{A}) < 0$, the transformation includes a reflection. If $\det(\mathbf{A}) = 0$, the matrix is <strong>singular</strong> — it collapses space and has no inverse.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.3a</div>
+      <div class="example-q">Find the determinant of $\mathbf{M} = \begin{pmatrix}2 & -1 & 3 \\ 0 & 4 & -2 \\ 1 & 0 & 5\end{pmatrix}$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Expand along row 1:
+            $\det(\mathbf{M}) = 2\det\begin{pmatrix}4 & -2 \\ 0 & 5\end{pmatrix} - (-1)\det\begin{pmatrix}0 & -2 \\ 1 & 5\end{pmatrix} + 3\det\begin{pmatrix}0 & 4 \\ 1 & 0\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $= 2(20 - 0) + 1(0 - (-2)) + 3(0 - 4)$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $= 40 + 2 - 12 = 30$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Properties of the Determinant</h3>
+
+    <div class="formula-box">
+      $$\det(\mathbf{AB}) = \det(\mathbf{A})\det(\mathbf{B})$$
+      $$\det(\mathbf{A}^T) = \det(\mathbf{A})$$
+      $$\det(\mathbf{A}^{-1}) = \dfrac{1}{\det(\mathbf{A})}$$
+      $$\det(k\mathbf{A}) = k^n \det(\mathbf{A}) \quad \text{for an } n \times n \text{ matrix}$$
+    </div>
+
+  </div>
+
+  <!-- ===== 2.4 INVERSE ===== -->
+
+  <div class="lesson-section" id="inverse">
+    <h2 class="section-title">2.4 Inverse Matrix</h2>
+
+    <p>The <strong>inverse</strong> of a square matrix $\mathbf{A}$ is the matrix $\mathbf{A}^{-1}$ such that $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. It only exists when $\det(\mathbf{A}) \neq 0$.</p>
+
+    <div class="formula-box">
+      $$\mathbf{A}^{-1} = \frac{1}{\det(\mathbf{A})}\begin{pmatrix}d & -b \\ -c & a\end{pmatrix} \quad \text{for } \mathbf{A} = \begin{pmatrix}a & b \\ c & d\end{pmatrix}$$
+    </div>
+
+    <p>For a $3\times3$ matrix, the inverse is found using the <strong>matrix of cofactors</strong>:</p>
+
+    <div class="formula-box">
+      $$\mathbf{A}^{-1} = \frac{1}{\det(\mathbf{A})} \mathbf{C}^T$$
+    </div>
+
+    <p>where $\mathbf{C}$ is the matrix of cofactors (also called the adjugate or adjoint matrix). In exams, $3\times3$ inverses are often given or only the $2\times2$ case is needed.</p>
+
+    <div class="key-point">
+      <strong>Inverse of a Product</strong>
+      $(\mathbf{AB})^{-1} = \mathbf{B}^{-1}\mathbf{A}^{-1}$ — note the reversal of order. This is analogous to putting on socks then shoes: you must take them off in reverse order.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.4a</div>
+      <div class="example-q">Find the inverse of $\mathbf{A} = \begin{pmatrix}3 & 2 \\ 5 & 4\end{pmatrix}$ and verify that $\mathbf{A}\mathbf{A}^{-1} = \mathbf{I}$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\det(\mathbf{A}) = 3(4) - 2(5) = 12 - 10 = 2$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\mathbf{A}^{-1} = \dfrac{1}{2}\begin{pmatrix}4 & -2 \\ -5 & 3\end{pmatrix} = \begin{pmatrix}2 & -1 \\ -\frac{5}{2} & \frac{3}{2}\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Verify: $\begin{pmatrix}3 & 2 \\ 5 & 4\end{pmatrix}\begin{pmatrix}2 & -1 \\ -\frac{5}{2} & \frac{3}{2}\end{pmatrix} = \begin{pmatrix}6-5 & -3+3 \\ 10-10 & -5+6\end{pmatrix} = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix} = \mathbf{I}$ ✓
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.5 TRANSFORMATIONS ===== -->
+
+  <div class="lesson-section" id="transformations">
+    <h2 class="section-title">2.5 Linear Transformations</h2>
+
+    <p>A $2\times2$ matrix $\mathbf{M}$ represents a <strong>linear transformation</strong> of the plane. The image of point $(x, y)$ is found by $\mathbf{M}\begin{pmatrix}x\\y\end{pmatrix}$.</p>
+
+    <p>The columns of $\mathbf{M}$ tell you where the standard basis vectors $\mathbf{e}_1 = \begin{pmatrix}1\\0\end{pmatrix}$ and $\mathbf{e}_2 = \begin{pmatrix}0\\1\end{pmatrix}$ are mapped to.</p>
+
+    <h3 class="subsection">Standard Transformations</h3>
+
+    <div class="formula-box">
+      $$\text{Rotation by } \theta \text{ anticlockwise about origin:} \quad \begin{pmatrix}\cos\theta & -\sin\theta \\ \sin\theta & \cos\theta\end{pmatrix}$$
+      $$\text{Reflection in } y = x: \quad \begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix}$$
+      $$\text{Reflection in } y = x\tan\theta: \quad \begin{pmatrix}\cos 2\theta & \sin 2\theta \\ \sin 2\theta & -\cos 2\theta\end{pmatrix}$$
+      $$\text{Enlargement scale factor } k: \quad \begin{pmatrix}k & 0 \\ 0 & k\end{pmatrix}$$
+      $$\text{Stretch s.f. } a \text{ in } x, \text{ s.f. } b \text{ in } y: \quad \begin{pmatrix}a & 0 \\ 0 & b\end{pmatrix}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.5a</div>
+      <div class="example-q">Find the matrix representing a rotation of $\frac{\pi}{3}$ anticlockwise about the origin. Hence find the image of the point $(2, 1)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\mathbf{R} = \begin{pmatrix}\cos\frac{\pi}{3} & -\sin\frac{\pi}{3} \\ \sin\frac{\pi}{3} & \cos\frac{\pi}{3}\end{pmatrix} = \begin{pmatrix}\frac{1}{2} & -\frac{\sqrt{3}}{2} \\ \frac{\sqrt{3}}{2} & \frac{1}{2}\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\mathbf{R}\begin{pmatrix}2\\1\end{pmatrix} = \begin{pmatrix}\frac{1}{2}(2) - \frac{\sqrt{3}}{2}(1) \\ \frac{\sqrt{3}}{2}(2) + \frac{1}{2}(1)\end{pmatrix} = \begin{pmatrix}1 - \frac{\sqrt{3}}{2} \\ \sqrt{3} + \frac{1}{2}\end{pmatrix} = \begin{pmatrix}\frac{2-\sqrt{3}}{2} \\ \frac{2\sqrt{3}+1}{2}\end{pmatrix}$
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.6 SUCCESSIVE TRANSFORMATIONS ===== -->
+
+  <div class="lesson-section" id="successive">
+    <h2 class="section-title">2.6 Successive Transformations</h2>
+
+    <p>When two transformations are applied in sequence, the combined transformation is represented by the <strong>product</strong> of the matrices — but order matters.</p>
+
+    <div class="key-point">
+      <strong>Order Convention</strong>
+      If transformation $\mathbf{A}$ is applied first, then $\mathbf{B}$, the combined matrix is $\mathbf{BA}$ (right to left). Think of it as function composition: $\mathbf{B}(\mathbf{A}\mathbf{x})= (\mathbf{BA})\mathbf{x}$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.6a</div>
+      <div class="example-q">Find the single matrix representing: first a reflection in the $x$-axis, then a rotation of $\frac{\pi}{2}$ anticlockwise.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Reflection in $x$-axis: $\mathbf{A} = \begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Rotation $\frac{\pi}{2}$ anticlockwise: $\mathbf{B} = \begin{pmatrix}0 & -1 \\ 1 & 0\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Combined (A first, then B): $\mathbf{BA} = \begin{pmatrix}0 & -1 \\ 1 & 0\end{pmatrix}\begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix} = \begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix}$
+            <div class="step-comment">This is the reflection in $y = x$. Makes geometric sense!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.7 INVARIANCE ===== -->
+
+  <div class="lesson-section" id="invariance">
+    <h2 class="section-title">2.7 Invariant Points &amp; Lines</h2>
+
+    <p>An <strong>invariant point</strong> is a point that maps to itself under a transformation: $\mathbf{M}\mathbf{x} = \mathbf{x}$. An <strong>invariant line</strong> is a line that maps to itself as a whole (individual points on it may move, but the line is preserved).</p>
+
+    <h3 class="subsection">Finding Invariant Points</h3>
+    <p>Solve $\mathbf{M}\begin{pmatrix}x\\y\end{pmatrix} = \begin{pmatrix}x\\y\end{pmatrix}$. This gives $(\mathbf{M} - \mathbf{I})\mathbf{x} = \mathbf{0}$. If $\det(\mathbf{M} - \mathbf{I}) = 0$, there are infinitely many invariant points (a line of invariant points).</p>
+
+    <h3 class="subsection">Finding Invariant Lines</h3>
+    <p>For a line $y = mx + c$ to be invariant, every point on it must map to another point on the same line. Substitute a general point $(t, mt+c)$, apply $\mathbf{M}$, and require the image to satisfy $y = mx + c$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.7a</div>
+      <div class="example-q">Find the invariant lines of $\mathbf{M} = \begin{pmatrix}3 & 1 \\ 0 & 2\end{pmatrix}$ of the form $y = mx$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            A point $(t, mt)$ on $y = mx$ maps to: $\begin{pmatrix}3 & 1 \\ 0 & 2\end{pmatrix}\begin{pmatrix}t \\ mt\end{pmatrix} = \begin{pmatrix}3t+mt \\ 2mt\end{pmatrix} = \begin{pmatrix}(3+m)t \\ 2mt\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            For this image to lie on $y = mx$, we need $\dfrac{2mt}{(3+m)t} = m$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $2m = m(3+m) \Rightarrow 2m = 3m + m^2 \Rightarrow m^2 + m = 0 \Rightarrow m(m+1) = 0$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            So $m = 0$ (the $x$-axis, $y = 0$) or $m = -1$ (the line $y = -x$).
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.8 SYSTEMS OF EQUATIONS ===== -->
+
+  <div class="lesson-section" id="systems">
+    <h2 class="section-title">2.8 Systems of Equations</h2>
+
+    <p>A system of linear equations $\mathbf{Ax} = \mathbf{b}$ can be solved using the inverse matrix: $\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}$, provided $\mathbf{A}$ is non-singular.</p>
+
+    <h3 class="subsection">Geometric Interpretation of 3 Equations in 3 Unknowns</h3>
+    <p>Each equation $ax + by + cz = d$ represents a <strong>plane</strong> in 3D. Three planes can intersect in various ways:</p>
+
+    <p><strong>Unique solution:</strong> Three planes meet at a single point. $\det(\mathbf{A}) \neq 0$.</p>
+    <p><strong>Infinite solutions:</strong> The planes share a common line or are all the same plane. $\det(\mathbf{A}) = 0$ and the system is consistent.</p>
+    <p><strong>No solution:</strong> The planes form a "triangular prism" or two are parallel. $\det(\mathbf{A}) = 0$ and the system is inconsistent.</p>
+
+    <div class="key-point">
+      <strong>Exam Technique for Inconsistent Systems</strong>
+      When $\det(\mathbf{A}) = 0$, add the equations or look for a contradiction. If adding multiples of the equations gives $0 = k$ (where $k \neq 0$), the system is inconsistent. If it gives $0 = 0$, there are infinitely many solutions — express two variables in terms of a parameter $\lambda$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.8a</div>
+      <div class="example-q">Solve: $x + 2y + z = 4$, $\; 2x - y + 3z = 7$, $\; x - 3y + 2z = 3$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Write as $\mathbf{Ax} = \mathbf{b}$ where $\mathbf{A} = \begin{pmatrix}1&2&1\\2&-1&3\\1&-3&2\end{pmatrix}$, $\mathbf{b} = \begin{pmatrix}4\\7\\3\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Row reduce (eliminate $x$ from rows 2 and 3):
+            $R_2 \to R_2 - 2R_1$: $\;0x - 5y + z = -1$
+            $R_3 \to R_3 - R_1$: $\;0x - 5y + z = -1$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Rows 2 and 3 are identical: $-5y + z = -1$. This means infinitely many solutions.
+            <div class="step-comment">Let $z = \lambda$. Then $y = \frac{\lambda+1}{5}$. Back-substitute into row 1 to find $x$.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $x = 4 - 2y - z = 4 - \dfrac{2(\lambda+1)}{5} - \lambda = \dfrac{18 - 7\lambda}{5}$
+            <div class="step-comment">Solution: $x = \frac{18-7\lambda}{5}$, $y = \frac{\lambda+1}{5}$, $z = \lambda$ for any $\lambda \in \mathbb{R}$.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 2.9 EIGENVALUES & EIGENVECTORS ===== -->
+
+  <div class="lesson-section" id="eigenvalues">
+    <h2 class="section-title">2.9 Eigenvalues &amp; Eigenvectors</h2>
+
+    <p>An <strong>eigenvector</strong> of matrix $\mathbf{A}$ is a non-zero vector $\mathbf{x}$ that is only scaled (not rotated) by $\mathbf{A}$. The scaling factor is the corresponding <strong>eigenvalue</strong> $\lambda$.</p>
+
+    <div class="formula-box">
+      $$\mathbf{A}\mathbf{x} = \lambda\mathbf{x}$$
+      $$(\mathbf{A} - \lambda\mathbf{I})\mathbf{x} = \mathbf{0}$$
+      $$\text{Eigenvalues: solve } \det(\mathbf{A} - \lambda\mathbf{I}) = 0 \quad \text{(characteristic equation)}$$
+    </div>
+
+    <p>For each eigenvalue $\lambda$, find the eigenvectors by solving $(\mathbf{A} - \lambda\mathbf{I})\mathbf{x} = \mathbf{0}$. There are infinitely many eigenvectors for each eigenvalue (any scalar multiple works) — we typically state the simplest form.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.9a</div>
+      <div class="example-q">Find the eigenvalues and eigenvectors of $\mathbf{A} = \begin{pmatrix}4 & 1 \\ 2 & 3\end{pmatrix}$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Characteristic equation: $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$
+            $$(4-\lambda)(3-\lambda) - 2 = 0 \implies \lambda^2 - 7\lambda + 10 = 0 \implies (\lambda-2)(\lambda-5) = 0$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Eigenvalues: $\lambda = 2$ and $\lambda = 5$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            For $\lambda = 2$: $(\mathbf{A} - 2\mathbf{I})\mathbf{x} = \mathbf{0} \Rightarrow \begin{pmatrix}2 & 1 \\ 2 & 1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \mathbf{0}$
+            So $2x + y = 0$, giving eigenvector $\begin{pmatrix}1\\-2\end{pmatrix}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            For $\lambda = 5$: $(\mathbf{A} - 5\mathbf{I})\mathbf{x} = \mathbf{0} \Rightarrow \begin{pmatrix}-1 & 1 \\ 2 & -2\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \mathbf{0}$
+            So $-x + y = 0$, giving eigenvector $\begin{pmatrix}1\\1\end{pmatrix}$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Geometric Meaning</strong>
+      Eigenvectors are the directions that a transformation leaves unchanged (only stretched or compressed). A positive eigenvalue stretches; a negative eigenvalue reflects and stretches; $\lambda = 1$ means the eigenvector is an invariant line direction.
+    </div>
+
+  </div>
+
+  <!-- ===== 2.10 DIAGONALISATION ===== -->
+
+  <div class="lesson-section" id="diagonalisation">
+    <h2 class="section-title">2.10 Diagonalisation</h2>
+
+    <p>If $\mathbf{A}$ has $n$ linearly independent eigenvectors, it can be <strong>diagonalised</strong>. Form the matrix $\mathbf{P}$ whose columns are the eigenvectors, and $\mathbf{D}$ the diagonal matrix of corresponding eigenvalues:</p>
+
+    <div class="formula-box">
+      $$\mathbf{A} = \mathbf{P}\mathbf{D}\mathbf{P}^{-1}$$
+      $$\mathbf{D} = \begin{pmatrix}\lambda_1 & 0 \\ 0 & \lambda_2\end{pmatrix}, \quad \mathbf{P} = \begin{pmatrix}| & | \\ \mathbf{x}_1 & \mathbf{x}_2 \\ | & |\end{pmatrix}$$
+    </div>
+
+    <p>The power of diagonalisation: computing $\mathbf{A}^n$ becomes trivial since $\mathbf{A}^n = \mathbf{P}\mathbf{D}^n\mathbf{P}^{-1}$, and $\mathbf{D}^n$ is just the diagonal matrix with entries $\lambda_1^n, \lambda_2^n$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.10a</div>
+      <div class="example-q">Using the eigenvalues and eigenvectors from Example 2.9a, diagonalise $\mathbf{A} = \begin{pmatrix}4&1\\2&3\end{pmatrix}$ and hence find $\mathbf{A}^5$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\mathbf{P} = \begin{pmatrix}1 & 1 \\ -2 & 1\end{pmatrix}$, $\quad \mathbf{D} = \begin{pmatrix}2 & 0 \\ 0 & 5\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\mathbf{P}^{-1} = \dfrac{1}{3}\begin{pmatrix}1 & -1 \\ 2 & 1\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\mathbf{D}^5 = \begin{pmatrix}2^5 & 0 \\ 0 & 5^5\end{pmatrix} = \begin{pmatrix}32 & 0 \\ 0 & 3125\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $\mathbf{A}^5 = \mathbf{P}\mathbf{D}^5\mathbf{P}^{-1} = \begin{pmatrix}1&1\\-2&1\end{pmatrix}\begin{pmatrix}32&0\\0&3125\end{pmatrix}\dfrac{1}{3}\begin{pmatrix}1&-1\\2&1\end{pmatrix}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            $= \dfrac{1}{3}\begin{pmatrix}32+3125 & -32+3125 \\ -64+3125 & 64+3125\end{pmatrix} \cdot \begin{pmatrix}1&-1\\2&1\end{pmatrix}$... expanding gives $\mathbf{A}^5 = \dfrac{1}{3}\begin{pmatrix}3157+6250 & -3157+3125 \\ -3061+6250 & 3061+3125\end{pmatrix}$
+            <div class="step-comment">Full calculation: $\mathbf{A}^5 = \begin{pmatrix}3094 & 1031 \\ 2062 & 2063\end{pmatrix}$. In an exam, leave in the form $\mathbf{PD}^5\mathbf{P}^{-1}$ unless asked to evaluate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Given $\mathbf{A} = \begin{pmatrix}1&3\\2&-1\end{pmatrix}$ and $\mathbf{B} = \begin{pmatrix}2&0\\-1&4\end{pmatrix}$, find (a) $\mathbf{AB}$, (b) $\det(\mathbf{A})$, (c) $\mathbf{A}^{-1}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          (a) $\mathbf{AB} = \begin{pmatrix}1(2)+3(-1) & 1(0)+3(4) \\ 2(2)+(-1)(-1) & 2(0)+(-1)(4)\end{pmatrix} = \begin{pmatrix}-1&12\\5&-4\end{pmatrix}$. (b) $\det(\mathbf{A}) = -1-6 = -7$. (c) $\mathbf{A}^{-1} = -\frac{1}{7}\begin{pmatrix}-1&-3\\-2&1\end{pmatrix} = \begin{pmatrix}\frac{1}{7}&\frac{3}{7}\\\frac{2}{7}&-\frac{1}{7}\end{pmatrix}$.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Find the matrix that represents a reflection in the line $y = x$ followed by a rotation of $90°$ anticlockwise. Describe the resulting single transformation.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Reflection in $y=x$: $\mathbf{A} = \begin{pmatrix}0&1\\1&0\end{pmatrix}$. Rotation $90°$: $\mathbf{B} = \begin{pmatrix}0&-1\\1&0\end{pmatrix}$. Combined (A then B): $\mathbf{BA} = \begin{pmatrix}0&-1\\1&0\end{pmatrix}\begin{pmatrix}0&1\\1&0\end{pmatrix} = \begin{pmatrix}-1&0\\0&1\end{pmatrix}$. This is a reflection in the $y$-axis.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Find the eigenvalues and eigenvectors of $\mathbf{M} = \begin{pmatrix}5&2\\1&4\end{pmatrix}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\det(\mathbf{M}-\lambda\mathbf{I}) = (5-\lambda)(4-\lambda)-2 = \lambda^2-9\lambda+18 = (\lambda-3)(\lambda-6) = 0$. Eigenvalues: $\lambda=3, \lambda=6$. For $\lambda=3$: $(2x+2y=0) \Rightarrow \mathbf{e}_1 = \begin{pmatrix}1\\-1\end{pmatrix}$. For $\lambda=6$: $(-x+2y=0) \Rightarrow \mathbf{e}_2 = \begin{pmatrix}2\\1\end{pmatrix}$.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Show that the system $x+2y-z=3$, $2x-y+z=1$, $3x+y=4$ has infinitely many solutions and find them in terms of a parameter $\lambda$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Note equation 1 + equation 2 = equation 3: $(x+2y-z)+(2x-y+z) = 3x+y = 4$ ✓ — so equations are dependent. $\det(\mathbf{A})=0$. Let $z=\lambda$. From eq2: $2x-y=1-\lambda$. From eq1: $x+2y=3+\lambda$. Solving: $5x=5+\lambda \Rightarrow x=1+\frac{\lambda}{5}$; $y=1-2+\frac{2\lambda}{5}+\frac{\lambda}{5}... $ Full solution: $x=\frac{5+\lambda}{5}$, $y=\frac{5+3\lambda}{5} \cdot$ (verify by substitution).
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">The matrix $\mathbf{A} = \begin{pmatrix}k&2\\3&k-1\end{pmatrix}$ is singular. Find the possible values of $k$ and for each value, find the invariant lines through the origin.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\det(\mathbf{A}) = k(k-1)-6 = k^2-k-6 = (k-3)(k+2) = 0$. So $k=3$ or $k=-2$. For $k=3$: $\mathbf{A} = \begin{pmatrix}3&2\\3&2\end{pmatrix}$. Invariant line: $3x+2y=0 \Rightarrow y = -\frac{3}{2}x$. For $k=-2$: $\mathbf{A}=\begin{pmatrix}-2&2\\3&-3\end{pmatrix}$. Invariant line: $-2x+2y=0 \Rightarrow y=x$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Diagonalise $\mathbf{B} = \begin{pmatrix}3&1\\1&3\end{pmatrix}$ and hence find a simplified expression for $\mathbf{B}^n$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Eigenvalues: $(3-\lambda)^2-1=0 \Rightarrow \lambda=2,4$. Eigenvectors: $\lambda=2 \Rightarrow \begin{pmatrix}1\\-1\end{pmatrix}$; $\lambda=4 \Rightarrow \begin{pmatrix}1\\1\end{pmatrix}$. $\mathbf{P}=\begin{pmatrix}1&1\\-1&1\end{pmatrix}$, $\mathbf{P}^{-1}=\frac{1}{2}\begin{pmatrix}1&-1\\1&1\end{pmatrix}$. $\mathbf{B}^n = \mathbf{P}\begin{pmatrix}2^n&0\\0&4^n\end{pmatrix}\mathbf{P}^{-1} = \frac{1}{2}\begin{pmatrix}2^n+4^n & -2^n+4^n \\ -2^n+4^n & 2^n+4^n\end{pmatrix}$.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">The transformation $T$ has matrix $\mathbf{M} = \begin{pmatrix}2&1\\0&3\end{pmatrix}$. Find all invariant lines (not just through the origin), and verify your answers geometrically.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          For line $y = mx + c$: point $(t, mt+c)$ maps to $(2t+mt+c,\ 3mt+3c) = ((2+m)t+c,\ 3(mt+c))$. For this to lie on $y=mx+c$: $3(mt+c) = m(2+m)t + mc + c$. Comparing coefficients of $t$: $3m = m(2+m) \Rightarrow m^2-m=0 \Rightarrow m=0$ or $m=1$. Constant: $3c = mc+c \Rightarrow c(2-m)=0$. For $m=0$: $2c=0 \Rightarrow c=0$. Line: $y=0$ (x-axis). For $m=1$: $c=0$ is not forced. Line: $y=x+c$ for any $c$ — a family of parallel lines.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Hard / STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Let $\mathbf{A}$ be a $2\times2$ matrix with eigenvalues $\lambda_1$ and $\lambda_2$. (i) Prove that $\text{tr}(\mathbf{A}) = \lambda_1 + \lambda_2$ and $\det(\mathbf{A}) = \lambda_1\lambda_2$, where $\text{tr}(\mathbf{A}) = a_{11} + a_{22}$ is the trace. (ii) Hence show that $\mathbf{A}^2 - \text{tr}(\mathbf{A})\cdot\mathbf{A} + \det(\mathbf{A})\cdot\mathbf{I} = \mathbf{0}$ (the Cayley-Hamilton theorem for $2\times2$ matrices). (iii) Use this to compute $\mathbf{A}^3$ for $\mathbf{A} = \begin{pmatrix}1&2\\3&2\end{pmatrix}$ without direct multiplication.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          (i) Char. eq: $\det(\mathbf{A}-\lambda\mathbf{I}) = \lambda^2 - (a+d)\lambda + (ad-bc) = 0$, so by Vieta's: $\lambda_1+\lambda_2 = \text{tr}(\mathbf{A})$, $\lambda_1\lambda_2 = \det(\mathbf{A})$. (ii) By Cayley-Hamilton, every matrix satisfies its own characteristic equation: substituting $\mathbf{A}$ for $\lambda$ in $\lambda^2-\text{tr}\cdot\lambda+\det=0$ gives $\mathbf{A}^2-\text{tr}(\mathbf{A})\mathbf{A}+\det(\mathbf{A})\mathbf{I}=\mathbf{0}$. (iii) $\text{tr}(\mathbf{A})=3$, $\det(\mathbf{A})=-4$. So $\mathbf{A}^2 = 3\mathbf{A}+4\mathbf{I} = \begin{pmatrix}7&6\\9&10\end{pmatrix}$. Then $\mathbf{A}^3 = \mathbf{A}\cdot\mathbf{A}^2 = \mathbf{A}(3\mathbf{A}+4\mathbf{I}) = 3\mathbf{A}^2+4\mathbf{A} = 3(3\mathbf{A}+4\mathbf{I})+4\mathbf{A} = 13\mathbf{A}+12\mathbf{I} = \begin{pmatrix}25&26\\39&38\end{pmatrix}$.
+        </div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">A linear transformation $T: \mathbb{R}^2 \to \mathbb{R}^2$ maps the unit square (vertices at $(0,0)$, $(1,0)$, $(1,1)$, $(0,1)$) to a parallelogram of area 5. The transformation maps $(1,0) \mapsto (2,1)$ and preserves the $y$-axis direction. Find the matrix of $T$, its eigenvalues, and the equations of its invariant lines.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Column 1 (image of $(1,0)$): $\begin{pmatrix}2\\1\end{pmatrix}$. Preserves $y$-axis direction means $(0,1)\mapsto(0,k)$ for some $k$. Area $= |\det(\mathbf{M})| = 5$: $\det = 2k - 0 = 2k = \pm5 \Rightarrow k = \pm\frac{5}{2}$. Taking $k=\frac{5}{2}$: $\mathbf{M}=\begin{pmatrix}2&0\\1&\frac{5}{2}\end{pmatrix}$. Eigenvalues: $(2-\lambda)(\frac{5}{2}-\lambda)=0 \Rightarrow \lambda=2, \frac{5}{2}$. Eigenvector $\lambda=2$: $\begin{pmatrix}1\\-2\end{pmatrix}$, line $y=-2x$. Eigenvector $\lambda=\frac{5}{2}$: $\begin{pmatrix}0\\1\end{pmatrix}$, the $y$-axis.
+        </div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="lesson-nav">
+    <a href="complex-numbers.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous Topic</span> Complex Numbers</div>
+    </a>
+    <a href="further-algebra.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Further Algebra</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (s.getBoundingClientRect().top < 150) current = s.id; });
+    sidebarLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
