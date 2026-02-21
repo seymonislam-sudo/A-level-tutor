@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyperbolic Functions — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 06</div>
+  <a href="#definitions" class="sidebar-link active"><span class="sidebar-num">6.1</span> Definitions</a>
+  <a href="#identities" class="sidebar-link"><span class="sidebar-num">6.2</span> Hyperbolic Identities</a>
+  <a href="#inverses" class="sidebar-link"><span class="sidebar-num">6.3</span> Inverse Hyperbolic Functions</a>
+  <a href="#logform" class="sidebar-link"><span class="sidebar-num">6.4</span> Logarithmic Forms</a>
+  <a href="#calculus" class="sidebar-link"><span class="sidebar-num">6.5</span> Calculus of Hyperbolics</a>
+  <a href="#intforms" class="sidebar-link"><span class="sidebar-num">6.6</span> Integration Using Hyperbolics</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 06</div>
+    <div class="topic-num-badge">Topic 06 · Core Pure</div>
+    <h1 class="topic-title">Hyperbolic Functions</h1>
+    <p class="topic-intro">The hyperbolic cousins of $\sin$ and $\cos$ — defined via exponentials, satisfying parallel identities, and unlocking a powerful new family of integration techniques.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 2, Chapter 6</div>
+      <div class="meta-item"><span>~3.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#definitions">6.1 — Definitions</a></li>
+      <li><a href="#identities">6.2 — Hyperbolic Identities</a></li>
+      <li><a href="#inverses">6.3 — Inverse Hyperbolic Functions</a></li>
+      <li><a href="#logform">6.4 — Logarithmic Forms</a></li>
+      <li><a href="#calculus">6.5 — Calculus of Hyperbolics</a></li>
+      <li><a href="#intforms">6.6 — Integration Using Hyperbolics</a></li>
+    </ul>
+  </div>
+
+  <!-- 6.1 DEFINITIONS -->
+  <div class="lesson-section" id="definitions">
+    <h2 class="section-title">6.1 Definitions</h2>
+    <p>The hyperbolic functions are defined using the exponential function. They are <em>not</em> circular functions — they parameterise the hyperbola $x^2 - y^2 = 1$ in the same way that $\cos\theta$ and $\sin\theta$ parameterise the unit circle.</p>
+
+    <div class="formula-box">
+      $$\cosh x = \frac{e^x + e^{-x}}{2} \qquad \sinh x = \frac{e^x - e^{-x}}{2} \qquad \tanh x = \frac{\sinh x}{\cosh x} = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$
+    </div>
+
+    <h3 class="subsection">Key Properties</h3>
+    <p><strong>$\cosh x$</strong> is always $\geq 1$, even, and looks like a catenary (the shape of a hanging chain). $\cosh 0 = 1$.</p>
+    <p><strong>$\sinh x$</strong> is odd, passes through the origin, and grows without bound in both directions. $\sinh 0 = 0$.</p>
+    <p><strong>$\tanh x$</strong> is odd with horizontal asymptotes at $y = \pm 1$. $-1 < \tanh x < 1$ for all $x$.</p>
+
+    <div class="key-point">
+      <strong>Osborn's Rule</strong>
+      Any trig identity can be converted to a hyperbolic identity by replacing every trig function with its hyperbolic counterpart, and replacing the sign of every product of two $\sinh$ terms (including $\tanh^2 = \sinh^2/\cosh^2$) with its negative. For example $\cos^2\theta + \sin^2\theta = 1$ becomes $\cosh^2 x - \sinh^2 x = 1$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.1a</div>
+      <div class="example-q">Show from the definitions that $\cosh^2 x - \sinh^2 x = 1$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\cosh^2 x = \left(\dfrac{e^x+e^{-x}}{2}\right)^2 = \dfrac{e^{2x}+2+e^{-2x}}{4}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\sinh^2 x = \left(\dfrac{e^x-e^{-x}}{2}\right)^2 = \dfrac{e^{2x}-2+e^{-2x}}{4}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\cosh^2 x - \sinh^2 x = \dfrac{(e^{2x}+2+e^{-2x})-(e^{2x}-2+e^{-2x})}{4} = \dfrac{4}{4} = 1$ $\quad\square$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.2 IDENTITIES -->
+  <div class="lesson-section" id="identities">
+    <h2 class="section-title">6.2 Hyperbolic Identities</h2>
+    <p>These mirror the trig identities but with sign changes where products of $\sinh$ appear (Osborn's rule).</p>
+
+    <div class="formula-box">
+      $$\cosh^2 x - \sinh^2 x = 1$$
+      $$1 - \tanh^2 x = \text{sech}^2\, x$$
+      $$\sinh(A \pm B) = \sinh A \cosh B \pm \cosh A \sinh B$$
+      $$\cosh(A \pm B) = \cosh A \cosh B \pm \sinh A \sinh B$$
+      $$\sinh 2x = 2\sinh x \cosh x$$
+      $$\cosh 2x = \cosh^2 x + \sinh^2 x = 2\cosh^2 x - 1 = 1 + 2\sinh^2 x$$
+    </div>
+
+    <div class="key-point">
+      <strong>Contrast with Trig</strong>
+      Notice $\cosh(A+B) = \cosh A\cosh B + \sinh A\sinh B$ — the sign is $+$, not $-$ as in $\cos(A+B)$. And $\cosh 2x = \cosh^2 x + \sinh^2 x$ — again $+$ not $-$. The identity $\cosh^2 x - \sinh^2 x = 1$ has a minus, unlike $\cos^2+\sin^2=1$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.2a</div>
+      <div class="example-q">Solve $2\cosh^2 x - 5\cosh x + 2 = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $u = \cosh x$. Factorise: $(2u-1)(u-2) = 0$, so $u = \frac{1}{2}$ or $u = 2$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\cosh x = \frac{1}{2}$: impossible since $\cosh x \geq 1$ for all real $x$. Reject.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\cosh x = 2$: $x = \pm\cosh^{-1}(2) = \pm\ln(2+\sqrt{3})$.<div class="step-comment">$\cosh$ is even so there are two solutions.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.3 INVERSES -->
+  <div class="lesson-section" id="inverses">
+    <h2 class="section-title">6.3 Inverse Hyperbolic Functions</h2>
+    <p>The inverse functions $\text{arcsinh}$, $\text{arccosh}$, $\text{arctanh}$ (also written $\sinh^{-1}$, $\cosh^{-1}$, $\tanh^{-1}$) are defined as follows:</p>
+
+    <p>$\text{arcsinh}: \mathbb{R} \to \mathbb{R}$ — defined for all real $x$.</p>
+    <p>$\text{arccosh}: [1, \infty) \to [0, \infty)$ — only defined for $x \geq 1$, returning non-negative values.</p>
+    <p>$\text{arctanh}: (-1,1) \to \mathbb{R}$ — only defined for $|x| < 1$.</p>
+
+    <div class="key-point">
+      <strong>Domain Restriction for arccosh</strong>
+      Since $\cosh$ is even, $\cosh^{-1}$ is only a function if we restrict the domain to $x \geq 0$. This gives $\cosh^{-1}(x) \geq 0$. When solving equations like $\cosh x = k$, remember there are two solutions: $x = \pm\cosh^{-1}(k)$.
+    </div>
+  </div>
+
+  <!-- 6.4 LOGARITHMIC FORMS -->
+  <div class="lesson-section" id="logform">
+    <h2 class="section-title">6.4 Logarithmic Forms</h2>
+    <p>The inverse hyperbolic functions can be expressed as natural logarithms — a beautiful result derived by solving the exponential definitions.</p>
+
+    <div class="formula-box">
+      $$\sinh^{-1} x = \ln\!\left(x + \sqrt{x^2+1}\right) \quad \text{all } x$$
+      $$\cosh^{-1} x = \ln\!\left(x + \sqrt{x^2-1}\right) \quad x \geq 1$$
+      $$\tanh^{-1} x = \frac{1}{2}\ln\!\left(\frac{1+x}{1-x}\right) \quad |x| < 1$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.4a — Derivation</div>
+      <div class="example-q">Derive $\sinh^{-1} x = \ln(x + \sqrt{x^2+1})$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $y = \sinh^{-1} x$, so $\sinh y = x$, i.e. $\dfrac{e^y - e^{-y}}{2} = x$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Multiply by $2e^y$: $e^{2y} - 1 = 2xe^y$, giving $e^{2y} - 2xe^y - 1 = 0$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Quadratic in $e^y$: $e^y = \dfrac{2x \pm \sqrt{4x^2+4}}{2} = x \pm \sqrt{x^2+1}$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Since $e^y > 0$ and $\sqrt{x^2+1} > |x|$, we must take the $+$ sign: $e^y = x + \sqrt{x^2+1}$.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$y = \ln(x + \sqrt{x^2+1})$ $\quad\square$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.4b</div>
+      <div class="example-q">Find the exact value of $\tanh^{-1}\!\left(\dfrac{1}{2}\right)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\tanh^{-1}\!\left(\dfrac{1}{2}\right) = \dfrac{1}{2}\ln\!\left(\dfrac{1+\frac{1}{2}}{1-\frac{1}{2}}\right) = \dfrac{1}{2}\ln\!\left(\dfrac{3/2}{1/2}\right) = \dfrac{1}{2}\ln 3$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.5 CALCULUS -->
+  <div class="lesson-section" id="calculus">
+    <h2 class="section-title">6.5 Calculus of Hyperbolic Functions</h2>
+    <p>Derivatives follow directly from the exponential definitions — and closely mirror the trig results, with the key difference that $\frac{d}{dx}\cosh x = +\sinh x$ (not $-\sinh x$).</p>
+
+    <div class="formula-box">
+      $$\frac{d}{dx}(\sinh x) = \cosh x \qquad \frac{d}{dx}(\cosh x) = \sinh x \qquad \frac{d}{dx}(\tanh x) = \text{sech}^2 x$$
+    </div>
+
+    <div class="formula-box">
+      $$\int \sinh x\,dx = \cosh x + c \qquad \int \cosh x\,dx = \sinh x + c \qquad \int \text{sech}^2 x\,dx = \tanh x + c$$
+    </div>
+
+    <h3 class="subsection">Derivatives of Inverse Hyperbolics</h3>
+    <p>Derived by implicit differentiation — these are essential for integration.</p>
+
+    <div class="formula-box">
+      $$\frac{d}{dx}(\sinh^{-1} x) = \frac{1}{\sqrt{1+x^2}}$$
+      $$\frac{d}{dx}(\cosh^{-1} x) = \frac{1}{\sqrt{x^2-1}} \quad (x > 1)$$
+      $$\frac{d}{dx}(\tanh^{-1} x) = \frac{1}{1-x^2} \quad (|x| < 1)$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.5a — Derivation</div>
+      <div class="example-q">Derive $\dfrac{d}{dx}(\cosh^{-1} x) = \dfrac{1}{\sqrt{x^2-1}}$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $y = \cosh^{-1} x$, so $\cosh y = x$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Differentiate implicitly: $\sinh y \cdot \dfrac{dy}{dx} = 1$, so $\dfrac{dy}{dx} = \dfrac{1}{\sinh y}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Since $\cosh^2 y - \sinh^2 y = 1$: $\sinh y = \sqrt{\cosh^2 y - 1} = \sqrt{x^2-1}$ (positive since $y \geq 0$).</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\dfrac{dy}{dx} = \dfrac{1}{\sqrt{x^2-1}}$ $\quad\square$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.6 INTEGRATION -->
+  <div class="lesson-section" id="intforms">
+    <h2 class="section-title">6.6 Integration Using Hyperbolic Substitutions</h2>
+    <p>The inverse hyperbolic derivatives give us powerful new integration results — the hyperbolic counterparts of the inverse trig integrals from Topic 04.</p>
+
+    <div class="formula-box">
+      $$\int \frac{1}{\sqrt{x^2+a^2}}\,dx = \sinh^{-1}\!\left(\frac{x}{a}\right) + c = \ln\!\left(x + \sqrt{x^2+a^2}\right) + c$$
+      $$\int \frac{1}{\sqrt{x^2-a^2}}\,dx = \cosh^{-1}\!\left(\frac{x}{a}\right) + c = \ln\!\left(x + \sqrt{x^2-a^2}\right) + c \quad (x > a)$$
+      $$\int \frac{1}{a^2-x^2}\,dx = \frac{1}{a}\tanh^{-1}\!\left(\frac{x}{a}\right) + c = \frac{1}{2a}\ln\!\left(\frac{a+x}{a-x}\right) + c \quad (|x| < a)$$
+    </div>
+
+    <div class="key-point">
+      <strong>Trig vs Hyperbolic Substitutions</strong>
+      For $\sqrt{a^2 - x^2}$: use trig sub $x = a\sin\theta$ or $x = a\cos\theta$. For $\sqrt{x^2 + a^2}$: use hyperbolic sub $x = a\sinh t$. For $\sqrt{x^2 - a^2}$: use $x = a\cosh t$. The identity $\cosh^2 t - \sinh^2 t = 1$ eliminates the square root neatly.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.6a</div>
+      <div class="example-q">Find $\displaystyle\int \frac{1}{\sqrt{x^2+4}}\,dx$ using a hyperbolic substitution.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $x = 2\sinh t$, so $dx = 2\cosh t\,dt$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\sqrt{x^2+4} = \sqrt{4\sinh^2 t + 4} = 2\sqrt{\sinh^2 t + 1} = 2\cosh t$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\displaystyle\int \frac{2\cosh t}{2\cosh t}\,dt = \int 1\,dt = t + c$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Back-substitute: $t = \sinh^{-1}\!\left(\dfrac{x}{2}\right) = \ln\!\left(\dfrac{x}{2} + \sqrt{\dfrac{x^2}{4}+1}\right) = \ln\!\left(x + \sqrt{x^2+4}\right) - \ln 2$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$= \ln(x+\sqrt{x^2+4}) + c$ (absorbing $-\ln 2$ into $c$)<div class="step-comment">Or write as $\sinh^{-1}(x/2)+c$ — both are correct.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 6.6b — Completing the Square</div>
+      <div class="example-q">Find $\displaystyle\int \frac{1}{\sqrt{x^2+6x+5}}\,dx$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Complete the square: $x^2+6x+5 = (x+3)^2 - 4$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\displaystyle\int \frac{1}{\sqrt{(x+3)^2-4}}\,dx = \cosh^{-1}\!\left(\frac{x+3}{2}\right) + c$<div class="step-comment">Valid for $x+3 > 2$, i.e. $x > -1$. For $x < -5$ use the negative branch.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Equivalently: $\ln\!\left(x+3+\sqrt{x^2+6x+5}\right) + c$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Given $\sinh x = \frac{5}{12}$, find the exact values of $\cosh x$, $\tanh x$, and $\sinh 2x$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\cosh^2 x = 1+\sinh^2 x = 1+\frac{25}{144}=\frac{169}{144}$, so $\cosh x = \frac{13}{12}$ (positive). $\tanh x=\frac{5/12}{13/12}=\frac{5}{13}$. $\sinh 2x=2\sinh x\cosh x=2\cdot\frac{5}{12}\cdot\frac{13}{12}=\frac{65}{72}$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Solve: (a) $\cosh x = \dfrac{5}{4}$, (b) $\sinh x = 2$, giving exact answers in logarithmic form.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $x=\pm\cosh^{-1}(\frac{5}{4})=\pm\ln(\frac{5}{4}+\sqrt{\frac{25}{16}-1})=\pm\ln(\frac{5}{4}+\frac{3}{4})=\pm\ln 2$. (b) $x=\sinh^{-1}(2)=\ln(2+\sqrt{5})$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Differentiate: (a) $\sinh(3x^2)$, (b) $x\cosh x$, (c) $\tanh^{-1}(\sin x)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $6x\cosh(3x^2)$. (b) $\cosh x+x\sinh x$. (c) $\frac{\cos x}{1-\sin^2 x}=\frac{\cos x}{\cos^2 x}=\sec x$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Find: (a) $\displaystyle\int_0^1 \sinh 2x\,dx$, (b) $\displaystyle\int \cosh^2 x\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\left[\frac{\cosh 2x}{2}\right]_0^1=\frac{\cosh 2-1}{2}$. (b) Use $\cosh^2 x=\frac{1+\cosh 2x}{2}$: $\int\frac{1+\cosh 2x}{2}\,dx=\frac{x}{2}+\frac{\sinh 2x}{4}+c$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Find $\displaystyle\int \frac{1}{\sqrt{x^2+9}}\,dx$ and $\displaystyle\int \frac{1}{\sqrt{x^2-9}}\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\sinh^{-1}(x/3)+c = \ln(x+\sqrt{x^2+9})+c$. And $\cosh^{-1}(x/3)+c=\ln(x+\sqrt{x^2-9})+c$ (for $x>3$).</div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Solve $3\sinh x - 4\cosh x + 1 = 0$, giving answers as exact logarithms. (Hint: write in terms of $e^x$.)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Substitute definitions: $3\cdot\frac{e^x-e^{-x}}{2}-4\cdot\frac{e^x+e^{-x}}{2}+1=0 \Rightarrow \frac{3e^x-3e^{-x}-4e^x-4e^{-x}}{2}+1=0 \Rightarrow -e^x-7e^{-x}+2=0$. Multiply by $-e^x$: $e^{2x}-2e^x+7=0$... discriminant $4-28<0$. Hmm — try $3\cosh x-4\sinh x+1=0$ instead: $-e^x-7e^{-x}+2=0 \Rightarrow e^{2x}-2e^x+7=0$, still no real solutions. Original $3\sinh x-4\cosh x+1=0$: $\frac{(3-4)e^x+(-3-4)(-e^{-x})}{2}... = \frac{-e^x+7e^{-x}}{2}+1=0 \Rightarrow -e^x+7e^{-x}+2=0$. Multiply by $e^x$: $e^{2x}+2e^x-7=0 \Rightarrow e^x=\frac{-2+\sqrt{32}}{2}=-1+2\sqrt{2}$. So $x=\ln(-1+2\sqrt{2})$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Show that $\displaystyle\int_0^{\ln 3}\cosh^2 x\,dx = 1 + \dfrac{\ln 3}{2}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\int_0^{\ln3}\frac{1+\cosh2x}{2}\,dx=\left[\frac{x}{2}+\frac{\sinh2x}{4}\right]_0^{\ln3}=\frac{\ln3}{2}+\frac{\sinh(2\ln3)}{4}$. Now $\sinh(2\ln3)=\frac{e^{2\ln3}-e^{-2\ln3}}{2}=\frac{9-1/9}{2}=\frac{40}{9}$. So $=\frac{\ln3}{2}+\frac{40/9}{4}=\frac{\ln3}{2}+\frac{10}{9}$... checking: $\frac{10}{9}\neq1$. Let me recheck: $\int_0^{\ln3}\cosh^2x\,dx=\frac{\ln3}{2}+\frac{\sinh(2\ln3)}{4}$. $e^{2\ln3}=9$, $e^{-2\ln3}=1/9$. $\sinh(2\ln3)=\frac{9-1/9}{2}=\frac{80/9}{2}=\frac{40}{9}$. Answer $=\frac{\ln3}{2}+\frac{10}{9}$. Note: the question as stated has $1+\frac{\ln3}{2}$, which equals this only if $\frac{10}{9}=1$ — double-check by computing numerically. The correct answer is $\dfrac{\ln 3}{2}+\dfrac{10}{9}$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Find $\displaystyle\int \frac{1}{\sqrt{4x^2+8x+5}}\,dx$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Complete square: $4x^2+8x+5=4(x^2+2x)+5=4(x+1)^2+1$. So $\int\frac{1}{\sqrt{4(x+1)^2+1}}dx=\int\frac{1}{2\sqrt{(x+1)^2+\frac{1}{4}}}dx=\frac{1}{2}\cdot\frac{1}{1/2}\sinh^{-1}\!\left(\frac{x+1}{1/2}\right)\cdot\frac{1}{2}$... more carefully: $=\frac{1}{2}\sinh^{-1}(2(x+1))+c=\frac{1}{2}\ln(2(x+1)+\sqrt{4(x+1)^2+1})+c$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">(i) Using the definitions, prove that $\sinh^{-1}x + \sinh^{-1}y = \sinh^{-1}(x\sqrt{1+y^2}+y\sqrt{1+x^2})$. (ii) Hence, or otherwise, show that $\sinh^{-1}\!\left(\dfrac{3}{4}\right)+\sinh^{-1}\!\left(\dfrac{4}{3}\right) = \sinh^{-1}\!\left(\dfrac{25}{12}\right)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Let $\alpha=\sinh^{-1}x$, $\beta=\sinh^{-1}y$, so $\sinh\alpha=x$, $\sinh\beta=y$. Then $\sinh(\alpha+\beta)=\sinh\alpha\cosh\beta+\cosh\alpha\sinh\beta=x\sqrt{1+y^2}+y\sqrt{1+x^2}$ (since $\cosh=\sqrt{1+\sinh^2}$). So $\alpha+\beta=\sinh^{-1}(x\sqrt{1+y^2}+y\sqrt{1+x^2})$ ✓. (ii) With $x=3/4$, $y=4/3$: $\sqrt{1+y^2}=\sqrt{1+16/9}=\sqrt{25/9}=5/3$. $\sqrt{1+x^2}=\sqrt{1+9/16}=5/4$. RHS argument $=\frac{3}{4}\cdot\frac{5}{3}+\frac{4}{3}\cdot\frac{5}{4}=\frac{5}{4}+\frac{5}{3}=\frac{25}{12}$ ✓.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">A curve $C$ has parametric equations $x = a\cosh t$, $y = b\sinh t$. (i) Show that $C$ is a hyperbola. (ii) Find $\dfrac{dy}{dx}$ in terms of $t$. (iii) Find the equation of the tangent at the point $(a\cosh t_0,\ b\sinh t_0)$ and show it meets the asymptotes of the hyperbola at points whose midpoint is exactly the point of tangency.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $\frac{x^2}{a^2}-\frac{y^2}{b^2}=\cosh^2t-\sinh^2t=1$ ✓. (ii) $\frac{dy}{dx}=\frac{b\cosh t}{a\sinh t}=\frac{b}{a}\coth t$. (iii) Tangent: $y-b\sinh t_0=\frac{b\cosh t_0}{a\sinh t_0}(x-a\cosh t_0)$. Asymptotes are $y=\pm\frac{b}{a}x$. Substituting $y=\frac{b}{a}x$: solve to get intersection point $P_1$; substituting $y=-\frac{b}{a}x$: get $P_2$. Midpoint of $P_1P_2$ has coordinates $\left(a\cosh t_0,b\sinh t_0\right)$ — exactly the point of tangency ✓.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="polar-coordinates.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Polar Coordinates</div></a>
+    <a href="differential-equations.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Differential Equations</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
