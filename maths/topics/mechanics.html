@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanics — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(--bg);
+color: var(--text);
+font-family: 'DM Sans', sans-serif;
+line-height: 1.7;
+}
+
+body::before {
+content: '';
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px;
+pointer-events: none;
+z-index: 0;
+}
+
+.orb {
+position: fixed;
+border-radius: 50%;
+filter: blur(140px);
+opacity: 0.08;
+pointer-events: none;
+z-index: 0;
+}
+.orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 1.1rem 2.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: rgba(13,13,20,0.92);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+font-family: 'Playfair Display', serif;
+font-size: 1rem;
+font-weight: 700;
+color: var(--text);
+text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-back {
+color: var(--muted);
+text-decoration: none;
+font-size: 0.8rem;
+font-family: 'DM Mono', monospace;
+transition: color 0.2s;
+}
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar {
+position: fixed;
+top: 56px;
+left: 0;
+bottom: 0;
+width: 260px;
+background: var(--surface);
+border-right: 1px solid var(--border);
+overflow-y: auto;
+padding: 2rem 0;
+}
+
+.sidebar-title {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+padding: 0 1.5rem;
+margin-bottom: 1rem;
+}
+
+.sidebar-link {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.65rem 1.5rem;
+text-decoration: none;
+color: var(--muted);
+font-size: 0.85rem;
+transition: all 0.2s;
+border-left: 2px solid transparent;
+}
+
+.sidebar-link:hover {
+color: var(--text);
+background: rgba(255,255,255,0.03);
+}
+
+.sidebar-link.active {
+color: var(--accent);
+border-left-color: var(--accent);
+background: rgba(96,165,250,0.07);
+}
+
+.sidebar-num {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+width: 18px;
+flex-shrink: 0;
+}
+
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+
+.sidebar-divider {
+height: 1px;
+background: var(--border);
+margin: 1rem 1.5rem;
+}
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header {
+margin-bottom: 3rem;
+padding-bottom: 2rem;
+border-bottom: 1px solid var(--border);
+animation: fadeUp 0.6s ease both;
+}
+
+.breadcrumb {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+margin-bottom: 1.2rem;
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+
+.topic-num-badge {
+display: inline-block;
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+background: rgba(96,165,250,0.1);
+border: 1px solid rgba(96,165,250,0.25);
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+margin-bottom: 1rem;
+letter-spacing: 0.06em;
+}
+
+h1.topic-title {
+font-family: 'Playfair Display', serif;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 900;
+letter-spacing: -0.03em;
+line-height: 1.1;
+margin-bottom: 1rem;
+}
+
+.topic-intro {
+font-size: 1rem;
+color: var(--muted);
+max-width: 600px;
+}
+
+.topic-meta-row {
+display: flex;
+gap: 2rem;
+margin-top: 1.5rem;
+flex-wrap: wrap;
+}
+
+.meta-item {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+
+.meta-item span { color: var(--accent); }
+
+.lesson-section {
+margin-bottom: 3.5rem;
+animation: fadeUp 0.6s ease both;
+}
+
+h2.section-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.6rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+margin-bottom: 0.5rem;
+padding-top: 1rem;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+h2.section-title::before {
+content: '';
+display: inline-block;
+width: 4px;
+height: 1.4em;
+background: var(--accent);
+border-radius: 2px;
+flex-shrink: 0;
+}
+
+h3.subsection {
+font-family: 'Playfair Display', serif;
+font-size: 1.15rem;
+font-weight: 700;
+margin: 2rem 0 0.8rem;
+color: var(--text);
+}
+
+p {
+color: var(--text);
+margin-bottom: 1rem;
+font-size: 0.95rem;
+}
+
+.formula-box {
+background: var(--accent-dim);
+border: 1px solid rgba(96,165,250,0.25);
+border-radius: 12px;
+padding: 1.5rem 2rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.formula-box::before {
+content: 'KEY FORMULA';
+position: absolute;
+top: -0.6rem;
+left: 1rem;
+background: var(--accent);
+color: var(--bg);
+font-family: 'DM Mono', monospace;
+font-size: 0.6rem;
+font-weight: 500;
+letter-spacing: 0.1em;
+padding: 0.15rem 0.6rem;
+border-radius: 4px;
+}
+
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-left: 3px solid var(--accent);
+border-radius: 0 10px 10px 0;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.key-point strong {
+color: var(--accent);
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.warning-box {
+background: rgba(251,191,36,0.08);
+border: 1px solid rgba(251,191,36,0.3);
+border-radius: 10px;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.warning-box strong {
+color: #fcd34d;
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.example {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1.8rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.example-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--accent);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 0.8rem;
+}
+
+.example-q {
+font-size: 0.95rem;
+font-weight: 500;
+margin-bottom: 1.2rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border);
+}
+
+.example-steps {
+display: flex;
+flex-direction: column;
+gap: 0.8rem;
+}
+
+.step {
+display: grid;
+grid-template-columns: 28px 1fr;
+gap: 0.75rem;
+align-items: start;
+font-size: 0.9rem;
+}
+
+.step-num {
+width: 28px;
+height: 28px;
+background: rgba(96,165,250,0.12);
+border: 1px solid rgba(96,165,250,0.3);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+flex-shrink: 0;
+margin-top: 2px;
+}
+
+.step-content { color: var(--text); }
+
+.step-comment {
+font-size: 0.8rem;
+color: var(--muted);
+font-style: italic;
+margin-top: 0.3rem;
+}
+
+.reveal-btn {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+background: none;
+border: 1px solid var(--border);
+color: var(--muted);
+padding: 0.5rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+font-family: 'DM Mono', monospace;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+transition: all 0.2s;
+margin-top: 0.8rem;
+}
+
+.reveal-btn:hover {
+border-color: var(--accent);
+color: var(--accent);
+}
+
+.reveal-content {
+display: none;
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border);
+}
+
+.reveal-content.open { display: block; }
+
+.practice-section {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 2rem;
+margin-top: 2rem;
+}
+
+.practice-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1.5rem;
+}
+
+.practice-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.3rem;
+font-weight: 700;
+}
+
+.difficulty-badge {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+.diff-a { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item {
+padding: 1.2rem 0;
+border-bottom: 1px solid var(--border);
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 1rem;
+align-items: start;
+}
+
+.question-item:last-child { border-bottom: none; }
+
+.q-num {
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+margin-bottom: 0.4rem;
+}
+
+.q-text {
+font-size: 0.92rem;
+line-height: 1.6;
+}
+
+.q-marks {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+white-space: nowrap;
+margin-top: 0.2rem;
+}
+
+.lesson-nav {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 4rem;
+padding-top: 2rem;
+border-top: 1px solid var(--border);
+}
+
+.lesson-nav-btn {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+text-decoration: none;
+color: var(--muted);
+font-size: 0.85rem;
+transition: color 0.2s;
+padding: 0.8rem 1.2rem;
+border: 1px solid var(--border);
+border-radius: 10px;
+background: var(--surface);
+}
+
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
+
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+
+.btn-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+display: block;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.toc {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 3rem;
+}
+
+.toc-title {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 1rem;
+}
+
+.toc-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
+}
+
+.toc-list li a {
+color: var(--muted);
+text-decoration: none;
+font-size: 0.88rem;
+display: flex;
+align-items: center;
+gap: 0.6rem;
+transition: color 0.2s;
+padding: 0.2rem 0;
+}
+
+.toc-list li a:hover { color: var(--accent); }
+
+.toc-list li a::before {
+content: '';
+width: 16px;
+height: 1px;
+background: var(--border);
+flex-shrink: 0;
+}
+
+.toc-list li a:hover::before { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 17</div>
+  <a href="#kinematics" class="sidebar-link active"><span class="sidebar-num">17.1</span> Kinematics</a>
+  <a href="#suvat" class="sidebar-link"><span class="sidebar-num">17.2</span> SUVAT Equations</a>
+  <a href="#forces" class="sidebar-link"><span class="sidebar-num">17.3</span> Forces & Newton's Laws</a>
+  <a href="#connected" class="sidebar-link"><span class="sidebar-num">17.4</span> Connected Particles</a>
+  <a href="#friction" class="sidebar-link"><span class="sidebar-num">17.5</span> Friction</a>
+  <a href="#moments" class="sidebar-link"><span class="sidebar-num">17.6</span> Moments</a>
+  <a href="#projectiles" class="sidebar-link"><span class="sidebar-num">17.7</span> Projectiles</a>
+  <a href="#vectors-mech" class="sidebar-link"><span class="sidebar-num">17.8</span> Vectors in Mechanics</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 17
+    </div>
+    <div class="topic-num-badge">Topic 17 · Mechanics</div>
+    <h1 class="topic-title">Mechanics</h1>
+    <p class="topic-intro">Kinematics, forces, Newton's laws, friction, moments and projectiles. The mathematical description of motion and the forces that cause it.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Mechanics Year 1 & 2</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#kinematics">17.1 — Kinematics: Displacement, Velocity & Acceleration</a></li>
+      <li><a href="#suvat">17.2 — SUVAT Equations of Motion</a></li>
+      <li><a href="#forces">17.3 — Forces & Newton's Laws</a></li>
+      <li><a href="#connected">17.4 — Connected Particles</a></li>
+      <li><a href="#friction">17.5 — Friction</a></li>
+      <li><a href="#moments">17.6 — Moments & Equilibrium</a></li>
+      <li><a href="#projectiles">17.7 — Projectile Motion</a></li>
+      <li><a href="#vectors-mech">17.8 — Vectors in Mechanics</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 17.1 KINEMATICS ===== -->
+
+  <div class="lesson-section" id="kinematics">
+    <h2 class="section-title">17.1 Kinematics</h2>
+
+    <p>Kinematics is the study of motion without reference to forces. We describe motion using <strong>displacement</strong>, <strong>velocity</strong>, and <strong>acceleration</strong>.</p>
+
+    <div class="key-point">
+      <strong>Scalars vs Vectors</strong>
+      <strong>Distance</strong> and <strong>speed</strong> are scalars (magnitude only). <strong>Displacement</strong>, <strong>velocity</strong>, and <strong>acceleration</strong> are vectors (magnitude and direction). In 1D problems, sign indicates direction — always define a positive direction first.
+    </div>
+
+    <div class="formula-box">
+      $$v = \dfrac{ds}{dt} \qquad a = \dfrac{dv}{dt} = \dfrac{d^2s}{dt^2}$$
+      $$s = \int v\, dt \qquad v = \int a\, dt$$
+    </div>
+
+    <h3 class="subsection">Displacement-Time and Velocity-Time Graphs</h3>
+    <p>On a <strong>displacement-time graph</strong>: the gradient equals velocity. A horizontal line means the object is stationary.</p>
+    <p>On a <strong>velocity-time graph</strong>: the gradient equals acceleration; the area under the curve equals displacement (not distance — watch for sign changes).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.1a</div>
+      <div class="example-q">A particle moves so that $v = 3t^2 - 12t + 9$ m/s. Find the acceleration when $t = 2$ s and the displacement from $t = 0$ to $t = 3$ s (starting from the origin).</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $a = \dfrac{dv}{dt} = 6t - 12$. At $t = 2$: $a = 12 - 12 = 0$ m/s²
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $s = \int_0^3 (3t^2 - 12t + 9)\, dt = \left[t^3 - 6t^2 + 9t\right]_0^3$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $s = (27 - 54 + 27) - 0 = 0$ m
+            <div class="step-comment">The particle returns to its starting position! Note: this is displacement, not total distance travelled.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.2 SUVAT ===== -->
+
+  <div class="lesson-section" id="suvat">
+    <h2 class="section-title">17.2 SUVAT Equations of Motion</h2>
+
+    <p>When acceleration is <strong>constant</strong>, the five SUVAT equations link displacement $s$, initial velocity $u$, final velocity $v$, acceleration $a$, and time $t$.</p>
+
+    <div class="formula-box">
+      $$v = u + at$$
+      $$s = ut + \tfrac{1}{2}at^2$$
+      $$s = vt - \tfrac{1}{2}at^2$$
+      $$v^2 = u^2 + 2as$$
+      $$s = \tfrac{1}{2}(u + v)t$$
+    </div>
+
+    <div class="key-point">
+      <strong>Strategy</strong>
+      List the five variables $s, u, v, a, t$ and identify which three you know and which one you want. Pick the equation that contains those four variables.
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Gravity</strong>
+      In vertical problems, $g = 9.8$ m/s² (Edexcel uses 9.8, not 10). Take care with signs — if upward is positive, then $a = -9.8$ m/s² for a projectile under gravity only.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.2a</div>
+      <div class="example-q">A ball is thrown vertically upward at 14.7 m/s from a height of 1.2 m above the ground. Find the maximum height above the ground and the time to reach it.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Take upward as positive. $u = 14.7$, $a = -9.8$, $v = 0$ (at max height). Find $s$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Use $v^2 = u^2 + 2as$: $0 = 14.7^2 + 2(-9.8)s \Rightarrow s = \dfrac{14.7^2}{19.6} = 11.025$ m
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Maximum height above ground $= 1.2 + 11.025 = 12.225$ m
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Time: $v = u + at \Rightarrow 0 = 14.7 - 9.8t \Rightarrow t = 1.5$ s
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.3 FORCES & NEWTON'S LAWS ===== -->
+
+  <div class="lesson-section" id="forces">
+    <h2 class="section-title">17.3 Forces &amp; Newton's Laws</h2>
+
+    <p>Forces are vector quantities measured in Newtons (N). The effect of all forces on an object is described by Newton's three laws.</p>
+
+    <div class="formula-box">
+      $$\textbf{Newton's 1st Law: } \text{An object remains at rest or moves with constant velocity unless acted on by a resultant force.}$$
+      $$\textbf{Newton's 2nd Law: } F = ma$$
+      $$\textbf{Newton's 3rd Law: } \text{Every action has an equal and opposite reaction.}$$
+    </div>
+
+    <h3 class="subsection">Types of Forces</h3>
+    <p><strong>Weight:</strong> $W = mg$ downward. <strong>Normal reaction $R$:</strong> perpendicular to the surface. <strong>Tension $T$:</strong> along a string or rod. <strong>Friction $F$:</strong> opposing motion. <strong>Driving force / Thrust.</strong></p>
+
+    <h3 class="subsection">Resolving Forces</h3>
+    <p>To apply Newton's 2nd Law, resolve all forces in a chosen direction. The net force in that direction equals $ma$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.3a</div>
+      <div class="example-q">A particle of mass 5 kg is on a smooth horizontal surface. A horizontal force of 20 N acts on it. Find the acceleration and the normal reaction.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Horizontally: $F = ma \Rightarrow 20 = 5a \Rightarrow a = 4$ m/s²
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Vertically (no vertical acceleration): $R - mg = 0 \Rightarrow R = 5 \times 9.8 = 49$ N
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.3b</div>
+      <div class="example-q">A particle of mass 3 kg is on a smooth plane inclined at 30° to the horizontal. Find the acceleration down the plane.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Resolve parallel to the plane (taking down the plane as positive):
+            $mg\sin 30° = ma$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $a = g\sin 30° = 9.8 \times 0.5 = 4.9$ m/s²
+            <div class="step-comment">On a smooth incline the mass cancels — acceleration is independent of mass.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Perpendicular to plane: $R = mg\cos 30° = 3 \times 9.8 \times \frac{\sqrt{3}}{2} \approx 25.5$ N
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.4 CONNECTED PARTICLES ===== -->
+
+  <div class="lesson-section" id="connected">
+    <h2 class="section-title">17.4 Connected Particles</h2>
+
+    <p>When two or more particles are connected by a light inextensible string, they share the same acceleration (magnitude) and the string has the same tension throughout.</p>
+
+    <div class="key-point">
+      <strong>Method for Connected Particles</strong>
+      Apply $F = ma$ to each particle separately, then solve the simultaneous equations. Alternatively, if you only need the acceleration (not the tension), you can treat the whole system as one.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.4a</div>
+      <div class="example-q">Particle A (mass 4 kg) sits on a smooth horizontal table. It is connected by a light inextensible string over a smooth pulley at the edge of the table to particle B (mass 2 kg) hanging freely. Find the acceleration of the system and the tension in the string.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            For A (horizontal): $T = 4a$ &nbsp;&nbsp;...(1)
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            For B (vertical, taking down as positive): $2g - T = 2a$ &nbsp;&nbsp;...(2)
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Add (1) and (2): $2g = 6a \Rightarrow a = \dfrac{2 \times 9.8}{6} = \dfrac{9.8}{3} \approx 3.27$ m/s²
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            From (1): $T = 4 \times \dfrac{9.8}{3} = \dfrac{39.2}{3} \approx 13.1$ N
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.5 FRICTION ===== -->
+
+  <div class="lesson-section" id="friction">
+    <h2 class="section-title">17.5 Friction</h2>
+
+    <p>Friction is a force that opposes motion (or potential motion) between surfaces in contact. The maximum friction force is called the <strong>limiting friction</strong>.</p>
+
+    <div class="formula-box">
+      $$F \leq \mu R$$
+      $$F_{\max} = \mu R \quad \text{(when sliding or on the point of sliding)}$$
+    </div>
+
+    <p>$\mu$ is the <strong>coefficient of friction</strong> (dimensionless, $0 \leq \mu$). $R$ is the normal reaction. Friction acts up the slope when the particle tends to slide down, and down the slope when it tends to slide up.</p>
+
+    <div class="key-point">
+      <strong>Static vs Kinetic Friction</strong>
+      At A Level, we use one value of $\mu$ for both. An object is in <strong>limiting equilibrium</strong> when it is about to move and $F = \mu R$ exactly. If the object is moving, $F = \mu R$ (kinetic friction). If it is stationary and not on the point of moving, $F < \mu R$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.5a</div>
+      <div class="example-q">A particle of mass 5 kg rests on a rough horizontal surface with $\mu = 0.3$. A horizontal force $P$ is applied. Find (a) the maximum value of $P$ for equilibrium, (b) the acceleration if $P = 25$ N.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $R = mg = 5 \times 9.8 = 49$ N
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            (a) $F_{\max} = \mu R = 0.3 \times 49 = 14.7$ N. So $P_{\max} = 14.7$ N.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            (b) $P = 25 > 14.7$, so the particle moves. Net force $= 25 - 14.7 = 10.3$ N. $a = 10.3/5 = 2.06$ m/s²
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.6 MOMENTS ===== -->
+
+  <div class="lesson-section" id="moments">
+    <h2 class="section-title">17.6 Moments &amp; Equilibrium</h2>
+
+    <p>The <strong>moment</strong> of a force about a point is its turning effect. It equals the force multiplied by the perpendicular distance from the point to the line of action of the force.</p>
+
+    <div class="formula-box">
+      $$M = Fd$$
+    </div>
+
+    <p>Moments are measured in Newton-metres (N m) and can be <strong>clockwise</strong> (negative by convention) or <strong>anticlockwise</strong> (positive).</p>
+
+    <h3 class="subsection">Conditions for Equilibrium</h3>
+    <p>For a rigid body in equilibrium, two conditions must both hold simultaneously:</p>
+
+    <div class="formula-box">
+      $$\sum F = 0 \quad \text{(no net force in any direction)}$$
+      $$\sum M = 0 \quad \text{(no net moment about any point)}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Exam Tip: Choosing Moments Pivot</strong>
+      Take moments about a point where an unknown force acts — this eliminates that unknown from the moments equation, making calculation much simpler.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.6a</div>
+      <div class="example-q">A uniform beam AB of mass 10 kg and length 4 m rests horizontally on supports at A and at C, where C is 1 m from B. A particle of mass 6 kg hangs from B. Find the reactions at A and C.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Let $R_A$ and $R_C$ be the reactions at A and C. Weight of beam acts at midpoint (2 m from A). $g = 9.8$ m/s².
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Take moments about A (eliminates $R_A$): clockwise moments = anticlockwise moments
+            $$R_C \times 3 = 10g \times 2 + 6g \times 4$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $3R_C = 20g + 24g = 44g \Rightarrow R_C = \dfrac{44 \times 9.8}{3} \approx 143.7$ N
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Resolve vertically: $R_A + R_C = 10g + 6g = 156.8$ N
+            $R_A = 156.8 - 143.7 \approx 13.1$ N
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 17.7 PROJECTILES ===== -->
+
+  <div class="lesson-section" id="projectiles">
+    <h2 class="section-title">17.7 Projectile Motion</h2>
+
+    <p>A projectile moves under gravity alone (no air resistance). The key insight is that horizontal and vertical motion are <strong>independent</strong> — we treat them separately.</p>
+
+    <div class="formula-box">
+      $$\textbf{Horizontal: } a_x = 0, \quad x = u\cos\theta \cdot t$$
+      $$\textbf{Vertical: } a_y = -g, \quad y = u\sin\theta \cdot t - \tfrac{1}{2}gt^2$$
+      $$v_x = u\cos\theta \quad \text{(constant)}$$
+      $$v_y = u\sin\theta - gt$$
+    </div>
+
+    <h3 class="subsection">Key Results</h3>
+
+    <div class="formula-box">
+      $$\text{Time of flight} = \dfrac{2u\sin\theta}{g}$$
+      $$\text{Range} = \dfrac{u^2\sin 2\theta}{g}$$
+      $$\text{Maximum height} = \dfrac{u^2\sin^2\theta}{2g}$$
+      $$\text{Maximum range occurs at } \theta = 45°$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Don't Memorise the Range Formula</strong>
+      In exams it's safer to derive the result from first principles using the two separate components — the formula only works when the launch and landing heights are the same. For any other scenario, derive from scratch.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.7a</div>
+      <div class="example-q">A ball is launched from the ground at $20$ m/s at $30°$ above the horizontal. Find (a) the maximum height, (b) the time of flight, (c) the horizontal range.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Initial components: $u_x = 20\cos 30° = 10\sqrt{3}$ m/s, $u_y = 20\sin 30° = 10$ m/s
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            (a) At max height, $v_y = 0$: $0 = 10 - 9.8t \Rightarrow t = 1.02$ s
+            $H = 10(1.02) - \frac{1}{2}(9.8)(1.02)^2 = 10.2 - 5.1 \approx 5.1$ m
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            (b) Time of flight $= 2 \times 1.02 = 2.04$ s (by symmetry)
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            (c) Range $= u_x \times t = 10\sqrt{3} \times 2.04 \approx 17.3 \times 2.04 \approx 35.3$ m
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Trajectory Equation</h3>
+    <p>Eliminating $t$ from the component equations gives the Cartesian equation of the trajectory:</p>
+
+    <div class="formula-box">
+      $$y = x\tan\theta - \dfrac{gx^2}{2u^2\cos^2\theta}$$
+    </div>
+
+  </div>
+
+  <!-- ===== 17.8 VECTORS IN MECHANICS ===== -->
+
+  <div class="lesson-section" id="vectors-mech">
+    <h2 class="section-title">17.8 Vectors in Mechanics</h2>
+
+    <p>In 2D mechanics problems, forces, velocities and accelerations are expressed as column vectors or using $\mathbf{i}$ and $\mathbf{j}$ unit vectors.</p>
+
+    <div class="formula-box">
+      $$\mathbf{F} = m\mathbf{a}$$
+      $$|\mathbf{v}| = \sqrt{v_x^2 + v_y^2} \quad \text{(speed)}$$
+      $$\mathbf{r} = \mathbf{r_0} + \mathbf{u}t + \tfrac{1}{2}\mathbf{a}t^2$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 17.8a</div>
+      <div class="example-q">A particle of mass 3 kg has position vector $\mathbf{r} = (t^2 + 2)\mathbf{i} + (3t - 1)\mathbf{j}$ metres at time $t$ seconds. Find the force acting on the particle at $t = 2$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\mathbf{v} = \dfrac{d\mathbf{r}}{dt} = 2t\,\mathbf{i} + 3\,\mathbf{j}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\mathbf{a} = \dfrac{d\mathbf{v}}{dt} = 2\,\mathbf{i} + 0\,\mathbf{j} = 2\,\mathbf{i}$ m/s² (constant — independent of $t$)
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\mathbf{F} = m\mathbf{a} = 3 \times 2\,\mathbf{i} = 6\,\mathbf{i}$ N
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Relative Velocity</h3>
+    <p>The velocity of A relative to B is $\mathbf{v}_A - \mathbf{v}_B$. This is used in problems involving ships, planes, or any two moving objects.</p>
+
+    <div class="formula-box">
+      $$\mathbf{v}_{A\text{ rel }B} = \mathbf{v}_A - \mathbf{v}_B$$
+    </div>
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <!-- Grade A -->
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A car accelerates uniformly from rest to 24 m/s in 8 seconds. Find the acceleration and the distance travelled.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $a = (v - u)/t = 24/8 = 3$ m/s². $s = ut + \frac{1}{2}at^2 = 0 + \frac{1}{2}(3)(64) = 96$ m.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A particle of mass 4 kg rests on a smooth plane inclined at $\theta$ to the horizontal where $\tan\theta = 0.75$. A force $P$ acts up the plane, keeping the particle in equilibrium. Find $P$ and the normal reaction $R$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\tan\theta = 0.75 \Rightarrow \sin\theta = 0.6$, $\cos\theta = 0.8$. Parallel: $P = mg\sin\theta = 4(9.8)(0.6) = 23.52$ N. Perpendicular: $R = mg\cos\theta = 4(9.8)(0.8) = 31.36$ N.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A uniform rod AB of mass 8 kg and length 3 m is hinged at A and rests horizontally, supported by a vertical string at B. Find the tension in the string and the reaction at the hinge.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Moments about A: $T \times 3 = 8g \times 1.5 \Rightarrow T = 4g = 39.2$ N. Vertical equilibrium: $R_A + T = 8g \Rightarrow R_A = 4g = 39.2$ N. (Hinge acts vertically upward.)
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A stone is thrown horizontally at 15 m/s from the top of a cliff 45 m high. Find the time to hit the sea and the horizontal distance from the base of the cliff.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Vertical: $45 = \frac{1}{2}(9.8)t^2 \Rightarrow t^2 = 90/9.8 \approx 9.184 \Rightarrow t \approx 3.03$ s. Horizontal: $x = 15 \times 3.03 \approx 45.5$ m.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Two particles of mass 5 kg and 3 kg are connected by a string over a smooth pulley. Find the acceleration of the system and the tension in the string when released from rest.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          For 5 kg: $5g - T = 5a$. For 3 kg: $T - 3g = 3a$. Adding: $2g = 8a \Rightarrow a = g/4 = 2.45$ m/s². $T = 3g + 3a = 3(9.8) + 3(2.45) = 29.4 + 7.35 = 36.75$ N.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A particle of mass 2 kg is on a rough inclined plane ($\mu = 0.4$, angle $30°$). It is given an initial velocity of 5 m/s up the plane. Find how far it travels before coming to rest, and determine whether it stays at rest or slides back down.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Going up: $R = mg\cos 30° = 2(9.8)(0.866) = 16.97$ N. Friction acts down: $F = \mu R = 0.4(16.97) = 6.79$ N. Deceleration: $a = g\sin 30° + \mu g\cos 30° = 4.9 + 3.39 = 8.29$ m/s². Distance: $v^2 = u^2 - 2as \Rightarrow s = 25/(2 \times 8.29) = 1.51$ m. Check at rest: force down slope $= mg\sin 30° = 9.8$ N; max friction up slope $= 6.79$ N. Since $9.8 > 6.79$, particle slides back down.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">A particle is projected at speed $u$ at angle $\alpha$ above the horizontal from a point O. Show that the particle passes through the point $(R, 0)$ (same height as O) when $R = \dfrac{u^2 \sin 2\alpha}{g}$ and find the two angles at which a target 80 m away can be hit at $u = 30$ m/s.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Time of flight: $0 = u\sin\alpha \cdot t - \frac{1}{2}gt^2 \Rightarrow t = 2u\sin\alpha/g$. Range: $R = u\cos\alpha \cdot t = \frac{u^2 \cdot 2\sin\alpha\cos\alpha}{g} = \frac{u^2\sin 2\alpha}{g}$ ✓. For target: $\sin 2\alpha = \frac{80g}{u^2} = \frac{80 \times 9.8}{900} = \frac{784}{900} = 0.871$. $2\alpha = 60.5°$ or $119.5°$. So $\alpha \approx 30.3°$ or $59.7°$.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A particle of mass 5 kg moves so that $\mathbf{r} = (2t^3 - t)\mathbf{i} + (t^2 + 4t)\mathbf{j}$ metres. Find the magnitude of the force on the particle at $t = 1$ s.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\mathbf{v} = (6t^2 - 1)\mathbf{i} + (2t + 4)\mathbf{j}$. $\mathbf{a} = 12t\,\mathbf{i} + 2\,\mathbf{j}$. At $t = 1$: $\mathbf{a} = 12\mathbf{i} + 2\mathbf{j}$. $\mathbf{F} = 5\mathbf{a} = 60\mathbf{i} + 10\mathbf{j}$. $|\mathbf{F}| = \sqrt{60^2 + 10^2} = \sqrt{3700} = 10\sqrt{37} \approx 60.8$ N.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Hard / STEP style -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">A particle is projected from point O at speed $u$ and angle $\alpha$. A second particle is projected simultaneously from the same point at speed $v$ and angle $\beta$ (where $\beta > \alpha$). Find the condition on $u$, $v$, $\alpha$, $\beta$ such that both particles reach the same maximum height. If this condition holds and $\alpha = 30°$, $\beta = 60°$, find the ratio $u : v$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Max height: $H = \frac{u^2\sin^2\alpha}{2g}$. Equal heights: $u^2\sin^2\alpha = v^2\sin^2\beta \Rightarrow u\sin\alpha = v\sin\beta$ (taking positive square roots). With $\alpha = 30°$, $\beta = 60°$: $u \cdot \frac{1}{2} = v \cdot \frac{\sqrt{3}}{2} \Rightarrow u = v\sqrt{3}$. So $u:v = \sqrt{3}:1$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">A uniform ladder of mass $m$ and length $2a$ leans against a smooth vertical wall at angle $\theta$ to the horizontal, with its foot on rough ground ($\mu$). A person of mass $M$ starts climbing the ladder. Find how far up the ladder the person can go before the ladder slips, and show that the ladder cannot slip if $\tan\theta > \dfrac{m + 2M}{2\mu(m + M)}$ is violated (i.e. determine the critical distance).</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Let person be distance $d$ up the ladder. Normal at wall: $S$ (horizontal). Normal at ground: $R = (m+M)g$ (vertical equil.). Friction at ground: $F = S$ (horizontal equil.). Moments about foot: $S \cdot 2a\sin\theta = mg \cdot a\cos\theta + Mg \cdot d\cos\theta$. So $S = \frac{(ma + Md)\cos\theta}{2a\sin\theta} \cdot g$. Limiting friction: $F = \mu R \Rightarrow S = \mu(m+M)g$. Setting equal: $\frac{(ma + Md)g\cos\theta}{2a\sin\theta} = \mu(m+M)g$. Solving for $d$: $d = \frac{2\mu a(m+M)\tan\theta - ma}{M} = \frac{a(2\mu(m+M)\tan\theta - m)}{M}$.
+        </div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="lesson-nav">
+    <a href="statistics.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous Topic</span> Statistics</div>
+    </a>
+    <a href="../index.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Back to</span> Maths Topics</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

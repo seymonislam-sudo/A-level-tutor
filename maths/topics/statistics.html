@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(--bg);
+color: var(--text);
+font-family: 'DM Sans', sans-serif;
+line-height: 1.7;
+}
+
+body::before {
+content: '';
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px;
+pointer-events: none;
+z-index: 0;
+}
+
+.orb {
+position: fixed;
+border-radius: 50%;
+filter: blur(140px);
+opacity: 0.08;
+pointer-events: none;
+z-index: 0;
+}
+.orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 1.1rem 2.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: rgba(13,13,20,0.92);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+font-family: 'Playfair Display', serif;
+font-size: 1rem;
+font-weight: 700;
+color: var(--text);
+text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-back {
+color: var(--muted);
+text-decoration: none;
+font-size: 0.8rem;
+font-family: 'DM Mono', monospace;
+transition: color 0.2s;
+}
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar {
+position: fixed;
+top: 56px;
+left: 0;
+bottom: 0;
+width: 260px;
+background: var(--surface);
+border-right: 1px solid var(--border);
+overflow-y: auto;
+padding: 2rem 0;
+}
+
+.sidebar-title {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+padding: 0 1.5rem;
+margin-bottom: 1rem;
+}
+
+.sidebar-link {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 0.65rem 1.5rem;
+text-decoration: none;
+color: var(--muted);
+font-size: 0.85rem;
+transition: all 0.2s;
+border-left: 2px solid transparent;
+}
+
+.sidebar-link:hover {
+color: var(--text);
+background: rgba(255,255,255,0.03);
+}
+
+.sidebar-link.active {
+color: var(--accent);
+border-left-color: var(--accent);
+background: rgba(96,165,250,0.07);
+}
+
+.sidebar-num {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+width: 18px;
+flex-shrink: 0;
+}
+
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+
+.sidebar-divider {
+height: 1px;
+background: var(--border);
+margin: 1rem 1.5rem;
+}
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header {
+margin-bottom: 3rem;
+padding-bottom: 2rem;
+border-bottom: 1px solid var(--border);
+animation: fadeUp 0.6s ease both;
+}
+
+.breadcrumb {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+margin-bottom: 1.2rem;
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+
+.topic-num-badge {
+display: inline-block;
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+background: rgba(96,165,250,0.1);
+border: 1px solid rgba(96,165,250,0.25);
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+margin-bottom: 1rem;
+letter-spacing: 0.06em;
+}
+
+h1.topic-title {
+font-family: 'Playfair Display', serif;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 900;
+letter-spacing: -0.03em;
+line-height: 1.1;
+margin-bottom: 1rem;
+}
+
+.topic-intro {
+font-size: 1rem;
+color: var(--muted);
+max-width: 600px;
+}
+
+.topic-meta-row {
+display: flex;
+gap: 2rem;
+margin-top: 1.5rem;
+flex-wrap: wrap;
+}
+
+.meta-item {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+
+.meta-item span { color: var(--accent); }
+
+.lesson-section {
+margin-bottom: 3.5rem;
+animation: fadeUp 0.6s ease both;
+}
+
+h2.section-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.6rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+margin-bottom: 0.5rem;
+padding-top: 1rem;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+h2.section-title::before {
+content: '';
+display: inline-block;
+width: 4px;
+height: 1.4em;
+background: var(--accent);
+border-radius: 2px;
+flex-shrink: 0;
+}
+
+h3.subsection {
+font-family: 'Playfair Display', serif;
+font-size: 1.15rem;
+font-weight: 700;
+margin: 2rem 0 0.8rem;
+color: var(--text);
+}
+
+p {
+color: var(--text);
+margin-bottom: 1rem;
+font-size: 0.95rem;
+}
+
+.formula-box {
+background: var(--accent-dim);
+border: 1px solid rgba(96,165,250,0.25);
+border-radius: 12px;
+padding: 1.5rem 2rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.formula-box::before {
+content: 'KEY FORMULA';
+position: absolute;
+top: -0.6rem;
+left: 1rem;
+background: var(--accent);
+color: var(--bg);
+font-family: 'DM Mono', monospace;
+font-size: 0.6rem;
+font-weight: 500;
+letter-spacing: 0.1em;
+padding: 0.15rem 0.6rem;
+border-radius: 4px;
+}
+
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-left: 3px solid var(--accent);
+border-radius: 0 10px 10px 0;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.key-point strong {
+color: var(--accent);
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.warning-box {
+background: rgba(251,191,36,0.08);
+border: 1px solid rgba(251,191,36,0.3);
+border-radius: 10px;
+padding: 1.2rem 1.5rem;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.warning-box strong {
+color: #fcd34d;
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.example {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1.8rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.example-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--accent);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 0.8rem;
+}
+
+.example-q {
+font-size: 0.95rem;
+font-weight: 500;
+margin-bottom: 1.2rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border);
+}
+
+.example-steps {
+display: flex;
+flex-direction: column;
+gap: 0.8rem;
+}
+
+.step {
+display: grid;
+grid-template-columns: 28px 1fr;
+gap: 0.75rem;
+align-items: start;
+font-size: 0.9rem;
+}
+
+.step-num {
+width: 28px;
+height: 28px;
+background: rgba(96,165,250,0.12);
+border: 1px solid rgba(96,165,250,0.3);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+flex-shrink: 0;
+margin-top: 2px;
+}
+
+.step-content { color: var(--text); }
+
+.step-comment {
+font-size: 0.8rem;
+color: var(--muted);
+font-style: italic;
+margin-top: 0.3rem;
+}
+
+.reveal-btn {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+background: none;
+border: 1px solid var(--border);
+color: var(--muted);
+padding: 0.5rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+font-family: 'DM Mono', monospace;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+transition: all 0.2s;
+margin-top: 0.8rem;
+}
+
+.reveal-btn:hover {
+border-color: var(--accent);
+color: var(--accent);
+}
+
+.reveal-content {
+display: none;
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border);
+}
+
+.reveal-content.open { display: block; }
+
+.practice-section {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 2rem;
+margin-top: 2rem;
+}
+
+.practice-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1.5rem;
+}
+
+.practice-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.3rem;
+font-weight: 700;
+}
+
+.difficulty-badge {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+padding: 0.25rem 0.7rem;
+border-radius: 6px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+.diff-a { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item {
+padding: 1.2rem 0;
+border-bottom: 1px solid var(--border);
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 1rem;
+align-items: start;
+}
+
+.question-item:last-child { border-bottom: none; }
+
+.q-num {
+font-family: 'DM Mono', monospace;
+font-size: 0.7rem;
+color: var(--accent);
+margin-bottom: 0.4rem;
+}
+
+.q-text {
+font-size: 0.92rem;
+line-height: 1.6;
+}
+
+.q-marks {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+white-space: nowrap;
+margin-top: 0.2rem;
+}
+
+.lesson-nav {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 4rem;
+padding-top: 2rem;
+border-top: 1px solid var(--border);
+}
+
+.lesson-nav-btn {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+text-decoration: none;
+color: var(--muted);
+font-size: 0.85rem;
+transition: color 0.2s;
+padding: 0.8rem 1.2rem;
+border: 1px solid var(--border);
+border-radius: 10px;
+background: var(--surface);
+}
+
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
+
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+
+.btn-label {
+font-family: 'DM Mono', monospace;
+font-size: 0.68rem;
+color: var(--muted);
+display: block;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.toc {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 3rem;
+}
+
+.toc-title {
+font-family: 'DM Mono', monospace;
+font-size: 0.72rem;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 1rem;
+}
+
+.toc-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
+}
+
+.toc-list li a {
+color: var(--muted);
+text-decoration: none;
+font-size: 0.88rem;
+display: flex;
+align-items: center;
+gap: 0.6rem;
+transition: color 0.2s;
+padding: 0.2rem 0;
+}
+
+.toc-list li a:hover { color: var(--accent); }
+
+.toc-list li a::before {
+content: '';
+width: 16px;
+height: 1px;
+background: var(--border);
+flex-shrink: 0;
+}
+
+.toc-list li a:hover::before { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 16</div>
+  <a href="#data" class="sidebar-link active"><span class="sidebar-num">16.1</span> Data & Sampling</a>
+  <a href="#measures" class="sidebar-link"><span class="sidebar-num">16.2</span> Measures of Location</a>
+  <a href="#spread" class="sidebar-link"><span class="sidebar-num">16.3</span> Measures of Spread</a>
+  <a href="#probability" class="sidebar-link"><span class="sidebar-num">16.4</span> Probability</a>
+  <a href="#distributions" class="sidebar-link"><span class="sidebar-num">16.5</span> Distributions</a>
+  <a href="#binomial" class="sidebar-link"><span class="sidebar-num">16.6</span> Binomial Distribution</a>
+  <a href="#hypothesis" class="sidebar-link"><span class="sidebar-num">16.7</span> Hypothesis Testing</a>
+  <a href="#normal" class="sidebar-link"><span class="sidebar-num">16.8</span> Normal Distribution</a>
+  <a href="#correlation" class="sidebar-link"><span class="sidebar-num">16.9</span> Correlation & Regression</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 16
+    </div>
+    <div class="topic-num-badge">Topic 16 · Statistics</div>
+    <h1 class="topic-title">Statistics</h1>
+    <p class="topic-intro">Data analysis, probability, distributions, and hypothesis testing. The statistical toolkit for interpreting the real world with mathematical rigour.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>9</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Statistics Year 1 & 2</div>
+      <div class="meta-item"><span>~6 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#data">16.1 — Data & Sampling</a></li>
+      <li><a href="#measures">16.2 — Measures of Location & Central Tendency</a></li>
+      <li><a href="#spread">16.3 — Measures of Spread</a></li>
+      <li><a href="#probability">16.4 — Probability</a></li>
+      <li><a href="#distributions">16.5 — Statistical Distributions</a></li>
+      <li><a href="#binomial">16.6 — Binomial Distribution</a></li>
+      <li><a href="#hypothesis">16.7 — Hypothesis Testing</a></li>
+      <li><a href="#normal">16.8 — Normal Distribution</a></li>
+      <li><a href="#correlation">16.9 — Correlation & Regression</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 16.1 DATA & SAMPLING ===== -->
+
+  <div class="lesson-section" id="data">
+    <h2 class="section-title">16.1 Data &amp; Sampling</h2>
+
+    <p>Statistics begins with data. Before analysing anything, you need to understand what type of data you have and how it was collected.</p>
+
+    <h3 class="subsection">Types of Data</h3>
+    <p><strong>Qualitative data</strong> is non-numerical (e.g. eye colour, favourite subject). <strong>Quantitative data</strong> is numerical, and splits into <strong>discrete</strong> (countable, e.g. number of siblings) and <strong>continuous</strong> (measurable, e.g. height, time).</p>
+
+    <h3 class="subsection">Populations and Samples</h3>
+    <p>A <strong>population</strong> is the entire group being studied. A <strong>sample</strong> is a subset of the population. We take samples because it is usually impractical or impossible to survey an entire population.</p>
+
+    <div class="key-point">
+      <strong>Key Point</strong>
+      A <strong>census</strong> surveys every member of a population. It gives completely accurate results but is time-consuming and expensive. A <strong>sample survey</strong> is faster and cheaper but introduces sampling error.
+    </div>
+
+    <h3 class="subsection">Sampling Methods</h3>
+    <p>You need to know five sampling methods for Edexcel:</p>
+    <p><strong>Simple random sampling:</strong> Every member of the population has an equal chance of being selected. Use a random number generator or lottery method. Unbiased but impractical for large populations.</p>
+    <p><strong>Systematic sampling:</strong> Select every $k$th member from a list, where $k = \frac{\text{population size}}{\text{sample size}}$. Quick and easy, but can introduce bias if the list has a periodic pattern.</p>
+    <p><strong>Stratified sampling:</strong> Divide the population into groups (strata) and sample from each in proportion to the stratum's size. Ensures representation from all subgroups.</p>
+    <p><strong>Opportunity (convenience) sampling:</strong> Use whoever is available. Quick but highly biased — not representative.</p>
+    <p><strong>Quota sampling:</strong> Like stratified but the researcher chooses who to include within each stratum. Faster than stratified but introduces researcher bias.</p>
+
+    <div class="formula-box">
+      $$\text{Stratum sample size} = \frac{\text{Stratum size}}{\text{Population size}} \times \text{Total sample size}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.1a</div>
+      <div class="example-q">A school has 800 students: 320 in Year 12 and 480 in Year 13. A stratified sample of 50 students is required. How many should come from each year group?</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Year 12: $\dfrac{320}{800} \times 50 = 20$ students
+            <div class="step-comment">Proportion from Year 12 is 320/800 = 0.4</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Year 13: $\dfrac{480}{800} \times 50 = 30$ students
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Total: $20 + 30 = 50$ ✓
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 16.2 MEASURES OF LOCATION ===== -->
+
+  <div class="lesson-section" id="measures">
+    <h2 class="section-title">16.2 Measures of Location &amp; Central Tendency</h2>
+
+    <p>Measures of location describe where the centre of a dataset lies.</p>
+
+    <div class="formula-box">
+      $$\bar{x} = \dfrac{\sum x}{n} \qquad \text{(mean of raw data)}$$
+      $$\bar{x} = \dfrac{\sum fx}{\sum f} \qquad \text{(mean of frequency distribution)}$$
+    </div>
+
+    <p>The <strong>median</strong> is the middle value when data is ordered. For $n$ values, the median is at position $\dfrac{n+1}{2}$.</p>
+    <p>The <strong>mode</strong> is the most frequent value. A dataset can be bimodal (two modes) or have no mode.</p>
+
+    <h3 class="subsection">Grouped Data</h3>
+    <p>For grouped frequency tables, you cannot find exact values — you estimate using the midpoint of each class.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.2a</div>
+      <div class="example-q">Find the estimated mean of the following grouped data:
+        <br>Heights (cm): 150–160 (freq 4), 160–170 (freq 11), 170–180 (freq 7), 180–190 (freq 3)</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Use midpoints: 155, 165, 175, 185
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\sum fx = 155(4) + 165(11) + 175(7) + 185(3) = 620 + 1815 + 1225 + 555 = 4215$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\sum f = 4 + 11 + 7 + 3 = 25$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $\bar{x} = \dfrac{4215}{25} = 168.6$ cm
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Quartiles and Percentiles</h3>
+    <p>The <strong>lower quartile</strong> $Q_1$ is at position $\frac{n}{4}$, the <strong>upper quartile</strong> $Q_3$ is at position $\frac{3n}{4}$. For grouped data, use linear interpolation.</p>
+
+    <div class="formula-box">
+      $$Q_1 \text{ position}: \frac{n}{4} \qquad Q_2 \text{ (median)}: \frac{n}{2} \qquad Q_3 \text{ position}: \frac{3n}{4}$$
+    </div>
+
+  </div>
+
+  <!-- ===== 16.3 MEASURES OF SPREAD ===== -->
+
+  <div class="lesson-section" id="spread">
+    <h2 class="section-title">16.3 Measures of Spread</h2>
+
+    <p>Measures of spread describe how dispersed the data is around the centre.</p>
+
+    <div class="formula-box">
+      $$\text{Range} = \text{max} - \text{min}$$
+      $$\text{IQR} = Q_3 - Q_1$$
+      $$\sigma^2 = \dfrac{\sum(x - \bar{x})^2}{n} = \dfrac{\sum x^2}{n} - \bar{x}^2$$
+      $$\sigma = \sqrt{\dfrac{\sum x^2}{n} - \bar{x}^2}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Key Point</strong>
+      The formula $\sigma^2 = \dfrac{\sum x^2}{n} - \bar{x}^2$ is much faster in practice than computing each $(x - \bar{x})^2$ separately. Always use this version in exams.
+    </div>
+
+    <h3 class="subsection">For Frequency Distributions</h3>
+
+    <div class="formula-box">
+      $$\sigma^2 = \dfrac{\sum fx^2}{\sum f} - \bar{x}^2$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.3a</div>
+      <div class="example-q">The values $3, 7, 8, 5, 9, 4, 6$ have mean $\bar{x} = 6$. Find the standard deviation.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\sum x^2 = 9 + 49 + 64 + 25 + 81 + 16 + 36 = 280$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\sigma^2 = \dfrac{280}{7} - 6^2 = 40 - 36 = 4$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\sigma = \sqrt{4} = 2$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Outliers</h3>
+    <p>An outlier is a value more than $1.5 \times \text{IQR}$ below $Q_1$ or above $Q_3$. Outliers should be noted and investigated — they may indicate genuine extreme values or data errors.</p>
+
+    <div class="formula-box">
+      $$\text{Outlier if: } x < Q_1 - 1.5 \times \text{IQR} \quad \text{or} \quad x > Q_3 + 1.5 \times \text{IQR}$$
+    </div>
+
+  </div>
+
+  <!-- ===== 16.4 PROBABILITY ===== -->
+
+  <div class="lesson-section" id="probability">
+    <h2 class="section-title">16.4 Probability</h2>
+
+    <p>Probability measures how likely an event is to occur, on a scale from 0 (impossible) to 1 (certain).</p>
+
+    <div class="formula-box">
+      $$P(A) = \dfrac{\text{number of favourable outcomes}}{\text{total number of equally likely outcomes}}$$
+      $$P(A') = 1 - P(A)$$
+      $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+    </div>
+
+    <h3 class="subsection">Independent and Mutually Exclusive Events</h3>
+    <p>Two events are <strong>mutually exclusive</strong> if they cannot both occur: $P(A \cap B) = 0$, so $P(A \cup B) = P(A) + P(B)$.</p>
+    <p>Two events are <strong>independent</strong> if the occurrence of one does not affect the other: $P(A \cap B) = P(A) \times P(B)$.</p>
+
+    <h3 class="subsection">Conditional Probability</h3>
+
+    <div class="formula-box">
+      $$P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$$
+    </div>
+
+    <p>Read $P(A \mid B)$ as "the probability of $A$ given that $B$ has occurred". This is vital for tree diagrams and Venn diagrams.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.4a</div>
+      <div class="example-q">In a class of 30, 18 study French, 12 study Spanish, and 5 study both. A student is chosen at random. Find the probability that they study French, given that they study Spanish.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $P(F \cap S) = \dfrac{5}{30}$, $\quad P(S) = \dfrac{12}{30}$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $P(F \mid S) = \dfrac{P(F \cap S)}{P(S)} = \dfrac{5/30}{12/30} = \dfrac{5}{12}$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Common Mistake</strong>
+      Independent does NOT mean mutually exclusive. Independent means $P(A \cap B) = P(A)P(B)$. Mutually exclusive means $P(A \cap B) = 0$. Two events with non-zero probability cannot be both independent and mutually exclusive simultaneously.
+    </div>
+
+  </div>
+
+  <!-- ===== 16.5 STATISTICAL DISTRIBUTIONS ===== -->
+
+  <div class="lesson-section" id="distributions">
+    <h2 class="section-title">16.5 Statistical Distributions</h2>
+
+    <p>A <strong>random variable</strong> $X$ takes numerical values determined by the outcome of a random process. We describe it using a <strong>probability distribution</strong>.</p>
+
+    <h3 class="subsection">Discrete Probability Distributions</h3>
+    <p>For a discrete random variable, we list all possible values and their probabilities. The probabilities must sum to 1.</p>
+
+    <div class="formula-box">
+      $$\sum P(X = x) = 1$$
+      $$E(X) = \sum x \cdot P(X = x)$$
+      $$\text{Var}(X) = E(X^2) - [E(X)]^2 = \sum x^2 P(X=x) - \mu^2$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.5a</div>
+      <div class="example-q">$X$ has the distribution: $P(X=1) = 0.2$, $P(X=2) = 0.5$, $P(X=3) = 0.3$. Find $E(X)$ and $\text{Var}(X)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $E(X) = 1(0.2) + 2(0.5) + 3(0.3) = 0.2 + 1.0 + 0.9 = 2.1$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $E(X^2) = 1^2(0.2) + 2^2(0.5) + 3^2(0.3) = 0.2 + 2.0 + 2.7 = 4.9$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\text{Var}(X) = 4.9 - (2.1)^2 = 4.9 - 4.41 = 0.49$
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 16.6 BINOMIAL DISTRIBUTION ===== -->
+
+  <div class="lesson-section" id="binomial">
+    <h2 class="section-title">16.6 Binomial Distribution</h2>
+
+    <p>The binomial distribution models the number of successes in a fixed number of independent trials, each with the same probability of success.</p>
+
+    <p>We write $X \sim B(n, p)$ where $n$ is the number of trials and $p$ is the probability of success on each trial.</p>
+
+    <div class="key-point">
+      <strong>Four Conditions for Binomial</strong>
+      (1) Fixed number of trials $n$. (2) Each trial is independent. (3) Only two outcomes: success or failure. (4) Constant probability of success $p$.
+    </div>
+
+    <div class="formula-box">
+      $$P(X = r) = \binom{n}{r} p^r (1-p)^{n-r}$$
+      $$E(X) = np$$
+      $$\text{Var}(X) = np(1-p)$$
+    </div>
+
+    <p>Where $\dbinom{n}{r} = \dfrac{n!}{r!(n-r)!}$ is the binomial coefficient (number of ways to choose $r$ from $n$).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.6a</div>
+      <div class="example-q">$X \sim B(8, 0.3)$. Find $P(X = 3)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $P(X = 3) = \dbinom{8}{3}(0.3)^3(0.7)^5$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dbinom{8}{3} = \dfrac{8!}{3! \cdot 5!} = 56$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $P(X=3) = 56 \times 0.027 \times 0.16807 = 56 \times 0.004538 \approx 0.2541$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.6b</div>
+      <div class="example-q">$X \sim B(10, 0.4)$. Find $P(X \geq 3)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Use the complement: $P(X \geq 3) = 1 - P(X \leq 2)$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $P(X=0) = (0.6)^{10} \approx 0.00605$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $P(X=1) = 10(0.4)(0.6)^9 \approx 0.04031$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $P(X=2) = 45(0.4)^2(0.6)^8 \approx 0.12093$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            $P(X \geq 3) = 1 - (0.00605 + 0.04031 + 0.12093) = 1 - 0.16729 \approx 0.8327$
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 16.7 HYPOTHESIS TESTING ===== -->
+
+  <div class="lesson-section" id="hypothesis">
+    <h2 class="section-title">16.7 Hypothesis Testing</h2>
+
+    <p>Hypothesis testing gives us a rigorous framework for deciding whether sample data provides enough evidence to reject a claim about a population parameter.</p>
+
+    <h3 class="subsection">The Framework</h3>
+    <p><strong>Step 1 — Set up hypotheses:</strong> The <strong>null hypothesis</strong> $H_0$ is the default claim (usually "no change" or a specific value of $p$). The <strong>alternative hypothesis</strong> $H_1$ is what you are trying to show.</p>
+    <p><strong>Step 2 — Choose significance level $\alpha$:</strong> Typically 5% ($\alpha = 0.05$) or 1%.</p>
+    <p><strong>Step 3 — Find the critical region:</strong> The set of values that would lead you to reject $H_0$.</p>
+    <p><strong>Step 4 — Calculate the test statistic</strong> and compare to the critical region.</p>
+    <p><strong>Step 5 — Conclude in context.</strong></p>
+
+    <div class="key-point">
+      <strong>One-tailed vs Two-tailed Tests</strong>
+      A <strong>one-tailed test</strong> tests if $p > p_0$ or $p < p_0$ (you specify a direction). A <strong>two-tailed test</strong> tests if $p \neq p_0$ (either direction). For a two-tailed test at 5% significance, use 2.5% in each tail.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.7a</div>
+      <div class="example-q">A coin is tossed 20 times and lands heads 15 times. Test at the 5% significance level whether the coin is biased towards heads.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $H_0: p = 0.5$ (fair coin), $H_1: p > 0.5$ (biased towards heads). One-tailed test.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Under $H_0$: $X \sim B(20, 0.5)$. Find $P(X \geq 15)$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $P(X \geq 15) = P(X=15) + \cdots + P(X=20) \approx 0.0207$
+            <div class="step-comment">Use tables or calculator. This is the p-value.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $0.0207 < 0.05$, so we reject $H_0$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <strong>Conclusion:</strong> There is sufficient evidence at the 5% significance level to conclude that the coin is biased towards heads.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Common Mistake</strong>
+      Never say "we accept $H_0$". If the test is not significant, we say "there is insufficient evidence to reject $H_0$". We never prove the null hypothesis — we simply fail to disprove it.
+    </div>
+
+  </div>
+
+  <!-- ===== 16.8 NORMAL DISTRIBUTION ===== -->
+
+  <div class="lesson-section" id="normal">
+    <h2 class="section-title">16.8 Normal Distribution</h2>
+
+    <p>The normal distribution is the most important continuous distribution. It is symmetric and bell-shaped, described entirely by its mean $\mu$ and standard deviation $\sigma$.</p>
+
+    <p>We write $X \sim N(\mu, \sigma^2)$. The <strong>standard normal</strong> has $\mu = 0$, $\sigma = 1$: $Z \sim N(0, 1)$.</p>
+
+    <div class="formula-box">
+      $$X \sim N(\mu, \sigma^2) \implies Z = \dfrac{X - \mu}{\sigma} \sim N(0,1)$$
+      $$P(X < a) = P\!\left(Z < \dfrac{a - \mu}{\sigma}\right)$$
+    </div>
+
+    <div class="key-point">
+      <strong>The 68–95–99.7 Rule</strong>
+      For $X \sim N(\mu, \sigma^2)$: approximately 68% of values lie within $1\sigma$ of the mean, 95% within $2\sigma$, and 99.7% within $3\sigma$. This is useful for quick sanity checks.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.8a</div>
+      <div class="example-q">$X \sim N(50, 16)$. Find $P(X > 54)$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\sigma = \sqrt{16} = 4$. Standardise: $Z = \dfrac{54 - 50}{4} = 1$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $P(X > 54) = P(Z > 1) = 1 - \Phi(1)$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            From tables: $\Phi(1) = 0.8413$, so $P(X > 54) = 1 - 0.8413 = 0.1587$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Normal Approximation to Binomial</h3>
+    <p>When $n$ is large and $p$ is not too extreme, $B(n,p)$ can be approximated by $N(np, np(1-p))$. Apply a <strong>continuity correction</strong>: replace $P(X = k)$ with $P(k - 0.5 < Y < k + 0.5)$.</p>
+
+    <div class="formula-box">
+      $$B(n, p) \approx N\!\left(np,\, np(1-p)\right) \quad \text{when } n \text{ large, } p \text{ not near 0 or 1}$$
+    </div>
+
+    <h3 class="subsection">Hypothesis Testing with the Normal Distribution</h3>
+    <p>For large samples, we can test a population mean $\mu$ using the sample mean $\bar{X}$. Under $H_0$:</p>
+
+    <div class="formula-box">
+      $$\bar{X} \sim N\!\left(\mu_0,\, \dfrac{\sigma^2}{n}\right) \implies Z = \dfrac{\bar{X} - \mu_0}{\sigma/\sqrt{n}} \sim N(0,1)$$
+    </div>
+
+  </div>
+
+  <!-- ===== 16.9 CORRELATION & REGRESSION ===== -->
+
+  <div class="lesson-section" id="correlation">
+    <h2 class="section-title">16.9 Correlation &amp; Regression</h2>
+
+    <p>Correlation and regression describe relationships between two variables in bivariate data.</p>
+
+    <h3 class="subsection">Product Moment Correlation Coefficient (PMCC)</h3>
+    <p>The PMCC $r$ measures the strength and direction of a linear relationship between two variables $x$ and $y$.</p>
+
+    <div class="formula-box">
+      $$-1 \leq r \leq 1$$
+      $$r = \dfrac{S_{xy}}{\sqrt{S_{xx} S_{yy}}}$$
+    </div>
+
+    <p>where $S_{xy} = \sum xy - \dfrac{\sum x \sum y}{n}$, $\quad S_{xx} = \sum x^2 - \dfrac{(\sum x)^2}{n}$, $\quad S_{yy} = \sum y^2 - \dfrac{(\sum y)^2}{n}$.</p>
+
+    <div class="key-point">
+      <strong>Interpreting r</strong>
+      $r = 1$: perfect positive linear correlation. $r = -1$: perfect negative linear correlation. $r = 0$: no linear correlation. Values near $\pm 1$ indicate strong correlation; near 0 indicates weak.
+    </div>
+
+    <h3 class="subsection">Linear Regression (Least Squares)</h3>
+    <p>The regression line of $y$ on $x$ is $y = a + bx$, where:</p>
+
+    <div class="formula-box">
+      $$b = \dfrac{S_{xy}}{S_{xx}} \qquad a = \bar{y} - b\bar{x}$$
+    </div>
+
+    <p>The regression line <strong>always passes through</strong> $(\bar{x}, \bar{y})$. Use it to predict $y$ for given $x$ values within the data range (interpolation) — but be cautious about extrapolating beyond the data.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Correlation ≠ Causation</strong>
+      A strong correlation between two variables does not mean one causes the other. There may be a <strong>lurking variable</strong> (confounding factor) causing both, or the correlation may be coincidental. Always comment on this in exam questions.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.9a</div>
+      <div class="example-q">For a dataset with $n = 6$: $\sum x = 30$, $\sum y = 42$, $\sum xy = 228$, $\sum x^2 = 170$, $\sum y^2 = 316$. Find the regression line of $y$ on $x$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\bar{x} = 30/6 = 5$, $\quad \bar{y} = 42/6 = 7$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $S_{xy} = 228 - \dfrac{30 \times 42}{6} = 228 - 210 = 18$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $S_{xx} = 170 - \dfrac{30^2}{6} = 170 - 150 = 20$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            $b = \dfrac{18}{20} = 0.9$, $\quad a = 7 - 0.9(5) = 7 - 4.5 = 2.5$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            Regression line: $y = 2.5 + 0.9x$
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <!-- Grade A -->
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A company has 200 employees: 80 in sales, 60 in operations, and 60 in finance. A stratified sample of 40 is required. How many should come from each department?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          Sales: $\frac{80}{200} \times 40 = 16$. Operations: $\frac{60}{200} \times 40 = 12$. Finance: $\frac{60}{200} \times 40 = 12$. Total: $16 + 12 + 12 = 40$ ✓
+        </div>
+      </div>
+      <div class="q-marks">[3 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Find the mean and standard deviation of: $2, 5, 5, 7, 9, 10, 10, 12$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\bar{x} = 60/8 = 7.5$. $\sum x^2 = 4+25+25+49+81+100+100+144 = 528$. $\sigma^2 = 528/8 - 7.5^2 = 66 - 56.25 = 9.75$. $\sigma = \sqrt{9.75} \approx 3.12$.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">$X \sim B(12, 0.25)$. Find (a) $P(X = 4)$, (b) $P(X \leq 2)$, (c) $E(X)$ and $\text{Var}(X)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          (a) $\binom{12}{4}(0.25)^4(0.75)^8 = 495 \times 0.00391 \times 0.1001 \approx 0.1936$. (b) $P(X=0) + P(X=1) + P(X=2) = 0.0317 + 0.1267 + 0.2323 = 0.3907$. (c) $E(X) = 12 \times 0.25 = 3$; $\text{Var}(X) = 12 \times 0.25 \times 0.75 = 2.25$.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">$X \sim N(100, 25)$. Find (a) $P(X < 103)$, (b) $P(X > 97)$, (c) $P(96 < X < 108)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\sigma = 5$. (a) $P(Z < 0.6) = 0.7257$. (b) $P(Z > -0.6) = P(Z < 0.6) = 0.7257$. (c) $P(-0.8 < Z < 1.6) = \Phi(1.6) - \Phi(-0.8) = 0.9452 - 0.2119 = 0.7333$.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Events $A$ and $B$ are such that $P(A) = 0.4$, $P(B) = 0.5$, $P(A \cup B) = 0.7$. Find $P(A \mid B)$ and determine whether $A$ and $B$ are independent.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $P(A \cap B) = 0.4 + 0.5 - 0.7 = 0.2$. $P(A \mid B) = 0.2/0.5 = 0.4$. Check independence: $P(A) \times P(B) = 0.4 \times 0.5 = 0.2 = P(A \cap B)$. So $A$ and $B$ are independent.
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A biased die has $P(6) = p$. The die is rolled 15 times. Find the range of values of $p$ for which it is more likely to get at most 2 sixes than at least 3 sixes.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          We need $P(X \leq 2) > 0.5$ where $X \sim B(15, p)$. This requires $p$ to be sufficiently small. Using tables or numerical methods, the critical value is approximately $p < 0.14$ (for exact boundary, solve $P(X \leq 2) = 0.5$).
+        </div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">The heights of students at a school are normally distributed with mean 168 cm and standard deviation 8 cm. If the tallest 10% of students are selected for a basketball team, find the minimum height required.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $P(X > h) = 0.1 \Rightarrow P(Z > z) = 0.1 \Rightarrow z = 1.282$. So $h = 168 + 1.282 \times 8 = 168 + 10.26 \approx 178.3$ cm.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A researcher claims that 30% of adults drink more than the recommended daily water intake. In a sample of 25 adults, only 4 drink enough. Test at the 5% significance level whether this provides evidence that the true proportion is less than 30%.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $H_0: p = 0.3$, $H_1: p < 0.3$. $X \sim B(25, 0.3)$ under $H_0$. $P(X \leq 4) = \sum_{r=0}^{4} \binom{25}{r}(0.3)^r(0.7)^{25-r} \approx 0.0905$. Since $0.0905 > 0.05$, we do not reject $H_0$. Insufficient evidence at 5% level to conclude the proportion is less than 30%.
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Hard / STEP style -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">The random variable $X \sim B(n, p)$. Show that $P(X = r+1) = \dfrac{(n-r)p}{(r+1)(1-p)} \cdot P(X = r)$. Use this recurrence relation to find the mode of $B(20, 0.4)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\dfrac{P(X=r+1)}{P(X=r)} = \dfrac{\binom{n}{r+1}p^{r+1}(1-p)^{n-r-1}}{\binom{n}{r}p^r(1-p)^{n-r}} = \dfrac{(n-r)p}{(r+1)(1-p)}$. For mode: this ratio $> 1$ when $(n-r)p > (r+1)(1-p)$, i.e. $np - rp > r + 1 - rp - p$, i.e. $r < (n+1)p - 1 = 21(0.4) - 1 = 7.4$. So $P$ increases up to $r = 7$ and decreases after. Mode is $X = 8$ (check: ratio at $r=7$ is $\frac{13 \times 0.4}{8 \times 0.6} = \frac{5.2}{4.8} > 1$; at $r=8$ is $\frac{12 \times 0.4}{9 \times 0.6} = \frac{4.8}{5.4} < 1$). Mode = 8.
+        </div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">Let $X \sim N(\mu, \sigma^2)$. By considering the transformation $Z = \frac{X-\mu}{\sigma}$, prove that $P(\mu - k\sigma < X < \mu + k\sigma) = 2\Phi(k) - 1$ where $\Phi$ is the standard normal CDF. Deduce the exact probability that $X$ lies within two standard deviations of the mean, given $\Phi(2) = 0.9772$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $P(\mu - k\sigma < X < \mu + k\sigma) = P\!\left(-k < \frac{X-\mu}{\sigma} < k\right) = P(-k < Z < k) = \Phi(k) - \Phi(-k) = \Phi(k) - (1 - \Phi(k)) = 2\Phi(k) - 1$. For $k = 2$: $P = 2(0.9772) - 1 = 0.9544$. So approximately 95.44% of values lie within two standard deviations.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="lesson-nav">
+    <a href="further-trigonometry.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous Topic</span> Further Trigonometry</div>
+    </a>
+    <a href="mechanics.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Mechanics</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
