@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exponentials & Logarithms — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --accent: #4ade80;
+    --accent-dim: rgba(74,222,128,0.12);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(–bg); color: var(–text); font-family: ‘DM Sans’, sans-serif; line-height: 1.7; }
+
+body::before {
+content: ‘’; position: fixed; inset: 0;
+background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #4ade80; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #4ade80; bottom: -100px; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(–border); }
+.nav-logo { font-family: ‘Playfair Display’, serif; font-size: 1rem; font-weight: 700; color: var(–text); text-decoration: none; }
+.nav-logo span { color: var(–accent); }
+.nav-back { color: var(–muted); text-decoration: none; font-size: 0.8rem; font-family: ‘DM Mono’, monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(–accent); }
+
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(–surface); border-right: 1px solid var(–border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(–accent); border-left-color: var(–accent); background: rgba(74,222,128,0.06); }
+.sidebar-num { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(–accent); }
+.sidebar-divider { height: 1px; background: var(–border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; max-width: 860px; }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(–border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(–accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: ‘Playfair Display’, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(–muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(–accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ‘’; display: inline-block; width: 4px; height: 1.4em; background: var(–accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: ‘Playfair Display’, serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(–text); }
+p { color: var(–text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(–accent-dim); border: 1px solid rgba(74,222,128,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: ‘KEY FORMULA’; position: absolute; top: -0.6rem; left: 1rem; background: var(–accent); color: var(–bg); font-family: ‘DM Mono’, monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(–surface2); border: 1px solid var(–border); border-left: 3px solid var(–accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(–accent); font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fbbf24; font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(–border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(–text); }
+.step-comment { font-size: 0.8rem; color: var(–muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(–border); color: var(–muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: ‘DM Mono’, monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(–accent); color: var(–accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(–border); }
+.reveal-content.open { display: block; }
+
+/* Log laws reference card */
+.law-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.law-card { background: var(–surface); border: 1px solid var(–border); border-radius: 10px; padding: 1rem 1.2rem; }
+.law-name { font-family: ‘DM Mono’, monospace; font-size: 0.65rem; color: var(–accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+.practice-section { background: var(–surface2); border: 1px solid var(–border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: ‘Playfair Display’, serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(74,222,128,0.12); color: var(–accent); border: 1px solid rgba(74,222,128,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(–border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(–border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(–border); border-radius: 10px; background: var(–surface); }
+.lesson-nav-btn:hover { color: var(–accent); border-color: rgba(74,222,128,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(–muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(–accent); }
+.toc-list li a::before { content: ‘’; width: 16px; height: 1px; background: var(–border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(–accent); }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 06</div>
+  <a href="#exponentials" class="sidebar-link active"><span class="sidebar-num">6.1</span> Exponential Functions</a>
+  <a href="#logarithms" class="sidebar-link"><span class="sidebar-num">6.2</span> Logarithms</a>
+  <a href="#log-laws" class="sidebar-link"><span class="sidebar-num">6.3</span> Laws of Logarithms</a>
+  <a href="#equations" class="sidebar-link"><span class="sidebar-num">6.4</span> Exponential Equations</a>
+  <a href="#modelling" class="sidebar-link"><span class="sidebar-num">6.5</span> Exponential Modelling</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 06
+    </div>
+    <div class="topic-num-badge">Topic 06 · Pure Mathematics</div>
+    <h1 class="topic-title">Exponentials &amp; Logarithms</h1>
+    <p class="topic-intro">The mathematics of growth, decay, and the inverse of powers. Logarithms unlock equations where the unknown is in the exponent — and they're the language of science.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 14–15</div>
+      <div class="meta-item"><span>~3.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#exponentials">6.1 — Exponential Functions</a></li>
+      <li><a href="#logarithms">6.2 — Logarithms</a></li>
+      <li><a href="#log-laws">6.3 — Laws of Logarithms</a></li>
+      <li><a href="#equations">6.4 — Solving Exponential Equations</a></li>
+      <li><a href="#modelling">6.5 — Exponential Modelling & Linearisation</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 6.1 EXPONENTIAL FUNCTIONS ===== -->
+
+  <div class="lesson-section" id="exponentials">
+    <h2 class="section-title">6.1 Exponential Functions</h2>
+
+```
+<p>An <strong>exponential function</strong> has the variable in the exponent: $f(x) = a^x$ where $a > 0$, $a \neq 1$. Unlike polynomials, these grow (or decay) at a rate proportional to their current value — making them the natural model for population growth, radioactive decay, compound interest, and temperature change.</p>
+
+<div class="formula-box">
+  $$f(x) = a^x \quad (a > 0,\ a \neq 1)$$
+  $$\text{Key properties: domain } (-\infty, \infty),\ \text{range } (0, \infty)$$
+  $$\text{Always passes through } (0, 1) \text{ since } a^0 = 1$$
+  $$a > 1: \text{ increasing (growth)} \qquad 0 < a < 1: \text{ decreasing (decay)}$$
+</div>
+
+<h3 class="subsection">The Natural Base $e$</h3>
+<p>The number $e \approx 2.718...$ is the unique base for which the exponential function is its own derivative — making $e^x$ the most important function in calculus. It arises naturally from compound interest and continuous growth.</p>
+
+<div class="formula-box">
+  $$e = \lim_{n \to \infty}\left(1 + \frac{1}{n}\right)^n \approx 2.71828\ldots$$
+  $$y = e^x: \text{ passes through }(0,1),\text{ gradient at every point equals its value}$$
+  $$y = e^{-x}: \text{ reflection of } e^x \text{ in the }y\text{-axis — exponential decay}$$
+</div>
+
+<div class="key-point">
+  <strong>Graph Behaviour</strong>
+  All exponential graphs $y = a^x$ share these features: pass through $(0,1)$; never touch the $x$-axis (the $x$-axis is a horizontal asymptote as $x \to -\infty$ for growth, $x \to +\infty$ for decay); always positive. Transformations work exactly as in Topic 1 — $y = 3e^{2x} + 1$ is a vertical stretch, horizontal compression, and upward shift of $e^x$.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.1a</div>
+  <div class="example-q">Sketch $y = 2e^{-x} + 3$, stating the asymptote, $y$-intercept, and whether the function is increasing or decreasing.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Start with $y = e^{-x}$: reflection of $e^x$ in the $y$-axis, so it is <em>decreasing</em>. Passes through $(0, 1)$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $y = 2e^{-x}$: vertical stretch by factor 2. Passes through $(0, 2)$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $y = 2e^{-x} + 3$: translate up by 3. Passes through $(0, 5)$. Asymptote shifts from $y = 0$ to $y = 3$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        Summary: $y$-intercept $(0, 5)$, asymptote $y = 3$, decreasing, range $(3, \infty)$.
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 6.2 LOGARITHMS ===== -->
+
+  <div class="lesson-section" id="logarithms">
+    <h2 class="section-title">6.2 Logarithms</h2>
+
+```
+<p>The <strong>logarithm</strong> is the inverse of the exponential. If $a^x = y$, then $\log_a y = x$. You can think of $\log_a y$ as answering the question: "What power do I raise $a$ to, to get $y$?"</p>
+
+<div class="formula-box">
+  $$a^x = y \iff \log_a y = x$$
+  $$\text{The natural logarithm: } \ln x = \log_e x$$
+  $$e^x = y \iff \ln y = x$$
+  $$\log_a a = 1 \qquad \log_a 1 = 0 \qquad \log_a(a^x) = x \qquad a^{\log_a x} = x$$
+</div>
+
+<p>The graph of $y = \log_a x$ is the reflection of $y = a^x$ in the line $y = x$. It passes through $(1, 0)$, has the $y$-axis as a vertical asymptote, and has domain $(0, \infty)$.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.2a</div>
+  <div class="example-q">Evaluate without a calculator: $(a)$ $\log_2 32$ &nbsp; $(b)$ $\log_3 \frac{1}{9}$ &nbsp; $(c)$ $\ln e^5$</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $(a)$: "What power of 2 gives 32?" $2^5 = 32$, so $\log_2 32 = \mathbf{5}$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $(b)$: $\frac{1}{9} = 3^{-2}$, so $\log_3 \frac{1}{9} = \mathbf{-2}$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $(c)$: $\ln e^5 = \mathbf{5}$ directly — $\ln$ and $e^x$ are inverses.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Domain of Logarithms</strong>
+  $\log_a x$ is only defined for $x > 0$. You cannot take the log of zero or a negative number. In equations, always check at the end that your solutions satisfy $x > 0$ — spurious solutions frequently arise from squaring or other manipulations.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 6.3 LAWS OF LOGARITHMS ===== -->
+
+  <div class="lesson-section" id="log-laws">
+    <h2 class="section-title">6.3 Laws of Logarithms</h2>
+
+```
+<p>These three laws are the backbone of all logarithm work. They correspond directly to the laws of indices — because logarithms <em>are</em> indices.</p>
+
+<div class="formula-box">
+  $$\log_a(xy) = \log_a x + \log_a y \quad \text{(multiplication → addition)}$$
+  $$\log_a\!\left(\frac{x}{y}\right) = \log_a x - \log_a y \quad \text{(division → subtraction)}$$
+  $$\log_a(x^n) = n\log_a x \quad \text{(power → multiply)}$$
+  $$\textbf{Change of base: } \log_a b = \frac{\log_c b}{\log_c a} = \frac{\ln b}{\ln a}$$
+</div>
+
+<div class="law-grid">
+  <div class="law-card">
+    <div class="law-name">Addition Law</div>
+    <p style="font-size:0.85rem; margin:0;">$\log(AB) = \log A + \log B$<br>Comes from $a^m \cdot a^n = a^{m+n}$</p>
+  </div>
+  <div class="law-card">
+    <div class="law-name">Subtraction Law</div>
+    <p style="font-size:0.85rem; margin:0;">$\log\!\left(\tfrac{A}{B}\right) = \log A - \log B$<br>Comes from $a^m \div a^n = a^{m-n}$</p>
+  </div>
+  <div class="law-card">
+    <div class="law-name">Power Law</div>
+    <p style="font-size:0.85rem; margin:0;">$\log(A^n) = n\log A$<br>Comes from $(a^m)^n = a^{mn}$</p>
+  </div>
+  <div class="law-card">
+    <div class="law-name">Change of Base</div>
+    <p style="font-size:0.85rem; margin:0;">$\log_a b = \dfrac{\ln b}{\ln a}$<br>Lets you use a calculator for any base</p>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.3a — Simplifying</div>
+  <div class="example-q">Write $2\log 3 + \log 4 - \log 6$ as a single logarithm.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Apply power law to the first term: $2\log 3 = \log 3^2 = \log 9$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Apply addition law: $\log 9 + \log 4 = \log(9 \times 4) = \log 36$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Apply subtraction law: $\log 36 - \log 6 = \log\!\left(\dfrac{36}{6}\right) = \log 6$.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.3b — Expanding</div>
+  <div class="example-q">Express $\ln\!\left(\dfrac{x^3\sqrt{y}}{z^2}\right)$ in terms of $\ln x$, $\ln y$, $\ln z$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Split numerator and denominator: $\ln(x^3\sqrt{y}) - \ln(z^2)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $= \ln(x^3) + \ln(y^{1/2}) - \ln(z^2)$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Apply power law: $= 3\ln x + \tfrac{1}{2}\ln y - 2\ln z$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Common Misconceptions</strong>
+  $\log(x + y) \neq \log x + \log y$. The addition law only works for <em>products</em> inside the log, not sums. Similarly, $\dfrac{\log x}{\log y} \neq \log\!\left(\dfrac{x}{y}\right)$ — the division law only applies when the division is <em>inside</em> the log. These are the two most common errors in this topic.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 6.4 SOLVING EXPONENTIAL EQUATIONS ===== -->
+
+  <div class="lesson-section" id="equations">
+    <h2 class="section-title">6.4 Solving Exponential Equations</h2>
+
+```
+<p>When the unknown is in the exponent, take logarithms of both sides to bring it down. The power law does the heavy lifting.</p>
+
+<div class="formula-box">
+  $$a^x = b \implies x\ln a = \ln b \implies x = \frac{\ln b}{\ln a}$$
+  $$\text{Or using change of base: } x = \log_a b$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.4a</div>
+  <div class="example-q">Solve $5^x = 20$, giving your answer to 3 significant figures.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Take $\ln$ of both sides: $\ln(5^x) = \ln 20$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Power law: $x\ln 5 = \ln 20$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $x = \dfrac{\ln 20}{\ln 5} = \dfrac{2.9957\ldots}{1.6094\ldots} \approx \mathbf{1.86}$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.4b</div>
+  <div class="example-q">Solve $3^{2x} - 10 \cdot 3^x + 9 = 0$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Let $u = 3^x$. Note $3^{2x} = (3^x)^2 = u^2$. The equation becomes:
+        $$u^2 - 10u + 9 = 0$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Factorise: $(u - 1)(u - 9) = 0$, so $u = 1$ or $u = 9$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $3^x = 1 \implies x = 0$. &nbsp; $3^x = 9 = 3^2 \implies x = 2$.
+        <div class="step-comment">Solutions: $x = 0$ and $x = 2$.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.4c — Solving with $\ln$</div>
+  <div class="example-q">Solve $\ln(3x - 1) + \ln(x + 2) = \ln(2x^2 + 1)$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Combine the left side using the addition law:
+        $$\ln\!\big[(3x-1)(x+2)\big] = \ln(2x^2+1)$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Since $\ln$ is one-to-one, the arguments must be equal:
+        $$(3x-1)(x+2) = 2x^2 + 1$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Expand: $3x^2 + 6x - x - 2 = 2x^2 + 1$
+        $$x^2 + 5x - 3 = 0 \implies x = \frac{-5 \pm \sqrt{37}}{2}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        $x \approx 0.541$ or $x \approx -5.541$. Check domain: need $3x - 1 > 0 \Rightarrow x > \frac{1}{3}$ and $x + 2 > 0 \Rightarrow x > -2$. Only $x \approx 0.541$ is valid.
+        <div class="step-comment">Always check solutions satisfy the domain conditions for all log terms.</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 6.5 MODELLING ===== -->
+
+  <div class="lesson-section" id="modelling">
+    <h2 class="section-title">6.5 Exponential Modelling &amp; Linearisation</h2>
+
+```
+<p>Exponential functions model real-world phenomena where the rate of change is proportional to the current value. This covers population growth, radioactive decay, cooling, and compound interest.</p>
+
+<div class="formula-box">
+  $$N = N_0\,e^{kt}$$
+  $$k > 0: \text{ growth} \qquad k < 0: \text{ decay}$$
+  $$\text{Half-life: time } T \text{ such that } N = \tfrac{1}{2}N_0 \implies e^{kT} = \tfrac{1}{2} \implies T = \frac{-\ln 2}{k}$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.5a</div>
+  <div class="example-q">A population of bacteria grows according to $P = 500e^{0.4t}$ where $t$ is measured in hours. $(a)$ Find the initial population. $(b)$ Find the population after 3 hours. $(c)$ Find the time when the population reaches 5000.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $(a)$: At $t = 0$: $P = 500e^0 = 500$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $(b)$: At $t = 3$: $P = 500e^{1.2} = 500 \times 3.320 \approx 1660$ bacteria.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $(c)$: Set $500e^{0.4t} = 5000 \implies e^{0.4t} = 10 \implies 0.4t = \ln 10 \implies t = \dfrac{\ln 10}{0.4} \approx 5.76$ hours.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">Linearisation: $y = ax^n$ and $y = ab^x$</h3>
+<p>Taking logarithms of an exponential or power model transforms it into a linear relationship — so you can plot a straight-line graph and read off the constants. This technique is used in every science subject.</p>
+
+<div class="formula-box">
+  $$y = ax^n \implies \log y = \log a + n\log x$$
+  $$\text{Plot } \log y \text{ against } \log x: \text{ gradient} = n,\ \text{intercept} = \log a$$
+  $$y = ab^x \implies \log y = \log a + x\log b$$
+  $$\text{Plot } \log y \text{ against } x: \text{ gradient} = \log b,\ \text{intercept} = \log a$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 6.5b</div>
+  <div class="example-q">A scientist believes variables $x$ and $y$ satisfy $y = ax^n$. When $\log y$ is plotted against $\log x$, a straight line passes through $(0.5, 1.3)$ and $(2, 4.3)$. Find $a$ and $n$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        The gradient of the line (which equals $n$):
+        $$n = \frac{4.3 - 1.3}{2 - 0.5} = \frac{3}{1.5} = 2$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Find the intercept using point $(0.5, 1.3)$ and gradient 2:
+        $$\log y - 1.3 = 2(\log x - 0.5) \implies \log y = 2\log x + 0.3$$
+        So $\log a = 0.3 \implies a = 10^{0.3} \approx 2.00$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Therefore $y = 2x^2$.
+        <div class="step-comment">Always convert back from $\log a$ to $a$ at the end — the intercept on a log graph gives $\log a$, not $a$ itself.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Which Model Applies?</strong>
+  If you plot $\log y$ vs $\log x$ and get a straight line, the model is $y = ax^n$ (a power law).
+  If you plot $\log y$ vs $x$ and get a straight line, the model is $y = ab^x$ (an exponential).
+  This distinction is tested directly in exams — you'll be given the graph and asked to identify the model and find the constants.
+</div>
+```
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q1</div>
+    <div class="q-text">Evaluate: $(a)\ \log_5 125$ &nbsp; $(b)\ \log_4 \dfrac{1}{16}$ &nbsp; $(c)\ \ln e^{-3}$</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(a)$: $5^3 = 125$, so $\log_5 125 = 3$. &nbsp; $(b)$: $4^{-2} = \frac{1}{16}$, so $\log_4\frac{1}{16} = -2$. &nbsp; $(c)$: $\ln e^{-3} = -3$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q2</div>
+    <div class="q-text">Write as a single logarithm: $3\ln 2 - \ln 4 + \ln 5$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $3\ln 2 = \ln 8$. $\ln 8 - \ln 4 = \ln 2$. $\ln 2 + \ln 5 = \ln 10$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q3</div>
+    <div class="q-text">Solve $7^x = 50$, giving your answer to 3 significant figures.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $x\ln 7 = \ln 50 \implies x = \dfrac{\ln 50}{\ln 7} = \dfrac{3.912}{1.946} \approx \mathbf{2.01}$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q4</div>
+    <div class="q-text">Solve $\ln(2x + 3) = 2$, giving your answer exactly.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $2x + 3 = e^2 \implies x = \dfrac{e^2 - 3}{2}$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q5</div>
+    <div class="q-text">A radioactive substance decays according to $M = 200e^{-0.05t}$ grams, where $t$ is in years. Find $(a)$ the initial mass, $(b)$ the mass after 10 years, $(c)$ the half-life.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(a)$: $M(0) = 200$ g. $(b)$: $M(10) = 200e^{-0.5} \approx 121$ g. $(c)$: $e^{-0.05T} = 0.5 \implies T = \dfrac{\ln 2}{0.05} \approx 13.9$ years.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q6</div>
+    <div class="q-text">Solve $2^{2x+1} - 5 \cdot 2^x + 2 = 0$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $2^{2x+1} = 2 \cdot (2^x)^2$. Let $u = 2^x$: $2u^2 - 5u + 2 = 0 \implies (2u-1)(u-2) = 0$. So $u = \frac{1}{2}$ or $u = 2$. $2^x = 2^{-1} \Rightarrow x = -1$. $2^x = 2 \Rightarrow x = 1$.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q7</div>
+    <div class="q-text">Variables $x$ and $y$ satisfy $y = ab^x$. When $\log_{10} y$ is plotted against $x$, a straight line with gradient $0.3$ and $y$-intercept $1.7$ is obtained. Find $a$ and $b$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\log y = \log a + x\log b$. So $\log b = 0.3 \Rightarrow b = 10^{0.3} \approx 2.00$ and $\log a = 1.7 \Rightarrow a = 10^{1.7} \approx 50.1$.
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q8</div>
+    <div class="q-text">Solve $\log_2(x+1) - \log_2(x-1) = 3$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\log_2\!\left(\dfrac{x+1}{x-1}\right) = 3 \implies \dfrac{x+1}{x-1} = 8 \implies x + 1 = 8x - 8 \implies 7x = 9 \implies x = \dfrac{9}{7}$. Check: $x - 1 = \frac{2}{7} > 0$ ✓.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q9</div>
+    <div class="q-text">$(a)$ Show that $\log_a b \cdot \log_b a = 1$ for all valid $a, b$.
+
+    $(b)$ Show that $\log_a b \cdot \log_b c = \log_a c$.
+
+    $(c)$ Hence evaluate $\log_2 3 \cdot \log_3 4 \cdot \log_4 8$ without a calculator.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(a)$: By change of base, $\log_a b = \dfrac{\ln b}{\ln a}$ and $\log_b a = \dfrac{\ln a}{\ln b}$. Product $= \dfrac{\ln b}{\ln a} \cdot \dfrac{\ln a}{\ln b} = 1$. $\square$
+
+      $(b)$: $\log_a b \cdot \log_b c = \dfrac{\ln b}{\ln a} \cdot \dfrac{\ln c}{\ln b} = \dfrac{\ln c}{\ln a} = \log_a c$. $\square$
+
+      $(c)$: By $(b)$ applied twice: $\log_2 3 \cdot \log_3 4 \cdot \log_4 8 = \log_2 4 \cdot \log_4 8 = \log_2 8 = 3$.
+    </div>
+  </div>
+  <div class="q-marks">[8 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q10</div>
+    <div class="q-text">Prove that $e > 2.7$ by showing that $\left(1 + \dfrac{1}{n}\right)^n$ is increasing in $n$, and evaluating it at $n = 10$. Hence explain why $e$ cannot be rational by considering the series $e = \displaystyle\sum_{k=0}^{\infty}\dfrac{1}{k!}$ (you may assume this series converges to $e$).</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      At $n = 10$: $\left(\frac{11}{10}\right)^{10} = \frac{11^{10}}{10^{10}}$. Numerically: $1.1^{10} \approx 2.5937 > 2.5$. Since the sequence is increasing (can be shown by AM-GM: $\frac{n \cdot \frac{n+1}{n} + 1}{n+1} \geq \left(\frac{n+1}{n}\right)^{n/(n+1)}$ — a STEP-level argument), and $1.1^{10} \approx 2.594$, we have $e > 2.594$. With $n = 100$, one gets $> 2.705$, approaching $e \approx 2.718$.
+
+      For irrationality (sketch of argument): Suppose $e = p/q$ for integers $p, q$. Then $q! \cdot e = q! \cdot \sum_{k=0}^{\infty}\frac{1}{k!}$. The partial sum $\sum_{k=0}^{q} \frac{q!}{k!}$ is an integer. The tail $q!\sum_{k=q+1}^{\infty}\frac{1}{k!} = \frac{1}{q+1} + \frac{1}{(q+1)(q+2)} + \cdots$, which is strictly between 0 and 1 (geometric series bound). So $q!\cdot e$ is an integer plus a non-integer — contradiction. Therefore $e$ is irrational. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[10 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="trigonometry.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Trigonometry</div>
+    </a>
+    <a href="differentiation.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Differentiation</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
