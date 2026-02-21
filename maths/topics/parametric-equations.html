@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parametric Equations — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; }
+
+body::before {
+content: ''; position: fixed; inset: 0;
+background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(13,13,20,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+.nav-logo span { color: var(--accent); }
+.nav-back { color: var(--nav-link); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(--nav-link); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(96,165,250,0.07); }
+.sidebar-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(--accent); }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(--muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(--accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ''; display: inline-block; width: 4px; height: 1.4em; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(--text); }
+p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(--accent-dim); border: 1px solid rgba(96,165,250,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: 'KEY FORMULA'; position: absolute; top: -0.6rem; left: 1rem; background: var(--accent); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fcd34d; font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(--text); }
+.step-comment { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.reveal-content.open { display: block; }
+
+.practice-section { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: 'DM Mono', monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(--muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(--accent); }
+.toc-list li a::before { content: ''; width: 16px; height: 1px; background: var(--border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 12</div>
+  <a href="#intro" class="sidebar-link active"><span class="sidebar-num">12.1</span> Parametric Curves</a>
+  <a href="#cartesian" class="sidebar-link"><span class="sidebar-num">12.2</span> Converting to Cartesian</a>
+  <a href="#gradient" class="sidebar-link"><span class="sidebar-num">12.3</span> Gradient &amp; Tangents</a>
+  <a href="#second-deriv" class="sidebar-link"><span class="sidebar-num">12.4</span> Second Derivative</a>
+  <a href="#area" class="sidebar-link"><span class="sidebar-num">12.5</span> Parametric Integration</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 12
+    </div>
+    <div class="topic-num-badge">Topic 12 · Pure Mathematics — Year 2</div>
+    <h1 class="topic-title">Parametric Equations</h1>
+    <p class="topic-intro">A richer way to describe curves — both $x$ and $y$ expressed as functions of a third variable $t$. Parametric equations handle curves that fold back on themselves, making them essential for motion, engineering, and elegant geometry.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 2, Chapter 8</div>
+      <div class="meta-item"><span>~3.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#intro">12.1 — Parametric Curves</a></li>
+      <li><a href="#cartesian">12.2 — Converting to Cartesian Form</a></li>
+      <li><a href="#gradient">12.3 — Gradient &amp; Tangents</a></li>
+      <li><a href="#second-deriv">12.4 — Second Derivative</a></li>
+      <li><a href="#area">12.5 — Parametric Integration</a></li>
+    </ul>
+  </div>
+
+  <!-- 12.1 -->
+  <div class="lesson-section" id="intro">
+    <h2 class="section-title">12.1 Parametric Curves</h2>
+
+    <p>Instead of writing $y$ directly as a function of $x$, parametric equations express both coordinates in terms of a <strong>parameter</strong> $t$. As $t$ varies, the point $(x(t), y(t))$ traces a curve in the plane.</p>
+
+    <div class="formula-box">
+      $$x = f(t), \quad y = g(t), \quad t \in [a, b]$$
+      $$\text{Each value of } t \text{ gives one point on the curve: } (f(t),\, g(t))$$
+    </div>
+
+    <p>The parameter $t$ is often time (giving the position of a moving object) but can be any convenient variable — an angle, a length, or a pure abstract value. Common exam parametrisations use $t$, $\theta$, or $t = \tan\theta$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.1a — Sketching a parametric curve</div>
+      <div class="example-q">A curve is defined by $x = t^2 - 1$, $y = 2t$ for $t \in [-3, 3]$. Find the coordinates when $t = -2, -1, 0, 1, 2$ and describe the curve.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Build a table:
+            <br>$t = -2$: $x = 3$, $y = -4$
+            <br>$t = -1$: $x = 0$, $y = -2$
+            <br>$t = 0$: $x = -1$, $y = 0$
+            <br>$t = 1$: $x = 0$, $y = 2$
+            <br>$t = 2$: $x = 3$, $y = 4$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Notice: $y = 2t \Rightarrow t = y/2$. Substitute into $x$: $x = (y/2)^2 - 1 = \frac{y^2}{4} - 1$, i.e. $y^2 = 4(x+1)$. This is a <strong>parabola</strong> with vertex at $(-1, 0)$, opening right.
+            <div class="step-comment">The parametric form neatly describes both branches of the parabola (positive and negative $y$) in a single sweep.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Why Parametric?</strong>
+      Some curves cannot be written as $y = f(x)$ because they fail the vertical line test — they loop back or have multiple $y$-values for a single $x$. A circle, for example, is impossible to express as a single function $y = f(x)$, but is trivial parametrically: $x = r\cos\theta$, $y = r\sin\theta$.
+    </div>
+  </div>
+
+  <!-- 12.2 -->
+  <div class="lesson-section" id="cartesian">
+    <h2 class="section-title">12.2 Converting to Cartesian Form</h2>
+
+    <p>To find the Cartesian equation, <strong>eliminate the parameter</strong> $t$ between the two equations. Common techniques: rearrange one equation for $t$ and substitute; use a trigonometric identity to eliminate $\theta$.</p>
+
+    <div class="formula-box">
+      $$\text{Method 1 (algebraic): solve } x = f(t) \text{ for } t, \text{ substitute into } y = g(t)$$
+      $$\text{Method 2 (trig): use } \sin^2\theta + \cos^2\theta = 1 \text{ or } \sec^2\theta = 1 + \tan^2\theta$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.2a — Algebraic elimination</div>
+      <div class="example-q">Find the Cartesian equation of the curve $x = \dfrac{2}{t}$, $y = t + 1$, $t \neq 0$. State any restrictions.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            From $x = \dfrac{2}{t}$: $t = \dfrac{2}{x}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Substitute into $y = t + 1$:
+            $$y = \frac{2}{x} + 1$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Since $t \neq 0$, we have $x \neq 0$. The Cartesian equation is $y = \dfrac{2}{x} + 1$, $x \neq 0$.
+            <div class="step-comment">Always check for and state any excluded values that arise from the original parameter restriction.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.2b — Trigonometric elimination</div>
+      <div class="example-q">Find the Cartesian equation of $x = 3\cos\theta$, $y = 2\sin\theta$, $0 \leq \theta < 2\pi$. Describe the curve.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\cos\theta = \dfrac{x}{3}$ and $\sin\theta = \dfrac{y}{2}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Apply $\sin^2\theta + \cos^2\theta = 1$:
+            $$\frac{x^2}{9} + \frac{y^2}{4} = 1$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            This is an <strong>ellipse</strong> centred at the origin, with semi-axes $a = 3$ (along $x$) and $b = 2$ (along $y$).
+            <div class="step-comment">The standard parametrisation of the ellipse $\frac{x^2}{a^2}+\frac{y^2}{b^2}=1$ is $x = a\cos\theta$, $y = b\sin\theta$. Worth memorising.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.2c</div>
+      <div class="example-q">Find the Cartesian equation of $x = \sec\theta$, $y = \tan\theta$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Use $\sec^2\theta - \tan^2\theta = 1$:
+            $$x^2 - y^2 = 1$$
+            <div class="step-comment">This is a hyperbola. The identity $\sec^2\theta = 1 + \tan^2\theta$ is the key tool here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.3 -->
+  <div class="lesson-section" id="gradient">
+    <h2 class="section-title">12.3 Gradient &amp; Tangents</h2>
+
+    <p>The gradient of a parametric curve uses the chain rule: $\dfrac{dy}{dx} = \dfrac{dy/dt}{dx/dt}$. This is the key formula — differentiate $y$ with respect to $t$, differentiate $x$ with respect to $t$, then divide.</p>
+
+    <div class="formula-box">
+      $$\frac{dy}{dx} = \frac{dy/dt}{dx/dt} \quad \left(\text{provided } \frac{dx}{dt} \neq 0\right)$$
+      $$\text{Tangent at parameter } t_0: \text{ gradient } m = \left.\frac{dy}{dx}\right|_{t=t_0}$$
+      $$\text{Equation: } y - y(t_0) = m\bigl(x - x(t_0)\bigr)$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.3a</div>
+      <div class="example-q">A curve is defined by $x = t^3 - 3t$, $y = t^2 + t$. Find $\dfrac{dy}{dx}$ in terms of $t$, and find the equation of the tangent at $t = 2$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\dfrac{dx}{dt} = 3t^2 - 3$, $\quad\dfrac{dy}{dt} = 2t + 1$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dfrac{dy}{dx} = \dfrac{2t+1}{3t^2-3}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            At $t = 2$: gradient $= \dfrac{5}{9}$. Point: $x(2) = 8 - 6 = 2$, $y(2) = 4 + 2 = 6$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Tangent: $y - 6 = \dfrac{5}{9}(x - 2) \implies 9y = 5x + 44$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.3b — Stationary points</div>
+      <div class="example-q">Find the stationary points of $x = 2t^3$, $y = 3t^2 - 12$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            Stationary when $\dfrac{dy}{dx} = 0$, i.e. $\dfrac{dy}{dt} = 0$ (provided $\dfrac{dx}{dt} \neq 0$).
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dfrac{dy}{dt} = 6t = 0 \implies t = 0$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            At $t = 0$: $x = 0$, $y = -12$. Check $\dfrac{dx}{dt} = 6t^2 = 0$ at $t = 0$ too — both derivatives are zero, so this needs the second derivative test (see 12.4).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Vertical Tangents</strong>
+      If $\dfrac{dx}{dt} = 0$ but $\dfrac{dy}{dt} \neq 0$, the tangent is <em>vertical</em> (undefined gradient). These are not stationary points — they are points where the curve doubles back. Always check both derivatives before concluding.
+    </div>
+  </div>
+
+  <!-- 12.4 -->
+  <div class="lesson-section" id="second-deriv">
+    <h2 class="section-title">12.4 Second Derivative</h2>
+
+    <p>The second derivative $\dfrac{d^2y}{dx^2}$ for a parametric curve requires a careful application of the chain rule. You differentiate $\dfrac{dy}{dx}$ with respect to $t$, then divide by $\dfrac{dx}{dt}$.</p>
+
+    <div class="formula-box">
+      $$\frac{d^2y}{dx^2} = \frac{\dfrac{d}{dt}\!\left(\dfrac{dy}{dx}\right)}{\dfrac{dx}{dt}}$$
+      $$\text{i.e. differentiate } \frac{dy}{dx} \text{ w.r.t. } t, \text{ then divide by } \frac{dx}{dt}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.4a</div>
+      <div class="example-q">For the curve $x = t^2$, $y = t^3 - 3t$, find $\dfrac{d^2y}{dx^2}$ and determine the nature of the stationary points.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\dfrac{dy}{dx} = \dfrac{3t^2 - 3}{2t} = \dfrac{3(t^2-1)}{2t}$.
+            Stationary when $\dfrac{dy}{dx} = 0$: $t = \pm 1$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Differentiate $\dfrac{dy}{dx}$ with respect to $t$ using the quotient rule:
+            $$\frac{d}{dt}\!\left(\frac{3t^2-3}{2t}\right) = \frac{6t \cdot 2t - (3t^2-3)\cdot 2}{4t^2} = \frac{12t^2 - 6t^2 + 6}{4t^2} = \frac{6t^2+6}{4t^2} = \frac{3(t^2+1)}{2t^2}$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\dfrac{d^2y}{dx^2} = \dfrac{3(t^2+1)/2t^2}{2t} = \dfrac{3(t^2+1)}{4t^3}$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            At $t = 1$: $\dfrac{d^2y}{dx^2} = \dfrac{6}{4} = \dfrac{3}{2} > 0$ → local <strong>minimum</strong> at $(1, -2)$.
+            At $t = -1$: $\dfrac{d^2y}{dx^2} = \dfrac{6}{-4} = -\dfrac{3}{2} < 0$ → local <strong>maximum</strong> at $(1, 2)$.
+            <div class="step-comment">Both stationary points have $x = t^2 = 1$ — the curve crosses itself at $x = 1$.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.5 -->
+  <div class="lesson-section" id="area">
+    <h2 class="section-title">12.5 Parametric Integration</h2>
+
+    <p>To find the area under a parametric curve, substitute the parametric expressions into the standard area formula, using the chain rule to change the variable of integration from $x$ to $t$.</p>
+
+    <div class="formula-box">
+      $$A = \int_a^b y\,dx = \int_{t_1}^{t_2} y(t)\cdot\frac{dx}{dt}\,dt$$
+      $$\text{where } t_1, t_2 \text{ correspond to } x = a, x = b \text{ respectively}$$
+      $$\text{Take care with limits and signs — sketch the region first}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.5a</div>
+      <div class="example-q">Find the area enclosed between the curve $x = t^2$, $y = t(t-2)^2$ and the $x$-axis, for $0 \leq t \leq 2$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            $\dfrac{dx}{dt} = 2t$. When $t = 0$: $x = 0$. When $t = 2$: $x = 4$.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Check sign of $y$: $y = t(t-2)^2 \geq 0$ for $0 \leq t \leq 2$ ✓.
+            $$A = \int_0^2 t(t-2)^2 \cdot 2t\,dt = 2\int_0^2 t^2(t-2)^2\,dt$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            Expand: $t^2(t^2 - 4t + 4) = t^4 - 4t^3 + 4t^2$.
+            $$A = 2\int_0^2 t^4 - 4t^3 + 4t^2\,dt = 2\left[\frac{t^5}{5} - t^4 + \frac{4t^3}{3}\right]_0^2$$
+            $$= 2\left(\frac{32}{5} - 16 + \frac{32}{3}\right) = 2\left(\frac{96 - 240 + 160}{15}\right) = 2 \times \frac{16}{15} = \frac{32}{15}$$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.5b — Area of an ellipse</div>
+      <div class="example-q">Show that the area of the ellipse $x = a\cos\theta$, $y = b\sin\theta$ is $\pi ab$.</div>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            By symmetry, area $= 4 \times$ (area in first quadrant where $x, y \geq 0$, i.e. $0 \leq \theta \leq \pi/2$).
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            $\dfrac{dx}{d\theta} = -a\sin\theta$. As $\theta$ goes from $0$ to $\pi/2$, $x$ goes from $a$ to $0$.
+            $$A = 4\int_{\pi/2}^{0} b\sin\theta \cdot (-a\sin\theta)\,d\theta = 4ab\int_0^{\pi/2}\sin^2\theta\,d\theta$$
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            $\displaystyle\int_0^{\pi/2}\sin^2\theta\,d\theta = \dfrac{\pi}{4}$ (standard result). So $A = 4ab \cdot \dfrac{\pi}{4} = \pi ab$. $\square$
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Find the Cartesian equation of: $(a)$ $x = 3t - 1$, $y = t^2 + 2$ &nbsp; $(b)$ $x = 4\cos\theta$, $y = 4\sin\theta$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: $t = \frac{x+1}{3}$, so $y = \left(\frac{x+1}{3}\right)^2 + 2 = \frac{(x+1)^2}{9} + 2$. $(b)$: $\cos\theta = x/4$, $\sin\theta = y/4$. $x^2 + y^2 = 16$ — a circle radius 4.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">For $x = 2t + 1$, $y = t^2 - 3t$, find $\dfrac{dy}{dx}$ in terms of $t$, and find the coordinates of the stationary point.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dy}{dx} = \frac{2t-3}{2}$. Stationary when $2t-3 = 0 \Rightarrow t = \frac{3}{2}$. $x = 4$, $y = \frac{9}{4} - \frac{9}{2} = -\frac{9}{4}$. Point: $\left(4, -\frac{9}{4}\right)$.
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">The curve $C$ is given by $x = t^2 + 1$, $y = 3t - t^3$. Find the equation of the tangent to $C$ at the point where $t = 1$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          At $t=1$: $x=2$, $y=2$. $\frac{dy}{dx} = \frac{3-3t^2}{2t}$. At $t=1$: $m=0$. Tangent: $y = 2$ (horizontal).
+        </div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A curve has $x = \cos 2\theta$, $y = \sin\theta$. Show the Cartesian equation is $x = 1 - 2y^2$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $x = \cos 2\theta = 1 - 2\sin^2\theta = 1 - 2y^2$. $\square$
+        </div>
+      </div>
+      <div class="q-marks">[2 marks]</div>
+    </div>
+  </div>
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">The curve $C$ is defined by $x = 3\cos t$, $y = 2\sin t - 1$, $0 \leq t < 2\pi$. $(a)$ Find $\dfrac{dy}{dx}$ at $t = \dfrac{\pi}{4}$. $(b)$ Find all values of $t$ for which the tangent is horizontal.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dy}{dx} = \frac{2\cos t}{-3\sin t} = -\frac{2\cos t}{3\sin t}$. $(a)$: At $t=\pi/4$: $-\frac{2/\sqrt{2}}{3/\sqrt{2}} = -\frac{2}{3}$. $(b)$: Horizontal when $\cos t = 0 \Rightarrow t = \pi/2$ (point $(0,1)$) and $t = 3\pi/2$ (point $(0,-3)$).
+        </div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Find the area enclosed between the curve $x = 3t^2$, $y = 6t - 2t^3$ and the $x$-axis for $0 \leq t \leq \sqrt{3}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dx}{dt} = 6t$. $y = 0$ when $6t - 2t^3 = 2t(3-t^2) = 0 \Rightarrow t = 0$ or $t = \sqrt{3}$. $y \geq 0$ on this interval. $A = \int_0^{\sqrt{3}} (6t-2t^3)\cdot 6t\,dt = 6\int_0^{\sqrt{3}} 6t^2 - 2t^4\,dt = 6\left[2t^3 - \frac{2t^5}{5}\right]_0^{\sqrt{3}} = 6\left(6\sqrt{3} - \frac{18\sqrt{3}}{5}\right) = 6\cdot\frac{12\sqrt{3}}{5} = \frac{72\sqrt{3}}{5}$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">For the curve $x = e^t$, $y = e^{2t} - 3e^t$, find $\dfrac{d^2y}{dx^2}$ and hence determine the nature of the stationary point.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $\frac{dy}{dx} = \frac{2e^{2t}-3e^t}{e^t} = 2e^t - 3$. Stationary when $2e^t = 3 \Rightarrow t = \ln(3/2)$. $\frac{d}{dt}(2e^t-3) = 2e^t$. $\frac{d^2y}{dx^2} = \frac{2e^t}{e^t} = 2 > 0$ for all $t$. Always a minimum. At $t=\ln(3/2)$: $x = 3/2$, $y = 9/4 - 9/2 = -9/4$. Minimum at $\left(\frac{3}{2}, -\frac{9}{4}\right)$.
+        </div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+  </div>
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">The astroid is defined by $x = a\cos^3 t$, $y = a\sin^3 t$, $0 \leq t \leq 2\pi$. $(a)$ Find the Cartesian equation. $(b)$ Show that $\dfrac{dy}{dx} = -\tan t$. $(c)$ The tangent at point $P$ (parameter $t$) meets the $x$- and $y$-axes at $A$ and $B$ respectively. Show that $|AB| = a$ regardless of $t$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">
+          $(a)$: $x^{2/3} = a^{2/3}\cos^2 t$, $y^{2/3} = a^{2/3}\sin^2 t$. Sum: $x^{2/3} + y^{2/3} = a^{2/3}$. $\square$
+
+          $(b)$: $\frac{dx}{dt} = -3a\cos^2 t\sin t$, $\frac{dy}{dt} = 3a\sin^2 t\cos t$. $\frac{dy}{dx} = \frac{3a\sin^2 t\cos t}{-3a\cos^2 t\sin t} = -\tan t$. $\square$
+
+          $(c)$: Tangent at $(a\cos^3 t, a\sin^3 t)$ with gradient $-\tan t$:
+          $y - a\sin^3 t = -\tan t(x - a\cos^3 t)$
+          $y\cos t - a\sin^3 t\cos t = -x\sin t + a\cos^3 t\sin t$
+          $x\sin t + y\cos t = a\sin t\cos t(\cos^2 t + \sin^2 t) = a\sin t\cos t$.
+          Divide: $\frac{x}{a\cos t} + \frac{y}{a\sin t} = 1$. So $A = (a\cos t, 0)$ and $B = (0, a\sin t)$.
+          $|AB| = \sqrt{a^2\cos^2 t + a^2\sin^2 t} = a$. $\square$
+        </div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="numerical-methods.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Numerical Methods</div>
+    </a>
+    <a href="further-differentiation.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Further Differentiation</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (s.getBoundingClientRect().top < 150) current = s.id; });
+    sidebarLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
