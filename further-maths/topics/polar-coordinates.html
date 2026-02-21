@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polar Coordinates — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 05</div>
+  <a href="#intro" class="sidebar-link active"><span class="sidebar-num">5.1</span> The Polar Coordinate System</a>
+  <a href="#converting" class="sidebar-link"><span class="sidebar-num">5.2</span> Converting Coordinates</a>
+  <a href="#curves" class="sidebar-link"><span class="sidebar-num">5.3</span> Sketching Polar Curves</a>
+  <a href="#common" class="sidebar-link"><span class="sidebar-num">5.4</span> Common Polar Curves</a>
+  <a href="#area" class="sidebar-link"><span class="sidebar-num">5.5</span> Area Enclosed by a Polar Curve</a>
+  <a href="#tangents" class="sidebar-link"><span class="sidebar-num">5.6</span> Tangents to Polar Curves</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 05</div>
+    <div class="topic-num-badge">Topic 05 · Core Pure</div>
+    <h1 class="topic-title">Polar Coordinates</h1>
+    <p class="topic-intro">A completely different way to describe points and curves — using distance and angle rather than $x$ and $y$. Unlocks beautiful curves that are impossible to express neatly in Cartesian form.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 2, Chapter 7</div>
+      <div class="meta-item"><span>~3 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#intro">5.1 — The Polar Coordinate System</a></li>
+      <li><a href="#converting">5.2 — Converting Coordinates</a></li>
+      <li><a href="#curves">5.3 — Sketching Polar Curves</a></li>
+      <li><a href="#common">5.4 — Common Polar Curves</a></li>
+      <li><a href="#area">5.5 — Area Enclosed by a Polar Curve</a></li>
+      <li><a href="#tangents">5.6 — Tangents to Polar Curves</a></li>
+    </ul>
+  </div>
+
+  <!-- 5.1 INTRO -->
+  <div class="lesson-section" id="intro">
+    <h2 class="section-title">5.1 The Polar Coordinate System</h2>
+    <p>In the <strong>polar coordinate system</strong>, a point $P$ is described by $(r, \theta)$ where $r$ is the distance from the origin (the <strong>pole</strong>) and $\theta$ is the angle measured anticlockwise from the positive $x$-axis (the <strong>initial line</strong>).</p>
+
+    <div class="formula-box">
+      $$P = (r, \theta) \quad r \geq 0,\quad \theta \in (-\pi, \pi]$$
+    </div>
+
+    <div class="key-point">
+      <strong>Convention</strong>
+      The principal value of $\theta$ is taken in $(-\pi, \pi]$. A polar curve is defined by an equation $r = f(\theta)$ — for each angle, it tells you how far from the pole the curve lies. When $r = 0$ the curve passes through the pole.
+    </div>
+
+    <p>Unlike Cartesian coordinates, polar representations are not unique: $(r, \theta)$ and $(r, \theta + 2\pi)$ describe the same point. Some textbooks allow $r < 0$, meaning the point is reflected through the pole — but at A Level we generally keep $r \geq 0$.</p>
+  </div>
+
+  <!-- 5.2 CONVERTING -->
+  <div class="lesson-section" id="converting">
+    <h2 class="section-title">5.2 Converting Coordinates</h2>
+    <p>The conversion between polar and Cartesian coordinates follows directly from the definition of $\sin$ and $\cos$.</p>
+
+    <div class="formula-box">
+      $$x = r\cos\theta \qquad y = r\sin\theta$$
+      $$r^2 = x^2 + y^2 \qquad \tan\theta = \frac{y}{x}$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Be careful with arctan</strong>
+      Always sketch the point to determine which quadrant it lies in before computing $\theta = \arctan(y/x)$. The arctan function only returns values in $(-\pi/2, \pi/2)$, so for points in the 2nd or 3rd quadrant you must add or subtract $\pi$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.2a</div>
+      <div class="example-q">Convert (a) the Cartesian point $(-1, \sqrt{3})$ to polar form, and (b) the polar point $(4, 2\pi/3)$ to Cartesian form.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $r = \sqrt{1+3} = 2$. Point is in 2nd quadrant. $\theta = \pi - \arctan(\sqrt{3}) = \pi - \frac{\pi}{3} = \frac{2\pi}{3}$. Polar: $\left(2, \dfrac{2\pi}{3}\right)$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $x = 4\cos\dfrac{2\pi}{3} = 4\times(-\frac{1}{2}) = -2$. $y = 4\sin\dfrac{2\pi}{3} = 4\times\dfrac{\sqrt{3}}{2} = 2\sqrt{3}$. Cartesian: $(-2, 2\sqrt{3})$.</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.2b — Converting Equations</div>
+      <div class="example-q">Convert $r = 4\cos\theta$ to Cartesian form.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Multiply both sides by $r$: $r^2 = 4r\cos\theta$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Substitute $r^2 = x^2+y^2$ and $r\cos\theta = x$: $x^2+y^2 = 4x$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Complete the square: $(x-2)^2 + y^2 = 4$ — a circle, centre $(2,0)$, radius $2$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.3 SKETCHING -->
+  <div class="lesson-section" id="curves">
+    <h2 class="section-title">5.3 Sketching Polar Curves</h2>
+    <p>To sketch $r = f(\theta)$, build a table of values for $\theta \in [0, 2\pi]$ (or $[-\pi, \pi]$), plot the key points, and join them smoothly. Look for symmetry to halve the work.</p>
+
+    <h3 class="subsection">Symmetry</h3>
+    <p><strong>Symmetry about the initial line</strong> (i.e. about $\theta = 0$): the curve has this if $f(-\theta) = f(\theta)$. This is the most common type.</p>
+    <p><strong>Symmetry about $\theta = \pi/2$</strong>: if $f(\pi - \theta) = f(\theta)$.</p>
+    <p><strong>Rotational symmetry</strong>: if $f(\theta + \alpha) = f(\theta)$ for some angle $\alpha$.</p>
+
+    <div class="key-point">
+      <strong>Exam Technique: Table of Values</strong>
+      Always compute $r$ at $\theta = 0, \pi/6, \pi/4, \pi/3, \pi/2, 2\pi/3, \pi$ (and their negatives if needed). Mark where $r = 0$ — these are points where the curve passes through the pole. Mark where $r$ is maximum.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.3a</div>
+      <div class="example-q">Sketch the curve $r = 1 + \cos\theta$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Since $\cos(-\theta) = \cos\theta$, the curve is symmetric about $\theta = 0$ (the initial line). Only need $\theta \in [0, \pi]$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">
+          Key values:
+          <br>$\theta=0$: $r=2$ (maximum, on initial line)
+          <br>$\theta=\pi/3$: $r=\frac{3}{2}$
+          <br>$\theta=\pi/2$: $r=1$
+          <br>$\theta=2\pi/3$: $r=\frac{1}{2}$
+          <br>$\theta=\pi$: $r=0$ (passes through pole)
+        </div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">The curve is a <strong>cardioid</strong> — heart-shaped. It starts at $(2,0)$, loops round to touch the pole at $\theta=\pi$, and reflects back symmetrically.<div class="step-comment">The name "cardioid" comes from the Greek for heart. It arises when a circle rolls around another circle of equal radius.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.4 COMMON CURVES -->
+  <div class="lesson-section" id="common">
+    <h2 class="section-title">5.4 Common Polar Curves</h2>
+    <p>You need to recognise and sketch these families instantly in the exam.</p>
+
+    <h3 class="subsection">Circle: $r = a$</h3>
+    <p>All points at distance $a$ from the pole — a circle centred at the origin, radius $a$.</p>
+
+    <h3 class="subsection">Circle through pole: $r = 2a\cos\theta$ or $r = 2a\sin\theta$</h3>
+    <p>A circle of radius $a$, centred at $(a, 0)$ or $(0, a)$ in Cartesian form. Passes through the pole at $\theta = \pi/2$ or $\theta = 0$ respectively.</p>
+
+    <h3 class="subsection">Cardioid: $r = a(1 + \cos\theta)$ or $r = a(1 - \cos\theta)$</h3>
+    <p>Heart-shaped curve. Maximum $r = 2a$ on the initial line; passes through pole at $\theta = \pi$. The $1 - \cos\theta$ version is the mirror image.</p>
+
+    <h3 class="subsection">Limaçon: $r = a + b\cos\theta$, $a \neq b$</h3>
+    <p>When $a > b$: a dimpled or convex loop. When $a < b$: has an inner loop. The cardioid is the special case $a = b$.</p>
+
+    <h3 class="subsection">Rose curves: $r = a\cos(n\theta)$ or $r = a\sin(n\theta)$</h3>
+    <p>Has $n$ petals if $n$ is odd, $2n$ petals if $n$ is even. Maximum $r = a$.</p>
+
+    <h3 class="subsection">Archimedean spiral: $r = a\theta$</h3>
+    <p>$r$ increases linearly with $\theta$ — a spiral that winds outward uniformly.</p>
+
+    <div class="formula-box">
+      $$r = a \quad\text{(circle)} \qquad r = a(1\pm\cos\theta) \quad\text{(cardioid)}$$
+      $$r = a + b\cos\theta \quad\text{(limaçon)} \qquad r = a\cos(n\theta) \quad\text{(rose, }n\text{ petals)}$$
+    </div>
+  </div>
+
+  <!-- 5.5 AREA -->
+  <div class="lesson-section" id="area">
+    <h2 class="section-title">5.5 Area Enclosed by a Polar Curve</h2>
+    <p>The area swept out by the radius vector from $\theta = \alpha$ to $\theta = \beta$ is:</p>
+
+    <div class="formula-box">
+      $$A = \frac{1}{2}\int_{\alpha}^{\beta} r^2\,d\theta$$
+    </div>
+
+    <p>This comes from approximating the region as a sum of thin sectors of angle $d\theta$ and radius $r$, each with area $\frac{1}{2}r^2\,d\theta$.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Choose limits carefully</strong>
+      Use symmetry to simplify. For a cardioid $r = a(1+\cos\theta)$, the full area is $2 \times \frac{1}{2}\int_0^{\pi} r^2\,d\theta$. For a rose with $n$ petals, find the area of one petal (between the two $\theta$ values where $r=0$) and multiply by $n$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.5a</div>
+      <div class="example-q">Find the total area enclosed by the cardioid $r = a(1 + \cos\theta)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">By symmetry about $\theta=0$: $A = 2\times\dfrac{1}{2}\displaystyle\int_0^{\pi}a^2(1+\cos\theta)^2\,d\theta = a^2\int_0^{\pi}(1+\cos\theta)^2\,d\theta$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Expand: $(1+\cos\theta)^2 = 1 + 2\cos\theta + \cos^2\theta = 1 + 2\cos\theta + \dfrac{1+\cos 2\theta}{2} = \dfrac{3}{2} + 2\cos\theta + \dfrac{\cos 2\theta}{2}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\displaystyle\int_0^{\pi}\left(\frac{3}{2}+2\cos\theta+\frac{\cos 2\theta}{2}\right)d\theta = \left[\frac{3\theta}{2}+2\sin\theta+\frac{\sin 2\theta}{4}\right]_0^{\pi} = \frac{3\pi}{2}$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$A = a^2 \times \dfrac{3\pi}{2} = \dfrac{3\pi a^2}{2}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.5b</div>
+      <div class="example-q">Find the area of one petal of the rose curve $r = \cos 2\theta$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$r = 0$ when $\cos 2\theta = 0$, i.e. $2\theta = \pm\pi/2$, so $\theta = \pm\pi/4$. One petal lies between $\theta = -\pi/4$ and $\theta = \pi/4$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$A = \dfrac{1}{2}\displaystyle\int_{-\pi/4}^{\pi/4}\cos^2 2\theta\,d\theta = \displaystyle\int_0^{\pi/4}\cos^2 2\theta\,d\theta$ (by symmetry)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$= \displaystyle\int_0^{\pi/4}\dfrac{1+\cos 4\theta}{2}\,d\theta = \left[\dfrac{\theta}{2}+\dfrac{\sin 4\theta}{8}\right]_0^{\pi/4} = \dfrac{\pi}{8}+0 = \dfrac{\pi}{8}$</div></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Area Between Two Curves</h3>
+    <p>The area between $r = f(\theta)$ (outer) and $r = g(\theta)$ (inner) for $\alpha \leq \theta \leq \beta$:</p>
+    <div class="formula-box">
+      $$A = \frac{1}{2}\int_{\alpha}^{\beta}\left[f(\theta)^2 - g(\theta)^2\right]d\theta$$
+    </div>
+  </div>
+
+  <!-- 5.6 TANGENTS -->
+  <div class="lesson-section" id="tangents">
+    <h2 class="section-title">5.6 Tangents to Polar Curves</h2>
+    <p>To find the gradient of a polar curve, convert to parametric form using $x = r\cos\theta$ and $y = r\sin\theta$, then use $\dfrac{dy}{dx} = \dfrac{dy/d\theta}{dx/d\theta}$.</p>
+
+    <div class="formula-box">
+      $$\frac{dy}{d\theta} = \frac{dr}{d\theta}\sin\theta + r\cos\theta$$
+      $$\frac{dx}{d\theta} = \frac{dr}{d\theta}\cos\theta - r\sin\theta$$
+      $$\frac{dy}{dx} = \frac{\frac{dr}{d\theta}\sin\theta + r\cos\theta}{\frac{dr}{d\theta}\cos\theta - r\sin\theta}$$
+    </div>
+
+    <p><strong>Tangents parallel to the initial line</strong> occur when $\dfrac{dy}{d\theta} = 0$.</p>
+    <p><strong>Tangents perpendicular to the initial line</strong> occur when $\dfrac{dx}{d\theta} = 0$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 5.6a</div>
+      <div class="example-q">Find the values of $\theta$ where $r = 1 + \cos\theta$ has tangents parallel to the initial line.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\dfrac{dr}{d\theta} = -\sin\theta$. So $\dfrac{dy}{d\theta} = -\sin\theta\cdot\sin\theta + (1+\cos\theta)\cos\theta$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$= -\sin^2\theta + \cos\theta + \cos^2\theta = \cos 2\theta + \cos\theta$<div class="step-comment">Used $\cos^2\theta - \sin^2\theta = \cos 2\theta$.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Set $= 0$: $\cos 2\theta + \cos\theta = 0 \Rightarrow 2\cos^2\theta - 1 + \cos\theta = 0 \Rightarrow (2\cos\theta - 1)(\cos\theta + 1) = 0$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\cos\theta = \frac{1}{2} \Rightarrow \theta = \pm\frac{\pi}{3}$, or $\cos\theta = -1 \Rightarrow \theta = \pi$ (but $r=0$ here, so this is the pole — check separately).<div class="step-comment">Tangents parallel to initial line at $\theta = \pi/3$ and $\theta = -\pi/3$.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Convert to polar coordinates: (a) $(\sqrt{3}, 1)$, (b) $(-2, 2)$, (c) $(0, -3)$. Convert to Cartesian: (d) $(5, \pi/6)$, (e) $(2, -3\pi/4)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $r=2$, 1st quadrant, $\theta=\pi/6$. So $(2,\pi/6)$. (b) $r=2\sqrt{2}$, 2nd quadrant, $\theta=3\pi/4$. So $(2\sqrt{2},3\pi/4)$. (c) $r=3$, negative $y$-axis, $\theta=-\pi/2$. So $(3,-\pi/2)$. (d) $x=5\cos(\pi/6)=5\sqrt{3}/2$, $y=5/2$. (e) $x=2\cos(-3\pi/4)=-\sqrt{2}$, $y=2\sin(-3\pi/4)=-\sqrt{2}$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Convert to Cartesian form and identify the curve: (a) $r = 6\sin\theta$, (b) $r = \dfrac{3}{\cos\theta}$, (c) $r^2 = \cos 2\theta$ (just state what type of curve).</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Multiply by $r$: $r^2=6r\sin\theta \Rightarrow x^2+y^2=6y \Rightarrow x^2+(y-3)^2=9$. Circle centre $(0,3)$ radius $3$. (b) $r\cos\theta=3 \Rightarrow x=3$. Vertical line. (c) $r^2=\cos2\theta$ is a <strong>lemniscate of Bernoulli</strong> — a figure-of-eight curve.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Sketch the curve $r = 2 + 2\sin\theta$, labelling the maximum $r$, where it crosses the initial line, and where it passes through the pole (if at all).</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">This is a cardioid $r=2(1+\sin\theta)$. Max $r=4$ at $\theta=\pi/2$ (top). On initial line ($\theta=0$ and $\pi$): $r=2$ both times. Passes through pole at $\theta=-\pi/2$ (or $3\pi/2$) where $\sin\theta=-1$. Symmetric about $\theta=\pi/2$ (the vertical axis). Shape is a heart pointing upward.</div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Find the area enclosed by $r = 3\cos\theta$ for $-\pi/2 \leq \theta \leq \pi/2$. Verify your answer using the Cartesian form.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$A=\frac{1}{2}\int_{-\pi/2}^{\pi/2}9\cos^2\theta\,d\theta=\frac{9}{2}\int_{-\pi/2}^{\pi/2}\frac{1+\cos2\theta}{2}\,d\theta=\frac{9}{2}\cdot\frac{\pi}{2}=\frac{9\pi}{4}$. Cartesian form: $x^2+y^2=3x \Rightarrow (x-3/2)^2+y^2=9/4$. Circle radius $3/2$, area $=\pi(3/2)^2=9\pi/4$ ✓.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Find the area of the region that lies inside $r = 3\cos\theta$ but outside $r = 1 + \cos\theta$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Find intersection: $3\cos\theta=1+\cos\theta \Rightarrow 2\cos\theta=1 \Rightarrow \theta=\pm\pi/3$. Area $=\frac{1}{2}\int_{-\pi/3}^{\pi/3}[(3\cos\theta)^2-(1+\cos\theta)^2]\,d\theta = \int_0^{\pi/3}[9\cos^2\theta-1-2\cos\theta-\cos^2\theta]\,d\theta = \int_0^{\pi/3}[8\cos^2\theta-2\cos\theta-1]\,d\theta$. $=\int_0^{\pi/3}[4(1+\cos2\theta)-2\cos\theta-1]\,d\theta=[3\theta+2\sin2\theta-2\sin\theta]_0^{\pi/3}=\pi+\sqrt{3}-\sqrt{3}=\pi$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">For the limaçon $r = 1 + 2\cos\theta$: (a) find where $r = 0$, (b) sketch the curve showing the inner loop, (c) find the area of the inner loop only.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $1+2\cos\theta=0 \Rightarrow \cos\theta=-1/2 \Rightarrow \theta=\pm2\pi/3$. (b) Inner loop traced for $2\pi/3\leq\theta\leq4\pi/3$ (where $r<0$ conventionally, but the loop is between $\theta=2\pi/3$ and $\theta=4\pi/3$). (c) $A_{inner}=\frac{1}{2}\int_{2\pi/3}^{4\pi/3}(1+2\cos\theta)^2\,d\theta=\frac{1}{2}\int_{2\pi/3}^{4\pi/3}(1+4\cos\theta+4\cos^2\theta)\,d\theta$. Expanding and integrating: $=\frac{1}{2}[\theta+4\sin\theta+\theta+\sin2\theta]_{2\pi/3}^{4\pi/3}=\pi-\frac{3\sqrt{3}}{2}$. Inner loop area $=\pi-\frac{3\sqrt{3}}{2}$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Find the equations of the tangents to $r = 2(1-\cos\theta)$ that are perpendicular to the initial line, and the Cartesian coordinates of the points of tangency.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$x=r\cos\theta=2(1-\cos\theta)\cos\theta=2\cos\theta-2\cos^2\theta$. $\frac{dx}{d\theta}=-2\sin\theta+4\sin\theta\cos\theta=2\sin\theta(2\cos\theta-1)=0$. So $\theta=0,\pi$ (pole) or $\cos\theta=1/2 \Rightarrow \theta=\pm\pi/3$. At $\theta=\pi/3$: $r=2(1-1/2)=1$. Point: $(r\cos\theta,r\sin\theta)=(1/2,\sqrt{3}/2)$. At $\theta=-\pi/3$: $(1/2,-\sqrt{3}/2)$. Tangents: $x=1/2$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+  </div>
+
+  <!-- Hard / STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">The curve $C$ has polar equation $r^2 = a^2\cos 2\theta$ (a <em>lemniscate of Bernoulli</em>). (i) State the values of $\theta$ for which the curve is defined. (ii) Convert to Cartesian form. (iii) Show that the total area enclosed by $C$ is $a^2$. (iv) Find the angle $\theta$ at which the tangent to $C$ is parallel to the initial line, for $0 < \theta < \pi/4$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Need $\cos2\theta\geq0$, so $-\pi/4\leq\theta\leq\pi/4$ or $3\pi/4\leq|\theta|\leq\pi$ (giving two loops). (ii) $r^2=a^2(\cos^2\theta-\sin^2\theta)=a^2\frac{x^2-y^2}{r^2}$, so $r^4=a^2(x^2-y^2)$, i.e. $(x^2+y^2)^2=a^2(x^2-y^2)$. (iii) Total area $=4\times\frac{1}{2}\int_0^{\pi/4}a^2\cos2\theta\,d\theta=2a^2[\frac{\sin2\theta}{2}]_0^{\pi/4}=2a^2\cdot\frac{1}{2}=a^2$ ✓. (iv) $y=r\sin\theta$; $\frac{dy}{d\theta}=0$. With $r^2=a^2\cos2\theta$, differentiate $r$ and apply the tangent formula. Setting $dy/d\theta=0$ leads to $\tan^2\theta=1/2$, so $\theta=\arctan(1/\sqrt{2})$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">Two curves have polar equations $r = 2\cos\theta$ and $r = 2\sin\theta$. (i) Show that they intersect at the pole and at the point with Cartesian coordinates $(1,1)$. (ii) Find the total area of the region enclosed by both curves (i.e. inside both simultaneously). (iii) Verify your answer by computing it a different way using Cartesian integration.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Equal when $2\cos\theta=2\sin\theta \Rightarrow \theta=\pi/4$: $r=\sqrt{2}$, giving $(\sqrt{2}\cos(\pi/4),\sqrt{2}\sin(\pi/4))=(1,1)$ ✓. At pole: $r=2\cos\theta=0$ when $\theta=\pi/2$; $r=2\sin\theta=0$ when $\theta=0$, so both pass through $(0,0)$ ✓. (ii) By symmetry about $y=x$, area inside both $=2\times\frac{1}{2}\int_0^{\pi/4}(2\sin\theta)^2\,d\theta=\int_0^{\pi/4}4\sin^2\theta\,d\theta=[2\theta-\sin2\theta]_0^{\pi/4}=\pi/2-1$. (iii) Both curves in Cartesian: $(x-1)^2+y^2=1$ and $x^2+(y-1)^2=1$. Area of intersection of two equal circles of radius 1 with centres distance $\sqrt{2}$ apart $=2\cos^{-1}(\frac{d}{2r})\cdot r^2 - \frac{d}{2}\sqrt{4r^2-d^2}=2\cos^{-1}(\frac{1}{\sqrt{2}})-\sqrt{2}\cdot\sqrt{2}=\pi/2-1$ ✓ (where $d=\sqrt{2}$, $r=1$).</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="further-calculus.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Further Calculus</div></a>
+    <a href="hyperbolic-functions.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Hyperbolic Functions</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
