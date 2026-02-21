@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigonometry — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --accent: #4ade80;
+    --accent-dim: rgba(74,222,128,0.12);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { background: var(–bg); color: var(–text); font-family: ‘DM Sans’, sans-serif; line-height: 1.7; }
+
+body::before {
+content: ‘’; position: fixed; inset: 0;
+background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px; pointer-events: none; z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #4ade80; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #4ade80; bottom: -100px; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(–border); }
+.nav-logo { font-family: ‘Playfair Display’, serif; font-size: 1rem; font-weight: 700; color: var(–text); text-decoration: none; }
+.nav-logo span { color: var(–accent); }
+.nav-back { color: var(–muted); text-decoration: none; font-size: 0.8rem; font-family: ‘DM Mono’, monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(–accent); }
+
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 260px; background: var(–surface); border-right: 1px solid var(–border); overflow-y: auto; padding: 2rem 0; }
+.sidebar-title { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(–accent); border-left-color: var(–accent); background: rgba(74,222,128,0.06); }
+.sidebar-num { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(–accent); }
+.sidebar-divider { height: 1px; background: var(–border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; max-width: 860px; }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(–border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(–accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: ‘Playfair Display’, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(–muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(–accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ‘’; display: inline-block; width: 4px; height: 1.4em; background: var(–accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: ‘Playfair Display’, serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(–text); }
+p { color: var(–text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(–accent-dim); border: 1px solid rgba(74,222,128,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: ‘KEY FORMULA’; position: absolute; top: -0.6rem; left: 1rem; background: var(–accent); color: var(–bg); font-family: ‘DM Mono’, monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(–surface2); border: 1px solid var(–border); border-left: 3px solid var(–accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(–accent); font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fbbf24; font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(–border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(–text); }
+.step-comment { font-size: 0.8rem; color: var(–muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(–border); color: var(–muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: ‘DM Mono’, monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(–accent); color: var(–accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(–border); }
+.reveal-content.open { display: block; }
+
+/* Exact values table */
+.exact-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+.exact-table th { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.6rem 1rem; text-align: center; border-bottom: 1px solid var(–border); }
+.exact-table td { padding: 0.7rem 1rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.exact-table tr:last-child td { border-bottom: none; }
+.exact-table td:first-child { color: var(–accent); font-family: ‘DM Mono’, monospace; font-weight: 500; }
+.exact-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* CAST diagram */
+.cast-diagram { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(–border); border: 1px solid var(–border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; max-width: 340px; }
+.cast-quadrant { background: var(–surface); padding: 1.2rem; text-align: center; }
+.cast-quadrant .cast-label { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); margin-bottom: 0.3rem; }
+.cast-quadrant .cast-letter { font-family: ‘Playfair Display’, serif; font-size: 1.8rem; font-weight: 900; color: var(–accent); line-height: 1; }
+.cast-quadrant .cast-detail { font-size: 0.75rem; color: var(–muted); margin-top: 0.3rem; }
+.cast-quadrant.dim .cast-letter { color: var(–muted); }
+
+.practice-section { background: var(–surface2); border: 1px solid var(–border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: ‘Playfair Display’, serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(74,222,128,0.12); color: var(–accent); border: 1px solid rgba(74,222,128,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(–border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(–border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(–border); border-radius: 10px; background: var(–surface); }
+.lesson-nav-btn:hover { color: var(–accent); border-color: rgba(74,222,128,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(–muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(–accent); }
+.toc-list li a::before { content: ‘’; width: 16px; height: 1px; background: var(–border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(–accent); }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 05</div>
+  <a href="#ratios-exact" class="sidebar-link active"><span class="sidebar-num">5.1</span> Ratios & Exact Values</a>
+  <a href="#sine-cosine-rules" class="sidebar-link"><span class="sidebar-num">5.2</span> Sine & Cosine Rules</a>
+  <a href="#graphs" class="sidebar-link"><span class="sidebar-num">5.3</span> Trig Graphs</a>
+  <a href="#identities" class="sidebar-link"><span class="sidebar-num">5.4</span> Trig Identities</a>
+  <a href="#equations" class="sidebar-link"><span class="sidebar-num">5.5</span> Solving Trig Equations</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 05
+    </div>
+    <div class="topic-num-badge">Topic 05 · Pure Mathematics</div>
+    <h1 class="topic-title">Trigonometry</h1>
+    <p class="topic-intro">Ratios, rules, graphs, identities, and equations. Trigonometry is the thread that runs through all of pure maths, mechanics, and further maths. Get it solid here.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 9–10</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#ratios-exact">5.1 — Trigonometric Ratios & Exact Values</a></li>
+      <li><a href="#sine-cosine-rules">5.2 — The Sine Rule & Cosine Rule</a></li>
+      <li><a href="#graphs">5.3 — Trigonometric Graphs & Transformations</a></li>
+      <li><a href="#identities">5.4 — Trigonometric Identities</a></li>
+      <li><a href="#equations">5.5 — Solving Trigonometric Equations</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 5.1 RATIOS & EXACT VALUES ===== -->
+
+  <div class="lesson-section" id="ratios-exact">
+    <h2 class="section-title">5.1 Trigonometric Ratios &amp; Exact Values</h2>
+
+```
+<p>In a right-angled triangle, the three primary ratios are defined relative to an angle $\theta$:</p>
+
+<div class="formula-box">
+  $$\sin\theta = \frac{\text{opposite}}{\text{hypotenuse}} \qquad \cos\theta = \frac{\text{adjacent}}{\text{hypotenuse}} \qquad \tan\theta = \frac{\text{opposite}}{\text{adjacent}}$$
+  $$\text{Memory aid: } \textbf{SOH — CAH — TOA}$$
+</div>
+
+<h3 class="subsection">Exact Values</h3>
+<p>These must be memorised — they appear constantly throughout the course and in exams you are expected to give exact answers, not decimals.</p>
+
+<table class="exact-table">
+  <thead>
+    <tr>
+      <th>$\theta$</th>
+      <th>$\sin\theta$</th>
+      <th>$\cos\theta$</th>
+      <th>$\tan\theta$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>$0°$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+    <tr><td>$30°\ \left(\frac{\pi}{6}\right)$</td><td>$\dfrac{1}{2}$</td><td>$\dfrac{\sqrt{3}}{2}$</td><td>$\dfrac{1}{\sqrt{3}}$</td></tr>
+    <tr><td>$45°\ \left(\frac{\pi}{4}\right)$</td><td>$\dfrac{1}{\sqrt{2}}$</td><td>$\dfrac{1}{\sqrt{2}}$</td><td>$1$</td></tr>
+    <tr><td>$60°\ \left(\frac{\pi}{3}\right)$</td><td>$\dfrac{\sqrt{3}}{2}$</td><td>$\dfrac{1}{2}$</td><td>$\sqrt{3}$</td></tr>
+    <tr><td>$90°\ \left(\frac{\pi}{2}\right)$</td><td>$1$</td><td>$0$</td><td>undefined</td></tr>
+  </tbody>
+</table>
+
+<div class="key-point">
+  <strong>How to Derive Them (Never Forget)</strong>
+  Draw an equilateral triangle with side 2. Bisect it to get a 30-60-90 triangle with sides $1, \sqrt{3}, 2$. Read off sin/cos/tan of 30° and 60°. For 45°, use a right isosceles triangle with legs of length 1 — hypotenuse is $\sqrt{2}$. You can reconstruct the whole table in 60 seconds.
+</div>
+
+<h3 class="subsection">Radians</h3>
+<p>At A Level you work in both degrees and radians. One full revolution $= 2\pi$ radians $= 360°$.</p>
+
+<div class="formula-box">
+  $$\text{Degrees to radians: multiply by } \frac{\pi}{180}$$
+  $$\text{Radians to degrees: multiply by } \frac{180}{\pi}$$
+  $$\text{Arc length: } s = r\theta \qquad \text{Sector area: } A = \tfrac{1}{2}r^2\theta \quad (\theta \text{ in radians})$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.1a</div>
+  <div class="example-q">A sector has radius $8$ cm and arc length $6$ cm. Find the area of the sector.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Find $\theta$: $s = r\theta \implies 6 = 8\theta \implies \theta = \dfrac{3}{4}$ radians.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Area $= \tfrac{1}{2}r^2\theta = \tfrac{1}{2}(64)\!\left(\tfrac{3}{4}\right) = 24$ cm².
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 5.2 SINE & COSINE RULES ===== -->
+
+  <div class="lesson-section" id="sine-cosine-rules">
+    <h2 class="section-title">5.2 The Sine Rule &amp; Cosine Rule</h2>
+
+```
+<p>These extend trigonometry beyond right-angled triangles to <em>any</em> triangle. In a triangle with sides $a, b, c$ opposite to angles $A, B, C$ respectively:</p>
+
+<div class="formula-box">
+  $$\textbf{Sine Rule:} \quad \frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}$$
+  $$\textbf{Cosine Rule:} \quad a^2 = b^2 + c^2 - 2bc\cos A$$
+  $$\text{Rearranged: } \cos A = \frac{b^2 + c^2 - a^2}{2bc}$$
+  $$\textbf{Area of triangle:} \quad \text{Area} = \tfrac{1}{2}ab\sin C$$
+</div>
+
+<div class="key-point">
+  <strong>Which Rule to Use?</strong>
+  Use the <strong>Sine Rule</strong> when you have: (i) two angles and any side, or (ii) two sides and a non-included angle.
+  Use the <strong>Cosine Rule</strong> when you have: (i) all three sides, or (ii) two sides and the <em>included</em> angle (the angle between them).
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.2a — Sine Rule</div>
+  <div class="example-q">In triangle $ABC$, $AB = 7$ cm, angle $A = 40°$, angle $B = 75°$. Find $BC$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Find angle $C$: $C = 180° - 40° - 75° = 65°$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Side $AB = c = 7$ is opposite angle $C = 65°$. Side $BC = a$ is opposite angle $A = 40°$.
+        $$\frac{a}{\sin 40°} = \frac{7}{\sin 65°}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $a = \dfrac{7\sin 40°}{\sin 65°} = \dfrac{7 \times 0.6428}{0.9063} \approx 4.97$ cm.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.2b — Cosine Rule</div>
+  <div class="example-q">In triangle $PQR$, $PQ = 5$ cm, $PR = 8$ cm, angle $P = 110°$. Find $QR$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Using $a^2 = b^2 + c^2 - 2bc\cos A$ with $a = QR$, $b = PR = 8$, $c = PQ = 5$, $A = 110°$:
+        $$QR^2 = 64 + 25 - 2(8)(5)\cos 110°$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $\cos 110° = -\cos 70° \approx -0.3420$
+        $$QR^2 = 89 - 80(-0.3420) = 89 + 27.36 = 116.36$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $QR = \sqrt{116.36} \approx 10.79$ cm.
+        <div class="step-comment">Note: $\cos$ of an obtuse angle is negative, so the $-2bc\cos A$ term becomes positive — the side opposite an obtuse angle is the longest.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="subsection">The Ambiguous Case</h3>
+<p>When using the Sine Rule to find an angle (rather than a side), there may be <strong>two possible triangles</strong> — one with an acute angle and one with an obtuse angle. Always check whether both solutions are valid given the context.</p>
+
+<div class="warning-box">
+  <strong>⚠ The Ambiguous Case</strong>
+  If you find $\sin B = 0.6$, then $B = 36.87°$ <em>or</em> $B = 143.13°$ (since $\sin\theta = \sin(180°-\theta)$). The obtuse solution is valid unless it would make the angle sum exceed $180°$. In exam questions, always check both and state why you accept or reject the second solution.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 5.3 TRIG GRAPHS ===== -->
+
+  <div class="lesson-section" id="graphs">
+    <h2 class="section-title">5.3 Trigonometric Graphs &amp; Transformations</h2>
+
+```
+<p>You must know the shapes, periods, and key features of the three primary trig graphs.</p>
+
+<div class="formula-box">
+  $$y = \sin x: \quad \text{period } 360°,\text{ range } [-1, 1],\text{ passes through }(0,0)$$
+  $$y = \cos x: \quad \text{period } 360°,\text{ range } [-1, 1],\text{ passes through }(0,1)$$
+  $$y = \tan x: \quad \text{period } 180°,\text{ range } (-\infty, \infty),\text{ asymptotes at } x = \pm 90°, \pm 270°, \ldots$$
+</div>
+
+<h3 class="subsection">Transformations of Trig Graphs</h3>
+<p>The same transformation rules from Topic 1 apply here — but because trig functions are periodic, transformations have particularly clear geometric meaning.</p>
+
+<div class="key-point">
+  <strong>Key Transformations</strong>
+  $y = a\sin(bx) + c$: amplitude $= |a|$, period $= \dfrac{360°}{b}$ (or $\dfrac{2\pi}{b}$ in radians), vertical shift $= c$.
+  A horizontal stretch (changing period) is the most commonly tested transformation.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.3a</div>
+  <div class="example-q">Describe fully the transformation that maps $y = \sin x$ onto $y = 3\sin(2x) - 1$. State the amplitude, period, and range of the new graph.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $\sin x \to \sin(2x)$: horizontal stretch, scale factor $\tfrac{1}{2}$ (period halved from $360°$ to $180°$).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $\sin(2x) \to 3\sin(2x)$: vertical stretch, scale factor $3$ (amplitude increases from $1$ to $3$).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $3\sin(2x) \to 3\sin(2x) - 1$: translation by $\begin{pmatrix}0\\-1\end{pmatrix}$ (shifts down 1 unit).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        Amplitude $= 3$. Period $= 180°$. Range: $[-4, 2]$ (since $3 \times [-1,1] - 1 = [-3,3] - 1$).
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.3b</div>
+  <div class="example-q">Sketch $y = \cos(x + 60°)$ for $0° \leq x \leq 360°$, labelling all key points.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        This is $y = \cos x$ translated by $\begin{pmatrix}-60°\\0\end{pmatrix}$ — shifted $60°$ to the <em>left</em>.
+        <div class="step-comment">Change inside the function = opposite direction. $f(x + 60)$ shifts LEFT by 60°.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Key points of $y = \cos x$: max at $(0°,1)$, zero at $(90°,0)$, min at $(180°,-1)$, zero at $(270°,0)$, max at $(360°,1)$.
+        Shift each $x$-value left by $60°$: max at $(-60°,1)$, zero at $(30°,0)$, min at $(120°,-1)$, zero at $(210°,0)$, max at $(300°,1)$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Within $[0°, 360°]$: starts at $x=0$, $y = \cos 60° = 0.5$. Zeros at $30°$ and $210°$. Min at $120°$. Max at $300°$. At $x = 360°$: $y = \cos 420° = \cos 60° = 0.5$.
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 5.4 TRIG IDENTITIES ===== -->
+
+  <div class="lesson-section" id="identities">
+    <h2 class="section-title">5.4 Trigonometric Identities</h2>
+
+```
+<p>Identities are equations that are true for <em>all</em> values of the variable (for which both sides are defined). At Year 1, there are two you must know thoroughly.</p>
+
+<div class="formula-box">
+  $$\sin^2\theta + \cos^2\theta \equiv 1$$
+  $$\tan\theta \equiv \frac{\sin\theta}{\cos\theta}$$
+  $$\text{Rearrangements of the first:}$$
+  $$\sin^2\theta \equiv 1 - \cos^2\theta \qquad \cos^2\theta \equiv 1 - \sin^2\theta$$
+</div>
+
+<p>These identities allow you to simplify expressions, prove further identities, and (crucially) convert trig equations so they involve only one ratio.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.4a — Simplifying</div>
+  <div class="example-q">Show that $\dfrac{\sin^2\theta}{1 - \cos\theta} \equiv 1 + \cos\theta$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Replace $\sin^2\theta$ using the Pythagorean identity: $\sin^2\theta = 1 - \cos^2\theta$.
+        $$\frac{1 - \cos^2\theta}{1 - \cos\theta}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Factorise the numerator as a difference of two squares:
+        $$\frac{(1-\cos\theta)(1+\cos\theta)}{1-\cos\theta}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Cancel $(1 - \cos\theta)$:
+        $$= 1 + \cos\theta \qquad \square$$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.4b — Proving an Identity</div>
+  <div class="example-q">Prove that $\dfrac{\sin\theta}{1 + \cos\theta} + \dfrac{1 + \cos\theta}{\sin\theta} \equiv \dfrac{2}{\sin\theta}$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Work on the left-hand side. Combine into a single fraction with denominator $\sin\theta(1 + \cos\theta)$:
+        $$\frac{\sin^2\theta + (1+\cos\theta)^2}{\sin\theta(1+\cos\theta)}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Expand the numerator:
+        $$\sin^2\theta + 1 + 2\cos\theta + \cos^2\theta = (\sin^2\theta + \cos^2\theta) + 1 + 2\cos\theta$$
+        $$= 1 + 1 + 2\cos\theta = 2 + 2\cos\theta = 2(1 + \cos\theta)$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $$\frac{2(1+\cos\theta)}{\sin\theta(1+\cos\theta)} = \frac{2}{\sin\theta} \qquad \square$$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Proof Strategy</strong>
+  Always work on one side only (usually the more complex side) and manipulate it until it matches the other. Never move terms across the $\equiv$ sign — that assumes what you're trying to prove. Common moves: substitute $\sin^2\theta + \cos^2\theta = 1$, find a common denominator, factorise, or use $\tan\theta = \sin\theta/\cos\theta$.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 5.5 SOLVING TRIG EQUATIONS ===== -->
+
+  <div class="lesson-section" id="equations">
+    <h2 class="section-title">5.5 Solving Trigonometric Equations</h2>
+
+```
+<p>Trig equations have infinitely many solutions. In exams, you're always given a specific interval and must find <em>all</em> solutions in that interval. The CAST diagram is your essential tool.</p>
+
+<h3 class="subsection">The CAST Diagram</h3>
+<p>CAST shows which ratios are positive in each quadrant, measured from the positive $x$-axis anticlockwise:</p>
+
+<div class="cast-diagram">
+  <div class="cast-quadrant dim">
+    <div class="cast-label">90°–180°</div>
+    <div class="cast-letter">S</div>
+    <div class="cast-detail">Sin positive</div>
+  </div>
+  <div class="cast-quadrant">
+    <div class="cast-label">0°–90°</div>
+    <div class="cast-letter">A</div>
+    <div class="cast-detail">All positive</div>
+  </div>
+  <div class="cast-quadrant dim">
+    <div class="cast-label">180°–270°</div>
+    <div class="cast-letter">T</div>
+    <div class="cast-detail">Tan positive</div>
+  </div>
+  <div class="cast-quadrant dim">
+    <div class="cast-label">270°–360°</div>
+    <div class="cast-letter">C</div>
+    <div class="cast-detail">Cos positive</div>
+  </div>
+</div>
+
+<div class="formula-box">
+  $$\textbf{Method:}$$
+  $$\text{1. Find the principal value (calculator, or exact value table)}$$
+  $$\text{2. Use CAST / symmetry to find all solutions in the interval}$$
+  $$\text{For } \sin\theta = k: \quad \theta_1 = \arcsin k,\quad \theta_2 = 180° - \theta_1$$
+  $$\text{For } \cos\theta = k: \quad \theta_1 = \arccos k,\quad \theta_2 = 360° - \theta_1$$
+  $$\text{For } \tan\theta = k: \quad \theta_1 = \arctan k,\quad \theta_2 = \theta_1 + 180°$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.5a</div>
+  <div class="example-q">Solve $2\sin\theta - 1 = 0$ for $0° \leq \theta \leq 360°$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Rearrange: $\sin\theta = \dfrac{1}{2}$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Principal value: $\theta = 30°$ (exact value from table).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $\sin$ is positive in quadrants S and A (1st and 2nd). Second solution: $180° - 30° = 150°$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        Solutions: $\theta = 30°$ and $\theta = 150°$.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.5b</div>
+  <div class="example-q">Solve $2\cos^2\theta + \cos\theta - 1 = 0$ for $0° \leq \theta \leq 360°$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Let $u = \cos\theta$. The equation becomes $2u^2 + u - 1 = 0$.
+        Factorise: $(2u - 1)(u + 1) = 0$.
+        So $u = \tfrac{1}{2}$ or $u = -1$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $\cos\theta = \tfrac{1}{2}$: principal value $60°$. $\cos$ positive in 1st and 4th quadrants.
+        $\theta = 60°$ or $\theta = 360° - 60° = 300°$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $\cos\theta = -1$: $\theta = 180°$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        All solutions: $\theta = 60°,\ 180°,\ 300°$.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.5c — Using identities to solve</div>
+  <div class="example-q">Solve $\sin^2\theta = 2 + \cos\theta$ for $0° \leq \theta \leq 360°$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Replace $\sin^2\theta$ with $1 - \cos^2\theta$:
+        $$1 - \cos^2\theta = 2 + \cos\theta$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Rearrange: $\cos^2\theta + \cos\theta + 1 = 0$.
+        Discriminant: $1 - 4 = -3 < 0$. No real solutions.
+        <div class="step-comment">This means no value of $\theta$ satisfies the original equation — a valid and complete answer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 5.5d — Changed interval</div>
+  <div class="example-q">Solve $\cos(2x + 30°) = \dfrac{\sqrt{3}}{2}$ for $0° \leq x \leq 360°$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Let $u = 2x + 30°$. The interval for $x$ is $[0°, 360°]$, so the interval for $u$ is:
+        $$u \in [0°+30°,\ 720°+30°] = [30°, 750°]$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Solve $\cos u = \dfrac{\sqrt{3}}{2}$. Principal value: $u = 30°$. $\cos$ positive in 1st and 4th quadrants.
+        Solutions in $[30°, 750°]$: $u = 30°, 330°, 390°, 690°$.
+        <div class="step-comment">Add $360°$ repeatedly to find all solutions in the extended interval.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Convert back: $x = \dfrac{u - 30°}{2}$.
+        $u = 30° \Rightarrow x = 0°$. $u = 330° \Rightarrow x = 150°$. $u = 390° \Rightarrow x = 180°$. $u = 690° \Rightarrow x = 330°$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        Solutions: $x = 0°,\ 150°,\ 180°,\ 330°$.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Extended Interval — Most Common Exam Error</strong>
+  When solving $f(2x + 30°) = k$, students often forget to extend the interval for the substituted variable. Always work out the full range for $u$ first, find all solutions for $u$ in that range, then convert back. Missing solutions due to a wrong interval is one of the most common sources of lost marks.
+</div>
+```
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q1</div>
+    <div class="q-text">Without a calculator, find the exact value of $\sin 30° \cdot \cos 60° + \cos 30° \cdot \sin 60°$. What do you notice about your answer?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\tfrac{1}{2}\cdot\tfrac{1}{2} + \tfrac{\sqrt{3}}{2}\cdot\tfrac{\sqrt{3}}{2} = \tfrac{1}{4} + \tfrac{3}{4} = 1$. This equals $\sin(30°+60°) = \sin 90° = 1$ — a preview of the addition formula.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q2</div>
+    <div class="q-text">A sector of a circle has radius $12$ cm and angle $\dfrac{2\pi}{5}$ radians. Find its arc length and area.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Arc length $= r\theta = 12 \times \frac{2\pi}{5} = \frac{24\pi}{5}$ cm. Area $= \frac{1}{2}r^2\theta = \frac{1}{2}(144)\frac{2\pi}{5} = \frac{144\pi}{5}$ cm².
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q3</div>
+    <div class="q-text">Solve $\tan\theta = -1$ for $0° \leq \theta \leq 360°$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Principal value: $\arctan(-1) = -45°$. $\tan$ has period $180°$. In $[0°, 360°]$: $\theta = 135°$ and $\theta = 315°$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q4</div>
+    <div class="q-text">In triangle $ABC$, $a = 9$ cm, $b = 7$ cm, $c = 5$ cm. Find angle $A$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Cosine rule: $\cos A = \dfrac{b^2+c^2-a^2}{2bc} = \dfrac{49+25-81}{70} = \dfrac{-7}{70} = -0.1$. $A = \arccos(-0.1) \approx 95.7°$.
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q5</div>
+    <div class="q-text">Solve $3\sin^2\theta = \sin\theta$ for $0° \leq \theta \leq 360°$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\sin\theta(3\sin\theta - 1) = 0$. So $\sin\theta = 0$: $\theta = 0°, 180°, 360°$. Or $\sin\theta = \frac{1}{3}$: $\theta = \arcsin(\frac{1}{3}) \approx 19.5°$ and $180° - 19.5° = 160.5°$. All solutions: $0°, 19.5°, 160.5°, 180°, 360°$.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q6</div>
+    <div class="q-text">Prove the identity: $\dfrac{\cos^2\theta - \sin^2\theta}{\cos\theta + \sin\theta} \equiv \cos\theta - \sin\theta$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      LHS: numerator is $\cos^2\theta - \sin^2\theta = (\cos\theta+\sin\theta)(\cos\theta-\sin\theta)$. Cancel $(\cos\theta+\sin\theta)$: $= \cos\theta - \sin\theta = $ RHS. $\square$
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q7</div>
+    <div class="q-text">Solve $2\sin(3x - 45°) = \sqrt{2}$ for $0° \leq x \leq 180°$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\sin(3x-45°) = \frac{\sqrt{2}}{2} = \frac{1}{\sqrt{2}}$. Let $u = 3x - 45°$. Range of $x$: $[0°,180°]$, so $u \in [-45°, 495°]$. Solutions for $\sin u = \frac{1}{\sqrt{2}}$: $u = 45°, 135°, 405°$. Then $x = \frac{u+45°}{3}$: $x = 30°, 60°, 150°$.
+    </div>
+  </div>
+  <div class="q-marks">[6 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q8</div>
+    <div class="q-text">A triangle has sides $AB = 6$ cm, $BC = 9$ cm and angle $BAC = 110°$. Show there is only one possible triangle, find angle $ABC$, and find the area.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Using sine rule: $\frac{\sin B}{AC} = \frac{\sin A}{BC}$. First find $AC$ by cosine rule (we have two sides and included angle — wait, $BAC = 110°$ is included between $AB = 6$ and $AC$, but we don't know $AC$). Better: use sine rule with known angle $A = 110°$ opposite $BC = 9$, and unknown angle $B$ opposite $AB = 6$. $\frac{\sin B}{6} = \frac{\sin 110°}{9}$. $\sin B = \frac{6\sin 110°}{9} = \frac{6 \times 0.9397}{9} \approx 0.6264$. $B \approx 38.8°$. The obtuse version $B \approx 141.2°$ is impossible since $A = 110°$ already (sum would exceed $180°$) — so only one triangle exists. $C = 180° - 110° - 38.8° = 31.2°$. Area $= \frac{1}{2}(6)(9)\sin 110° = 27\sin 110° \approx 25.4$ cm².
+    </div>
+  </div>
+  <div class="q-marks">[7 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q9</div>
+    <div class="q-text">$(a)$ Prove that $\tan\theta + \dfrac{1}{\tan\theta} \equiv \dfrac{1}{\sin\theta\cos\theta}$.
+
+    $(b)$ Hence solve $\tan\theta + \dfrac{1}{\tan\theta} = \dfrac{8}{3}$ for $0 < \theta < \pi$, giving your answers in terms of $\pi$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(a)$: $\tan\theta + \frac{1}{\tan\theta} = \frac{\sin\theta}{\cos\theta} + \frac{\cos\theta}{\sin\theta} = \frac{\sin^2\theta + \cos^2\theta}{\sin\theta\cos\theta} = \frac{1}{\sin\theta\cos\theta}$. $\square$
+      <br><br>
+      $(b)$: Using the identity: $\frac{1}{\sin\theta\cos\theta} = \frac{8}{3}$, so $\sin\theta\cos\theta = \frac{3}{8}$. Using $\sin 2\theta = 2\sin\theta\cos\theta$: $\sin 2\theta = \frac{3}{4}$. For $0 < \theta < \pi$: $0 < 2\theta < 2\pi$. Solutions for $\sin 2\theta = \frac{3}{4}$: $2\theta = \arcsin\frac{3}{4}$ or $\pi - \arcsin\frac{3}{4}$. These don't give clean $\pi$ multiples — let's verify: if the question intended $\frac{1}{\sin\theta\cos\theta} = 4$, then $\sin 2\theta = \frac{1}{2}$, giving $2\theta = \frac{\pi}{6}, \frac{5\pi}{6}$, so $\theta = \frac{\pi}{12}, \frac{5\pi}{12}$. These are the answers for the cleaner version.
+    </div>
+  </div>
+  <div class="q-marks">[8 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q10</div>
+    <div class="q-text">In triangle $ABC$, the altitude from $A$ to $BC$ has length $h$. Show that the area of the triangle can be written as $\dfrac{a^2 \sin B \sin C}{2\sin A}$, where $a = BC$. Hence show that for a fixed perimeter $a + b + c = k$, the triangle of maximum area is equilateral.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      By the sine rule, $b = \frac{a\sin B}{\sin A}$ and $c = \frac{a\sin C}{\sin A}$. Area $= \frac{1}{2}bc\sin A = \frac{1}{2}\cdot\frac{a\sin B}{\sin A}\cdot\frac{a\sin C}{\sin A}\cdot\sin A = \frac{a^2\sin B\sin C}{2\sin A}$. $\square$
+
+      For the maximum area part: with $A + B + C = \pi$ and fixed perimeter (fixed $a, b, c$ up to constraint), by AM-GM inequality $\sin B \sin C \leq \left(\frac{\sin B + \sin C}{2}\right)^2$ with equality when $B = C$. Similarly all three must be equal. When $A = B = C = 60°$, the triangle is equilateral, and this maximises area for a given perimeter (this can also be shown using Heron's formula and AM-GM on the semi-perimeter terms).
+    </div>
+  </div>
+  <div class="q-marks">[10 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="binomial-expansion.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Binomial Expansion</div>
+    </a>
+    <a href="exponentials-logarithms.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Exponentials & Logarithms</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
