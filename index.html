@@ -3,17 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Algebra & Functions — A Level Maths</title>
+<title>Archie's Hub — A Level Revision</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.body, {
-    delimiters: [
-      {left:'$$', right:'$$', display:true},
-      {left:'$', right:'$', display:false}
-    ]
-  });"></script>
 <style>
   :root {
     --bg: #0d0d14;
@@ -34,6 +25,7 @@
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
     line-height: 1.7;
+    min-height: 100vh;
   }
 
   body::before {
@@ -48,16 +40,9 @@
     z-index: 0;
   }
 
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(140px);
-    opacity: 0.07;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
-  .orb-2 { width: 500px; height: 500px; background: #c084fc; bottom: -100px; left: -100px; }
+  .orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.07; pointer-events: none; z-index: 0; }
+  .orb-1 { width: 700px; height: 700px; background: #60a5fa; top: -200px; right: -150px; }
+  .orb-2 { width: 500px; height: 500px; background: #818cf8; bottom: -100px; left: -100px; }
 
   nav {
     position: fixed;
@@ -67,7 +52,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(13,13,20,0.92);
+    background: rgba(13,13,20,0.9);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
   }
@@ -81,519 +66,258 @@
   }
   .nav-logo span { color: var(--accent); }
 
-  .nav-back {
-    color: var(--nav-link);
-    text-decoration: none;
-    font-size: 0.82rem;
+  .nav-tag {
     font-family: 'DM Mono', monospace;
-    transition: color 0.2s;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
   }
-  .nav-back:hover { color: var(--accent); }
 
-  .layout {
-    display: flex;
-    min-height: 100vh;
+  .hero {
     position: relative;
     z-index: 1;
+    padding: 10rem 2.5rem 5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
   }
 
-  .sidebar {
-    position: fixed;
-    top: 56px;
-    left: 0;
-    bottom: 0;
-    width: 260px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    padding: 2rem 0;
-  }
-
-  .sidebar-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    padding: 0 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 1.5rem;
-    text-decoration: none;
-    color: var(--nav-link);
-    font-size: 0.85rem;
-    transition: all 0.2s;
-    border-left: 2px solid transparent;
-  }
-
-  .sidebar-link:hover {
-    color: var(--text);
-    background: rgba(255,255,255,0.04);
-  }
-
-  .sidebar-link.active {
-    color: var(--accent);
-    border-left-color: var(--accent);
-    background: rgba(96,165,250,0.07);
-  }
-
-  .sidebar-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    width: 18px;
-    flex-shrink: 0;
-  }
-
-  .sidebar-link.active .sidebar-num { color: var(--accent); }
-
-  .sidebar-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 1rem 1.5rem;
-  }
-
-  .main {
-    margin-left: 260px;
-    padding: 5rem 4rem 8rem;
-    flex: 1;
-    min-width: 0;
-    width: calc(100% - 260px);
-  }
-
-  .topic-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .breadcrumb {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .breadcrumb a { color: var(--accent); text-decoration: none; }
-
-  .topic-num-badge {
+  .hero-badge {
     display: inline-block;
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    background: rgba(96,165,250,0.1);
-    border: 1px solid rgba(96,165,250,0.3);
-    padding: 0.25rem 0.7rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    letter-spacing: 0.06em;
-  }
-
-  h1.topic-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-    color: var(--text);
-  }
-
-  .topic-intro {
-    font-size: 1rem;
-    color: var(--muted);
-    max-width: 600px;
-  }
-
-  .topic-meta-row {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .meta-item {
-    font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .meta-item span { color: var(--accent); }
-
-  .lesson-section {
-    margin-bottom: 3.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  h2.section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--text);
-  }
-
-  h2.section-title::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 1.4em;
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  h3.subsection {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin: 2rem 0 0.8rem;
-    color: var(--text);
-  }
-
-  p {
-    color: var(--text);
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-  }
-
-  .formula-box {
+    color: var(--accent);
     background: var(--accent-dim);
-    border: 1px solid rgba(96,165,250,0.25);
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    margin: 1.5rem 0;
-    position: relative;
-  }
-
-  .formula-box::before {
-    content: 'KEY FORMULA';
-    position: absolute;
-    top: -0.6rem;
-    left: 1rem;
-    background: var(--accent);
-    color: var(--bg);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    padding: 0.15rem 0.6rem;
-    border-radius: 4px;
-  }
-
-  .formula-box .katex-display { margin: 0.5rem 0; }
-
-  .key-point {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 10px 10px 0;
-    padding: 1.2rem 1.5rem;
-    margin: 1.5rem 0;
-    font-size: 0.9rem;
-  }
-
-  .key-point strong {
-    color: var(--accent);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  .warning-box {
-    background: rgba(245,158,11,0.08);
-    border: 1px solid rgba(245,158,11,0.35);
-    border-radius: 10px;
-    padding: 1.2rem 1.5rem;
-    margin: 1.5rem 0;
-    font-size: 0.9rem;
-  }
-
-  .warning-box strong {
-    color: #f59e0b;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  .example {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.8rem;
-    margin: 1.5rem 0;
-  }
-
-  .example-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.8rem;
-  }
-
-  .example-q {
-    font-size: 0.95rem;
-    font-weight: 500;
-    margin-bottom: 1.2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-  }
-
-  .example-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .step {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 0.75rem;
-    align-items: start;
-    font-size: 0.9rem;
-  }
-
-  .step-num {
-    width: 28px;
-    height: 28px;
-    background: rgba(96,165,250,0.12);
     border: 1px solid rgba(96,165,250,0.3);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .step-content { color: var(--text); }
-
-  .step-comment {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-style: italic;
-    margin-top: 0.3rem;
-  }
-
-  .reveal-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--nav-link);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
     letter-spacing: 0.08em;
-    transition: all 0.2s;
-    margin-top: 0.8rem;
+    text-transform: uppercase;
   }
 
-  .reveal-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .reveal-content {
-    display: none;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    color: var(--text);
-    font-size: 0.92rem;
-  }
-
-  .reveal-content.open { display: block; }
-
-  .practice-section {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
-    margin-top: 2rem;
-  }
-
-  .practice-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
     margin-bottom: 1.5rem;
   }
 
-  .practice-title {
+  h1.hero-title span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
     font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+    display: block;
   }
 
-  .difficulty-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    padding: 0.25rem 0.7rem;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .diff-a { background: rgba(96,165,250,0.12); color: #93c5fd; border: 1px solid rgba(96,165,250,0.3); }
-  .diff-b { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-  .diff-c { background: rgba(251,113,133,0.12); color: #fda4af; border: 1px solid rgba(251,113,133,0.3); }
-
-  .question-item {
-    padding: 1.2rem 0;
-    border-bottom: 1px solid var(--border);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .question-item:last-child { border-bottom: none; }
-
-  .q-num {
+  .stat-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
-    color: var(--accent);
-    margin-bottom: 0.4rem;
-  }
-
-  .q-text {
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: var(--text);
-  }
-
-  .q-marks {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
     color: var(--muted);
-    white-space: nowrap;
-    margin-top: 0.2rem;
-  }
-
-  .lesson-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .lesson-nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    text-decoration: none;
-    color: var(--nav-link);
-    font-size: 0.85rem;
-    transition: color 0.2s;
-    padding: 0.8rem 1.2rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
-  }
-
-  .lesson-nav-btn:hover { color: var(--accent); border-color: rgba(96,165,250,0.4); }
-  .lesson-nav-btn.next { flex-direction: row-reverse; }
-
-  .btn-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    display: block;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
-  .toc {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 3rem;
+  /* Subject grid */
+  .subjects {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2.5rem 8rem;
   }
 
-  .toc-title {
+  .section-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
-  }
-
-  .toc-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .toc-list li a {
-    color: var(--nav-link);
-    text-decoration: none;
-    font-size: 0.88rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 2rem;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    transition: color 0.2s;
-    padding: 0.2rem 0;
+    gap: 1rem;
   }
 
-  .toc-list li a:hover { color: var(--accent); }
-
-  .toc-list li a::before {
+  .section-label::after {
     content: '';
-    width: 16px;
+    flex: 1;
     height: 1px;
     background: var(--border);
+  }
+
+  .subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .subject-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+    background: linear-gradient(135deg, rgba(96,165,250,0.05), transparent);
+  }
+
+  .subject-card:hover {
+    border-color: rgba(96,165,250,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .subject-card:hover::before { opacity: 1; }
+
+  .subject-card.coming-soon {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
     flex-shrink: 0;
   }
 
-  .toc-list li a:hover::before { background: var(--accent); }
+  .icon-maths    { background: rgba(96,165,250,0.15);  border: 1px solid rgba(96,165,250,0.3); }
+  .icon-further  { background: rgba(129,140,248,0.15); border: 1px solid rgba(129,140,248,0.3); }
+  .icon-physics  { background: rgba(52,211,153,0.15);  border: 1px solid rgba(52,211,153,0.3); }
+  .icon-cs       { background: rgba(251,191,36,0.15);  border: 1px solid rgba(251,191,36,0.3); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  .card-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .status-live    { background: rgba(96,165,250,0.12); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+  .status-soon    { background: rgba(160,160,192,0.1); color: var(--muted);  border: 1px solid rgba(160,160,192,0.2); }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .card-meta-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .card-meta-item .val { color: var(--accent); }
+
+  .card-arrow {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    color: var(--muted);
+    font-size: 1rem;
+    transition: all 0.2s;
+    opacity: 0;
+  }
+
+  .subject-card:hover .card-arrow {
+    opacity: 1;
+    color: var(--accent);
+    transform: translateX(3px);
   }
 
   @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { margin-left: 0; width: 100%; padding: 5rem 1.5rem 4rem; }
+    .hero { padding: 8rem 1.5rem 3rem; }
+    .subjects { padding: 0 1.5rem 5rem; }
+    nav { padding: 1rem 1.5rem; }
+    .hero-stats { gap: 1.5rem; }
   }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero        { animation: fadeUp 0.7s ease both; }
+  .subject-grid { animation: fadeUp 0.7s 0.15s ease both; }
 </style>
 </head>
 <body>
@@ -602,377 +326,94 @@
 <div class="orb orb-2"></div>
 
 <nav>
-  <a href="../index.html" class="nav-logo">Archie's <span>Hub</span></a>
-  <a href="../index.html" class="nav-back">&#8592; Maths</a>
+  <a href="index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <span class="nav-tag">A Level Revision</span>
 </nav>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-title">Topic 01</div>
-    <a href="#indices" class="sidebar-link active"><span class="sidebar-num">1.1</span> Laws of Indices</a>
-    <a href="#surds" class="sidebar-link"><span class="sidebar-num">1.2</span> Surds</a>
-    <a href="#quadratics" class="sidebar-link"><span class="sidebar-num">1.3</span> Quadratics</a>
-    <a href="#simultaneous" class="sidebar-link"><span class="sidebar-num">1.4</span> Simultaneous Equations</a>
-    <a href="#inequalities" class="sidebar-link"><span class="sidebar-num">1.5</span> Inequalities</a>
-    <a href="#transformations" class="sidebar-link"><span class="sidebar-num">1.6</span> Graph Transformations</a>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-title">Practice</div>
-    <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
-    <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
-    <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
-  </aside>
+<section class="hero">
+  <div class="hero-badge">A Level · 2025–2026</div>
+  <h1 class="hero-title">Your revision<br><span>headquarters</span></h1>
+  <p class="hero-sub">Complete topic coverage with worked examples, practice questions at every difficulty level, and STEP preparation — all in one place.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">15</span>
+      <span class="stat-label">Maths Topics</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Difficulty Levels</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">4</span>
+      <span class="stat-label">Subjects</span>
+    </div>
+  </div>
+</section>
 
-  <main class="main">
+<section class="subjects">
+  <div class="section-label">// Choose a subject</div>
+  <div class="subject-grid">
 
-    <div class="topic-header">
-      <div class="breadcrumb">
-        <a href="../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 01
+    <!-- Maths -->
+    <a href="maths/index.html" class="subject-card">
+      <div class="card-top">
+        <div class="card-icon icon-maths">∑</div>
+        <span class="card-status status-live">Live</span>
       </div>
-      <div class="topic-num-badge">Topic 01 &middot; Pure Mathematics</div>
-      <h1 class="topic-title">Algebra &amp; Functions</h1>
-      <p class="topic-intro">The foundation of all A Level Maths. Master indices, surds, quadratics, and graph transformations before moving on.</p>
-      <div class="topic-meta-row">
-        <div class="meta-item"><span>6</span> subtopics</div>
-        <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 1&#8211;5</div>
-        <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+      <div class="card-title">Mathematics</div>
+      <div class="card-desc">Pure Maths Years 1 &amp; 2 — algebra, calculus, trigonometry, vectors and more. Full worked examples with STEP-style questions.</div>
+      <div class="card-meta">
+        <div class="card-meta-item"><span class="val">15</span> topics</div>
+        <div class="card-meta-item"><span class="val">Edexcel</span> spec</div>
+        <div class="card-meta-item"><span class="val">Year 1 &amp; 2</span></div>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <!-- Further Maths -->
+    <div class="subject-card coming-soon">
+      <div class="card-top">
+        <div class="card-icon icon-further">∞</div>
+        <span class="card-status status-soon">Coming soon</span>
+      </div>
+      <div class="card-title">Further Mathematics</div>
+      <div class="card-desc">Complex numbers, matrices, further calculus, polar coordinates and STEP preparation.</div>
+      <div class="card-meta">
+        <div class="card-meta-item"><span class="val">—</span> topics</div>
+        <div class="card-meta-item"><span class="val">Edexcel</span> spec</div>
       </div>
     </div>
 
-    <div class="toc">
-      <div class="toc-title">// In this topic</div>
-      <ul class="toc-list">
-        <li><a href="#indices">1.1 &#8212; Laws of Indices</a></li>
-        <li><a href="#surds">1.2 &#8212; Surds</a></li>
-        <li><a href="#quadratics">1.3 &#8212; Quadratics</a></li>
-        <li><a href="#simultaneous">1.4 &#8212; Simultaneous Equations</a></li>
-        <li><a href="#inequalities">1.5 &#8212; Inequalities</a></li>
-        <li><a href="#transformations">1.6 &#8212; Graph Transformations</a></li>
-      </ul>
-    </div>
-
-    <!-- 1.1 INDICES -->
-    <div class="lesson-section" id="indices">
-      <h2 class="section-title">1.1 Laws of Indices</h2>
-      <p>Indices (or powers/exponents) describe repeated multiplication. The rules for manipulating them are essential throughout all of A Level Maths.</p>
-      <div class="formula-box">
-        $$a^m \times a^n = a^{m+n}$$
-        $$a^m \div a^n = a^{m-n}$$
-        $$(a^m)^n = a^{mn}$$
-        $$a^0 = 1 \quad (a \neq 0)$$
-        $$a^{-n} = \dfrac{1}{a^n}$$
-        $$a^{\frac{1}{n}} = \sqrt[n]{a}$$
-        $$a^{\frac{m}{n}} = \left(\sqrt[n]{a}\right)^m = \sqrt[n]{a^m}$$
+    <!-- Physics -->
+    <div class="subject-card coming-soon">
+      <div class="card-top">
+        <div class="card-icon icon-physics">⚡</div>
+        <span class="card-status status-soon">Coming soon</span>
       </div>
-      <div class="key-point">
-        <strong>Key Point</strong>
-        The rules above only apply when the <em>base</em> is the same. You cannot simplify $a^3 \times b^2$ using these rules.
-      </div>
-      <h3 class="subsection">Worked Examples</h3>
-      <div class="example">
-        <div class="example-label">Worked Example 1.1a</div>
-        <div class="example-q">Simplify: $\dfrac{x^5 \times x^{-2}}{x^3}$</div>
-        <div class="example-steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">Multiply terms in the numerator: $x^5 \times x^{-2} = x^{5+(-2)} = x^3$<div class="step-comment">Add the powers when multiplying same base.</div></div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">Divide: $\dfrac{x^3}{x^3} = x^{3-3} = x^0 = 1$<div class="step-comment">Subtract powers when dividing. Anything to the power 0 is 1.</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="example">
-        <div class="example-label">Worked Example 1.1b</div>
-        <div class="example-q">Evaluate: $27^{-\frac{2}{3}}$</div>
-        <div class="example-steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">$27^{\frac{1}{3}} = \sqrt[3]{27} = 3$<div class="step-comment">The denominator of the fractional power is the root.</div></div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">Apply the numerator: $3^2 = 9$<div class="step-comment">The numerator is the power.</div></div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-content">Apply the negative: $27^{-\frac{2}{3}} = \dfrac{1}{9}$<div class="step-comment">Negative power means take the reciprocal.</div></div>
-          </div>
-        </div>
+      <div class="card-title">Physics</div>
+      <div class="card-desc">Mechanics, electricity, waves, quantum physics and more — with mathematical derivations throughout.</div>
+      <div class="card-meta">
+        <div class="card-meta-item"><span class="val">—</span> topics</div>
+        <div class="card-meta-item"><span class="val">AQA</span> spec</div>
       </div>
     </div>
 
-    <!-- 1.2 SURDS -->
-    <div class="lesson-section" id="surds">
-      <h2 class="section-title">1.2 Surds</h2>
-      <p>A <strong>surd</strong> is an irrational root that cannot be simplified to a rational number. We leave answers in surd form to keep them <em>exact</em>.</p>
-      <div class="formula-box">
-        $$\sqrt{ab} = \sqrt{a}\cdot\sqrt{b}$$
-        $$\sqrt{\dfrac{a}{b}} = \dfrac{\sqrt{a}}{\sqrt{b}}$$
-        $$(a + \sqrt{b})(a - \sqrt{b}) = a^2 - b$$
+    <!-- Computer Science -->
+    <div class="subject-card coming-soon">
+      <div class="card-top">
+        <div class="card-icon icon-cs">{ }</div>
+        <span class="card-status status-soon">Coming soon</span>
       </div>
-      <h3 class="subsection">Simplifying Surds</h3>
-      <p>Find the largest square factor of the number under the root.</p>
-      <div class="example">
-        <div class="example-label">Worked Example 1.2a</div>
-        <div class="example-q">Simplify $\sqrt{72}$</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">Find the largest square factor of 72: $72 = 36 \times 2$</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">$\sqrt{72} = \sqrt{36 \times 2} = \sqrt{36}\cdot\sqrt{2} = 6\sqrt{2}$</div></div>
-        </div>
-      </div>
-      <h3 class="subsection">Rationalising the Denominator</h3>
-      <p>We never leave a surd in the denominator. Multiply top and bottom by the conjugate.</p>
-      <div class="example">
-        <div class="example-label">Worked Example 1.2b</div>
-        <div class="example-q">Rationalise the denominator of $\dfrac{5}{3+\sqrt{2}}$</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">Multiply by the conjugate $(3 - \sqrt{2})$: $\dfrac{5}{3+\sqrt{2}} \times \dfrac{3-\sqrt{2}}{3-\sqrt{2}}$</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">Denominator by difference of two squares: $(3+\sqrt{2})(3-\sqrt{2}) = 9 - 2 = 7$</div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content">$$\dfrac{5(3-\sqrt{2})}{7} = \dfrac{15 - 5\sqrt{2}}{7}$$</div></div>
-        </div>
-      </div>
-      <div class="warning-box">
-        <strong>&#9888; Common Mistake</strong>
-        $\sqrt{a+b} \neq \sqrt{a} + \sqrt{b}$. Example: $\sqrt{9+16} = 5$, but $\sqrt{9} + \sqrt{16} = 7$. Never split a sum under a root.
+      <div class="card-title">Computer Science</div>
+      <div class="card-desc">Algorithms, data structures, programming concepts, Boolean logic and computer architecture.</div>
+      <div class="card-meta">
+        <div class="card-meta-item"><span class="val">—</span> topics</div>
+        <div class="card-meta-item"><span class="val">AQA</span> spec</div>
       </div>
     </div>
 
-    <!-- 1.3 QUADRATICS -->
-    <div class="lesson-section" id="quadratics">
-      <h2 class="section-title">1.3 Quadratics</h2>
-      <p>A quadratic is any expression $ax^2 + bx + c$ where $a \neq 0$. You need to solve, factorise, and complete the square.</p>
-      <h3 class="subsection">The Quadratic Formula</h3>
-      <div class="formula-box">
-        $$x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
-      </div>
-      <h3 class="subsection">Completing the Square</h3>
-      <div class="formula-box">
-        $$ax^2 + bx + c = a\left(x + \dfrac{b}{2a}\right)^2 - \dfrac{b^2}{4a} + c$$
-      </div>
-      <div class="example">
-        <div class="example-label">Worked Example 1.3a</div>
-        <div class="example-q">Complete the square for $2x^2 - 8x + 3$</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">Factor out 2: $2(x^2 - 4x) + 3$</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">Half of $-4$ is $-2$, $(-2)^2 = 4$: $2\left[(x-2)^2 - 4\right] + 3$</div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content">$2(x-2)^2 - 8 + 3 = 2(x-2)^2 - 5$<div class="step-comment">Vertex at $(2, -5)$.</div></div></div>
-        </div>
-      </div>
-      <h3 class="subsection">The Discriminant</h3>
-      <div class="formula-box">
-        $$\Delta = b^2 - 4ac$$
-        $$\Delta > 0 \implies \text{two distinct real roots}$$
-        $$\Delta = 0 \implies \text{one repeated real root}$$
-        $$\Delta < 0 \implies \text{no real roots}$$
-      </div>
-    </div>
-
-    <!-- 1.4 SIMULTANEOUS -->
-    <div class="lesson-section" id="simultaneous">
-      <h2 class="section-title">1.4 Simultaneous Equations</h2>
-      <p>At A Level you solve simultaneous equations where one or both are quadratic, using substitution.</p>
-      <div class="example">
-        <div class="example-label">Worked Example 1.4a</div>
-        <div class="example-q">Solve: $y = x + 3$ and $x^2 + y^2 = 29$</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">Substitute $y = x + 3$: $x^2 + (x+3)^2 = 29$</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">Expand: $2x^2 + 6x - 20 = 0$</div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content">Factorise: $(x+5)(x-2) = 0$</div></div>
-          <div class="step"><div class="step-num">4</div><div class="step-content">$x = -5 \Rightarrow y = -2$ &nbsp;&nbsp; $x = 2 \Rightarrow y = 5$</div></div>
-        </div>
-      </div>
-      <div class="key-point">
-        <strong>Exam Technique</strong>
-        Always find both coordinates and write them as pairs. Leaving just $x$ values loses marks.
-      </div>
-    </div>
-
-    <!-- 1.5 INEQUALITIES -->
-    <div class="lesson-section" id="inequalities">
-      <h2 class="section-title">1.5 Inequalities</h2>
-      <p>Linear inequalities work like equations except: multiplying or dividing by a negative flips the sign. For quadratic inequalities, sketch the curve first.</p>
-      <div class="example">
-        <div class="example-label">Worked Example 1.5a</div>
-        <div class="example-q">Solve $x^2 - 5x + 4 &lt; 0$</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">Factorise: $(x-1)(x-4) = 0$, roots $x = 1$ and $x = 4$</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">Parabola opens upward, so below zero between the roots.</div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content">Solution: $1 &lt; x &lt; 4$</div></div>
-        </div>
-      </div>
-      <div class="warning-box">
-        <strong>&#9888; Common Mistake</strong>
-        Never write $4 > x > 1$. Always write $x$ increasing left to right: $1 &lt; x &lt; 4$.
-      </div>
-    </div>
-
-    <!-- 1.6 TRANSFORMATIONS -->
-    <div class="lesson-section" id="transformations">
-      <h2 class="section-title">1.6 Graph Transformations</h2>
-      <div class="formula-box">
-        $$y = f(x) + a \;\longrightarrow\; \text{translation } \begin{pmatrix}0\\a\end{pmatrix}$$
-        $$y = f(x + a) \;\longrightarrow\; \text{translation } \begin{pmatrix}-a\\0\end{pmatrix}$$
-        $$y = af(x) \;\longrightarrow\; \text{vertical stretch, s.f. } a$$
-        $$y = f(ax) \;\longrightarrow\; \text{horizontal stretch, s.f. } \tfrac{1}{a}$$
-        $$y = -f(x) \;\longrightarrow\; \text{reflection in } x\text{-axis}$$
-        $$y = f(-x) \;\longrightarrow\; \text{reflection in } y\text{-axis}$$
-      </div>
-      <div class="key-point">
-        <strong>Memory Trick</strong>
-        Changes <em>inside</em> the brackets affect $x$ and do the <em>opposite</em> to what you'd expect: $f(x + 3)$ shifts <em>left</em> by 3.
-      </div>
-      <div class="example">
-        <div class="example-label">Worked Example 1.6a</div>
-        <div class="example-q">$y = f(x)$ has a maximum at $(2, 5)$. Find the maximum after $y = 3f(x - 1)$.</div>
-        <div class="example-steps">
-          <div class="step"><div class="step-num">1</div><div class="step-content">$f(x-1)$: translate $+1$ in $x$. Point: $(3, 5)$.</div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content">$3f(x-1)$: vertical stretch $\times 3$. Point: $(3, 15)$.</div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content">New maximum: $\mathbf{(3,\, 15)}$</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRACTICE -->
-    <div id="practice-a" style="margin-top: 3rem;">
-      <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
-    </div>
-
-    <div class="practice-section" style="margin-bottom: 1.5rem;">
-      <div class="practice-header">
-        <div class="practice-title">Section A &#8212; Foundation</div>
-        <div class="difficulty-badge diff-a">Grade A</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q1</div>
-          <div class="q-text">Simplify: $\dfrac{(2x^3)^2 \times x^{-4}}{4x}$</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$\dfrac{4x^6 \times x^{-4}}{4x} = \dfrac{4x^2}{4x} = x$</div>
-        </div>
-        <div class="q-marks">[3 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q2</div>
-          <div class="q-text">Rationalise the denominator: $\dfrac{6}{2 - \sqrt{3}}$</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">Multiply by $\dfrac{2+\sqrt{3}}{2+\sqrt{3}}$: $\dfrac{6(2+\sqrt{3})}{4-3} = 12 + 6\sqrt{3}$</div>
-        </div>
-        <div class="q-marks">[3 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q3</div>
-          <div class="q-text">Complete the square for $x^2 + 6x - 7$ and find the minimum value.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$(x+3)^2 - 16$. Minimum $-16$ at $x = -3$.</div>
-        </div>
-        <div class="q-marks">[4 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q4</div>
-          <div class="q-text">Solve simultaneously: $y = 2x - 1$ and $y = x^2 - 3x + 5$.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$(x-2)(x-3) = 0$. Solutions: $(2, 3)$ and $(3, 5)$.</div>
-        </div>
-        <div class="q-marks">[5 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q5</div>
-          <div class="q-text">Find the set of values of $x$ satisfying $x^2 - x - 12 \leq 0$.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$(x-4)(x+3) \leq 0$. Solution: $-3 \leq x \leq 4$.</div>
-        </div>
-        <div class="q-marks">[4 marks]</div>
-      </div>
-    </div>
-
-    <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
-      <div class="practice-header">
-        <div class="practice-title">Section B &#8212; Challenging</div>
-        <div class="difficulty-badge diff-b">Grade B</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q6</div>
-          <div class="q-text">Show that $\dfrac{(9x)^{\frac{1}{2}} \cdot 27x^2}{3^4 \cdot x^{-\frac{1}{2}}}$ simplifies to $x^k$ and find $k$.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">Numerator: $3^4 x^{\frac{5}{2}}$. Divided by $3^4 x^{-\frac{1}{2}}$. Result: $x^3$. So $k = 3$.</div>
-        </div>
-        <div class="q-marks">[5 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q7</div>
-          <div class="q-text">Find the values of $k$ for which $kx^2 + 4x + k = 0$ has two distinct real solutions.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$16 - 4k^2 > 0 \Rightarrow k^2 &lt; 4$, so $-2 &lt; k &lt; 2$, $k \neq 0$.</div>
-        </div>
-        <div class="q-marks">[5 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q8</div>
-          <div class="q-text">$y = f(x)$ passes through $(4, 7)$. Find the corresponding point on $y = \tfrac{1}{2}f(2x + 6)$.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$2x + 6 = 4 \Rightarrow x = -1$. $y = \tfrac{1}{2} \times 7 = 3.5$. Point: $(-1,\, 3.5)$.</div>
-        </div>
-        <div class="q-marks">[4 marks]</div>
-      </div>
-    </div>
-
-    <div id="practice-c" class="practice-section">
-      <div class="practice-header">
-        <div class="practice-title">Section C &#8212; STEP-style</div>
-        <div class="difficulty-badge diff-c">Hard</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q9</div>
-          <div class="q-text">Prove that $x^2 + 4x + 7 > 0$ for all real $x$. Hence prove $\dfrac{x^2 + 4x + 7}{2x^2 + 3} > 0$ for all real $x$.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">$(x+2)^2 + 3 \geq 3 > 0$. Also $2x^2 + 3 \geq 3 > 0$. Both always positive, so quotient always positive. $\square$</div>
-        </div>
-        <div class="q-marks">[6 marks]</div>
-      </div>
-      <div class="question-item">
-        <div>
-          <div class="q-num">Q10</div>
-          <div class="q-text">Given $\sqrt{a} + \sqrt{b} = \sqrt{c}$ for positive integers $a, b, c$, show that at least one of $a, b, c$ is divisible by 4, or two are equal.</div>
-          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '&#9650; Hide answer' : '&#9660; Show answer'">&#9660; Show answer</button>
-          <div class="reveal-content">Square both sides: $a + b + 2\sqrt{ab} = c$. So $2\sqrt{ab}$ is an integer, meaning $ab$ is a perfect square. Writing $a = m^2 s$, $b = n^2 s$ (square-free $s$) gives $c = (m+n)^2 s$. Considering cases modulo 4 establishes the result.</div>
-        </div>
-        <div class="q-marks">[8 marks]</div>
-      </div>
-    </div>
-
-    <div class="lesson-nav">
-      <a href="../index.html" class="lesson-nav-btn">
-        &#8592; <div><span class="btn-label">Back to</span> Maths Topics</div>
-      </a>
-      <a href="coordinate-geometry.html" class="lesson-nav-btn next">
-        <div><span class="btn-label">Next Topic</span> Coordinate Geometry</div> &#8594;
-      </a>
-    </div>
-
-  </main>
-</div>
-
-<script>
-  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
-  const sidebarLinks = document.querySelectorAll('.sidebar-link');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => { if (s.getBoundingClientRect().top < 150) current = s.id; });
-    sidebarLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
-    });
-  });
-</script>
+  </div>
+</section>
 
 </body>
 </html>
