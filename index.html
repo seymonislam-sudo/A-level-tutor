@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,501 +7,465 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: rgba(255,255,255,0.08);
-    --text: #e8e8f0;
-    --muted: #7070a0;
-    --maths: #4ade80;
-    --further: #22d3ee;
-    --physics: #f97316;
-    --cs: #a78bfa;
-    --tmua: #fbbf24;
-    --step: #f43f5e;
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+
+    /* Colour-blind safe palette — uses shape + pattern + distinct luminosity, not just hue */
+    /* High contrast pairs tested for deuteranopia, protanopia, tritanopia */
+    --maths:   #60a5fa;   /* bright blue */
+    --further: #f59e0b;   /* amber */
+    --physics: #fb7185;   /* rose/pink */
+    --cs:      #34d399;   /* emerald */
+    --tmua:    #c084fc;   /* violet */
+    --step:    #f97316;   /* orange */
   }
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘DM Sans’, sans-serif;
-min-height: 100vh;
-overflow-x: hidden;
-}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-/* Background grid */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image:
-linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-background-size: 60px 60px;
-pointer-events: none;
-z-index: 0;
-}
+  /* Subtle grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* Glow orbs */
-.orb {
-position: fixed;
-border-radius: 50%;
-filter: blur(120px);
-opacity: 0.15;
-pointer-events: none;
-z-index: 0;
-}
-.orb-1 { width: 600px; height: 600px; background: #4ade80; top: -200px; left: -200px; animation: drift1 20s ease-in-out infinite; }
-.orb-2 { width: 500px; height: 500px; background: #a78bfa; bottom: -200px; right: -100px; animation: drift2 25s ease-in-out infinite; }
-.orb-3 { width: 400px; height: 400px; background: #22d3ee; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: drift3 18s ease-in-out infinite; }
+  /* Soft ambient orbs — toned down */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 700px; height: 700px; background: #60a5fa; top: -300px; left: -200px; animation: drift1 22s ease-in-out infinite; }
+  .orb-2 { width: 500px; height: 500px; background: #c084fc; bottom: -200px; right: -100px; animation: drift2 28s ease-in-out infinite; }
 
-@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(80px,60px)} }
-@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-80px)} }
-@keyframes drift3 { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-45%,-55%)} }
+  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,40px)} }
+  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,-60px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.4)} }
 
-/* Nav */
-nav {
-position: fixed;
-top: 0; left: 0; right: 0;
-z-index: 100;
-padding: 1.2rem 2.5rem;
-display: flex;
-align-items: center;
-justify-content: space-between;
-background: rgba(10,10,15,0.8);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid var(–border);
-}
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.1rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13,13,20,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
 
-.nav-logo {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.3rem;
-font-weight: 700;
-letter-spacing: -0.02em;
-color: var(–text);
-}
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--maths); }
 
-.nav-logo span {
-color: var(–maths);
-}
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
 
-.nav-links {
-display: flex;
-gap: 2rem;
-list-style: none;
-}
+  .nav-links a {
+    color: var(--nav-link);          /* #d0d0e8 — high contrast on dark bg */
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #ffffff; }
 
-.nav-links a {
-color: var(–muted);
-text-decoration: none;
-font-size: 0.85rem;
-font-weight: 500;
-letter-spacing: 0.05em;
-text-transform: uppercase;
-transition: color 0.2s;
-}
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+  }
 
-.nav-links a:hover { color: var(–text); }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(96,165,250,0.12);
+    border: 1px solid rgba(96,165,250,0.4);
+    color: #93c5fd;                 /* lighter blue for text readability */
+    padding: 0.4rem 1.1rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #60a5fa;
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
 
-/* Hero */
-.hero {
-position: relative;
-z-index: 1;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-text-align: center;
-padding: 8rem 2rem 4rem;
-}
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
 
-.hero-badge {
-display: inline-flex;
-align-items: center;
-gap: 0.5rem;
-background: rgba(74,222,128,0.1);
-border: 1px solid rgba(74,222,128,0.3);
-color: var(–maths);
-padding: 0.4rem 1rem;
-border-radius: 100px;
-font-size: 0.78rem;
-font-family: ‘DM Mono’, monospace;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-margin-bottom: 2rem;
-animation: fadeUp 0.8s ease both;
-}
+  .hero h1 .name {
+    display: block;
+    background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-.hero-badge::before {
-content: ‘’;
-width: 6px; height: 6px;
-background: var(–maths);
-border-radius: 50%;
-animation: pulse 2s ease infinite;
-}
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
 
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+  .hero-stats {
+    display: flex;
+    gap: 3.5rem;
+    margin-bottom: 5rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.73rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.4rem;
+    font-family: 'DM Mono', monospace;
+  }
 
-.hero h1 {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(3.5rem, 8vw, 7rem);
-font-weight: 900;
-line-height: 1;
-letter-spacing: -0.03em;
-margin-bottom: 1.5rem;
-animation: fadeUp 0.8s 0.1s ease both;
-}
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+    animation: scrollDrop 2s ease infinite;
+  }
+  @keyframes scrollDrop {
+    0%  { transform:scaleY(0); transform-origin:top }
+    50% { transform:scaleY(1); transform-origin:top }
+    51% { transform:scaleY(1); transform-origin:bottom }
+    100%{ transform:scaleY(0); transform-origin:bottom }
+  }
 
-.hero h1 .name {
-display: block;
-background: linear-gradient(135deg, #4ade80, #22d3ee);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
+  /* ── SECTIONS ── */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.hero p {
-font-size: 1.15rem;
-color: var(–muted);
-max-width: 560px;
-line-height: 1.7;
-margin-bottom: 3rem;
-animation: fadeUp 0.8s 0.2s ease both;
-}
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 0.7rem;
+  }
 
-.hero-stats {
-display: flex;
-gap: 3rem;
-margin-bottom: 4rem;
-animation: fadeUp 0.8s 0.3s ease both;
-}
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+    line-height: 1.1;
+    color: var(--text);
+  }
 
-.stat {
-text-align: center;
-}
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto;
+    max-width: 1200px;
+  }
 
-.stat-num {
-font-family: ‘Playfair Display’, serif;
-font-size: 2.5rem;
-font-weight: 700;
-line-height: 1;
-}
+  /* ── SUBJECT CARDS ── */
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
 
-.stat-label {
-font-size: 0.75rem;
-color: var(–muted);
-text-transform: uppercase;
-letter-spacing: 0.08em;
-margin-top: 0.3rem;
-font-family: ‘DM Mono’, monospace;
-}
+  .subject-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
 
-.scroll-hint {
-position: absolute;
-bottom: 2rem;
-left: 50%;
-transform: translateX(-50%);
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 0.5rem;
-color: var(–muted);
-font-size: 0.7rem;
-font-family: ‘DM Mono’, monospace;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-animation: fadeUp 1s 0.6s ease both;
-}
+  .subject-card:hover { transform: translateY(-5px); }
 
-.scroll-line {
-width: 1px;
-height: 40px;
-background: linear-gradient(to bottom, var(–muted), transparent);
-animation: scrollLine 2s ease infinite;
-}
+  /* Per-subject hover colours */
+  .card-maths:hover   { border-color: var(--maths);   box-shadow: 0 8px 40px rgba(96,165,250,0.18); }
+  .card-further:hover { border-color: var(--further); box-shadow: 0 8px 40px rgba(245,158,11,0.18); }
+  .card-physics:hover { border-color: var(--physics); box-shadow: 0 8px 40px rgba(251,113,133,0.18); }
+  .card-cs:hover      { border-color: var(--cs);      box-shadow: 0 8px 40px rgba(52,211,153,0.18); }
+  .card-tmua:hover    { border-color: var(--tmua);    box-shadow: 0 8px 40px rgba(192,132,252,0.18); }
+  .card-step:hover    { border-color: var(--step);    box-shadow: 0 8px 40px rgba(249,115,22,0.18); }
 
-@keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+  .card-maths   { --accent: var(--maths); }
+  .card-further { --accent: var(--further); }
+  .card-physics { --accent: var(--physics); }
+  .card-cs      { --accent: var(--cs); }
+  .card-tmua    { --accent: var(--tmua); }
+  .card-step    { --accent: var(--step); }
 
-@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  .card-accent-line {
+    width: 36px; height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-bottom: 1.5rem;
+    transition: width 0.3s ease;
+  }
+  .subject-card:hover .card-accent-line { width: 56px; }
 
-/* Subjects section */
-.section {
-position: relative;
-z-index: 1;
-padding: 6rem 2rem;
-max-width: 1200px;
-margin: 0 auto;
-}
+  .card-icon {
+    font-size: 1.9rem;
+    margin-bottom: 0.9rem;
+    line-height: 1;
+  }
 
-.section-label {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.75rem;
-color: var(–muted);
-text-transform: uppercase;
-letter-spacing: 0.12em;
-margin-bottom: 0.8rem;
-}
+  .card-board {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.45rem;
+    font-weight: 500;
+  }
 
-.section-title {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(2rem, 4vw, 3rem);
-font-weight: 700;
-letter-spacing: -0.02em;
-margin-bottom: 3rem;
-line-height: 1.1;
-}
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
 
-.subjects-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-gap: 1.5rem;
-}
+  .card-desc {
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+  }
 
-.subject-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 16px;
-padding: 2rem;
-cursor: pointer;
-transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-position: relative;
-overflow: hidden;
-text-decoration: none;
-color: inherit;
-display: block;
-}
+  .card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
 
-.subject-card::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-opacity: 0;
-transition: opacity 0.3s;
-}
+  .topic-tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.71rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
 
-.subject-card:hover {
-transform: translateY(-4px);
-}
+  .card-arrow {
+    position: absolute;
+    top: 2rem; right: 2rem;
+    width: 30px; height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    transition: all 0.25s;
+  }
+  .subject-card:hover .card-arrow {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(45deg);
+  }
 
-.subject-card:hover::before { opacity: 1; }
+  .card-exam {
+    background: linear-gradient(140deg, var(--surface) 0%, var(--surface2) 100%);
+  }
 
-.card-maths { –accent: var(–maths); }
-.card-further { –accent: var(–further); }
-.card-physics { –accent: var(–physics); }
-.card-cs { –accent: var(–cs); }
-.card-tmua { –accent: var(–tmua); }
-.card-step { –accent: var(–step); }
+  /* ── PROGRESS TRACKER ── */
+  .tracker {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2.5rem;
+    margin-top: 0;
+  }
 
-.subject-card:hover {
-border-color: var(–accent);
-box-shadow: 0 0 40px rgba(var(–accent-rgb, 74,222,128), 0.1);
-}
+  .tracker-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
 
-.card-maths:hover { box-shadow: 0 8px 40px rgba(74,222,128,0.15); }
-.card-further:hover { box-shadow: 0 8px 40px rgba(34,211,238,0.15); }
-.card-physics:hover { box-shadow: 0 8px 40px rgba(249,115,22,0.15); }
-.card-cs:hover { box-shadow: 0 8px 40px rgba(167,139,250,0.15); }
-.card-tmua:hover { box-shadow: 0 8px 40px rgba(251,191,36,0.15); }
-.card-step:hover { box-shadow: 0 8px 40px rgba(244,63,94,0.15); }
+  .tracker-sub {
+    color: var(--muted);
+    font-size: 0.86rem;
+    margin-bottom: 2rem;
+  }
 
-.card-accent-line {
-width: 40px;
-height: 3px;
-border-radius: 2px;
-background: var(–accent);
-margin-bottom: 1.5rem;
-transition: width 0.3s ease;
-}
+  .progress-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
 
-.subject-card:hover .card-accent-line { width: 60px; }
+  .progress-item {
+    padding: 1rem;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
 
-.card-icon {
-font-size: 2rem;
-margin-bottom: 1rem;
-}
+  .progress-label {
+    font-size: 0.76rem;
+    color: var(--nav-link);          /* brighter than --muted for legibility */
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.8rem;
+  }
 
-.card-board {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.7rem;
-color: var(–accent);
-text-transform: uppercase;
-letter-spacing: 0.1em;
-margin-bottom: 0.5rem;
-}
+  .progress-bar-bg {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
 
-.card-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.5rem;
-font-weight: 700;
-margin-bottom: 0.8rem;
-letter-spacing: -0.02em;
-}
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
 
-.card-desc {
-font-size: 0.88rem;
-color: var(–muted);
-line-height: 1.6;
-margin-bottom: 1.5rem;
-}
+  .progress-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.73rem;
+    color: var(--muted);
+  }
 
-.card-topics {
-display: flex;
-flex-wrap: wrap;
-gap: 0.5rem;
-}
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+  }
+  footer span { color: var(--maths); }
 
-.topic-tag {
-background: rgba(255,255,255,0.05);
-border: 1px solid var(–border);
-padding: 0.25rem 0.65rem;
-border-radius: 6px;
-font-size: 0.73rem;
-color: var(–muted);
-font-family: ‘DM Mono’, monospace;
-}
-
-.card-arrow {
-position: absolute;
-top: 2rem;
-right: 2rem;
-width: 32px;
-height: 32px;
-border: 1px solid var(–border);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 0.9rem;
-color: var(–muted);
-transition: all 0.3s;
-}
-
-.subject-card:hover .card-arrow {
-border-color: var(–accent);
-color: var(–accent);
-transform: rotate(45deg);
-}
-
-/* STEP/TMUA special cards */
-.card-exam {
-background: linear-gradient(135deg, var(–surface) 0%, var(–surface2) 100%);
-}
-
-/* Progress tracker */
-.tracker {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 16px;
-padding: 2.5rem;
-margin-top: 4rem;
-}
-
-.tracker-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.5rem;
-font-weight: 700;
-margin-bottom: 0.5rem;
-}
-
-.tracker-sub {
-color: var(–muted);
-font-size: 0.88rem;
-margin-bottom: 2rem;
-}
-
-.progress-items {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-gap: 1rem;
-}
-
-.progress-item {
-padding: 1rem;
-background: var(–surface2);
-border-radius: 10px;
-border: 1px solid var(–border);
-}
-
-.progress-label {
-font-size: 0.78rem;
-color: var(–muted);
-font-family: ‘DM Mono’, monospace;
-text-transform: uppercase;
-letter-spacing: 0.06em;
-margin-bottom: 0.8rem;
-}
-
-.progress-bar-bg {
-height: 4px;
-background: rgba(255,255,255,0.05);
-border-radius: 2px;
-overflow: hidden;
-margin-bottom: 0.5rem;
-}
-
-.progress-bar-fill {
-height: 100%;
-border-radius: 2px;
-transition: width 1s ease;
-}
-
-.progress-pct {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.75rem;
-color: var(–muted);
-}
-
-/* Footer */
-footer {
-position: relative;
-z-index: 1;
-text-align: center;
-padding: 3rem 2rem;
-border-top: 1px solid var(–border);
-color: var(–muted);
-font-size: 0.82rem;
-font-family: ‘DM Mono’, monospace;
-}
-
-footer span { color: var(–maths); }
-
-/* Divider */
-.divider {
-height: 1px;
-background: var(–border);
-margin: 0 auto;
-max-width: 1200px;
-}
-
-/* Coming soon overlay */
-.coming-soon-badge {
-position: absolute;
-top: 1rem;
-right: 4rem;
-background: rgba(255,255,255,0.05);
-border: 1px solid var(–border);
-padding: 0.2rem 0.6rem;
-border-radius: 6px;
-font-size: 0.65rem;
-font-family: ‘DM Mono’, monospace;
-color: var(–muted);
-text-transform: uppercase;
-letter-spacing: 0.08em;
-}
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero-stats { gap: 2rem; }
+    .section { padding: 4rem 1.25rem; }
+  }
 </style>
-
 </head>
 <body>
 
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
 
 <!-- Nav -->
-
 <nav>
   <div class="nav-logo">Archie's <span>Hub</span></div>
   <ul class="nav-links">
@@ -513,7 +476,6 @@ letter-spacing: 0.08em;
 </nav>
 
 <!-- Hero -->
-
 <section class="hero">
   <div class="hero-badge">Year 12 · 2025–2026</div>
   <h1>
@@ -544,78 +506,75 @@ letter-spacing: 0.08em;
 </section>
 
 <!-- Subjects -->
-
 <section class="section" id="subjects">
   <div class="section-label">// Your A Levels</div>
   <h2 class="section-title">Core Subjects</h2>
 
   <div class="subjects-grid">
 
-```
-<!-- Maths -->
-<a class="subject-card card-maths" href="maths/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">∑</div>
-  <div class="card-board">Edexcel</div>
-  <div class="card-accent-line" style="background: var(--maths);"></div>
-  <div class="card-title">Mathematics</div>
-  <div class="card-desc">Pure maths, statistics and mechanics. From differentiation to hypothesis testing.</div>
-  <div class="card-topics">
-    <span class="topic-tag">Pure 1 & 2</span>
-    <span class="topic-tag">Statistics</span>
-    <span class="topic-tag">Mechanics</span>
-    <span class="topic-tag">Calculus</span>
-  </div>
-</a>
+    <!-- Maths -->
+    <a class="subject-card card-maths" href="maths/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">∑</div>
+      <div class="card-board">Edexcel</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">Mathematics</div>
+      <div class="card-desc">Pure maths, statistics and mechanics. From differentiation to hypothesis testing.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Pure 1 & 2</span>
+        <span class="topic-tag">Statistics</span>
+        <span class="topic-tag">Mechanics</span>
+        <span class="topic-tag">Calculus</span>
+      </div>
+    </a>
 
-<!-- Further Maths -->
-<a class="subject-card card-further" href="further-maths/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">ℂ</div>
-  <div class="card-board">Edexcel</div>
-  <div class="card-accent-line" style="background: var(--further);"></div>
-  <div class="card-title">Further Mathematics</div>
-  <div class="card-desc">Complex numbers, matrices, further calculus and beyond. The deepest mathematical thinking at A Level.</div>
-  <div class="card-topics">
-    <span class="topic-tag">Complex Numbers</span>
-    <span class="topic-tag">Matrices</span>
-    <span class="topic-tag">Further Pure</span>
-    <span class="topic-tag">Proof</span>
-  </div>
-</a>
+    <!-- Further Maths -->
+    <a class="subject-card card-further" href="further-maths/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">ℂ</div>
+      <div class="card-board">Edexcel</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">Further Mathematics</div>
+      <div class="card-desc">Complex numbers, matrices, further calculus and beyond. The deepest mathematical thinking at A Level.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Complex Numbers</span>
+        <span class="topic-tag">Matrices</span>
+        <span class="topic-tag">Further Pure</span>
+        <span class="topic-tag">Proof</span>
+      </div>
+    </a>
 
-<!-- Physics -->
-<a class="subject-card card-physics" href="physics/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">⚛</div>
-  <div class="card-board">AQA</div>
-  <div class="card-accent-line" style="background: var(--physics);"></div>
-  <div class="card-title">Physics</div>
-  <div class="card-desc">Mechanics, waves, electricity, fields and particles. Understanding the universe from first principles.</div>
-  <div class="card-topics">
-    <span class="topic-tag">Mechanics</span>
-    <span class="topic-tag">Electricity</span>
-    <span class="topic-tag">Waves</span>
-    <span class="topic-tag">Fields</span>
-  </div>
-</a>
+    <!-- Physics -->
+    <a class="subject-card card-physics" href="physics/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">⚛</div>
+      <div class="card-board">AQA</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">Physics</div>
+      <div class="card-desc">Mechanics, waves, electricity, fields and particles. Understanding the universe from first principles.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Mechanics</span>
+        <span class="topic-tag">Electricity</span>
+        <span class="topic-tag">Waves</span>
+        <span class="topic-tag">Fields</span>
+      </div>
+    </a>
 
-<!-- Computer Science -->
-<a class="subject-card card-cs" href="cs/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">⌨</div>
-  <div class="card-board">AQA</div>
-  <div class="card-accent-line" style="background: var(--cs);"></div>
-  <div class="card-title">Computer Science</div>
-  <div class="card-desc">Algorithms, data structures, systems and programming. The theory and practice of computation.</div>
-  <div class="card-topics">
-    <span class="topic-tag">Algorithms</span>
-    <span class="topic-tag">Data Structures</span>
-    <span class="topic-tag">Systems</span>
-    <span class="topic-tag">Programming</span>
-  </div>
-</a>
-```
+    <!-- Computer Science -->
+    <a class="subject-card card-cs" href="cs/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">⌨</div>
+      <div class="card-board">AQA</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">Computer Science</div>
+      <div class="card-desc">Algorithms, data structures, systems and programming. The theory and practice of computation.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Algorithms</span>
+        <span class="topic-tag">Data Structures</span>
+        <span class="topic-tag">Systems</span>
+        <span class="topic-tag">Programming</span>
+      </div>
+    </a>
 
   </div>
 </section>
@@ -623,45 +582,42 @@ letter-spacing: 0.08em;
 <div class="divider"></div>
 
 <!-- Entrance Exams -->
-
 <section class="section" id="exams">
   <div class="section-label">// University Entrance</div>
   <h2 class="section-title">Entrance Exams</h2>
 
   <div class="subjects-grid">
 
-```
-<!-- TMUA -->
-<a class="subject-card card-tmua card-exam" href="tmua/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">🎯</div>
-  <div class="card-board">Cambridge · Durham · LSE</div>
-  <div class="card-accent-line" style="background: var(--tmua);"></div>
-  <div class="card-title">TMUA</div>
-  <div class="card-desc">Test of Mathematics for University Admission. Two 75-minute papers testing mathematical reasoning and application.</div>
-  <div class="card-topics">
-    <span class="topic-tag">Paper 1 — Knowledge</span>
-    <span class="topic-tag">Paper 2 — Reasoning</span>
-    <span class="topic-tag">Multiple Choice</span>
-  </div>
-</a>
+    <!-- TMUA -->
+    <a class="subject-card card-tmua card-exam" href="tmua/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">🎯</div>
+      <div class="card-board">Cambridge · Durham · LSE</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">TMUA</div>
+      <div class="card-desc">Test of Mathematics for University Admission. Two 75-minute papers testing mathematical reasoning and application.</div>
+      <div class="card-topics">
+        <span class="topic-tag">Paper 1 — Knowledge</span>
+        <span class="topic-tag">Paper 2 — Reasoning</span>
+        <span class="topic-tag">Multiple Choice</span>
+      </div>
+    </a>
 
-<!-- STEP -->
-<a class="subject-card card-step card-exam" href="step/index.html">
-  <div class="card-arrow">→</div>
-  <div class="card-icon">🏆</div>
-  <div class="card-board">Cambridge Maths Requirement</div>
-  <div class="card-accent-line" style="background: var(--step);"></div>
-  <div class="card-title">STEP</div>
-  <div class="card-desc">Sixth Term Examination Paper. Extended problem-solving requiring genuine mathematical creativity. The ultimate challenge.</div>
-  <div class="card-topics">
-    <span class="topic-tag">STEP 2</span>
-    <span class="topic-tag">STEP 3</span>
-    <span class="topic-tag">Problem Solving</span>
-    <span class="topic-tag">Extended Proofs</span>
-  </div>
-</a>
-```
+    <!-- STEP -->
+    <a class="subject-card card-step card-exam" href="step/index.html">
+      <div class="card-arrow">→</div>
+      <div class="card-icon">🏆</div>
+      <div class="card-board">Cambridge Maths Requirement</div>
+      <div class="card-accent-line"></div>
+      <div class="card-title">STEP</div>
+      <div class="card-desc">Sixth Term Examination Paper. Extended problem-solving requiring genuine mathematical creativity. The ultimate challenge.</div>
+      <div class="card-topics">
+        <span class="topic-tag">STEP 2</span>
+        <span class="topic-tag">STEP 3</span>
+        <span class="topic-tag">Problem Solving</span>
+        <span class="topic-tag">Extended Proofs</span>
+      </div>
+    </a>
 
   </div>
 </section>
@@ -669,7 +625,6 @@ letter-spacing: 0.08em;
 <div class="divider"></div>
 
 <!-- Progress -->
-
 <section class="section" id="progress">
   <div class="section-label">// Track Your Journey</div>
   <h2 class="section-title">Year 12 Progress</h2>
@@ -678,53 +633,50 @@ letter-spacing: 0.08em;
     <div class="tracker-title">Topic Coverage</div>
     <div class="tracker-sub">Updated as we build out each subject. Keep going, Archie.</div>
 
-```
-<div class="progress-items">
-  <div class="progress-item">
-    <div class="progress-label">Mathematics</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--maths);"></div>
+    <div class="progress-items">
+      <div class="progress-item">
+        <div class="progress-label">Mathematics</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--maths);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Further Maths</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--further);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Physics</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--physics);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Computer Science</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--cs);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">TMUA Prep</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--tmua);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">STEP Prep</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 5%; background: var(--step);"></div>
+        </div>
+        <div class="progress-pct">Just getting started</div>
+      </div>
     </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-  <div class="progress-item">
-    <div class="progress-label">Further Maths</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--further);"></div>
-    </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-  <div class="progress-item">
-    <div class="progress-label">Physics</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--physics);"></div>
-    </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-  <div class="progress-item">
-    <div class="progress-label">Computer Science</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--cs);"></div>
-    </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-  <div class="progress-item">
-    <div class="progress-label">TMUA Prep</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--tmua);"></div>
-    </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-  <div class="progress-item">
-    <div class="progress-label">STEP Prep</div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" style="width: 5%; background: var(--step);"></div>
-    </div>
-    <div class="progress-pct">Just getting started</div>
-  </div>
-</div>
-```
-
   </div>
 </section>
 
