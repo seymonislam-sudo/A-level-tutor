@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binomial Expansion — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --accent: #4ade80;
+    --accent-dim: rgba(74,222,128,0.12);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+line-height: 1.7;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+background-size: 60px 60px;
+pointer-events: none;
+z-index: 0;
+}
+
+.orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: #4ade80; top: -200px; right: -100px; }
+.orb-2 { width: 500px; height: 500px; background: #4ade80; bottom: -100px; left: -100px; }
+
+nav {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between;
+background: rgba(10,10,15,0.9); backdrop-filter: blur(20px);
+border-bottom: 1px solid var(–border);
+}
+.nav-logo { font-family: ‘Playfair Display’, serif; font-size: 1rem; font-weight: 700; color: var(–text); text-decoration: none; }
+.nav-logo span { color: var(–accent); }
+.nav-back { color: var(–muted); text-decoration: none; font-size: 0.8rem; font-family: ‘DM Mono’, monospace; transition: color 0.2s; }
+.nav-back:hover { color: var(–accent); }
+
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar {
+position: fixed; top: 56px; left: 0; bottom: 0; width: 260px;
+background: var(–surface); border-right: 1px solid var(–border);
+overflow-y: auto; padding: 2rem 0;
+}
+.sidebar-title { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+.sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+.sidebar-link.active { color: var(–accent); border-left-color: var(–accent); background: rgba(74,222,128,0.06); }
+.sidebar-num { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); width: 18px; flex-shrink: 0; }
+.sidebar-link.active .sidebar-num { color: var(–accent); }
+.sidebar-divider { height: 1px; background: var(–border); margin: 1rem 1.5rem; }
+
+.main { margin-left: 260px; padding: 5rem 4rem 8rem; max-width: 860px; }
+
+.topic-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(–border); animation: fadeUp 0.6s ease both; }
+.breadcrumb { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+.breadcrumb a { color: var(–accent); text-decoration: none; }
+.topic-num-badge { display: inline-block; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); padding: 0.25rem 0.7rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em; }
+h1.topic-title { font-family: ‘Playfair Display’, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+.topic-intro { font-size: 1rem; color: var(–muted); max-width: 600px; }
+.topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.meta-item { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); display: flex; align-items: center; gap: 0.4rem; }
+.meta-item span { color: var(–accent); }
+
+.lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+h2.section-title { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+h2.section-title::before { content: ‘’; display: inline-block; width: 4px; height: 1.4em; background: var(–accent); border-radius: 2px; flex-shrink: 0; }
+h3.subsection { font-family: ‘Playfair Display’, serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(–text); }
+p { color: var(–text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+.formula-box { background: var(–accent-dim); border: 1px solid rgba(74,222,128,0.25); border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0; position: relative; }
+.formula-box::before { content: ‘KEY FORMULA’; position: absolute; top: -0.6rem; left: 1rem; background: var(–accent); color: var(–bg); font-family: ‘DM Mono’, monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 4px; }
+.formula-box .katex-display { margin: 0.5rem 0; }
+
+.key-point { background: var(–surface2); border: 1px solid var(–border); border-left: 3px solid var(–accent); border-radius: 0 10px 10px 0; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.key-point strong { color: var(–accent); font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.warning-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+.warning-box strong { color: #fbbf24; font-family: ‘DM Mono’, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+.example { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; }
+.example-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+.example-q { font-size: 0.95rem; font-weight: 500; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(–border); }
+.example-steps { display: flex; flex-direction: column; gap: 0.8rem; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; align-items: start; font-size: 0.9rem; }
+.step-num { width: 28px; height: 28px; background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); flex-shrink: 0; margin-top: 2px; }
+.step-content { color: var(–text); }
+.step-comment { font-size: 0.8rem; color: var(–muted); font-style: italic; margin-top: 0.3rem; }
+
+.reveal-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(–border); color: var(–muted); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: ‘DM Mono’, monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; margin-top: 0.8rem; }
+.reveal-btn:hover { border-color: var(–accent); color: var(–accent); }
+.reveal-content { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(–border); }
+.reveal-content.open { display: block; }
+
+/* Pascal’s Triangle */
+.pascal-triangle { font-family: ‘DM Mono’, monospace; text-align: center; margin: 1.5rem 0; line-height: 2.2; }
+.pascal-row { display: flex; justify-content: center; gap: 0.8rem; }
+.pascal-num { min-width: 2rem; color: var(–text); font-size: 0.9rem; }
+.pascal-num.highlight { color: var(–accent); font-weight: 700; }
+.pascal-label { font-size: 0.68rem; color: var(–muted); margin-right: 1rem; font-family: ‘DM Mono’, monospace; }
+
+.practice-section { background: var(–surface2); border: 1px solid var(–border); border-radius: 16px; padding: 2rem; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.practice-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.practice-title { font-family: ‘Playfair Display’, serif; font-size: 1.3rem; font-weight: 700; }
+.difficulty-badge { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; padding: 0.25rem 0.7rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.diff-a { background: rgba(74,222,128,0.12); color: var(–accent); border: 1px solid rgba(74,222,128,0.3); }
+.diff-b { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.diff-c { background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+
+.question-item { padding: 1.2rem 0; border-bottom: 1px solid var(–border); display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+.question-item:last-child { border-bottom: none; }
+.q-num { font-family: ‘DM Mono’, monospace; font-size: 0.7rem; color: var(–accent); margin-bottom: 0.4rem; }
+.q-text { font-size: 0.92rem; line-height: 1.6; }
+.q-marks { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); white-space: nowrap; margin-top: 0.2rem; }
+
+.lesson-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(–border); }
+.lesson-nav-btn { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(–muted); font-size: 0.85rem; transition: color 0.2s; padding: 0.8rem 1.2rem; border: 1px solid var(–border); border-radius: 10px; background: var(–surface); }
+.lesson-nav-btn:hover { color: var(–accent); border-color: rgba(74,222,128,0.4); }
+.lesson-nav-btn.next { flex-direction: row-reverse; }
+.btn-label { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: var(–muted); display: block; text-transform: uppercase; letter-spacing: 0.08em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.toc { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; }
+.toc-title { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.toc-list li a { color: var(–muted); text-decoration: none; font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s; padding: 0.2rem 0; }
+.toc-list li a:hover { color: var(–accent); }
+.toc-list li a::before { content: ‘’; width: 16px; height: 1px; background: var(–border); flex-shrink: 0; }
+.toc-list li a:hover::before { background: var(–accent); }
+</style>
+
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Maths</a>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 04</div>
+  <a href="#pascals-triangle" class="sidebar-link active"><span class="sidebar-num">4.1</span> Pascal's Triangle</a>
+  <a href="#binomial-formula" class="sidebar-link"><span class="sidebar-num">4.2</span> The Binomial Formula</a>
+  <a href="#specific-terms" class="sidebar-link"><span class="sidebar-num">4.3</span> Finding Specific Terms</a>
+  <a href="#general-form" class="sidebar-link"><span class="sidebar-num">4.4</span> Expanding $(a + bx)^n$</a>
+  <a href="#approximations" class="sidebar-link"><span class="sidebar-num">4.5</span> Approximations</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb">
+      <a href="../../index.html">Hub</a> / <a href="../index.html">Maths</a> / Topic 04
+    </div>
+    <div class="topic-num-badge">Topic 04 · Pure Mathematics</div>
+    <h1 class="topic-title">Binomial Expansion</h1>
+    <p class="topic-intro">A compact formula for expanding powers of brackets — precisely, efficiently, and without writing out every term. Essential for approximation and for all of statistics.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Pure Year 1, Chapter 8</div>
+      <div class="meta-item"><span>~2.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#pascals-triangle">4.1 — Pascal's Triangle</a></li>
+      <li><a href="#binomial-formula">4.2 — The Binomial Formula</a></li>
+      <li><a href="#specific-terms">4.3 — Finding Specific Terms</a></li>
+      <li><a href="#general-form">4.4 — Expanding $(a + bx)^n$</a></li>
+      <li><a href="#approximations">4.5 — Using Expansions for Approximations</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== 4.1 PASCAL'S TRIANGLE ===== -->
+
+  <div class="lesson-section" id="pascals-triangle">
+    <h2 class="section-title">4.1 Pascal's Triangle</h2>
+
+```
+<p>Pascal's Triangle gives the coefficients when you expand $(1 + x)^n$. Each number is the sum of the two numbers above it. Row $n$ gives the coefficients for $(1+x)^n$.</p>
+
+<div class="pascal-triangle">
+  <div class="pascal-row"><span class="pascal-label">n=0</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=1</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=2</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">2</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=3</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">3</span><span class="pascal-num highlight">3</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=4</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">4</span><span class="pascal-num highlight">6</span><span class="pascal-num highlight">4</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=5</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">5</span><span class="pascal-num highlight">10</span><span class="pascal-num highlight">10</span><span class="pascal-num highlight">5</span><span class="pascal-num highlight">1</span></div>
+  <div class="pascal-row"><span class="pascal-label">n=6</span><span class="pascal-num highlight">1</span><span class="pascal-num highlight">6</span><span class="pascal-num highlight">15</span><span class="pascal-num highlight">20</span><span class="pascal-num highlight">15</span><span class="pascal-num highlight">6</span><span class="pascal-num highlight">1</span></div>
+</div>
+
+<p>So $(1+x)^3 = 1 + 3x + 3x^2 + x^3$ and $(1+x)^4 = 1 + 4x + 6x^2 + 4x^3 + x^4$.</p>
+
+<div class="key-point">
+  <strong>Observations</strong>
+  The row for $n$ has $n+1$ terms. The coefficients are always symmetric. The first and last coefficient are always 1. The second and second-to-last are always $n$. Pascal's Triangle becomes impractical for large $n$ — that's where the formula comes in.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.1a</div>
+  <div class="example-q">Use Pascal's Triangle to expand $(1 + x)^5$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Row $n=5$ from Pascal's Triangle: $1, 5, 10, 10, 5, 1$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Apply as coefficients, with powers of $x$ increasing from $0$ to $5$:
+        $$(1+x)^5 = 1 + 5x + 10x^2 + 10x^3 + 5x^4 + x^5$$
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 4.2 THE BINOMIAL FORMULA ===== -->
+
+  <div class="lesson-section" id="binomial-formula">
+    <h2 class="section-title">4.2 The Binomial Formula</h2>
+
+```
+<p>For large $n$, Pascal's Triangle is slow. The <strong>binomial coefficient</strong> $\binom{n}{r}$ (read "n choose r") gives any coefficient directly:</p>
+
+<div class="formula-box">
+  $$\binom{n}{r} = {}^nC_r = \frac{n!}{r!\,(n-r)!}$$
+  $$(a + b)^n = \sum_{r=0}^{n} \binom{n}{r} a^{n-r} b^r$$
+  $$= \binom{n}{0}a^n + \binom{n}{1}a^{n-1}b + \binom{n}{2}a^{n-2}b^2 + \cdots + \binom{n}{n}b^n$$
+  $$\text{Special case: } (1+x)^n = 1 + nx + \frac{n(n-1)}{2!}x^2 + \frac{n(n-1)(n-2)}{3!}x^3 + \cdots + x^n$$
+</div>
+
+<p>The factorial notation: $n! = n \times (n-1) \times \cdots \times 2 \times 1$, and $0! = 1$ by convention.</p>
+
+<div class="key-point">
+  <strong>Computing $\binom{n}{r}$ Quickly</strong>
+  Write out $r$ descending factors from $n$ in the numerator, divided by $r!$. For example:
+  $\binom{8}{3} = \dfrac{8 \times 7 \times 6}{3 \times 2 \times 1} = \dfrac{336}{6} = 56$.
+  Never expand $n!$ fully — cancel as you go.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.2a</div>
+  <div class="example-q">Expand $(1 + x)^6$ fully using the binomial formula.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Compute the coefficients: $\binom{6}{0}=1,\ \binom{6}{1}=6,\ \binom{6}{2}=15,\ \binom{6}{3}=20,\ \binom{6}{4}=15,\ \binom{6}{5}=6,\ \binom{6}{6}=1$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $$(1+x)^6 = 1 + 6x + 15x^2 + 20x^3 + 15x^4 + 6x^5 + x^6$$
+        <div class="step-comment">Check: coefficients match row 6 of Pascal's Triangle. ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.2b</div>
+  <div class="example-q">Expand $(1 - 2x)^4$, simplifying all coefficients.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Treat as $(1 + (-2x))^4$. Use $n=4$, $b = -2x$:
+        $$\binom{4}{0}1 + \binom{4}{1}(-2x) + \binom{4}{2}(-2x)^2 + \binom{4}{3}(-2x)^3 + \binom{4}{4}(-2x)^4$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $$= 1 + 4(-2x) + 6(4x^2) + 4(-8x^3) + 1(16x^4)$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $$= 1 - 8x + 24x^2 - 32x^3 + 16x^4$$
+        <div class="step-comment">The signs alternate because $b = -2x$ is negative. Always apply the power to the whole $b$ term, including the sign and coefficient.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ Most Common Mistake</strong>
+  When $b = -2x$, then $b^2 = (-2x)^2 = 4x^2$, <em>not</em> $-4x^2$. Students forget to square the coefficient and/or lose the negative when squaring. Write out $(-2x)^r$ explicitly before simplifying.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 4.3 FINDING SPECIFIC TERMS ===== -->
+
+  <div class="lesson-section" id="specific-terms">
+    <h2 class="section-title">4.3 Finding Specific Terms</h2>
+
+```
+<p>In an exam, you'll often be asked to find one specific term of an expansion — not the whole thing. The general term is your tool.</p>
+
+<div class="formula-box">
+  $$\text{The } (r+1)\text{th term of } (a+b)^n \text{ is:}$$
+  $$T_{r+1} = \binom{n}{r}\,a^{n-r}\,b^r$$
+  $$\text{The term in } x^k \text{ corresponds to } r = k \text{ when expanding } (1 + x)^n$$
+</div>
+
+<div class="key-point">
+  <strong>Strategy</strong>
+  Set up the general term $\binom{n}{r}a^{n-r}b^r$, then find $r$ by matching the power of $x$ you want. Solve for $r$, then substitute back.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.3a</div>
+  <div class="example-q">Find the coefficient of $x^3$ in the expansion of $(1 + 2x)^7$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        General term: $T_{r+1} = \binom{7}{r}(1)^{7-r}(2x)^r = \binom{7}{r}2^r x^r$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        For the $x^3$ term, set $r = 3$:
+        $$T_4 = \binom{7}{3} \cdot 2^3 \cdot x^3 = 35 \times 8 \times x^3 = 280x^3$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        The coefficient of $x^3$ is $\mathbf{280}$.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.3b</div>
+  <div class="example-q">Find the term independent of $x$ in the expansion of $\left(2x + \dfrac{3}{x}\right)^6$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        General term: $T_{r+1} = \binom{6}{r}(2x)^{6-r}\!\left(\dfrac{3}{x}\right)^r = \binom{6}{r} \cdot 2^{6-r} \cdot 3^r \cdot x^{6-r} \cdot x^{-r}$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Combine powers of $x$: $x^{6-r-r} = x^{6-2r}$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        For term independent of $x$: $6 - 2r = 0 \implies r = 3$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        $T_4 = \binom{6}{3} \cdot 2^3 \cdot 3^3 = 20 \times 8 \times 27 = \mathbf{4320}$
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ===== 4.4 GENERAL FORM (a + bx)^n ===== -->
+
+  <div class="lesson-section" id="general-form">
+    <h2 class="section-title">4.4 Expanding $(a + bx)^n$</h2>
+
+```
+<p>When the first term is not $1$, factor it out first — this keeps the algebra clean and reduces errors.</p>
+
+<div class="formula-box">
+  $$(a + bx)^n = a^n\!\left(1 + \frac{b}{a}x\right)^n$$
+  $$\text{then expand } \left(1 + \frac{b}{a}x\right)^n \text{ using the standard formula.}$$
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.4a</div>
+  <div class="example-q">Expand $(2 + 3x)^4$ up to and including the term in $x^2$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Factor out $2^4 = 16$:
+        $$(2 + 3x)^4 = 2^4\!\left(1 + \tfrac{3}{2}x\right)^4 = 16\left(1 + \tfrac{3}{2}x\right)^4$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Expand $\left(1 + \tfrac{3}{2}x\right)^4$ up to $x^2$:
+        $$1 + \binom{4}{1}\!\left(\tfrac{3}{2}x\right) + \binom{4}{2}\!\left(\tfrac{3}{2}x\right)^2 + \cdots$$
+        $$= 1 + 4 \cdot \tfrac{3}{2}x + 6 \cdot \tfrac{9}{4}x^2 + \cdots$$
+        $$= 1 + 6x + \tfrac{27}{2}x^2 + \cdots$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Multiply through by 16:
+        $$(2+3x)^4 = 16 + 96x + 216x^2 + \cdots$$
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.4b</div>
+  <div class="example-q">Find the first four terms in ascending powers of $x$ of $(3 - x)^5$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        $(3-x)^5 = 3^5\!\left(1 - \tfrac{x}{3}\right)^5 = 243\left(1 - \tfrac{x}{3}\right)^5$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Expand $\left(1 - \tfrac{x}{3}\right)^5$ with $b = -\tfrac{1}{3}x$:
+        $$1 + 5\!\left(-\tfrac{x}{3}\right) + 10\!\left(-\tfrac{x}{3}\right)^2 + 10\!\left(-\tfrac{x}{3}\right)^3 + \cdots$$
+        $$= 1 - \tfrac{5x}{3} + \tfrac{10x^2}{9} - \tfrac{10x^3}{27} + \cdots$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Multiply by 243:
+        $$243 - 405x + 270x^2 - 90x^3 + \cdots$$
+        <div class="step-comment">Check: first term $= 3^5 = 243$ ✓. Last shown term: $243 \times \frac{10}{27} = 90$ ✓.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>⚠ "Up to and including" vs "first n terms"</strong>
+  "Up to and including the term in $x^3$" means stop after the $x^3$ term — even if there are more. "First four terms" means the same thing here. Always read the question carefully. Never expand beyond what's asked for.
+</div>
+```
+
+  </div>
+
+  <!-- ===== 4.5 APPROXIMATIONS ===== -->
+
+  <div class="lesson-section" id="approximations">
+    <h2 class="section-title">4.5 Using Expansions for Approximations</h2>
+
+```
+<p>One of the most elegant applications of the binomial expansion: substitute a small value of $x$ to get a decimal approximation of an irrational number — without a calculator.</p>
+
+<div class="key-point">
+  <strong>The Method</strong>
+  Expand $(1 + x)^n$ or $(a + bx)^n$ to a few terms. Then choose a value of $x$ (usually a simple fraction) such that the expression evaluates to the number you want to approximate. The more terms you include, the better the approximation.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.5a</div>
+  <div class="example-q">Use the expansion of $(1 + x)^{1/2}$ to find an approximation to $\sqrt{1.04}$ correct to 4 decimal places. (Hint: the expansion to three terms is $1 + \tfrac{1}{2}x - \tfrac{1}{8}x^2 + \cdots$)</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        We want $\sqrt{1.04} = (1 + 0.04)^{1/2}$, so substitute $x = 0.04$.
+        <div class="step-comment">Note: the full binomial expansion extends to negative/fractional $n$ (Year 2), but we can use the given approximation here.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        $(1 + 0.04)^{1/2} \approx 1 + \tfrac{1}{2}(0.04) - \tfrac{1}{8}(0.04)^2$
+        $$= 1 + 0.02 - \tfrac{1}{8}(0.0016) = 1 + 0.02 - 0.0002 = 1.0198$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        $\sqrt{1.04} \approx 1.0198$ (true value: $1.01980...$) ✓
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example 4.5b</div>
+  <div class="example-q">$(a)$ Find the first three terms of the expansion of $(2 + 5x)^8$ in ascending powers of $x$.
+  $(b)$ By substituting a suitable value of $x$, use your expansion to estimate $2.5^8$.</div>
+  <div class="example-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        Part (a): $(2+5x)^8 = 2^8\!\left(1 + \tfrac{5x}{2}\right)^8 = 256\left(1 + \tfrac{5x}{2}\right)^8$
+        $$\approx 256\!\left[1 + 8\cdot\tfrac{5x}{2} + 28\cdot\tfrac{25x^2}{4}\right] = 256\left[1 + 20x + 175x^2\right]$$
+        $$= 256 + 5120x + 44800x^2 + \cdots$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        Part (b): We want $2.5^8 = (2 + 5x)^8$ when $5x = 0.5$, i.e. $x = 0.1$.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        Substitute $x = 0.1$:
+        $$256 + 5120(0.1) + 44800(0.01) = 256 + 512 + 448 = 1216$$
+        <div class="step-comment">Exact value: $2.5^8 = 1525.87...$. The approximation is rough here because $x = 0.1$ is not especially small and we've only used three terms. More terms would improve accuracy.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Validity</strong>
+  A binomial approximation is only valid when $|x|$ is small — typically $|x| < 1$ for the expansion to converge. The closer $x$ is to $0$, the better the approximation. This condition becomes critical in Year 2 when you encounter infinite binomial expansions.
+</div>
+```
+
+  </div>
+
+  <!-- ===== PRACTICE QUESTIONS ===== -->
+
+  <div id="practice-a" style="margin-top: 3rem;">
+    <h2 class="section-title" style="margin-bottom: 1.5rem;">Practice Questions</h2>
+  </div>
+
+  <!-- Grade A -->
+
+  <div class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q1</div>
+    <div class="q-text">Expand $(1 + x)^7$ fully using the binomial formula.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $1 + 7x + 21x^2 + 35x^3 + 35x^4 + 21x^5 + 7x^6 + x^7$
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q2</div>
+    <div class="q-text">Find the coefficient of $x^4$ in the expansion of $(1 - 3x)^6$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $T_5 = \binom{6}{4}(-3x)^4 = 15 \times 81 x^4 = 1215x^4$. Coefficient is $\mathbf{1215}$.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q3</div>
+    <div class="q-text">Find the first three terms in ascending powers of $x$ of $(3 + 2x)^5$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(3+2x)^5 = 3^5(1+\frac{2x}{3})^5 = 243\left[1 + 5\cdot\frac{2x}{3} + 10\cdot\frac{4x^2}{9} + \cdots\right] = 243 + 810x + 1080x^2 + \cdots$
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q4</div>
+    <div class="q-text">Evaluate $\binom{10}{3} + \binom{10}{7}$ without a calculator. What do you notice?</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\binom{10}{3} = \frac{10 \times 9 \times 8}{6} = 120$. $\binom{10}{7} = \binom{10}{3} = 120$ (by symmetry: $\binom{n}{r} = \binom{n}{n-r}$). Sum $= 240$. The two values are equal — binomial coefficients are symmetric.
+    </div>
+  </div>
+  <div class="q-marks">[3 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q5</div>
+    <div class="q-text">Expand $(2x - 1)^4$ fully.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $\binom{4}{0}(2x)^4 + \binom{4}{1}(2x)^3(-1) + \binom{4}{2}(2x)^2(-1)^2 + \binom{4}{3}(2x)(-1)^3 + \binom{4}{4}(-1)^4$
+      $= 16x^4 - 32x^3 + 24x^2 - 8x + 1$
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Grade B -->
+
+  <div id="practice-b" class="practice-section" style="margin-bottom: 1.5rem;">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q6</div>
+    <div class="q-text">The coefficient of $x^2$ in the expansion of $(2 + kx)^6$ is 60. Find the possible values of $k$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $T_3 = \binom{6}{2}(2)^4(kx)^2 = 15 \times 16 \times k^2 x^2 = 240k^2 x^2$. Set equal to $60x^2$: $240k^2 = 60 \Rightarrow k^2 = \frac{1}{4} \Rightarrow k = \pm\frac{1}{2}$.
+    </div>
+  </div>
+  <div class="q-marks">[4 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q7</div>
+    <div class="q-text">Find the term independent of $x$ in the expansion of $\left(x^2 + \dfrac{2}{x}\right)^9$.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      General term: $\binom{9}{r}(x^2)^{9-r}\!\left(\frac{2}{x}\right)^r = \binom{9}{r} 2^r x^{2(9-r)-r} = \binom{9}{r}2^r x^{18-3r}$. Set $18 - 3r = 0 \Rightarrow r = 6$. Term $= \binom{9}{6}2^6 = 84 \times 64 = \mathbf{5376}$.
+    </div>
+  </div>
+  <div class="q-marks">[5 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q8</div>
+    <div class="q-text">$(a)$ Find the first four terms of the expansion of $(1 + 2x)^{10}$ in ascending powers of $x$.
+    $(b)$ Hence find an approximation for $1.02^{10}$, giving your answer to 5 significant figures.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      $(a)$: $1 + 20x + 180x^2 + 960x^3 + \cdots$
+      $(b)$: Set $2x = 0.02 \Rightarrow x = 0.01$. Then $1.02^{10} \approx 1 + 20(0.01) + 180(0.0001) + 960(0.000001) = 1 + 0.2 + 0.018 + 0.00096 = 1.2190$ (to 5 s.f.: $\mathbf{1.2190}$). Actual: $1.21899...$
+    </div>
+  </div>
+  <div class="q-marks">[6 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Hard / STEP -->
+
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+```
+<div class="question-item">
+  <div>
+    <div class="q-num">Q9</div>
+    <div class="q-text">Show that $\displaystyle\sum_{r=0}^{n}\binom{n}{r} = 2^n$. Hence find $\displaystyle\sum_{r=0}^{n}\binom{n}{r}(-1)^r$ and interpret its value.</div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      Set $x = 1$ in $(1+x)^n = \sum_{r=0}^n \binom{n}{r}x^r$: $(1+1)^n = 2^n = \sum_{r=0}^n \binom{n}{r}$. $\square$
+      <br><br>
+      Set $x = -1$: $(1-1)^n = 0 = \sum_{r=0}^n \binom{n}{r}(-1)^r$ (for $n \geq 1$).
+      This means the alternating sum of any row of Pascal's Triangle equals zero — the sum of coefficients with even $r$ equals the sum with odd $r$. In other words, in any expansion $(1+x)^n$, exactly half the terms contribute positively and half negatively when $x = -1$.
+    </div>
+  </div>
+  <div class="q-marks">[6 marks]</div>
+</div>
+
+<div class="question-item">
+  <div>
+    <div class="q-num">Q10</div>
+    <div class="q-text">In the expansion of $(1 + x)^n(1 + x)^m = (1+x)^{n+m}$, compare the coefficient of $x^r$ on both sides to prove the Vandermonde identity:
+    $$\sum_{k=0}^{r} \binom{n}{k}\binom{m}{r-k} = \binom{n+m}{r}$$
+    </div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide answer' : '▼ Show answer'">▼ Show answer</button>
+    <div class="reveal-content">
+      The coefficient of $x^r$ in $(1+x)^{n+m}$ is $\binom{n+m}{r}$ (right-hand side). For the left-hand side: expand each factor separately. The coefficient of $x^k$ in $(1+x)^n$ is $\binom{n}{k}$, and the coefficient of $x^{r-k}$ in $(1+x)^m$ is $\binom{m}{r-k}$. When multiplying the two series, the coefficient of $x^r$ is the sum over all ways to pick powers summing to $r$:
+      $$\text{coeff of } x^r \text{ in } (1+x)^n(1+x)^m = \sum_{k=0}^{r}\binom{n}{k}\binom{m}{r-k}$$
+      Since the two expressions are equal as polynomials, their coefficients of $x^r$ must be equal:
+      $$\sum_{k=0}^{r}\binom{n}{k}\binom{m}{r-k} = \binom{n+m}{r} \qquad \square$$
+      This is a beautiful identity connecting combinatorics and algebra — it counts the number of ways to choose $r$ objects from $n+m$ by splitting into those taken from the first $n$ and those from the last $m$.
+    </div>
+  </div>
+  <div class="q-marks">[8 marks]</div>
+</div>
+```
+
+  </div>
+
+  <!-- Navigation -->
+
+  <div class="lesson-nav">
+    <a href="further-algebra.html" class="lesson-nav-btn">
+      ← <div><span class="btn-label">Previous</span> Further Algebra</div>
+    </a>
+    <a href="trigonometry.html" class="lesson-nav-btn next">
+      <div><span class="btn-label">Next Topic</span> Trigonometry</div> →
+    </a>
+  </div>
+
+</main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.lesson-section[id], div[id^="practice"]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (section.getBoundingClientRect().top < 150) current = section.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
