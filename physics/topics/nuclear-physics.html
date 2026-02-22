@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuclear Physics — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .y2-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-top:0.8rem}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 08</div>
+  <a href="#rutherford" class="sidebar-link active"><span class="sidebar-num">8.1</span> Rutherford Scattering</a>
+  <a href="#radioactivity" class="sidebar-link"><span class="sidebar-num">8.2</span> Radioactive Decay</a>
+  <a href="#decay-law" class="sidebar-link"><span class="sidebar-num">8.3</span> Decay Law & Half-life</a>
+  <a href="#nuclear-instability" class="sidebar-link"><span class="sidebar-num">8.4</span> Nuclear Instability</a>
+  <a href="#mass-energy" class="sidebar-link"><span class="sidebar-num">8.5</span> Mass-Energy Equivalence</a>
+  <a href="#fission-fusion" class="sidebar-link"><span class="sidebar-num">8.6</span> Fission & Fusion</a>
+  <a href="#radiation-safety" class="sidebar-link"><span class="sidebar-num">8.7</span> Radiation & Safety</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 08</div>
+    <div class="topic-num-badge">Topic 08 · AQA Physics</div>
+    <div class="y2-badge">⬆ Year 2 content</div>
+    <h1 class="topic-title">Nuclear Physics</h1>
+    <p class="topic-intro">From Rutherford's gold foil experiment to the binding energy of nuclei and the promise of fusion power — nuclear physics connects the smallest structures in matter to the largest energy sources in the universe.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.8</div>
+      <div class="meta-item"><span>~4.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#rutherford">8.1 — Rutherford Scattering & the Nuclear Model</a></li>
+      <li><a href="#radioactivity">8.2 — Radioactive Decay Types</a></li>
+      <li><a href="#decay-law">8.3 — Radioactive Decay Law & Half-life</a></li>
+      <li><a href="#nuclear-instability">8.4 — Nuclear Instability & the N-Z Graph</a></li>
+      <li><a href="#mass-energy">8.5 — Mass-Energy Equivalence & Binding Energy</a></li>
+      <li><a href="#fission-fusion">8.6 — Fission, Fusion & Nuclear Reactors</a></li>
+      <li><a href="#radiation-safety">8.7 — Radiation & Safety</a></li>
+    </ul>
+  </div>
+
+  <!-- 8.1 RUTHERFORD -->
+  <div class="lesson-section" id="rutherford">
+    <h2 class="section-title">8.1 Rutherford Scattering & the Nuclear Model</h2>
+
+    <p>In 1909, Geiger and Marsden (under Rutherford's direction) fired alpha particles at a thin gold foil and observed the scattered particles. The results were startling and overthrew the then-accepted Thomson "plum pudding" model of the atom.</p>
+
+    <div class="key-point">
+      <strong>What was observed — and what it proved</strong>
+      Most alpha particles passed straight through (atom is mostly empty space). A small fraction were deflected at large angles. About 1 in 8000 bounced almost straight back. The large-angle scattering proved the positive charge is concentrated in a tiny, dense nucleus. The fact that only a tiny fraction was deflected proved the nucleus is very small compared to the atom (nuclear diameter ~$10^{-15}$ m; atomic diameter ~$10^{-10}$ m — a factor of $10^5$).
+    </div>
+
+    <h3 class="subsection">Nuclear radius</h3>
+    <p>The radius of a nucleus scales with the cube root of the nucleon number $A$:</p>
+
+    <div class="formula-box">
+      $$r = r_0 A^{1/3} \qquad r_0 = 1.2\times10^{-15}\text{ m} = 1.2\text{ fm}$$
+    </div>
+
+    <p>This means nuclear density is approximately constant for all nuclei — the nucleus is incompressible. Nuclear density $\approx 10^{17}$ kg m⁻³, roughly $10^{14}$ times denser than everyday matter. A teaspoon of nuclear matter would weigh about 500 million tonnes.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.1a — Closest approach</div>
+      <div class="example-q">An alpha particle ($q = +2e$, $E_k = 5.0$ MeV) is fired directly at a gold nucleus ($Z = 79$). Find the distance of closest approach (where all KE is converted to electrostatic PE).</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$E_k = 5.0\times10^6\times1.6\times10^{-19} = 8.0\times10^{-13}$ J.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">At closest approach, all KE → PE: $E_k = \dfrac{kq_\alpha q_{\rm Au}}{d} = \dfrac{k\times2e\times79e}{d}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$d = \dfrac{8.99\times10^9\times2\times1.6\times10^{-19}\times79\times1.6\times10^{-19}}{8.0\times10^{-13}} = \dfrac{8.99\times10^9\times4.047\times10^{-36}}{8.0\times10^{-13}} = \dfrac{3.638\times10^{-26}}{8.0\times10^{-13}} = 4.55\times10^{-14}$ m $= 45$ fm.<div class="step-comment">This is ~38 times the gold nuclear radius ($r = 1.2\times79^{1/3} = 5.2$ fm) — the alpha doesn't actually reach the nucleus; nuclear forces don't come into play. This validates the purely electrostatic analysis.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.2 RADIOACTIVE DECAY -->
+  <div class="lesson-section" id="radioactivity">
+    <h2 class="section-title">8.2 Radioactive Decay Types</h2>
+
+    <table>
+      <tr><th>Type</th><th>Symbol</th><th>Particle emitted</th><th>Penetrating power</th><th>Ionising power</th><th>Stopped by</th></tr>
+      <tr><td>Alpha</td><td>$\alpha$</td><td>$^4_2\text{He}$ nucleus (2p + 2n)</td><td>Lowest</td><td>Highest</td><td>Paper / few cm air</td></tr>
+      <tr><td>Beta-minus</td><td>$\beta^-$</td><td>Electron + antineutrino</td><td>Medium</td><td>Medium</td><td>~3 mm aluminium</td></tr>
+      <tr><td>Beta-plus</td><td>$\beta^+$</td><td>Positron + neutrino</td><td>Medium</td><td>Medium</td><td>~3 mm aluminium</td></tr>
+      <tr><td>Gamma</td><td>$\gamma$</td><td>High-energy photon</td><td>Highest</td><td>Lowest</td><td>Several cm lead / metres concrete</td></tr>
+    </table>
+
+    <p>In every nuclear decay, <strong>mass number $A$</strong>, <strong>atomic number $Z$</strong>, charge, and energy are all conserved.</p>
+
+    <div class="formula-box">
+      $$\alpha\text{ decay: } ^A_Z\text{X} \rightarrow ^{A-4}_{Z-2}\text{Y} + ^4_2\text{He}$$
+      $$\beta^-\text{ decay: } ^A_Z\text{X} \rightarrow ^{A}_{Z+1}\text{Y} + ^0_{-1}e + \bar{\nu}_e$$
+      $$\beta^+\text{ decay: } ^A_Z\text{X} \rightarrow ^{A}_{Z-1}\text{Y} + ^0_{+1}e + \nu_e$$
+      $$\gamma\text{ emission: nucleus drops to lower energy state, }A\text{ and }Z\text{ unchanged}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.2a — Decay equations</div>
+      <div class="example-q">Write balanced nuclear equations for: (a) alpha decay of Radium-226 ($^{226}_{88}$Ra), (b) beta-minus decay of Carbon-14, (c) electron capture by Potassium-40.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $^{226}_{88}\text{Ra} \rightarrow ^{222}_{86}\text{Rn} + ^4_2\text{He}$. Check: $A$: $226 = 222+4$ ✓; $Z$: $88 = 86+2$ ✓. Radon-222 is the daughter.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $^{14}_{6}\text{C} \rightarrow ^{14}_{7}\text{N} + ^0_{-1}e + \bar{\nu}_e$. Check: $A$: $14=14$ ✓; $Z$: $6 = 7+(-1)$ ✓. This is the basis of radiocarbon dating.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) Electron capture: $^{40}_{19}\text{K} + ^0_{-1}e \rightarrow ^{40}_{18}\text{Ar} + \nu_e$. An orbital electron is absorbed by the nucleus; a proton becomes a neutron; a neutrino is emitted. $Z$ decreases by 1.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.3 DECAY LAW -->
+  <div class="lesson-section" id="decay-law">
+    <h2 class="section-title">8.3 Radioactive Decay Law & Half-life</h2>
+
+    <p>Radioactive decay is a random process — we cannot predict when any individual nucleus will decay. However, for a large sample, the rate of decay is proportional to the number of undecayed nuclei present.</p>
+
+    <div class="formula-box">
+      $$\frac{dN}{dt} = -\lambda N \qquad \text{(decay rate proportional to }N\text{)}$$
+      $$N = N_0 e^{-\lambda t} \qquad A = A_0 e^{-\lambda t} \qquad \text{(}A = \lambda N\text{ = activity, Bq)}$$
+      $$t_{1/2} = \frac{\ln 2}{\lambda} = \frac{0.693}{\lambda} \qquad \lambda = \frac{\ln 2}{t_{1/2}}$$
+    </div>
+
+    <p>The <strong>decay constant</strong> $\lambda$ is the probability per unit time that a nucleus will decay (s⁻¹). The <strong>activity</strong> $A = \lambda N$ is the number of decays per second, measured in becquerels (Bq). After each half-life, the activity and number of undecayed nuclei both halve.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.3a — Iodine-131</div>
+      <div class="example-q">Iodine-131 has a half-life of 8.0 days and is used in thyroid cancer treatment. A patient receives a dose with initial activity $3.7\times10^8$ Bq. Find (a) the decay constant, (b) the activity after 24 days, (c) the number of I-131 atoms in the initial dose, (d) the time for the activity to fall to $10^7$ Bq.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $\lambda = \ln2/t_{1/2} = 0.693/(8.0\times24\times3600) = 0.693/691200 = 1.002\times10^{-6}$ s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) 24 days = 3 half-lives. $A = A_0/2^3 = 3.7\times10^8/8 = 4.625\times10^7$ Bq. Or: $A = A_0 e^{-\lambda t} = 3.7\times10^8\times e^{-3\ln2} = 3.7\times10^8\times0.125 = 4.625\times10^7$ Bq ✓.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $A = \lambda N$. $N = A/\lambda = 3.7\times10^8/1.002\times10^{-6} = 3.69\times10^{14}$ atoms (a tiny fraction of a mole, but hugely radioactive).</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(d) $10^7 = 3.7\times10^8 e^{-\lambda t}$. $e^{-\lambda t} = 10^7/3.7\times10^8 = 0.02703$. $\lambda t = -\ln(0.02703) = 3.611$. $t = 3.611/1.002\times10^{-6} = 3.604\times10^6$ s $= 41.7$ days $= 5.21$ half-lives.<div class="step-comment">After about 5 half-lives, the activity is less than 3% of its initial value — considered safe for most medical purposes.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.4 NUCLEAR INSTABILITY -->
+  <div class="lesson-section" id="nuclear-instability">
+    <h2 class="section-title">8.4 Nuclear Instability & the N–Z Graph</h2>
+
+    <p>Stable nuclei lie along the <strong>line of stability</strong> on a neutron number $N$ vs proton number $Z$ graph. For light nuclei, $N \approx Z$ (e.g. $^{12}_6$C has $N = Z = 6$). For heavier nuclei, more neutrons are needed to overcome the increasing electrostatic repulsion between protons: $N > Z$ (e.g. $^{208}_{82}$Pb has $N = 126$, $Z = 82$).</p>
+
+    <table>
+      <tr><th>Position relative to stability line</th><th>Decay mode</th><th>Effect</th></tr>
+      <tr><td>Too many neutrons (above line)</td><td>$\beta^-$ decay</td><td>$n \rightarrow p$: $Z$ increases by 1, moves toward line</td></tr>
+      <tr><td>Too many protons (below line)</td><td>$\beta^+$ decay or electron capture</td><td>$p \rightarrow n$: $Z$ decreases by 1, moves toward line</td></tr>
+      <tr><td>Too heavy ($A > 82$)</td><td>$\alpha$ decay</td><td>Loses 2p and 2n: moves diagonally toward stability</td></tr>
+      <tr><td>Excited nucleus</td><td>$\gamma$ emission</td><td>No change in $A$ or $Z$ — just releases energy</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>The strong nuclear force</strong>
+      The strong nuclear force holds the nucleus together against electrostatic repulsion between protons. It is: attractive at distances 0.5–3 fm, repulsive at distances less than 0.5 fm (prevents nuclear collapse), short-range (negligible beyond ~3 fm), and acts equally on protons and neutrons. Extra neutrons provide additional strong force without adding to electrostatic repulsion — which is why heavy nuclei need more neutrons than protons to be stable.
+    </div>
+  </div>
+
+  <!-- 8.5 MASS-ENERGY -->
+  <div class="lesson-section" id="mass-energy">
+    <h2 class="section-title">8.5 Mass-Energy Equivalence & Binding Energy</h2>
+
+    <div class="formula-box">
+      $$E = mc^2 \qquad \Delta E = \Delta mc^2$$
+      $$\text{Binding energy} = (\text{mass of separated nucleons} - \text{mass of nucleus})\times c^2$$
+      $$\text{Mass defect: } \Delta m = Zm_p + (A-Z)m_n - m_{\text{nucleus}}$$
+      $$1\text{ u} = 1.661\times10^{-27}\text{ kg} \equiv 931.5\text{ MeV}/c^2$$
+    </div>
+
+    <p>The <strong>mass defect</strong> is the difference between the total mass of the separate nucleons and the mass of the assembled nucleus. This "missing mass" has been converted to binding energy — the energy that holds the nucleus together and must be supplied to completely separate all nucleons.</p>
+
+    <p>The <strong>binding energy per nucleon</strong> (BE/A) is a measure of nuclear stability. Plotting BE/A against mass number $A$ gives the binding energy curve — one of the most important graphs in nuclear physics.</p>
+
+    <div class="key-point">
+      <strong>The binding energy curve — key features</strong>
+      Peak at $^{56}$Fe (~8.8 MeV/nucleon) — the most stable nucleus. Light nuclei: BE/A increases steeply (fusion releases energy for $A < 56$). Heavy nuclei: BE/A decreases gradually (fission releases energy for $A > 56$). The curve explains why both fusion and fission release energy — both produce nuclei closer to the peak. Energy is released as the products are more tightly bound than the reactants.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.5a — Binding energy of helium-4</div>
+      <div class="example-q">Calculate the binding energy of $^4_2$He. ($m_p = 1.007276$ u, $m_n = 1.008665$ u, $m(^4\text{He}) = 4.002602$ u, $1$ u $= 931.5$ MeV/$c^2$)</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Mass of 2 protons + 2 neutrons $= 2\times1.007276 + 2\times1.008665 = 2.014552 + 2.017330 = 4.031882$ u.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Mass defect $\Delta m = 4.031882 - 4.002602 = 0.029280$ u.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Binding energy $= 0.029280\times931.5 = 27.28$ MeV.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Binding energy per nucleon $= 27.28/4 = 6.82$ MeV/nucleon.<div class="step-comment">This is below the peak at Fe-56 (8.8 MeV/nucleon) but well above light nuclei like deuterium (1.1 MeV/nucleon), explaining why helium is very stable and common in nature.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.6 FISSION & FUSION -->
+  <div class="lesson-section" id="fission-fusion">
+    <h2 class="section-title">8.6 Fission, Fusion & Nuclear Reactors</h2>
+
+    <h3 class="subsection">Nuclear fission</h3>
+    <p>A heavy nucleus (e.g. U-235) absorbs a slow (thermal) neutron, becomes unstable, and splits into two medium-mass nuclei plus 2–3 fast neutrons and energy (~200 MeV per fission). The released neutrons can trigger further fissions — a <strong>chain reaction</strong>. In a reactor, control rods absorb neutrons to keep the reaction at a controlled rate (multiplication factor $k = 1$).</p>
+
+    <div class="formula-box">
+      $$^{235}_{92}\text{U} + ^1_0\text{n} \rightarrow ^{141}_{56}\text{Ba} + ^{92}_{36}\text{Kr} + 3^1_0\text{n} + \text{energy}$$
+    </div>
+
+    <table>
+      <tr><th>Reactor component</th><th>Material</th><th>Purpose</th></tr>
+      <tr><td>Fuel</td><td>Enriched uranium (U-235 ~3–5%)</td><td>Provides fissionable material</td></tr>
+      <tr><td>Moderator</td><td>Water, graphite, heavy water</td><td>Slows fast neutrons to thermal energies (increases fission probability)</td></tr>
+      <tr><td>Control rods</td><td>Boron or cadmium</td><td>Absorb neutrons to control chain reaction rate</td></tr>
+      <tr><td>Coolant</td><td>Water, CO₂, liquid sodium</td><td>Removes heat from core to drive turbines</td></tr>
+      <tr><td>Containment</td><td>Steel pressure vessel + concrete</td><td>Biological shielding against radiation</td></tr>
+    </table>
+
+    <h3 class="subsection">Nuclear fusion</h3>
+    <p>Two light nuclei combine to form a heavier, more stable nucleus, releasing large amounts of energy. The most promising fusion reaction for power generation:</p>
+
+    <div class="formula-box">
+      $$^2_1\text{H} + ^3_1\text{H} \rightarrow ^4_2\text{He} + ^1_0\text{n} + 17.6\text{ MeV}$$
+    </div>
+
+    <p>Fusion requires temperatures of ~$10^8$ K to overcome the Coulomb barrier between nuclei. At these temperatures, matter exists as a plasma. Confining this plasma is the major engineering challenge — tokamak reactors use powerful magnetic fields. Fusion produces far more energy per kg of fuel than fission and produces no long-lived radioactive waste — just helium and neutrons.</p>
+
+    <div class="key-point">
+      <strong>Fission vs Fusion — key comparison</strong>
+      Fission: uses heavy nuclei (U, Pu), currently operating in power stations, produces long-lived radioactive waste, risk of meltdown, energy ~200 MeV per reaction. Fusion: uses light nuclei (D, T), not yet commercially viable, fuel is hydrogen from seawater (essentially unlimited), short-lived waste (He + activated structural materials), ~17.6 MeV per reaction but ~4× more energy per kg of fuel.
+    </div>
+  </div>
+
+  <!-- 8.7 RADIATION SAFETY -->
+  <div class="lesson-section" id="radiation-safety">
+    <h2 class="section-title">8.7 Radiation & Safety</h2>
+
+    <p>Ionising radiation damages biological tissue by breaking chemical bonds and ionising DNA, potentially causing mutations, cancer, or cell death. The three types of radiation present different hazards depending on the exposure route.</p>
+
+    <table>
+      <tr><th>Radiation</th><th>External hazard</th><th>Internal hazard</th><th>Why</th></tr>
+      <tr><td>Alpha</td><td>Low — stopped by skin</td><td>Very high — most ionising</td><td>High ionisation density causes severe localised damage if inhaled/ingested</td></tr>
+      <tr><td>Beta</td><td>Moderate — penetrates skin</td><td>High</td><td>Can reach internal organs both externally and internally</td></tr>
+      <tr><td>Gamma</td><td>High — penetrates deeply</td><td>Lower than $\alpha$ or $\beta$</td><td>Very penetrating but less densely ionising; spreads dose over large volume</td></tr>
+    </table>
+
+    <h3 class="subsection">Background radiation</h3>
+    <p>Background radiation is omnipresent and mostly natural: radon gas from rocks (~50% in UK), cosmic rays (~10%), food and drink (~12%), medical (~14%), with industrial/nuclear sources contributing less than 1%. All radiation measurements must subtract background count rate to find the activity of a source.</p>
+
+    <div class="key-point">
+      <strong>Radiocarbon dating — using $t_{1/2}$ of C-14</strong>
+      Carbon-14 ($t_{1/2} = 5730$ years) is produced in the atmosphere by cosmic ray interactions with nitrogen. Living organisms continuously exchange carbon with the atmosphere, maintaining a constant ratio of C-14 to C-12. After death, C-14 decays without replenishment. Measuring the current C-14 activity and comparing with the expected original activity allows the age to be calculated: $t = (t_{1/2}/\ln2)\times\ln(A_0/A)$. Accurate for materials up to ~50,000 years old.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.7a — Radiocarbon dating</div>
+      <div class="example-q">A piece of ancient wood has a C-14 activity of 0.18 Bq per gram of carbon. Fresh wood has an activity of 0.26 Bq g⁻¹. ($t_{1/2}$ of C-14 = 5730 years.) Find the age of the wood.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\lambda = \ln2/t_{1/2} = 0.693/5730 = 1.210\times10^{-4}$ yr⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$A = A_0 e^{-\lambda t}$. $0.18 = 0.26\,e^{-\lambda t}$. $e^{-\lambda t} = 0.18/0.26 = 0.6923$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$-\lambda t = \ln(0.6923) = -0.3677$. $t = 0.3677/1.210\times10^{-4} = 3039$ years $\approx 3000$ years old.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Complete the following nuclear equations and name the type of decay: (a) $^{238}_{92}\text{U} \rightarrow \text{?} + ^4_2\text{He}$, (b) $^{14}_{6}\text{C} \rightarrow ^{14}_7\text{N} + \text{?} + \bar{\nu}_e$, (c) $^{60}_{27}\text{Co}^* \rightarrow ^{60}_{27}\text{Co} + \text{?}$, (d) $^{22}_{11}\text{Na} \rightarrow \text{?} + ^0_{+1}e + \nu_e$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $^{234}_{90}$Th + $^4_2$He — alpha decay. $A$: $238=234+4$ ✓; $Z$: $92=90+2$ ✓. (b) $^{14}_6$C → $^{14}_7$N + $^0_{-1}e$ + $\bar{\nu}_e$ — beta-minus decay. Electron (negatron) emitted. (c) $\gamma$ photon — gamma emission. Excited cobalt-60 releases energy as a gamma ray; $A$ and $Z$ unchanged. Used in radiotherapy. (d) $^{22}_{10}$Ne + $^0_{+1}e$ + $\nu_e$ — beta-plus decay. $Z$: $11 = 10+1$ ✓.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A radioactive sample has a half-life of 12 hours. The initial activity is $6.4\times10^5$ Bq. Find (a) the decay constant in s⁻¹, (b) the activity after 36 hours, (c) the activity after 2.5 days, (d) the time for the activity to fall to $5.0\times10^4$ Bq.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\lambda = \ln2/(12\times3600) = 0.693/43200 = 1.604\times10^{-5}$ s⁻¹. (b) 36 hours = 3 half-lives. $A = 6.4\times10^5/2^3 = 6.4\times10^5/8 = 8.0\times10^4$ Bq. (c) 2.5 days = 60 hours = 5 half-lives. $A = 6.4\times10^5/2^5 = 6.4\times10^5/32 = 2.0\times10^4$ Bq. (d) $5.0\times10^4 = 6.4\times10^5\,e^{-\lambda t}$. $e^{-\lambda t} = 5/64 = 0.07813$. $\lambda t = -\ln(0.07813) = 2.549$. $t = 2.549/1.604\times10^{-5} = 1.589\times10^5$ s = 44.1 hours $= 3.68$ half-lives.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Calculate the binding energy per nucleon of $^{56}_{26}$Fe, the most stable nucleus. ($m_p = 1.007276$ u, $m_n = 1.008665$ u, $m(^{56}\text{Fe}) = 55.934939$ u, $1$ u $= 931.5$ MeV/$c^2$)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Iron-56 has 26 protons and 30 neutrons. Mass of constituents $= 26\times1.007276 + 30\times1.008665 = 26.18918 + 30.25995 = 56.44913$ u. Mass defect $= 56.44913 - 55.934939 = 0.514191$ u. Binding energy $= 0.514191\times931.5 = 479.0$ MeV. BE/nucleon $= 479.0/56 = 8.554$ MeV/nucleon $\approx 8.6$ MeV/nucleon. (Very close to the accepted maximum of ~8.79 MeV/nucleon — small discrepancy due to rounding in atomic masses.)</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A student measures the count rate from a radioactive source at regular intervals, obtaining the following data (background = 25 counts per minute): $t = 0$ min: 825 cpm; $t = 10$ min: 527 cpm; $t = 20$ min: 338 cpm; $t = 30$ min: 220 cpm; $t = 40$ min: 144 cpm. (a) Correct each reading for background. (b) Explain how to use a graph of $\ln$(corrected count rate) against time to find the half-life. (c) Calculate the decay constant and half-life from the data, using any suitable method.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Corrected rates: $t=0$: $825-25=800$; $t=10$: $502$; $t=20$: $313$; $t=30$: $195$; $t=40$: $119$ cpm. (b) Since $A = A_0 e^{-\lambda t}$, taking $\ln$: $\ln A = \ln A_0 - \lambda t$. Plot $\ln A$ vs $t$: straight line with gradient $= -\lambda$ and y-intercept $= \ln A_0$. Draw best-fit line and calculate gradient. $t_{1/2} = \ln2/\lambda$. (c) $\ln$ values: $t=0$: $\ln800=6.685$; $t=10$: $\ln502=6.219$; $t=20$: $\ln313=5.747$; $t=30$: $\ln195=5.273$; $t=40$: $\ln119=4.779$. Gradient $\approx (4.779-6.685)/(40-0) = -1.906/40 = -0.04765$ min⁻¹. $\lambda = 0.04765$ min⁻¹ $= 7.94\times10^{-4}$ s⁻¹. $t_{1/2} = 0.693/0.04765 = 14.5$ min. (Exact value would need best-fit line, but ~15 min is consistent with the data showing roughly halving every 15 minutes.)</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A nuclear fission reaction is: $^{235}_{92}\text{U} + ^1_0\text{n} \rightarrow ^{92}_{36}\text{Kr} + ^{141}_{56}\text{Ba} + 3^1_0\text{n}$. The relevant atomic masses are: U-235: 235.043923 u; Kr-92: 91.926156 u; Ba-141: 140.914411 u; n: 1.008665 u. (a) Calculate the mass defect in atomic mass units. (b) Calculate the energy released in MeV and in joules. (c) How many fissions per second would be needed to produce 1.0 GW of power? (d) Calculate the mass of U-235 consumed per day at this power output.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Mass before $= 235.043923 + 1.008665 = 236.052588$ u. Mass after $= 91.926156 + 140.914411 + 3\times1.008665 = 91.926156 + 140.914411 + 3.025995 = 235.866562$ u. Mass defect $= 236.052588 - 235.866562 = 0.186026$ u. (b) Energy $= 0.186026\times931.5 = 173.3$ MeV $= 173.3\times10^6\times1.6\times10^{-19} = 2.773\times10^{-11}$ J per fission. (c) Fissions/s $= P/E = 1.0\times10^9/2.773\times10^{-11} = 3.61\times10^{19}$ fissions s⁻¹. (d) Per day: fissions $= 3.61\times10^{19}\times86400 = 3.12\times10^{24}$. Moles $= 3.12\times10^{24}/6.02\times10^{23} = 5.18$ mol. Mass $= 5.18\times235 = 1218$ g $\approx 1.2$ kg of U-235 per day to produce 1 GW. This is remarkably little fuel — a conventional coal power station burns about 10,000 tonnes of coal per day for the same output.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Nuclear power stations use the fission of uranium-235 as a fuel source. (a) Describe the process of nuclear fission, explaining why a chain reaction occurs and how it is controlled in a nuclear reactor. (b) Explain the role of the moderator in a thermal nuclear reactor, including what would happen if the moderator were removed. (c) Compare the energy released per kilogram of fuel in nuclear fission with that of a fossil fuel (fossil fuel releases approximately $4.5\times10^7$ J kg⁻¹; use your answer from Q5 part d). (d) State two environmental advantages and one disadvantage of nuclear power compared to fossil fuel power generation. (e) Explain why nuclear fusion is considered preferable to nuclear fission as a future energy source, and state the main technological challenge that has prevented its commercial use.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) A slow (thermal) neutron is absorbed by a U-235 nucleus, creating unstable U-236. This splits into two medium-mass nuclei (fission fragments) and typically 2–3 fast neutrons, releasing ~200 MeV. The released neutrons can each trigger further fissions — a chain reaction. If on average more than one neutron triggers a new fission (multiplication factor $k > 1$), the reaction grows exponentially (runaway/bomb). In a reactor, control rods (boron or cadmium) absorb excess neutrons to maintain exactly $k = 1$ (critical, steady state). Lowering control rods increases absorption, reducing power; raising them allows more fissions. (b) The moderator (e.g. water or graphite) surrounds the fuel and slows fast fission neutrons down to thermal energies (~0.025 eV). Slow neutrons have a much higher probability of being captured by U-235 nuclei rather than passing through (U-235 has a large neutron capture cross-section at thermal energies, but U-238 — which makes up 97% of the fuel — does not absorb slow neutrons). Without the moderator, the fast neutrons would mostly be absorbed by U-238 rather than causing fission of U-235, and the chain reaction would stop. (c) From Q5d: 1.2 kg of U-235 produces $1.0\times10^9\times86400 = 8.64\times10^{13}$ J. Energy per kg $= 8.64\times10^{13}/1.2 = 7.2\times10^{13}$ J kg⁻¹. Ratio $= 7.2\times10^{13}/4.5\times10^7 = 1.6\times10^6$ — nuclear fuel releases about 1.6 million times more energy per kilogram than fossil fuels. (d) Advantages: no CO₂ or greenhouse gas emissions during operation (reduces climate change impact); very large energy density means very small land area and fuel volume needed. Disadvantage: produces radioactive waste that remains hazardous for thousands of years, requiring secure long-term storage; risk of major accidents (e.g. Chernobyl, Fukushima) with potentially catastrophic consequences. (e) Fusion is preferable because: fuel (deuterium from seawater, tritium bred from lithium) is effectively unlimited; produces no long-lived radioactive waste — only helium and short-lived activation products; no risk of runaway reaction (plasma naturally cools and stops if containment fails). The main challenge is containing plasma at temperatures of ~$10^8$ K — far hotter than the sun's core — for long enough to achieve net energy output. Magnetic confinement (tokamak, e.g. ITER) and inertial confinement (laser) approaches are both being developed, but sustained net energy production has not yet been achieved commercially.</div>
+      </div>
+      <div class="q-marks">[14 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="fields.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Fields & their Consequences</div></a>
+    <a href="astrophysics.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Astrophysics</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
