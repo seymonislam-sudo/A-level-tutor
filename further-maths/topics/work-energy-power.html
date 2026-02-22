@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work, Energy & Power — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 14</div>
+  <a href="#work" class="sidebar-link active"><span class="sidebar-num">14.1</span> Work Done by a Force</a>
+  <a href="#wet" class="sidebar-link"><span class="sidebar-num">14.2</span> Work-Energy Theorem</a>
+  <a href="#pe" class="sidebar-link"><span class="sidebar-num">14.3</span> Potential Energy & Conservation</a>
+  <a href="#power" class="sidebar-link"><span class="sidebar-num">14.4</span> Power</a>
+  <a href="#variable-force" class="sidebar-link"><span class="sidebar-num">14.5</span> Work Done by a Variable Force</a>
+  <a href="#conservative" class="sidebar-link"><span class="sidebar-num">14.6</span> Conservative Forces & Potential</a>
+  <a href="#motion-eqn" class="sidebar-link"><span class="sidebar-num">14.7</span> Equations of Motion from Energy</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 14</div>
+    <div class="topic-num-badge">Topic 14 · Further Mechanics</div>
+    <h1 class="topic-title">Work, Energy & Power</h1>
+    <p class="topic-intro">The energy methods of mechanics — from the work-energy theorem to variable forces, conservative fields, and using energy to derive equations of motion without resolving forces.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Mechanics 1, Chapter 3</div>
+      <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#work">14.1 — Work Done by a Force</a></li>
+      <li><a href="#wet">14.2 — Work-Energy Theorem</a></li>
+      <li><a href="#pe">14.3 — Potential Energy & Conservation of Energy</a></li>
+      <li><a href="#power">14.4 — Power</a></li>
+      <li><a href="#variable-force">14.5 — Work Done by a Variable Force</a></li>
+      <li><a href="#conservative">14.6 — Conservative Forces & Potential Energy Functions</a></li>
+      <li><a href="#motion-eqn">14.7 — Equations of Motion from Energy</a></li>
+    </ul>
+  </div>
+
+  <!-- 14.1 WORK -->
+  <div class="lesson-section" id="work">
+    <h2 class="section-title">14.1 Work Done by a Force</h2>
+    <p>The <strong>work done</strong> by a constant force $\mathbf{F}$ as a particle moves through displacement $\mathbf{s}$ is:</p>
+
+    <div class="formula-box">
+      $$W = \mathbf{F} \cdot \mathbf{s} = Fs\cos\theta$$
+    </div>
+
+    <p>where $\theta$ is the angle between the force and the displacement. Work is a scalar measured in joules (J = N m).</p>
+
+    <p>When $\theta = 0°$ (force and motion in same direction): $W = Fs$ (maximum positive work). When $\theta = 90°$ (force perpendicular to motion): $W = 0$ (e.g. normal reaction on a horizontal surface). When $\theta = 180°$ (force opposing motion): $W = -Fs$ (negative work, e.g. friction).</p>
+
+    <div class="key-point">
+      <strong>Friction always does negative work</strong>
+      Friction always opposes motion, so it always does negative work on the moving object, removing kinetic energy from the system. This is why friction is a non-conservative force — the work done depends on the path taken.
+    </div>
+  </div>
+
+  <!-- 14.2 WORK-ENERGY THEOREM -->
+  <div class="lesson-section" id="wet">
+    <h2 class="section-title">14.2 Work-Energy Theorem</h2>
+    <p>The <strong>work-energy theorem</strong> states that the net work done on a particle equals its change in kinetic energy:</p>
+
+    <div class="formula-box">
+      $$W_{\text{net}} = \Delta\text{KE} = \frac{1}{2}mv^2 - \frac{1}{2}mu^2$$
+    </div>
+
+    <p>This follows directly from Newton's second law: $F = ma = m\dfrac{dv}{dt}$, and $W = \displaystyle\int F\,ds = \int m\frac{dv}{dt}\,ds = \int mv\,dv = \frac{1}{2}mv^2 - \frac{1}{2}mu^2$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.2a</div>
+      <div class="example-q">A 5 kg block is pulled 10 m along a rough horizontal surface by a force of 30 N at 20° to the horizontal. The coefficient of friction is 0.3. Find the final speed if it starts from rest.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Work done by applied force: $W_F = 30\cos20° \times 10 = 281.9$ J</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Normal reaction: $R = mg - 30\sin20° = 5(9.8) - 10.26 = 38.74$ N. Friction: $F_r = 0.3 \times 38.74 = 11.62$ N. Work done by friction: $W_f = -11.62 \times 10 = -116.2$ J</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Net work $= 281.9 - 116.2 = 165.7$ J $= \frac{1}{2}(5)v^2$. So $v = \sqrt{2 \times 165.7/5} = \sqrt{66.28} \approx 8.14$ m s⁻¹</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14.3 POTENTIAL ENERGY -->
+  <div class="lesson-section" id="pe">
+    <h2 class="section-title">14.3 Potential Energy & Conservation of Energy</h2>
+
+    <div class="formula-box">
+      $$\text{GPE} = mgh \qquad \text{(gravitational potential energy)}$$
+      $$\text{KE} + \text{PE} = \text{constant} \quad \text{(when no non-conservative forces act)}$$
+    </div>
+
+    <p>The <strong>principle of conservation of mechanical energy</strong> states that in the absence of friction and other dissipative forces, the total mechanical energy (KE + PE) is constant.</p>
+
+    <p>When friction or other non-conservative forces act, the energy equation becomes:</p>
+
+    <div class="formula-box">
+      $$\text{KE}_1 + \text{PE}_1 + W_{\text{driving}} = \text{KE}_2 + \text{PE}_2 + W_{\text{resistance}}$$
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted)">Or equivalently: Work done by all forces = change in KE (work-energy theorem applied to all forces).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.3a</div>
+      <div class="example-q">A skier of mass 70 kg descends a 200 m slope inclined at 30°. The resistance to motion is 80 N. Find the speed at the bottom if the skier starts from rest.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Height dropped: $h = 200\sin30° = 100$ m. Loss in GPE $= 70 \times 9.8 \times 100 = 68600$ J</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Work done against resistance $= 80 \times 200 = 16000$ J</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Energy equation: $68600 - 16000 = \frac{1}{2}(70)v^2$. $v^2 = \dfrac{52600}{35} = 1502.9$. $v \approx 38.8$ m s⁻¹</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14.4 POWER -->
+  <div class="lesson-section" id="power">
+    <h2 class="section-title">14.4 Power</h2>
+    <p><strong>Power</strong> is the rate of doing work, measured in watts (W = J s⁻¹).</p>
+
+    <div class="formula-box">
+      $$P = \frac{dW}{dt} = \mathbf{F} \cdot \mathbf{v} = Fv\cos\theta$$
+    </div>
+
+    <p>For a vehicle moving at velocity $v$ with driving force $F$ in the direction of motion: $P = Fv$.</p>
+
+    <div class="key-point">
+      <strong>Maximum speed (terminal velocity)</strong>
+      At maximum speed, acceleration $= 0$, so driving force $=$ resistance. With constant power $P$: driving force $= P/v_{\max}$. Setting this equal to resistance $R$: $v_{\max} = P/R$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.4a</div>
+      <div class="example-q">A car of mass 1200 kg has engine power 40 kW. Resistance to motion is $600 + 2v^2$ N where $v$ is speed in m s⁻¹. Find (a) the maximum speed on a level road, (b) the acceleration at 20 m s⁻¹.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) At max speed: driving force $=$ resistance. $\frac{40000}{v_{\max}} = 600 + 2v_{\max}^2$. So $40000 = 600v_{\max} + 2v_{\max}^3$. Try $v_{\max} = 20$: $40000 = 12000 + 16000 = 28000$ ✗. Try $v = 25$: $40000 = 15000 + 31250 = 46250$ ✗. Try $v = 22$: $40000 = 13200 + 21296 \approx 34496$ — bracket between 22 and 25. Numerically: $v_{\max} \approx 23.1$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) At $v = 20$ m s⁻¹: driving force $= 40000/20 = 2000$ N. Resistance $= 600 + 800 = 1400$ N. Net force $= 600$ N. $a = 600/1200 = 0.5$ m s⁻².</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14.5 VARIABLE FORCE -->
+  <div class="lesson-section" id="variable-force">
+    <h2 class="section-title">14.5 Work Done by a Variable Force</h2>
+    <p>When force varies with position, work done is found by integration:</p>
+
+    <div class="formula-box">
+      $$W = \int_{x_1}^{x_2} F(x)\,dx$$
+    </div>
+
+    <p>This is the area under the force-displacement graph. For a spring obeying Hooke's Law ($F = kx$ where $x$ is extension/compression from natural length):</p>
+
+    <div class="formula-box">
+      $$W_{\text{spring}} = \int_0^x kx'\,dx' = \frac{1}{2}kx^2 \qquad \text{(Elastic PE stored } = \frac{1}{2}kx^2\text{)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.5a</div>
+      <div class="example-q">A force $F = (3x^2 + 2x)$ N acts on a particle moving from $x = 1$ m to $x = 4$ m. Find the work done.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$W = \displaystyle\int_1^4 (3x^2 + 2x)\,dx = \left[x^3 + x^2\right]_1^4 = (64 + 16) - (1 + 1) = 80 - 2 = 78$ J</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.5b — Hooke's Law</div>
+      <div class="example-q">A spring has natural length 0.5 m and stiffness $k = 200$ N m⁻¹. Find the work done in stretching it from its natural length to 0.8 m, and then from 0.8 m to 1.1 m.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Stretching to 0.8 m: extension $x = 0.3$ m. $W_1 = \frac{1}{2}(200)(0.3)^2 = 9$ J.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">From 0.8 m to 1.1 m: extensions 0.3 m to 0.6 m. $W_2 = \int_{0.3}^{0.6} 200x\,dx = [100x^2]_{0.3}^{0.6} = 36 - 9 = 27$ J.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">It takes more work to stretch from 0.6–0.9 than 0–0.3 m — the force increases with extension.<div class="step-comment">Alternatively: $W_2 = \frac{1}{2}(200)(0.6)^2 - \frac{1}{2}(200)(0.3)^2 = 36 - 9 = 27$ J ✓</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14.6 CONSERVATIVE FORCES -->
+  <div class="lesson-section" id="conservative">
+    <h2 class="section-title">14.6 Conservative Forces & Potential Energy Functions</h2>
+
+    <p>A force is <strong>conservative</strong> if the work it does is independent of the path taken — it depends only on the start and end points. Gravity and spring forces are conservative; friction is not.</p>
+
+    <p>For a conservative force in 1D, there exists a <strong>potential energy function</strong> $V(x)$ such that:</p>
+
+    <div class="formula-box">
+      $$F(x) = -\frac{dV}{dx} \qquad \text{or equivalently} \qquad V(x) = -\int F(x)\,dx$$
+    </div>
+
+    <p>The total mechanical energy $E = \frac{1}{2}mv^2 + V(x)$ is conserved when only conservative forces act.</p>
+
+    <h3 class="subsection">Equilibrium positions</h3>
+    <p>Equilibrium occurs where $F = 0$, i.e. where $\dfrac{dV}{dx} = 0$ (stationary points of $V$). The type of equilibrium is determined by the second derivative:</p>
+
+    <div class="formula-box">
+      $$\frac{d^2V}{dx^2} > 0 \implies \text{stable equilibrium (potential energy minimum)}$$
+      $$\frac{d^2V}{dx^2} < 0 \implies \text{unstable equilibrium (potential energy maximum)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.6a</div>
+      <div class="example-q">A particle moves along the $x$-axis under a force $F(x) = 6x - x^3$ N. Find the equilibrium positions and classify them.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Equilibrium: $F = 0 \Rightarrow 6x - x^3 = 0 \Rightarrow x(6 - x^2) = 0$. So $x = 0$, $x = \pm\sqrt{6}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$V(x) = -\int (6x - x^3)\,dx = -3x^2 + \frac{x^4}{4} + C$. $\frac{d^2V}{dx^2} = -6 + 3x^2$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">At $x=0$: $V'' = -6 < 0$ → unstable. At $x = \pm\sqrt{6}$: $V'' = -6 + 18 = 12 > 0$ → stable.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14.7 EQUATIONS OF MOTION -->
+  <div class="lesson-section" id="motion-eqn">
+    <h2 class="section-title">14.7 Equations of Motion from Energy</h2>
+
+    <p>Energy conservation is often the most efficient route to finding velocity as a function of position — especially when forces are variable or when you don't need acceleration explicitly.</p>
+
+    <p>The key technique: write $\frac{1}{2}mv^2 + V(x) = E$ (constant), then differentiate with respect to time to get the equation of motion:</p>
+
+    <div class="formula-box">
+      $$mv\frac{dv}{dx}\cdot\dot{x} + \frac{dV}{dx}\dot{x} = 0 \implies m\dot{x}\ddot{x} = -\frac{dV}{dx}\dot{x}$$
+      $$\implies m\ddot{x} = -\frac{dV}{dx} = F(x)$$
+    </div>
+
+    <p>This is Newton's second law — confirming the energy approach is consistent.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.7a — SHM from energy</div>
+      <div class="example-q">A particle of mass $m$ is attached to a spring of stiffness $k$ (natural length $l$), lying on a smooth surface. The spring is compressed by $a$ and released. Use energy to find $v$ as a function of displacement $x$ from equilibrium, and hence show the motion is SHM.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">At displacement $x$ from equilibrium, elastic PE $= \frac{1}{2}kx^2$. Initial energy (spring compressed by $a$, at rest): $E = \frac{1}{2}ka^2$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Conservation: $\frac{1}{2}mv^2 + \frac{1}{2}kx^2 = \frac{1}{2}ka^2$. So $v^2 = \dfrac{k}{m}(a^2 - x^2)$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Differentiate $v^2 = \frac{k}{m}(a^2-x^2)$ w.r.t. $t$: $2v\dot{v} = -\frac{2k}{m}x\dot{x}$. Since $v = \dot{x}$: $\ddot{x} = -\dfrac{k}{m}x$.<div class="step-comment">This is $\ddot{x} = -\omega^2 x$ with $\omega = \sqrt{k/m}$ — simple harmonic motion with amplitude $a$. ✓</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 14.7b — Vehicle on incline</div>
+      <div class="example-q">A car of mass 1000 kg and engine power 50 kW moves up an incline of $\sin\theta = \frac{1}{20}$. Resistance is 500 N. Write the equation of motion and find the terminal velocity on the slope.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Driving force at speed $v$: $F_D = P/v = 50000/v$ N. Equation of motion (up the slope positive): $1000\ddot{x} = \dfrac{50000}{v} - 500 - 1000g\cdot\frac{1}{20} = \dfrac{50000}{v} - 990$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Terminal velocity: $\ddot{x} = 0 \Rightarrow \dfrac{50000}{v_T} = 990 \Rightarrow v_T = \dfrac{50000}{990} \approx 50.5$ m s⁻¹.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A particle of mass 3 kg slides down a rough incline of length 8 m inclined at 25° to the horizontal. The coefficient of friction is 0.2. Using the work-energy theorem, find the speed at the bottom if it starts from rest.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Height $=8\sin25°=3.381$ m. GPE lost $=3(9.8)(3.381)=99.40$ J. Normal reaction $=3(9.8)\cos25°=26.63$ N. Friction $=0.2\times26.63=5.326$ N. Work by friction $=-5.326\times8=-42.61$ J. Net work $=99.40-42.61=56.79$ J $=\frac{1}{2}(3)v^2$. $v=\sqrt{37.86}\approx6.15$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A car of mass 900 kg has engine power 36 kW. Resistance to motion is constant at 800 N. Find (a) the maximum speed on a level road, (b) the maximum speed up an incline where $\sin\theta = \frac{1}{15}$, (c) the acceleration at 20 m s⁻¹ on the level.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) At max speed: $\frac{36000}{v}=800\Rightarrow v=45$ m s⁻¹. (b) On incline: $\frac{36000}{v}=800+900(9.8)\frac{1}{15}=800+588=1388\Rightarrow v=\frac{36000}{1388}\approx25.9$ m s⁻¹. (c) Driving force $=36000/20=1800$ N. Net force $=1800-800=1000$ N. $a=1000/900=1.11$ m s⁻².</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A force $F(x) = \dfrac{4}{x^2}$ N acts on a particle moving from $x = 1$ m to $x = 4$ m. Find (a) the work done, (b) the speed at $x = 4$ m if the mass is 2 kg and the particle starts from rest at $x = 1$ m.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $W=\int_1^4\frac{4}{x^2}dx=\left[-\frac{4}{x}\right]_1^4=-1+4=3$ J. (b) $W=\frac{1}{2}mv^2\Rightarrow3=\frac{1}{2}(2)v^2\Rightarrow v=\sqrt{3}\approx1.73$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A particle moves in a potential field $V(x) = x^3 - 6x^2 + 9x$. Find the equilibrium positions, classify them, and find the force on the particle at $x = 2$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$F=-\frac{dV}{dx}=-(3x^2-12x+9)=-3(x^2-4x+3)=-3(x-1)(x-3)$. Equilibrium: $x=1$ and $x=3$. $V''=6x-12$. At $x=1$: $V''=-6<0\Rightarrow$ unstable. At $x=3$: $V''=6>0\Rightarrow$ stable. At $x=2$: $F=-3(4-8+3)=-3(-1)=3$ N (in positive $x$ direction).</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A particle of mass 2 kg moves along the $x$-axis under a force $F = 8 - 2x$ N (with $x$ in metres). (a) Find the potential energy function $V(x)$. (b) If the particle starts from rest at $x = 0$, find its speed at $x = 3$ m. (c) Find the range of $x$ for which the particle can reach, and the turning points.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $V(x)=-\int(8-2x)dx=-8x+x^2+C$. Take $C=0$: $V(x)=x^2-8x$. (b) Total energy at $x=0$: $E=0+V(0)=0$. At $x=3$: $\frac{1}{2}(2)v^2+(9-24)=0\Rightarrow v^2=15\Rightarrow v=\sqrt{15}\approx3.87$ m s⁻¹. (c) Turning points where $v=0$: $V(x)=0\Rightarrow x^2-8x=0\Rightarrow x(x-8)=0$. So turning points at $x=0$ (start) and $x=8$ m. The particle oscillates between $x=0$ and $x=8$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A lorry of mass 5000 kg travels along a level road with resistance $R = 1000 + 50v$ N where $v$ is in m s⁻¹. The engine works at constant power $P$. (a) Write the equation of motion. (b) If the maximum speed is 30 m s⁻¹, find $P$. (c) Find the acceleration when $v = 10$ m s⁻¹.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $5000\ddot{x}=\frac{P}{v}-(1000+50v)$. (b) At max speed $a=0$: $\frac{P}{30}=1000+1500=2500\Rightarrow P=75000$ W $=75$ kW. (c) At $v=10$: driving force $=75000/10=7500$ N. Resistance $=1000+500=1500$ N. Net $=6000$ N. $a=6000/5000=1.2$ m s⁻².</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">A bead of mass $m$ slides on a smooth wire in the shape of a curve $y = f(x)$. Using energy conservation, show that its speed $v$ at height $y$ satisfies $v^2 = v_0^2 - 2gy$ where $v_0$ is the speed at $y=0$. A bead starts from rest at height $H$ on a smooth loop-the-loop of radius $r$. Find the minimum $H$ for the bead to maintain contact at the top of the loop.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Energy conservation (no friction, smooth wire): $\frac{1}{2}mv^2+mgy=\frac{1}{2}mv_0^2+0\Rightarrow v^2=v_0^2-2gy$. Starting from rest at height $H$: $v_0=0$, so $v^2=2g(H-y)$. At the top of the loop, height $y=2r$: $v_{\text{top}}^2=2g(H-2r)$. At the top, for circular motion (minimum contact means normal reaction $N=0$): centripetal force provided by gravity only: $\frac{mv_{\text{top}}^2}{r}=mg\Rightarrow v_{\text{top}}^2=gr$. So $2g(H-2r)\geq gr\Rightarrow H-2r\geq\frac{r}{2}\Rightarrow H\geq\frac{5r}{2}$. Minimum $H=\frac{5r}{2}$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A particle of mass $m$ moves in one dimension under a force $F(x) = -kx + \dfrac{c}{x^3}$ where $k, c > 0$. (i) Find the potential energy function $V(x)$ for $x > 0$. (ii) Find the equilibrium position $x_0$ and show it is stable. (iii) For small displacements $x = x_0 + \xi$ where $|\xi| \ll x_0$, show the motion is approximately SHM and find the angular frequency.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $V(x)=-\int(-kx+cx^{-3})dx=\frac{kx^2}{2}+\frac{c}{2x^2}+C$. (ii) Equilibrium: $F=0\Rightarrow -kx_0+c/x_0^3=0\Rightarrow x_0^4=c/k\Rightarrow x_0=(c/k)^{1/4}$. $V''(x)=k+3c/x^4$. At $x_0$: $V''=k+3k=4k>0\Rightarrow$ stable ✓. (iii) $F(x_0+\xi)\approx F(x_0)+\xi F'(x_0)=0+\xi(-k-3c/x_0^4)=\xi(-k-3k)=-4k\xi$. Equation of motion: $m\ddot{\xi}=-4k\xi$, which is SHM with $\omega^2=4k/m$, so $\omega=2\sqrt{k/m}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">A car of mass $M$ moves along a level road with driving force $F$ and resistance $kv^2$ (where $v$ is speed). (i) Write the equation of motion and show that if $F$ is constant, the terminal velocity is $v_T = \sqrt{F/k}$. (ii) Show that the speed satisfies $v = v_T\tanh\!\left(\dfrac{v_T k t}{M}\right)$ when starting from rest. (iii) Find the distance travelled in time $t$ and the limiting distance as $F \to \infty$ with $v_T$ fixed.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $M\dot{v}=F-kv^2=k(v_T^2-v^2)$. At terminal: $\dot{v}=0\Rightarrow v=v_T=\sqrt{F/k}$ ✓. (ii) Separate: $\frac{dv}{v_T^2-v^2}=\frac{k}{M}dt$. Integrate: $\frac{1}{v_T}\tanh^{-1}(v/v_T)=\frac{kt}{M}\Rightarrow v=v_T\tanh(kv_Tt/M)$ ✓. (iii) $x=\int_0^tv_T\tanh(kv_Ts/M)ds=\frac{M}{k}\ln\cosh(kv_Tt/M)$. As $F\to\infty$ with $v_T$ fixed means $k\to\infty$, $M/k\to0$... actually as $t\to\infty$: $x\approx v_Tt-\frac{M}{k}\ln2\to\infty$, so distance is unbounded. For fixed $t$ and $F\to\infty$: $kv_T=\sqrt{kF}\to\infty$, so $\tanh\to1$ quickly and $v\to v_T$ rapidly, distance $\to v_Tt$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="momentum-impulse.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Momentum & Impulse</div></a>
+    <a href="elastic-strings-springs.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Elastic Strings & Springs</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
