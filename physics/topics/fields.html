@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fields & their Consequences — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .y2-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-top:0.8rem}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .compare-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+  .compare-card h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.8rem;color:var(--accent)}
+  .compare-card p{font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  @media(max-width:900px){.compare-grid{grid-template-columns:1fr}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 07</div>
+  <a href="#gravity" class="sidebar-link active"><span class="sidebar-num">7.1</span> Gravitational Fields</a>
+  <a href="#orbits" class="sidebar-link"><span class="sidebar-num">7.2</span> Orbits & Satellites</a>
+  <a href="#electric-fields" class="sidebar-link"><span class="sidebar-num">7.3</span> Electric Fields</a>
+  <a href="#capacitance" class="sidebar-link"><span class="sidebar-num">7.4</span> Capacitance</a>
+  <a href="#capacitor-charge" class="sidebar-link"><span class="sidebar-num">7.5</span> Capacitor Charge & Discharge</a>
+  <a href="#magnetic-fields" class="sidebar-link"><span class="sidebar-num">7.6</span> Magnetic Fields & Forces</a>
+  <a href="#electromagnetic-induction" class="sidebar-link"><span class="sidebar-num">7.7</span> Electromagnetic Induction</a>
+  <a href="#transformers" class="sidebar-link"><span class="sidebar-num">7.8</span> Transformers & AC</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 07</div>
+    <div class="topic-num-badge">Topic 07 · AQA Physics</div>
+    <div class="y2-badge">⬆ Year 2 content</div>
+    <h1 class="topic-title">Fields & their Consequences</h1>
+    <p class="topic-intro">Gravity, electricity and magnetism — three of the four fundamental forces — are described through the unifying concept of fields. This is the most mathematically demanding topic at A Level, with deep analogies between gravitational and electric fields.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.7</div>
+      <div class="meta-item"><span>~7 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#gravity">7.1 — Gravitational Fields</a></li>
+      <li><a href="#orbits">7.2 — Orbits & Satellites</a></li>
+      <li><a href="#electric-fields">7.3 — Electric Fields</a></li>
+      <li><a href="#capacitance">7.4 — Capacitance</a></li>
+      <li><a href="#capacitor-charge">7.5 — Capacitor Charge & Discharge</a></li>
+      <li><a href="#magnetic-fields">7.6 — Magnetic Fields & Forces</a></li>
+      <li><a href="#electromagnetic-induction">7.7 — Electromagnetic Induction</a></li>
+      <li><a href="#transformers">7.8 — Transformers & AC</a></li>
+    </ul>
+  </div>
+
+  <!-- 7.1 GRAVITATIONAL FIELDS -->
+  <div class="lesson-section" id="gravity">
+    <h2 class="section-title">7.1 Gravitational Fields</h2>
+
+    <p>A gravitational field is a region of space where a mass experiences a force. All masses create a gravitational field. The field is always attractive — there is no negative gravitational charge.</p>
+
+    <div class="formula-box">
+      $$F = \frac{Gm_1 m_2}{r^2} \qquad \text{(Newton's Law of Gravitation)}$$
+      $$g = \frac{GM}{r^2} \qquad \text{(gravitational field strength, N kg}^{-1}\text{)}$$
+      $$V_g = -\frac{GM}{r} \qquad \text{(gravitational potential, J kg}^{-1}\text{)}$$
+      $$G = 6.67\times10^{-11}\text{ N m}^2\text{ kg}^{-2}$$
+    </div>
+
+    <p>Gravitational potential $V_g$ is defined as zero at infinity and is negative everywhere else (since work must be done against gravity to move a mass away from a planet — gravity is attractive). The potential energy of mass $m$ at distance $r$: $E_p = mV_g = -GMm/r$.</p>
+
+    <div class="key-point">
+      <strong>Field lines and equipotentials</strong>
+      Gravitational field lines point in the direction a mass would move (towards the source mass). Equipotentials are surfaces of constant potential — no work is done moving a mass along an equipotential. Field lines are always perpendicular to equipotentials. Near Earth's surface, both are approximately parallel lines (uniform field; $g \approx 9.81$ N kg⁻¹).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.1a</div>
+      <div class="example-q">Find (a) the gravitational field strength at the surface of Mars ($M = 6.39\times10^{23}$ kg, $R = 3.39\times10^6$ m), (b) the gravitational potential at the surface, (c) the energy needed to lift a 75 kg astronaut from the surface to infinity.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $g = GM/R^2 = (6.67\times10^{-11}\times6.39\times10^{23})/(3.39\times10^6)^2 = 4.262\times10^{13}/1.149\times10^{13} = 3.71$ N kg⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $V_g = -GM/R = -4.262\times10^{13}/3.39\times10^6 = -1.257\times10^7$ J kg⁻¹ $= -12.6$ MJ kg⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $\Delta E_p = m\Delta V_g = 75\times(0 - (-1.257\times10^7)) = 75\times1.257\times10^7 = 9.43\times10^8$ J $= 943$ MJ.<div class="step-comment">This is the escape energy (sufficient to reach infinity). The escape velocity follows from $\frac{1}{2}mv^2 = GMm/R$: $v_{\rm esc} = \sqrt{2GM/R} = \sqrt{2\times1.257\times10^7} = 5013$ m s⁻¹ $\approx 5.0$ km s⁻¹.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.2 ORBITS -->
+  <div class="lesson-section" id="orbits">
+    <h2 class="section-title">7.2 Orbits & Satellites</h2>
+
+    <p>For a circular orbit, gravity provides the centripetal force:</p>
+
+    <div class="formula-box">
+      $$\frac{GMm}{r^2} = \frac{mv^2}{r} = m\omega^2 r \implies v = \sqrt{\frac{GM}{r}}$$
+      $$T^2 = \frac{4\pi^2}{GM}r^3 \qquad \text{(Kepler's Third Law)}$$
+    </div>
+
+    <p>Total energy of a satellite in circular orbit: $E = -\frac{GMm}{2r}$ (negative — bound system). KE $= +GMm/2r$; PE $= -GMm/r$. As a satellite moves to a higher orbit, it gains PE but loses KE — total energy decreases (becomes more negative) when moving inward.</p>
+
+    <div class="key-point">
+      <strong>Geostationary orbits</strong>
+      A geostationary satellite has period $T = 24$ h, orbits above the equator, and moves in the same direction as Earth's rotation. It appears stationary from the ground — ideal for communications. Using Kepler's third law with $T = 86400$ s and $M_{\rm Earth} = 5.97\times10^{24}$ kg: $r = (GM T^2/4\pi^2)^{1/3} = 4.22\times10^7$ m (about 6.6 Earth radii above the surface). Low Earth Orbit (LEO) satellites have $T \approx 90$ min and are used for weather, imaging, and the ISS.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.2a — Kepler's Third Law</div>
+      <div class="example-q">The Moon orbits Earth at radius $3.84\times10^8$ m with period 27.3 days. Use Kepler's Third Law to find the mass of the Earth.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$T = 27.3\times24\times3600 = 2.360\times10^6$ s.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$M = \dfrac{4\pi^2 r^3}{GT^2} = \dfrac{4\pi^2\times(3.84\times10^8)^3}{6.67\times10^{-11}\times(2.360\times10^6)^2}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Numerator: $4\pi^2\times5.662\times10^{25} = 2.236\times10^{27}$. Denominator: $6.67\times10^{-11}\times5.570\times10^{12} = 3.715\times10^2$. $M = 2.236\times10^{27}/371.5 = 6.02\times10^{24}$ kg ✓ (accepted: $5.97\times10^{24}$ kg).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.3 ELECTRIC FIELDS -->
+  <div class="lesson-section" id="electric-fields">
+    <h2 class="section-title">7.3 Electric Fields</h2>
+
+    <p>An electric field exists wherever a charge experiences a force. The field can be attractive (opposite charges) or repulsive (like charges). The key analogies and contrasts with gravity:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>⬤ Gravitational</h4>
+        <p>Force: $F = Gm_1m_2/r^2$</p>
+        <p>Field: $g = GM/r^2$ (N kg⁻¹)</p>
+        <p>Potential: $V_g = -GM/r$ (J kg⁻¹)</p>
+        <p>Always attractive</p>
+        <p>Depends on mass</p>
+      </div>
+      <div class="compare-card">
+        <h4>⚡ Electric</h4>
+        <p>Force: $F = kQ_1Q_2/r^2 = Q_1Q_2/4\pi\varepsilon_0 r^2$</p>
+        <p>Field: $E = kQ/r^2 = Q/4\pi\varepsilon_0 r^2$ (N C⁻¹ = V m⁻¹)</p>
+        <p>Potential: $V = kQ/r = Q/4\pi\varepsilon_0 r$ (J C⁻¹ = V)</p>
+        <p>Attractive or repulsive</p>
+        <p>Depends on charge</p>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      $$F = \frac{Q_1 Q_2}{4\pi\varepsilon_0 r^2} \qquad E = \frac{Q}{4\pi\varepsilon_0 r^2} \qquad V = \frac{Q}{4\pi\varepsilon_0 r}$$
+      $$\varepsilon_0 = 8.85\times10^{-12}\text{ F m}^{-1} \qquad k = \frac{1}{4\pi\varepsilon_0} = 8.99\times10^9\text{ N m}^2\text{ C}^{-2}$$
+    </div>
+
+    <h3 class="subsection">Uniform electric field</h3>
+    <p>Between two parallel plates with potential difference $V$ and separation $d$:</p>
+
+    <div class="formula-box">
+      $$E = \frac{V}{d} \qquad F = QE = \frac{QV}{d} \qquad W = QV = Q\Delta V$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.3a — Charged particle between plates</div>
+      <div class="example-q">An electron enters a uniform electric field of $5.0\times10^4$ V m⁻¹ horizontally at $3.0\times10^7$ m s⁻¹. The plates are 0.12 m long. Find (a) the vertical acceleration, (b) the vertical displacement as it exits, (c) the exit speed.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $F = eE = 1.6\times10^{-19}\times5.0\times10^4 = 8.0\times10^{-15}$ N. $a = F/m_e = 8.0\times10^{-15}/9.11\times10^{-31} = 8.78\times10^{15}$ m s⁻².</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) Time in field: $t = L/v_x = 0.12/3.0\times10^7 = 4.0\times10^{-9}$ s. Vertical displacement: $y = \frac{1}{2}at^2 = \frac{1}{2}\times8.78\times10^{15}\times(4.0\times10^{-9})^2 = 0.0702$ m $= 7.0$ cm.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $v_y = at = 8.78\times10^{15}\times4.0\times10^{-9} = 3.51\times10^7$ m s⁻¹. Exit speed $= \sqrt{v_x^2+v_y^2} = \sqrt{(3.0)^2+(3.51)^2}\times10^7 = \sqrt{9+12.32}\times10^7 = 4.62\times10^7$ m s⁻¹.<div class="step-comment">Note: the horizontal speed is unchanged (no horizontal force). The motion is parabolic — exactly like projectile motion under gravity, but much more dramatic!</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.4 CAPACITANCE -->
+  <div class="lesson-section" id="capacitance">
+    <h2 class="section-title">7.4 Capacitance</h2>
+
+    <p>A capacitor stores charge (and energy) by accumulating opposite charges on two conducting plates separated by an insulator (dielectric). Capacitance is the charge stored per unit voltage:</p>
+
+    <div class="formula-box">
+      $$C = \frac{Q}{V} \qquad \text{(capacitance, F = C V}^{-1}\text{)}$$
+      $$E = \tfrac{1}{2}QV = \tfrac{1}{2}CV^2 = \frac{Q^2}{2C} \qquad \text{(energy stored)}$$
+      $$C = \frac{\varepsilon_0\varepsilon_r A}{d} \qquad \text{(parallel plate capacitor)}$$
+    </div>
+
+    <table>
+      <tr><th></th><th>Series</th><th>Parallel</th></tr>
+      <tr><td>Charge</td><td>Same on each: $Q_1 = Q_2 = Q$</td><td>Total: $Q = Q_1 + Q_2$</td></tr>
+      <tr><td>Voltage</td><td>Splits: $V = V_1 + V_2$</td><td>Same across each: $V_1 = V_2 = V$</td></tr>
+      <tr><td>Combination</td><td>$\dfrac{1}{C} = \dfrac{1}{C_1} + \dfrac{1}{C_2}$</td><td>$C = C_1 + C_2$</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Why capacitors in series give smaller capacitance</strong>
+      In series, the same charge must be pushed onto both capacitors. The voltage of the supply is shared across both, so each capacitor only charges to a fraction of the total voltage. Less charge per unit total voltage means smaller effective capacitance. In parallel, both capacitors receive the full voltage and can each store charge independently — capacitances add.
+    </div>
+  </div>
+
+  <!-- 7.5 CAPACITOR CHARGE/DISCHARGE -->
+  <div class="lesson-section" id="capacitor-charge">
+    <h2 class="section-title">7.5 Capacitor Charge & Discharge</h2>
+
+    <p>When a capacitor charges or discharges through a resistor, the voltage, charge and current all change exponentially:</p>
+
+    <div class="formula-box">
+      $$\text{Discharge: } Q = Q_0 e^{-t/RC} \qquad V = V_0 e^{-t/RC} \qquad I = I_0 e^{-t/RC}$$
+      $$\text{Charge: } Q = Q_0(1 - e^{-t/RC}) \qquad V = V_0(1 - e^{-t/RC})$$
+      $$\tau = RC \qquad \text{(time constant — time to fall to }e^{-1} \approx 37\%\text{ of initial)}$$
+    </div>
+
+    <p>The time constant $\tau = RC$ has units of seconds: $[\Omega][F] = [\text{V A}^{-1}][\text{C V}^{-1}] = [\text{s}]$. After $\tau$, the quantity falls to 37% of its initial value. After $5\tau$, it's effectively fully discharged (< 1%).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.5a</div>
+      <div class="example-q">A 470 μF capacitor is charged to 12.0 V and discharged through a 22 kΩ resistor. Find (a) the time constant, (b) the voltage after 5.0 s, (c) the time to fall to 3.0 V, (d) the energy remaining at 3.0 V.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $\tau = RC = 22\times10^3\times470\times10^{-6} = 10.34$ s.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $V = 12.0\,e^{-5.0/10.34} = 12.0\,e^{-0.4836} = 12.0\times0.6167 = 7.40$ V.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $3.0 = 12.0\,e^{-t/10.34}$. $e^{-t/10.34} = 0.25$. $-t/10.34 = \ln(0.25) = -1.386$. $t = 1.386\times10.34 = 14.34$ s.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(d) $E = \frac{1}{2}CV^2 = \frac{1}{2}\times470\times10^{-6}\times9.0 = 2.115\times10^{-3}$ J $= 2.1$ mJ.<div class="step-comment">Initial energy was $\frac{1}{2}\times470\times10^{-6}\times144 = 33.8$ mJ — only 6.3% remains, confirming it's well into discharge.</div></div></div>
+      </div>
+    </div>
+
+    <p>To find $RC$ experimentally: plot $\ln V$ against $t$ — a straight line with gradient $= -1/RC$. This linearises the exponential, making it easy to find $\tau$ from the gradient.</p>
+  </div>
+
+  <!-- 7.6 MAGNETIC FIELDS -->
+  <div class="lesson-section" id="magnetic-fields">
+    <h2 class="section-title">7.6 Magnetic Fields & Forces</h2>
+
+    <div class="formula-box">
+      $$F = BIL\sin\theta \qquad \text{(force on current-carrying conductor)}$$
+      $$F = BQv\sin\theta \qquad \text{(force on moving charge)}$$
+      $$B = \frac{\mu_0 I}{2\pi r} \; \text{(long wire)} \qquad B = \mu_0 nI \; \text{(solenoid, }n\text{ = turns/m)}$$
+    </div>
+
+    <p>Magnetic flux density $B$ is measured in tesla (T). Direction of force: use <strong>Fleming's Left Hand Rule</strong> — for conventional current. Thumb = Force (motion), Index = Field, Middle = Current. For a positive charge moving in a magnetic field, the force is always perpendicular to both velocity and field — so magnetic fields do no work on charges (they change direction but not speed).</p>
+
+    <h3 class="subsection">Circular motion of charges in a magnetic field</h3>
+    <p>Since the magnetic force is always perpendicular to velocity, a charged particle in a uniform magnetic field moves in a circle:</p>
+
+    <div class="formula-box">
+      $$BQv = \frac{mv^2}{r} \implies r = \frac{mv}{BQ} \qquad \text{(radius of circular motion)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.6a — Cyclotron radius</div>
+      <div class="example-q">A proton ($m = 1.67\times10^{-27}$ kg, $q = 1.6\times10^{-19}$ C) moves at $2.5\times10^6$ m s⁻¹ perpendicular to a 0.40 T magnetic field. Find (a) the radius of its circular path, (b) its period, (c) whether the radius changes if the field is doubled.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $r = mv/BQ = (1.67\times10^{-27}\times2.5\times10^6)/(0.40\times1.6\times10^{-19}) = 4.175\times10^{-21}/6.4\times10^{-20} = 0.0653$ m $= 6.5$ cm.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) Circumference $= 2\pi r = 0.410$ m. $T = 2\pi r/v = 0.410/2.5\times10^6 = 1.64\times10^{-7}$ s. Or $T = 2\pi m/BQ$ (independent of speed!).</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $r = mv/BQ \propto 1/B$. Doubling $B$ halves the radius. The proton moves in a tighter circle. The period also halves (since $T = 2\pi m/BQ$).<div class="step-comment">The independence of period from speed is exploited in cyclotrons — the alternating voltage that accelerates the proton can have a fixed frequency equal to the cyclotron frequency $f = BQ/2\pi m$.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.7 ELECTROMAGNETIC INDUCTION -->
+  <div class="lesson-section" id="electromagnetic-induction">
+    <h2 class="section-title">7.7 Electromagnetic Induction</h2>
+
+    <p>When the magnetic flux through a circuit changes, an EMF is induced. This is Faraday's Law. The induced EMF drives a current that opposes the change causing it (Lenz's Law).</p>
+
+    <div class="formula-box">
+      $$\Phi = BA\cos\theta \qquad \text{(magnetic flux, Wb = T m}^2\text{)}$$
+      $$\mathcal{E} = -N\frac{\Delta\Phi}{\Delta t} = -\frac{\Delta(N\Phi)}{\Delta t} \qquad \text{(Faraday's Law)}$$
+      $$\mathcal{E} = BLv \qquad \text{(EMF in a moving conductor)}$$
+    </div>
+
+    <p>The quantity $N\Phi$ is called <strong>flux linkage</strong> (Wb-turns). Faraday's Law says the induced EMF equals the rate of change of flux linkage. The negative sign reflects Lenz's Law — the induced effects always oppose the change.</p>
+
+    <div class="key-point">
+      <strong>Lenz's Law and energy conservation</strong>
+      Lenz's Law is a consequence of energy conservation. If the induced current aided the change rather than opposing it, it would create a self-reinforcing loop — generating energy from nothing. By opposing the change, the induced current does work against the external agent that is causing the flux change, converting mechanical energy into electrical energy.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.7a — AC generator</div>
+      <div class="example-q">A rectangular coil of 200 turns, area 0.025 m², rotates at 50 Hz in a uniform field of 0.15 T. Find (a) the peak EMF, (b) the rms EMF, (c) the instantaneous EMF when the coil has rotated 30° from the position of maximum flux.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) For a rotating coil: $\mathcal{E} = NBA\omega\sin(\omega t)$. Peak: $\mathcal{E}_0 = NBA\omega = 200\times0.15\times0.025\times2\pi\times50 = 200\times0.15\times0.025\times314.2 = 235.6$ V.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $\mathcal{E}_{\rm rms} = \mathcal{E}_0/\sqrt{2} = 235.6/1.414 = 166.6$ V.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) At $\theta = 30°$ from max flux: flux $= NBA\cos30°$, rate of change $\propto \sin30°$. $\mathcal{E} = \mathcal{E}_0\sin30° = 235.6\times0.5 = 117.8$ V.<div class="step-comment">Maximum EMF occurs when the coil plane is parallel to the field (zero flux, maximum rate of change). Zero EMF when the coil is perpendicular to the field (maximum flux, zero rate of change).</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.8 TRANSFORMERS -->
+  <div class="lesson-section" id="transformers">
+    <h2 class="section-title">7.8 Transformers & AC</h2>
+
+    <div class="formula-box">
+      $$\frac{V_s}{V_p} = \frac{N_s}{N_p} \qquad \frac{I_s}{I_p} = \frac{N_p}{N_s} \qquad \text{(ideal transformer)}$$
+      $$P_{\rm loss} = I^2 R \qquad \text{(power lost in transmission cables)}$$
+    </div>
+
+    <p>A <strong>step-up transformer</strong> increases voltage ($N_s > N_p$) and decreases current. A <strong>step-down transformer</strong> decreases voltage ($N_s < N_p$) and increases current. An ideal transformer is 100% efficient: $V_p I_p = V_s I_s$.</p>
+
+    <p>The <strong>National Grid</strong> transmits electricity at high voltage (e.g. 400 kV) to reduce power loss. Since $P_{\rm loss} = I^2 R$, increasing voltage by factor $k$ reduces current by $k$, reducing power loss by $k^2$. At 400 kV instead of 25 kV, losses are reduced by a factor of $(400/25)^2 = 256$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.8a — Power transmission</div>
+      <div class="example-q">A power station generates 60 MW at 25 kV. It steps up to 400 kV for transmission through cables of total resistance 4.0 Ω. Find (a) the transmission current, (b) the power lost in the cables, (c) the efficiency of transmission, (d) what the power loss would be without the step-up transformer.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $I = P/V = 60\times10^6/400\times10^3 = 150$ A.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $P_{\rm loss} = I^2 R = 150^2\times4.0 = 90000$ W $= 90$ kW.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) Efficiency $= (P_{\rm in} - P_{\rm loss})/P_{\rm in} = (60000-90)/60000 = 99.85\%$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(d) Without step-up: $I' = 60\times10^6/25\times10^3 = 2400$ A. $P_{\rm loss}' = 2400^2\times4.0 = 23.04\times10^6$ W $= 23$ MW — 38% of the generated power wasted!<div class="step-comment">This dramatic difference (90 kW vs 23 MW) shows why the National Grid uses high-voltage AC — transformers only work with AC (changing flux), which is why the mains is AC.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Two point charges $Q_1 = +4.0\,\mu$C and $Q_2 = -2.0\,\mu$C are 0.30 m apart. Find (a) the force between them (state whether attractive or repulsive), (b) the electric field at the midpoint between them due to each charge separately, (c) the resultant electric field at the midpoint.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $F = kQ_1Q_2/r^2 = 8.99\times10^9\times4\times10^{-6}\times2\times10^{-6}/0.09 = 0.08/0.09... = (8.99\times10^9\times8\times10^{-12})/0.09 = 71.92\times10^{-3}/0.09 = 0.799$ N. Attractive (opposite charges). (b) Midpoint at $r = 0.15$ m from each. $E_1 = kQ_1/r^2 = 8.99\times10^9\times4\times10^{-6}/0.0225 = 1.598$ MN C⁻¹ (pointing away from $Q_1$, i.e. towards $Q_2$). $E_2 = k|Q_2|/r^2 = 8.99\times10^9\times2\times10^{-6}/0.0225 = 0.799$ MN C⁻¹ (pointing towards $Q_2$, same direction as $E_1$). (c) Both fields point in the same direction (from $+Q_1$ toward $-Q_2$). Resultant $= 1.598 + 0.799 = 2.40$ MN C⁻¹ directed from $Q_1$ to $Q_2$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A 220 μF capacitor is charged to 15 V and then discharged through an 8.2 kΩ resistor. Find (a) the initial charge stored, (b) the initial energy stored, (c) the time constant, (d) the charge remaining after 2.5 s, (e) the time for the voltage to fall to 5.0 V.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $Q_0 = CV_0 = 220\times10^{-6}\times15 = 3.30\times10^{-3}$ C $= 3.30$ mC. (b) $E = \frac{1}{2}CV^2 = \frac{1}{2}\times220\times10^{-6}\times225 = 0.02475$ J $= 24.75$ mJ. (c) $\tau = RC = 8200\times220\times10^{-6} = 1.804$ s. (d) $Q = Q_0 e^{-t/\tau} = 3.30\times10^{-3}\times e^{-2.5/1.804} = 3.30\times10^{-3}\times e^{-1.386} = 3.30\times10^{-3}\times0.250 = 8.25\times10^{-4}$ C. (e) $5.0 = 15\,e^{-t/1.804}$. $e^{-t/1.804} = 1/3$. $t = 1.804\times\ln3 = 1.804\times1.099 = 1.982$ s $\approx 2.0$ s.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A satellite orbits Earth at height $3.6\times10^5$ m above the surface. ($R_E = 6.4\times10^6$ m, $M_E = 5.97\times10^{24}$ kg.) Find (a) the orbital radius, (b) the orbital speed, (c) the period, (d) whether this is a LEO or geostationary orbit.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $r = R_E + h = 6.4\times10^6 + 3.6\times10^5 = 6.76\times10^6$ m. (b) $v = \sqrt{GM/r} = \sqrt{6.67\times10^{-11}\times5.97\times10^{24}/6.76\times10^6} = \sqrt{5.891\times10^7} = 7676$ m s⁻¹ $\approx 7.7$ km s⁻¹. (c) $T = 2\pi r/v = 2\pi\times6.76\times10^6/7676 = 5530$ s $= 92.2$ min. (d) LEO — period is about 90 minutes, far less than 24 hours. The ISS orbits at a similar altitude.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A velocity selector uses crossed electric and magnetic fields to select particles of a specific speed. An electric field of $3.0\times10^4$ V m⁻¹ and magnetic field of 0.25 T act perpendicular to each other and to the beam of singly-charged ions. (a) Find the speed of ions that pass through undeflected. (b) An ion of mass $6.64\times10^{-26}$ kg and charge $+2e$ exits the selector and enters a region with only the 0.25 T magnetic field. Find the radius of its circular path. (c) Sketch the path of a positive ion moving too slowly through the selector and explain using force directions.</d></div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Undeflected when electric force = magnetic force: $qE = qvB$. $v = E/B = 3.0\times10^4/0.25 = 1.2\times10^5$ m s⁻¹. (b) $r = mv/BQ = 6.64\times10^{-26}\times1.2\times10^5/(0.25\times2\times1.6\times10^{-19}) = 7.968\times10^{-21}/8\times10^{-20} = 0.0996$ m $\approx 0.10$ m. (c) A positive ion moving too slowly: the magnetic force $qvB$ is smaller than the electric force $qE$. With the electric field set up to oppose/balance the magnetic force for selected ions, for a slow ion the electric force wins. If $E$ points upward and $B$ points into the page with ions moving right, then for the selected ion: $F_E$ upward, $F_B$ downward (by FLHR for positive charges moving right in field into page: $v\times B$ = right × into page = downward). For a slow ion: $F_E > F_B$, net force upward — ion deflects upward and misses the exit slit.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A 500-turn coil of area $4.0\times10^{-3}$ m² is placed in a magnetic field of 0.30 T with the plane of the coil perpendicular to the field. (a) Calculate the flux linkage. (b) The field is reduced to zero uniformly over 0.020 s. Calculate the induced EMF. (c) The coil is connected to a 12 Ω resistor. Find the induced current and the force on the coil if one side has length 0.05 m. (d) Use Lenz's Law to determine the direction of the induced current and explain how this demonstrates energy conservation.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Flux linkage $= N\Phi = NBA\cos\theta = 500\times0.30\times4.0\times10^{-3}\times\cos0° = 0.60$ Wb turns. (b) $\mathcal{E} = -\Delta(N\Phi)/\Delta t = -(0-0.60)/0.020 = +30$ V. (c) $I = \mathcal{E}/R = 30/12 = 2.5$ A. Force on one side: $F = BIL = 0.30\times2.5\times0.05 = 0.0375$ N... but field is falling, so use average $B$; for this calculation use initial $B$: force decreases as field falls. At the start: $F = 0.30\times2.5\times0.05 = 0.0375$ N. (d) By Lenz's Law, the induced current must create a magnetic field that opposes the decrease in flux — so the induced current flows to maintain the original field direction. Using the right-hand rule, if the original field points into the coil (say, into the page), the induced current flows clockwise when viewed from the front to create a field into the page inside the coil. This induced current flows against the external agent removing the field — the electrical energy generated by the induced EMF comes from the work done by whoever is reducing the magnetic field (e.g., pulling away a magnet). Energy is conserved: mechanical energy in → electrical energy out.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A student investigates the gravitational and electric fields around a point mass and a point charge respectively, and notices striking similarities. (a) Write down the equations for gravitational force between two masses and electrostatic force between two charges. State two similarities and two differences between the two equations. (b) Calculate the ratio of the electrostatic to gravitational force between two protons. ($m_p = 1.67\times10^{-27}$ kg, $e = 1.6\times10^{-19}$ C.) (c) The gravitational potential at distance $r$ from a point mass $M$ is $V_g = -GM/r$. Write down the equivalent expression for electric potential near a point charge $Q$, and explain the significance of the sign difference when comparing a positive charge to a mass. (d) A proton is accelerated from rest through a potential difference of 2.0 MV. Find its final speed, stating any assumption you make. (e) At what distance from a proton is the electric potential equal to the gravitational potential at the surface of the Earth (take $g = 9.81$ N kg⁻¹, $R_E = 6.37\times10^6$ m, $M_E = 5.97\times10^{24}$ kg)? Comment on your answer.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Gravity: $F_g = Gm_1m_2/r^2$; Electric: $F_e = kQ_1Q_2/r^2$. Similarities: both inverse square law; both depend on a product of source quantities; both have the same mathematical form with different constants. Differences: gravity is always attractive (masses always positive); electric force can be attractive or repulsive; gravitational constant $G$ is tiny ($6.67\times10^{-11}$) while $k$ is large ($8.99\times10^9$), so electric forces are vastly stronger. (b) $F_e/F_g = kQ^2/(Gm_p^2) = (8.99\times10^9\times(1.6\times10^{-19})^2)/(6.67\times10^{-11}\times(1.67\times10^{-27})^2) = (8.99\times10^9\times2.56\times10^{-38})/(6.67\times10^{-11}\times2.789\times10^{-54}) = 2.301\times10^{-28}/1.860\times10^{-64} = 1.24\times10^{36}$. Electric force is $10^{36}$ times stronger. (c) $V = kQ/r = Q/4\pi\varepsilon_0 r$. For a positive charge $Q>0$, $V > 0$, decreasing to zero at infinity. For gravity, $V_g < 0$ everywhere (gravity is only attractive, so the potential is a "well"). The positive sign for a positive charge reflects that work must be done against repulsion to bring a positive test charge closer — potential increases approaching positive charge. For a negative charge, $V < 0$ like gravity. (d) Assume non-relativistic (valid since proton rest energy is 938 MeV $\gg$ 2 MeV). $\frac{1}{2}m_p v^2 = eV = 1.6\times10^{-19}\times2.0\times10^6 = 3.2\times10^{-13}$ J. $v = \sqrt{2\times3.2\times10^{-13}/1.67\times10^{-27}} = \sqrt{3.832\times10^{14}} = 1.96\times10^7$ m s⁻¹ $\approx 6.5\%$ of $c$ — barely non-relativistic, assumption marginally valid. (e) Gravitational potential at Earth's surface: $V_g = -GM_E/R_E = -6.67\times10^{-11}\times5.97\times10^{24}/6.37\times10^6 = -6.25\times10^7$ J kg⁻¹. Electric potential of proton: $V = ke/r = 8.99\times10^9\times1.6\times10^{-19}/r = 1.438\times10^{-9}/r$. Set equal in magnitude: $1.438\times10^{-9}/r = 6.25\times10^7$. $r = 1.438\times10^{-9}/6.25\times10^7 = 2.30\times10^{-17}$ m. This is well inside the proton's nucleus (proton radius $\approx 10^{-15}$ m) — at such scales, quantum mechanics and nuclear forces dominate, and classical electrostatics breaks down entirely.</div>
+      </div>
+      <div class="q-marks">[15 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="further-mechanics-thermal.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Further Mechanics & Thermal</div></a>
+    <a href="nuclear-physics.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Nuclear Physics</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
