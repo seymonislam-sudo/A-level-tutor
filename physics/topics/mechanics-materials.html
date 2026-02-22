@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanics & Materials — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 04</div>
+  <a href="#scalars-vectors" class="sidebar-link active"><span class="sidebar-num">4.1</span> Scalars & Vectors</a>
+  <a href="#moments" class="sidebar-link"><span class="sidebar-num">4.2</span> Moments & Equilibrium</a>
+  <a href="#motion" class="sidebar-link"><span class="sidebar-num">4.3</span> Motion & SUVAT</a>
+  <a href="#projectiles" class="sidebar-link"><span class="sidebar-num">4.4</span> Projectile Motion</a>
+  <a href="#newtons-laws" class="sidebar-link"><span class="sidebar-num">4.5</span> Newton's Laws</a>
+  <a href="#work-energy" class="sidebar-link"><span class="sidebar-num">4.6</span> Work, Energy & Power</a>
+  <a href="#momentum" class="sidebar-link"><span class="sidebar-num">4.7</span> Momentum & Collisions</a>
+  <a href="#materials" class="sidebar-link"><span class="sidebar-num">4.8</span> Properties of Materials</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 04</div>
+    <div class="topic-num-badge">Topic 04 · AQA Physics</div>
+    <h1 class="topic-title">Mechanics & Materials</h1>
+    <p class="topic-intro">The backbone of classical physics — forces, motion, energy, momentum, and the mechanical properties of materials. This topic underpins almost everything else in A Level Physics.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.4</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#scalars-vectors">4.1 — Scalars & Vectors</a></li>
+      <li><a href="#moments">4.2 — Moments & Equilibrium</a></li>
+      <li><a href="#motion">4.3 — Motion & SUVAT Equations</a></li>
+      <li><a href="#projectiles">4.4 — Projectile Motion</a></li>
+      <li><a href="#newtons-laws">4.5 — Newton's Laws of Motion</a></li>
+      <li><a href="#work-energy">4.6 — Work, Energy & Power</a></li>
+      <li><a href="#momentum">4.7 — Momentum & Collisions</a></li>
+      <li><a href="#materials">4.8 — Properties of Materials</a></li>
+    </ul>
+  </div>
+
+  <!-- 4.1 SCALARS & VECTORS -->
+  <div class="lesson-section" id="scalars-vectors">
+    <h2 class="section-title">4.1 Scalars & Vectors</h2>
+
+    <p>A <strong>scalar</strong> has magnitude only. A <strong>vector</strong> has both magnitude and direction. Getting this distinction right matters throughout the course.</p>
+
+    <table>
+      <tr><th>Scalars</th><th>Vectors</th></tr>
+      <tr><td>Distance, speed, mass, time, energy, power, temperature, pressure</td><td>Displacement, velocity, acceleration, force, momentum, weight, electric field</td></tr>
+    </table>
+
+    <h3 class="subsection">Resolving & combining vectors</h3>
+    <p>Any vector can be resolved into two perpendicular components. For a vector of magnitude $F$ at angle $\theta$ to the horizontal:</p>
+
+    <div class="formula-box">
+      $$F_x = F\cos\theta \qquad F_y = F\sin\theta$$
+      $$\text{Resultant: } R = \sqrt{F_x^2 + F_y^2} \qquad \theta = \arctan\!\left(\frac{F_y}{F_x}\right)$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.1a — Resolving forces</div>
+      <div class="example-q">A 120 N force acts at 35° above the horizontal. Find its horizontal and vertical components. A second force of 80 N acts horizontally to the left. Find the magnitude and direction of the resultant.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$F_{1x} = 120\cos35° = 98.3$ N (right). $F_{1y} = 120\sin35° = 68.8$ N (up).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$F_{2x} = -80$ N (left). $F_{2y} = 0$. Total: $R_x = 98.3 - 80 = 18.3$ N. $R_y = 68.8$ N.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$R = \sqrt{18.3^2 + 68.8^2} = \sqrt{335 + 4733} = \sqrt{5068} = 71.2$ N. $\theta = \arctan(68.8/18.3) = 75.1°$ above horizontal.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.2 MOMENTS -->
+  <div class="lesson-section" id="moments">
+    <h2 class="section-title">4.2 Moments & Equilibrium</h2>
+
+    <div class="formula-box">
+      $$\text{Moment} = F \times d \qquad \text{(force × perpendicular distance from pivot)}$$
+      $$\text{Principle of moments: } \sum\text{clockwise moments} = \sum\text{anticlockwise moments}$$
+    </div>
+
+    <p>For a body in <strong>equilibrium</strong>, two conditions must both be satisfied: (1) the resultant force is zero (no net translation), and (2) the resultant moment about any point is zero (no net rotation).</p>
+
+    <div class="key-point">
+      <strong>Couple</strong>
+      A couple is a pair of equal, parallel, opposite forces whose lines of action do not coincide. A couple produces rotation but no translation. The moment of a couple $= F \times d$ where $d$ is the perpendicular distance between the forces. Unlike a single force, the moment of a couple is the same about any point.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.2a — Beam in equilibrium</div>
+      <div class="example-q">A uniform beam of weight 200 N and length 4.0 m is supported at its ends by two vertical forces $R_A$ and $R_B$. A 500 N load hangs 1.5 m from end A. Find $R_A$ and $R_B$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Take moments about A (eliminates $R_A$). Clockwise: $500\times1.5 + 200\times2.0 = 750 + 400 = 1150$ N m. Anticlockwise: $R_B\times4.0$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$R_B = 1150/4.0 = 287.5$ N.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Vertical equilibrium: $R_A + R_B = 500 + 200 = 700$ N. $R_A = 700 - 287.5 = 412.5$ N.<div class="step-comment">Check by taking moments about B: $R_A\times4.0 = 412.5\times4 = 1650$. Clockwise: $500\times2.5 + 200\times2.0 = 1250+400=1650$ ✓</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.3 MOTION & SUVAT -->
+  <div class="lesson-section" id="motion">
+    <h2 class="section-title">4.3 Motion & SUVAT Equations</h2>
+
+    <p>For <strong>uniform acceleration</strong> (constant $a$), the four SUVAT equations relate displacement $s$, initial velocity $u$, final velocity $v$, acceleration $a$, and time $t$:</p>
+
+    <div class="formula-box">
+      $$v = u + at$$
+      $$s = ut + \tfrac{1}{2}at^2$$
+      $$v^2 = u^2 + 2as$$
+      $$s = \tfrac{1}{2}(u+v)t$$
+    </div>
+
+    <p>Each equation contains 4 of the 5 quantities — identify which 3 you know and which you want to find, then choose the equation that doesn't involve the unknown you don't need.</p>
+
+    <div class="key-point">
+      <strong>Displacement-time and velocity-time graphs</strong>
+      On a displacement-time graph: gradient = velocity; a curve means changing velocity. On a velocity-time graph: gradient = acceleration; area under graph = displacement. A horizontal line means constant velocity ($a = 0$). These graph interpretations are tested constantly.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.3a — Braking car</div>
+      <div class="example-q">A car travelling at 28 m s⁻¹ brakes with deceleration 6.5 m s⁻². Find (a) the time to stop, (b) the stopping distance, (c) the distance covered in the first 2.0 s of braking.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $v = u + at$: $0 = 28 + (-6.5)t$. $t = 28/6.5 = 4.31$ s.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $v^2 = u^2 + 2as$: $0 = 784 + 2(-6.5)s$. $s = 784/13 = 60.3$ m.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $s = ut + \frac{1}{2}at^2 = 28(2.0) + \frac{1}{2}(-6.5)(4.0) = 56 - 13 = 43$ m.<div class="step-comment">Note: at $t=2$ s the car has decelerated from 28 to $28 - 6.5\times2 = 15$ m s⁻¹ — it's still moving, so using the full stopping distance would be wrong.</div></div></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Free fall and $g$</h3>
+    <p>In the absence of air resistance, all objects fall with the same acceleration $g = 9.81$ m s⁻² (use $g = 9.8$ m s⁻² unless told otherwise). This was demonstrated by Galileo and is a direct consequence of the equivalence of inertial and gravitational mass.</p>
+  </div>
+
+  <!-- 4.4 PROJECTILES -->
+  <div class="lesson-section" id="projectiles">
+    <h2 class="section-title">4.4 Projectile Motion</h2>
+
+    <p>A projectile moves under gravity alone (no air resistance). The horizontal and vertical motions are completely independent — treat them separately using SUVAT.</p>
+
+    <table>
+      <tr><th></th><th>Horizontal</th><th>Vertical</th></tr>
+      <tr><td>Acceleration</td><td>$0$ (constant velocity)</td><td>$g = 9.8$ m s⁻² downward</td></tr>
+      <tr><td>Initial velocity</td><td>$u_x = u\cos\theta$</td><td>$u_y = u\sin\theta$</td></tr>
+      <tr><td>Velocity at time $t$</td><td>$v_x = u_x$ (constant)</td><td>$v_y = u_y - gt$</td></tr>
+      <tr><td>Displacement at time $t$</td><td>$x = u_x t$</td><td>$y = u_y t - \frac{1}{2}gt^2$</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.4a — Ball launched at an angle</div>
+      <div class="example-q">A ball is launched at 18 m s⁻¹ at 40° above the horizontal from flat ground. Find (a) the maximum height, (b) the time of flight, (c) the range, (d) the speed and direction of the ball after 1.5 s.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$u_x = 18\cos40° = 13.79$ m s⁻¹. $u_y = 18\sin40° = 11.57$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(a) At max height, $v_y = 0$: $v_y^2 = u_y^2 - 2gh$. $h = u_y^2/(2g) = 11.57^2/19.6 = 6.83$ m.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(b) Time to max height: $t_{up} = u_y/g = 11.57/9.8 = 1.181$ s. Total time $= 2t_{up} = 2.36$ s (symmetric trajectory on flat ground).</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(c) Range $= u_x \times T = 13.79\times2.36 = 32.5$ m.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">(d) At $t=1.5$ s: $v_x = 13.79$ m s⁻¹. $v_y = 11.57 - 9.8\times1.5 = 11.57 - 14.7 = -3.13$ m s⁻¹ (downward). Speed $= \sqrt{13.79^2 + 3.13^2} = \sqrt{190.2+9.8} = \sqrt{200} = 14.1$ m s⁻¹. Direction: $\arctan(3.13/13.79) = 12.8°$ below horizontal.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.5 NEWTON'S LAWS -->
+  <div class="lesson-section" id="newtons-laws">
+    <h2 class="section-title">4.5 Newton's Laws of Motion</h2>
+
+    <div class="key-point">
+      <strong>Newton's Three Laws</strong>
+      <strong>1st Law:</strong> A body remains at rest or in uniform motion unless acted upon by a resultant force. <strong>2nd Law:</strong> The resultant force equals the rate of change of momentum: $F = ma$ (for constant mass). <strong>3rd Law:</strong> For every action there is an equal and opposite reaction — forces always occur in pairs on different objects, of the same type.
+    </div>
+
+    <div class="formula-box">
+      $$F = ma \qquad \text{(Newton's 2nd law, constant mass)}$$
+      $$W = mg \qquad \text{(weight)}$$
+    </div>
+
+    <p>On an object moving through a fluid, <strong>drag</strong> increases with speed. Eventually drag equals the driving force — <strong>terminal velocity</strong> is reached when $F_{\text{net}} = 0$ and acceleration $= 0$.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Newton's 3rd Law pairs — common misconceptions</strong>
+      The reaction pair must be: same type of force (both gravitational, both normal, etc.), equal magnitude, opposite direction, acting on different objects. "Weight down, normal force up" on a book on a table are NOT a Newton's 3rd pair — they act on the same object (the book). The 3rd law pair of the book's weight (Earth pulling book down) is the book pulling Earth up gravitationally.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.5a — Connected particles</div>
+      <div class="example-q">Two masses $m_1 = 4.0$ kg and $m_2 = 6.0$ kg are connected by a light inextensible string over a frictionless pulley (Atwood machine). Find (a) the acceleration, (b) the tension in the string.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Net force on system: $(m_2 - m_1)g = (6.0-4.0)\times9.8 = 19.6$ N. Total mass $= 10$ kg.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(a) $a = F/m = 19.6/10 = 1.96$ m s⁻².</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(b) For $m_1$ (accelerating up): $T - m_1 g = m_1 a$. $T = m_1(g+a) = 4.0\times(9.8+1.96) = 4.0\times11.76 = 47.0$ N.<div class="step-comment">Check with $m_2$ (accelerating down): $m_2 g - T = m_2 a$. $T = m_2(g-a) = 6.0\times7.84 = 47.0$ N ✓</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.6 WORK, ENERGY & POWER -->
+  <div class="lesson-section" id="work-energy">
+    <h2 class="section-title">4.6 Work, Energy & Power</h2>
+
+    <div class="formula-box">
+      $$W = Fs\cos\theta \qquad \text{(work done by force }F\text{ over displacement }s\text{)}$$
+      $$E_k = \tfrac{1}{2}mv^2 \qquad E_p = mgh$$
+      $$P = \frac{W}{t} = Fv \qquad \eta = \frac{P_{\text{out}}}{P_{\text{in}}} \times 100\%$$
+    </div>
+
+    <p>The <strong>work-energy theorem</strong>: the net work done on an object equals its change in kinetic energy: $W_{\text{net}} = \Delta E_k$. When no energy is lost to friction or other dissipative forces, total mechanical energy (KE + PE) is conserved.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.6a — Roller coaster</div>
+      <div class="example-q">A roller coaster car (mass 800 kg) starts from rest at the top of a 45 m drop. At the bottom, its speed is 26 m s⁻¹. (a) Find the energy lost to friction and air resistance. (b) Find the average resistive force over the 45 m drop.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\Delta E_p = mgh = 800\times9.8\times45 = 352800$ J. $E_k = \frac{1}{2}\times800\times26^2 = 270400$ J.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(a) Energy lost $= \Delta E_p - E_k = 352800 - 270400 = 82400$ J $\approx 82$ kJ.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(b) $W_{\text{friction}} = F\times s$. $F = 82400/45 = 1831$ N $\approx 1.8$ kN.<div class="step-comment">This is ~23% of the car's weight — significant but reasonable for a real rollercoaster with aerodynamic drag.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.7 MOMENTUM -->
+  <div class="lesson-section" id="momentum">
+    <h2 class="section-title">4.7 Momentum & Collisions</h2>
+
+    <div class="formula-box">
+      $$p = mv \qquad \text{(momentum, kg m s}^{-1}\text{)}$$
+      $$F = \frac{\Delta p}{\Delta t} \qquad \text{(Newton's 2nd law in full form)}$$
+      $$\text{Impulse} = F\Delta t = \Delta p$$
+    </div>
+
+    <p><strong>Conservation of momentum</strong>: in a closed system (no external forces), total momentum is constant. This applies to all collisions.</p>
+
+    <table>
+      <tr><th>Collision type</th><th>Momentum</th><th>Kinetic energy</th></tr>
+      <tr><td>Elastic</td><td>Conserved</td><td>Conserved</td></tr>
+      <tr><td>Inelastic</td><td>Conserved</td><td>Not conserved (lost to heat/deformation)</td></tr>
+      <tr><td>Perfectly inelastic</td><td>Conserved</td><td>Maximum loss — objects stick together</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.7a — Collision</div>
+      <div class="example-q">A 2.0 kg ball moving at 5.0 m s⁻¹ collides with a stationary 3.0 kg ball. After the collision, the 2.0 kg ball moves at 1.0 m s⁻¹ in the same direction. (a) Find the velocity of the 3.0 kg ball. (b) Determine whether the collision is elastic.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) Conservation of momentum: $2.0\times5.0 + 3.0\times0 = 2.0\times1.0 + 3.0\times v_2$. $10 = 2 + 3v_2$. $v_2 = 8/3 = 2.67$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) KE before: $\frac{1}{2}(2.0)(5.0^2) = 25$ J. KE after: $\frac{1}{2}(2.0)(1.0^2) + \frac{1}{2}(3.0)(2.67^2) = 1 + 10.7 = 11.7$ J.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">KE is not conserved (25 J ≠ 11.7 J) — the collision is <strong>inelastic</strong>. Energy lost $= 13.3$ J (converted to heat, sound, and deformation).</div></div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Impulse and safety</strong>
+      Impulse $= \Delta p = F\Delta t$. For a given change in momentum, increasing the collision time $\Delta t$ reduces the average force $F$. This is the physics behind crumple zones, airbags, crash mats, and padded clothing — all extend the time over which momentum changes to reduce peak forces on the body.
+    </div>
+  </div>
+
+  <!-- 4.8 MATERIALS -->
+  <div class="lesson-section" id="materials">
+    <h2 class="section-title">4.8 Properties of Materials</h2>
+
+    <h3 class="subsection">Hooke's Law & springs</h3>
+
+    <div class="formula-box">
+      $$F = kx \qquad \text{(Hooke's Law: force proportional to extension)}$$
+      $$E = \tfrac{1}{2}kx^2 = \tfrac{1}{2}Fx \qquad \text{(elastic strain energy)}$$
+    </div>
+
+    <p>Hooke's Law holds up to the <strong>limit of proportionality</strong>. Beyond this, the relationship becomes non-linear. The <strong>elastic limit</strong> is the point beyond which the material no longer returns to its original shape when the force is removed (permanent deformation occurs). The elastic limit is close to but slightly beyond the limit of proportionality.</p>
+
+    <h3 class="subsection">Stress, strain and the Young modulus</h3>
+
+    <div class="formula-box">
+      $$\sigma = \frac{F}{A} \quad \text{(stress, Pa)} \qquad \varepsilon = \frac{\Delta L}{L} \quad \text{(strain, dimensionless)}$$
+      $$E = \frac{\sigma}{\varepsilon} = \frac{FL}{A\Delta L} \quad \text{(Young modulus, Pa)}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Stress-strain curve features</strong>
+      The stress-strain curve for a ductile material (e.g. mild steel) shows: elastic region (straight line, Hooke's law applies), limit of proportionality, elastic limit, yield point (material suddenly stretches with little extra stress — upper and lower yield points), plastic region (large strain for small stress increase), ultimate tensile stress (UTS — maximum stress), fracture point. Brittle materials (glass, ceramics) break at or near the limit of proportionality with no plastic deformation.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 4.8a — Young modulus</div>
+      <div class="example-q">A steel wire of length 2.50 m and diameter 0.80 mm is suspended vertically and a 40 N weight is hung from it. The extension is 1.4 mm. Find the Young modulus of steel.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Cross-sectional area: $A = \pi(d/2)^2 = \pi(0.40\times10^{-3})^2 = 5.027\times10^{-7}$ m².</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Stress: $\sigma = F/A = 40/5.027\times10^{-7} = 7.96\times10^7$ Pa.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Strain: $\varepsilon = \Delta L/L = 1.4\times10^{-3}/2.50 = 5.6\times10^{-4}$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$E = \sigma/\varepsilon = 7.96\times10^7/5.6\times10^{-4} = 1.42\times10^{11}$ Pa $= 142$ GPa.<div class="step-comment">The accepted value for steel is ~200 GPa. The discrepancy suggests the wire may not be pure steel, or the measurement of extension has significant uncertainty.</div></div></div>
+      </div>
+    </div>
+
+    <table>
+      <tr><th>Material behaviour</th><th>Description</th><th>Example</th></tr>
+      <tr><td>Elastic</td><td>Returns to original shape after force removed</td><td>Rubber band, spring</td></tr>
+      <tr><td>Plastic</td><td>Permanently deformed — doesn't return to original shape</td><td>Clay, metal past yield point</td></tr>
+      <tr><td>Ductile</td><td>Can be drawn into wires — large plastic deformation before fracture</td><td>Copper, mild steel</td></tr>
+      <tr><td>Brittle</td><td>Fractures with little or no plastic deformation</td><td>Glass, ceramics, cast iron</td></tr>
+      <tr><td>Hard</td><td>Resistant to plastic deformation / scratching</td><td>Diamond, hardened steel</td></tr>
+      <tr><td>Stiff</td><td>High Young modulus — large stress for small strain</td><td>Steel, diamond</td></tr>
+    </table>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A stone is thrown horizontally at 12 m s⁻¹ from the top of a cliff 80 m high. Find (a) the time to reach the sea, (b) the horizontal distance from the base of the cliff, (c) the speed of the stone just before hitting the water.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Vertical: $s = \frac{1}{2}gt^2$. $t = \sqrt{2s/g} = \sqrt{160/9.8} = \sqrt{16.33} = 4.04$ s. (b) Horizontal: $x = u_x t = 12\times4.04 = 48.5$ m. (c) $v_y = gt = 9.8\times4.04 = 39.6$ m s⁻¹. Speed $= \sqrt{12^2+39.6^2} = \sqrt{144+1568} = \sqrt{1712} = 41.4$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A spring has spring constant 45 N m⁻¹. (a) Find the extension when a 3.6 N weight is hung from it. (b) Find the elastic potential energy stored. (c) Two identical such springs are connected in series and the same 3.6 N weight is hung. Find the total extension and energy stored in the combined system.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $x = F/k = 3.6/45 = 0.080$ m $= 8.0$ cm. (b) $E = \frac{1}{2}kx^2 = \frac{1}{2}(45)(0.08^2) = 0.144$ J. (c) Springs in series: effective $k = k/2 = 22.5$ N m⁻¹. Total extension $= F/k_{\rm eff} = 3.6/22.5 = 0.16$ m (doubles). Each spring extends 0.08 m. Total energy $= \frac{1}{2}k_{\rm eff}x_{\rm total}^2 = \frac{1}{2}(22.5)(0.16^2) = 0.288$ J (doubles — makes sense: same force over twice the distance).</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A car of mass 1200 kg accelerates from rest to 30 m s⁻¹ in 8.5 s. (a) Find the average net force. (b) The engine provides 6500 N of driving force. Find the average resistive force. (c) Find the useful output power at 30 m s⁻¹.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $a = \Delta v/t = 30/8.5 = 3.53$ m s⁻². $F_{\rm net} = ma = 1200\times3.53 = 4235$ N. (b) $F_{\rm resistance} = F_{\rm drive} - F_{\rm net} = 6500 - 4235 = 2265$ N. (c) $P = Fv = 6500\times30 = 195000$ W $= 195$ kW.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A uniform ladder of mass 25 kg and length 6.0 m leans against a smooth vertical wall, with its base on rough horizontal ground, making an angle of 65° with the horizontal. A painter of mass 72 kg stands 4.0 m up the ladder. Find (a) the normal reaction at the wall, (b) the normal reaction at the ground, (c) the minimum coefficient of friction at the ground needed to prevent slipping.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Let $R_W$ = reaction at wall (horizontal), $R_G$ = reaction at ground (vertical), $F_f$ = friction at ground (horizontal). (a) Take moments about base of ladder. Anticlockwise moments (wall): $R_W\times6.0\sin65° = R_W\times5.438$. Clockwise: ladder weight $25g\times3.0\cos65° = 245\times1.268 = 310.6$ N m; painter $72g\times4.0\cos65° = 705.6\times1.690 = 1192.5$... Let me redo. Moment arm for horizontal distances: $25g\times(3.0\cos65°) + 72g\times(4.0\cos65°) = 245\times1.2679 + 706\times1.6906 = 310.6 + 1193.5 = 1504$ N m. So $R_W = 1504/5.438 = 276.6$ N $\approx 277$ N. (b) Vertical equilibrium: $R_G = (25+72)g = 97\times9.8 = 950.6$ N. (c) Horizontal equilibrium: friction $= R_W = 277$ N. $\mu_{\min} = F_f/R_G = 277/950.6 = 0.291$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A metal wire of cross-sectional area $1.5\times10^{-7}$ m² and natural length 3.0 m is stretched. The stress-strain graph is linear up to stress $1.8\times10^8$ Pa with Young modulus $1.2\times10^{11}$ Pa. (a) Find the strain and extension at the limit of proportionality. (b) Find the elastic potential energy stored at this point. (c) Beyond the elastic limit, the wire extends by a further 0.05 m under constant stress. Describe the energy changes and what this indicates about the wire's behaviour.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\varepsilon = \sigma/E = 1.8\times10^8/1.2\times10^{11} = 1.5\times10^{-3}$. Extension $= \varepsilon L = 1.5\times10^{-3}\times3.0 = 4.5\times10^{-3}$ m $= 4.5$ mm. (b) Volume $= A\times L = 1.5\times10^{-7}\times3.0 = 4.5\times10^{-7}$ m³. Energy per unit volume $= \frac{1}{2}\sigma\varepsilon = \frac{1}{2}\times1.8\times10^8\times1.5\times10^{-3} = 1.35\times10^5$ J m⁻³. Total EPE $= 1.35\times10^5\times4.5\times10^{-7} = 0.0608$ J. Or: $E = \frac{1}{2}Fx = \frac{1}{2}(\sigma A)(\varepsilon L) = \frac{1}{2}(27)(4.5\times10^{-3}) = 0.0608$ J ✓. (c) The additional extension at constant stress indicates plastic deformation — the wire is stretching without any additional force (yield point behaviour). The work done by the applied force goes into permanently rearranging the crystal structure of the metal (dislocations moving), not into recoverable elastic energy. The wire will not return to its original length when unloaded — it has been permanently deformed.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A crash test dummy of mass 75 kg is travelling at 15 m s⁻¹ in a car that stops suddenly. (a) Calculate the momentum of the dummy before the crash. (b) Without a seatbelt, the dummy hits the dashboard and stops in 0.012 s. Calculate the average force on the dummy. (c) With a seatbelt and airbag, the stopping time increases to 0.18 s. Calculate the new average force and compare with part (b). (d) The seatbelt extends by 15 cm as it applies force to the dummy. Use the work-energy theorem to find the average force the seatbelt exerts. Compare this with your answer to (c) and comment. (e) Explain how crumple zones, in addition to seatbelts and airbags, further reduce injury in a collision.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $p = mv = 75\times15 = 1125$ kg m s⁻¹. (b) $F = \Delta p/\Delta t = 1125/0.012 = 93750$ N $\approx 94$ kN. (c) $F = 1125/0.18 = 6250$ N $\approx 6.3$ kN — about 15 times smaller than without safety equipment. (d) Work-energy theorem: $W = \Delta E_k$. The dummy decelerates from 15 m s⁻¹ to rest: $\Delta E_k = \frac{1}{2}\times75\times15^2 = 8437.5$ J. $F = W/d = 8437.5/0.15 = 56250$ N $\approx 56$ kN. This is much larger than the 6.3 kN from (c) — the discrepancy arises because (c) assumed the dummy was brought to rest by the seatbelt alone over 0.18 s; (d) calculates the average force over just the seatbelt extension of 15 cm. In reality, the airbag and seat back also absorb energy over greater distances, so the actual average seatbelt force is smaller. (e) Crumple zones increase the distance over which the car decelerates ($W = Fs$, so for same energy absorbed, larger $s$ means smaller $F$). They also increase the collision time, further reducing the average deceleration force. Crumple zones absorb kinetic energy through plastic deformation of the car body, so less energy is transmitted to the occupants.</div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="waves.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Waves</div></a>
+    <a href="electricity.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Electricity</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
