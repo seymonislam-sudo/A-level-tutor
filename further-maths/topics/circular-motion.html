@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circular Motion — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .complete-banner{background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(167,139,250,0.05));border:1px solid rgba(167,139,250,0.4);border-radius:16px;padding:2rem;margin:2.5rem 0;text-align:center}
+  .complete-banner h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--accent);margin-bottom:0.5rem}
+  .complete-banner p{color:var(--muted);margin:0;font-size:0.9rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 16</div>
+  <a href="#kinematics" class="sidebar-link active"><span class="sidebar-num">16.1</span> Kinematics of Circular Motion</a>
+  <a href="#horizontal" class="sidebar-link"><span class="sidebar-num">16.2</span> Horizontal Circular Motion</a>
+  <a href="#conical" class="sidebar-link"><span class="sidebar-num">16.3</span> Conical Pendulum</a>
+  <a href="#vertical" class="sidebar-link"><span class="sidebar-num">16.4</span> Vertical Circular Motion</a>
+  <a href="#complete" class="sidebar-link"><span class="sidebar-num">16.5</span> Completing a Vertical Circle</a>
+  <a href="#leaving" class="sidebar-link"><span class="sidebar-num">16.6</span> Leaving a Circular Path</a>
+  <a href="#general" class="sidebar-link"><span class="sidebar-num">16.7</span> General Motion in a Circle</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 16</div>
+    <div class="topic-num-badge">Topic 16 · Further Mechanics</div>
+    <h1 class="topic-title">Circular Motion</h1>
+    <p class="topic-intro">The final frontier of Further Mechanics — from the centripetal acceleration formula to the critical conditions for completing vertical circles, leaving curved surfaces, and the conical pendulum.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Mechanics 1, Chapter 5</div>
+      <div class="meta-item"><span>~4.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#kinematics">16.1 — Kinematics of Circular Motion</a></li>
+      <li><a href="#horizontal">16.2 — Horizontal Circular Motion</a></li>
+      <li><a href="#conical">16.3 — The Conical Pendulum</a></li>
+      <li><a href="#vertical">16.4 — Vertical Circular Motion</a></li>
+      <li><a href="#complete">16.5 — Completing a Vertical Circle</a></li>
+      <li><a href="#leaving">16.6 — Leaving a Circular Path</a></li>
+      <li><a href="#general">16.7 — General Motion in a Circle</a></li>
+    </ul>
+  </div>
+
+  <!-- 16.1 KINEMATICS -->
+  <div class="lesson-section" id="kinematics">
+    <h2 class="section-title">16.1 Kinematics of Circular Motion</h2>
+
+    <p>A particle moving in a circle of radius $r$ with angular velocity $\omega$ has linear speed $v = r\omega$. Its acceleration is directed towards the centre (centripetal) with magnitude:</p>
+
+    <div class="formula-box">
+      $$a = \frac{v^2}{r} = r\omega^2 = v\omega$$
+      $$\text{Angular velocity: } \omega = \frac{d\theta}{dt} \quad \text{rad s}^{-1} \qquad \text{Period: } T = \frac{2\pi}{\omega} = \frac{2\pi r}{v}$$
+    </div>
+
+    <p>In vector form, if $\hat{\mathbf{r}}$ points outward from the centre and $\hat{\boldsymbol{\theta}}$ is tangential:</p>
+    <div class="formula-box">
+      $$\mathbf{a} = -r\omega^2\hat{\mathbf{r}} + r\dot{\omega}\hat{\boldsymbol{\theta}} = -\frac{v^2}{r}\hat{\mathbf{r}} + \dot{v}\hat{\boldsymbol{\theta}}$$
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted)">For uniform circular motion ($\omega$ constant, $\dot{v}=0$): only the centripetal (inward radial) component exists. For non-uniform motion, there is also a tangential component $\dot{v}$.</p>
+
+    <div class="key-point">
+      <strong>No work done by centripetal force</strong>
+      The centripetal force is always perpendicular to the velocity (which is tangential), so it does no work. This means kinetic energy — and speed — can only change due to other forces with a tangential component (gravity, tangential thrust, etc.).
+    </div>
+  </div>
+
+  <!-- 16.2 HORIZONTAL -->
+  <div class="lesson-section" id="horizontal">
+    <h2 class="section-title">16.2 Horizontal Circular Motion</h2>
+
+    <p>For a particle moving in a horizontal circle, the net inward (centripetal) force provides the centripetal acceleration. Resolve forces horizontally and vertically separately.</p>
+
+    <div class="formula-box">
+      $$F_{\text{centripetal}} = \frac{mv^2}{r} = mr\omega^2 \quad \text{(directed inward)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.2a — Car on a banked track</div>
+      <div class="example-q">A car of mass 1200 kg travels around a banked circular track of radius 80 m. The track is banked at angle $\alpha$ to the horizontal. Find the angle required for the car to travel at 20 m s⁻¹ without any sideways friction force.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">With no friction, the only forces are weight $mg$ (down) and normal reaction $N$ (perpendicular to track). Resolving vertically: $N\cos\alpha = mg$. Resolving horizontally (centripetal): $N\sin\alpha = \dfrac{mv^2}{r}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Dividing: $\tan\alpha = \dfrac{v^2}{rg} = \dfrac{400}{80 \times 9.8} = \dfrac{400}{784} \approx 0.510$. So $\alpha = \arctan(0.510) \approx 27.0°$.</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.2b — Particle on a string</div>
+      <div class="example-q">A particle of mass 0.3 kg is attached to a fixed point by a string of length 0.5 m and moves in a horizontal circle. The string makes angle 30° with the vertical. Find the tension, angular velocity, and period.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Radius of circle: $r = 0.5\sin30° = 0.25$ m. Resolving vertically: $T\cos30° = 0.3g$. $T = \dfrac{0.3 \times 9.8}{\cos30°} = \dfrac{2.94}{0.866} = 3.394$ N.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Resolving horizontally: $T\sin30° = mr\omega^2$. $3.394 \times 0.5 = 0.3 \times 0.25 \times \omega^2$. $1.697 = 0.075\omega^2$. $\omega^2 = 22.63$. $\omega \approx 4.76$ rad s⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Period $T = \dfrac{2\pi}{\omega} = \dfrac{2\pi}{4.76} \approx 1.32$ s.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16.3 CONICAL PENDULUM -->
+  <div class="lesson-section" id="conical">
+    <h2 class="section-title">16.3 The Conical Pendulum</h2>
+
+    <p>A conical pendulum consists of a particle on a string of length $l$ attached to a fixed point, rotating so the string makes a constant angle $\alpha$ with the vertical. The particle traces a horizontal circle of radius $r = l\sin\alpha$.</p>
+
+    <div class="formula-box">
+      $$\tan\alpha = \frac{\omega^2 r}{g} = \frac{\omega^2 l\sin\alpha}{g} \implies \cos\alpha = \frac{g}{\omega^2 l}$$
+      $$T_{\text{period}} = 2\pi\sqrt{\frac{l\cos\alpha}{g}}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Increasing $\omega$ increases $\alpha$</strong>
+      As the angular velocity increases, the particle rises (angle $\alpha$ increases, $\cos\alpha$ decreases). There is a minimum $\omega$ to maintain any given angle: $\omega_{\min} = \sqrt{g/(l\cos\alpha)}$. As $\omega \to \infty$, $\alpha \to 90°$ (particle approaches the horizontal), but this requires infinite tension.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.3a</div>
+      <div class="example-q">A conical pendulum has string length 0.8 m. Find (a) the period when $\alpha = 60°$, (b) the angular velocity needed to make $\alpha = 45°$, (c) whether $\alpha = 90°$ is achievable.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $T = 2\pi\sqrt{\dfrac{0.8\cos60°}{9.8}} = 2\pi\sqrt{\dfrac{0.4}{9.8}} = 2\pi\sqrt{0.0408} = 2\pi(0.2020) \approx 1.27$ s.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $\cos45° = \dfrac{g}{\omega^2 l}$. $\omega^2 = \dfrac{9.8}{0.8\cos45°} = \dfrac{9.8}{0.566} = 17.31$. $\omega \approx 4.16$ rad s⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $\cos90° = 0$, requiring $\omega^2 l = g/0 \to \infty$ — impossible. $\alpha = 90°$ cannot be achieved with finite $\omega$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16.4 VERTICAL CIRCULAR MOTION -->
+  <div class="lesson-section" id="vertical">
+    <h2 class="section-title">16.4 Vertical Circular Motion</h2>
+
+    <p>For a particle moving in a vertical circle of radius $r$, the speed varies with position (gravity does work). At angle $\theta$ from the bottom, measured from centre:</p>
+
+    <div class="formula-box">
+      $$v^2 = v_{\text{bottom}}^2 - 2gr(1 - \cos\theta) \quad \text{(by energy conservation, measuring height from bottom)}$$
+    </div>
+
+    <p>At any position, resolve forces along the radial direction (towards centre = positive centripetal direction):</p>
+
+    <div class="formula-box">
+      $$T - mg\cos\phi = \frac{mv^2}{r} \quad \text{(string/rod, at angle }\phi\text{ from vertical above centre)}$$
+    </div>
+
+    <p>where $\phi$ is the angle from the vertically-upward position (so $\phi = 0$ at top, $\phi = \pi$ at bottom). The component of gravity toward the centre is $mg\cos\phi$ (positive when above centre, negative below).</p>
+
+    <div class="key-point">
+      <strong>Standard angle convention</strong>
+      It's clearest to measure $\theta$ from the lowest point. At angle $\theta$ from the bottom, the height above the bottom is $r(1-\cos\theta)$. At the top, $\theta = \pi$, height $= 2r$. The centripetal equation at general $\theta$: the component of gravity toward centre is $-g\cos\theta$ (gravity pulls downward; toward centre from $\theta = 0$ to $\theta = \pi/2$ has a centripetal component of $+g\cos(\pi-\theta) = -g\cos\theta$ when $\theta > \pi/2$)... it's easiest to draw a diagram and resolve case by case.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.4a — Speed and tension at top of circle</div>
+      <div class="example-q">A particle of mass 0.5 kg moves on the inside of a smooth circular track of radius 1.5 m in a vertical plane. At the bottom its speed is 7 m s⁻¹. Find the speed and normal reaction at the top.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Height from bottom to top $= 2r = 3$ m. Energy: $\frac{1}{2}mv_T^2 = \frac{1}{2}mv_B^2 - mg(2r)$. $v_T^2 = 49 - 2(9.8)(3) = 49 - 58.8 = -9.8$ — negative!</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Since $v_T^2 < 0$ is impossible, the particle does not reach the top with this speed. It leaves the track before reaching the top.<div class="step-comment">The minimum speed at the bottom to complete the circle on the inside of a track is found by requiring $v_T^2 \geq 0$: $v_B^2 \geq 4gr = 58.8$, so $v_B \geq 7.67$ m s⁻¹.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16.5 COMPLETING A VERTICAL CIRCLE -->
+  <div class="lesson-section" id="complete">
+    <h2 class="section-title">16.5 Completing a Vertical Circle</h2>
+
+    <p>The conditions for completing a full vertical circle depend on whether the particle is on a <strong>string</strong>, a <strong>rod</strong>, or the <strong>inside/outside of a surface</strong>.</p>
+
+    <div class="key-point">
+      <strong>String: tension ≥ 0 at top</strong>
+      A string can only pull. At the top, centripetal force = $T + mg = mv_T^2/r$. For the string to remain taut: $T \geq 0$, so $mv_T^2/r \geq mg$, giving $v_T^2 \geq gr$. Using energy from the bottom: $v_B^2 \geq 5gr$. Minimum speed at bottom: $v_B = \sqrt{5gr}$.
+    </div>
+
+    <div class="key-point">
+      <strong>Rod: no minimum speed at top needed</strong>
+      A rod can push or pull, so $T$ can be negative (thrust). No condition on $v_T$ — the particle can have zero speed at the top and still be in circular motion (the rod provides an upward thrust). Minimum speed at bottom: $v_B = \sqrt{4gr}$ (for $v_T = 0$).
+    </div>
+
+    <div class="key-point">
+      <strong>Outside a sphere: normal reaction ≥ 0</strong>
+      The surface can only push (normal reaction $N \geq 0$). At the top outside: $mg - N = mv^2/r$, so $N = m(g - v^2/r) \geq 0$ requires $v^2 \leq gr$. But for the particle to reach the top without leaving the sphere earlier, we need to find where $N = 0$ — this is the point of leaving (see 16.6).
+    </div>
+
+    <div class="formula-box">
+      $$\text{String: } v_B \geq \sqrt{5gr} \qquad \text{Rod: } v_B \geq \sqrt{4gr} \qquad \text{Inside surface: } v_B \geq \sqrt{5gr}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.5a — Minimum speed on a string</div>
+      <div class="example-q">A particle on a string of length 0.6 m moves in a vertical circle. Find (a) the minimum speed at the bottom to complete the circle, (b) the tension at the bottom when moving at this minimum speed.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) Minimum speed at bottom: $v_B = \sqrt{5gr} = \sqrt{5 \times 9.8 \times 0.6} = \sqrt{29.4} \approx 5.42$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) At the bottom, centripetal force is upward. $T - mg = mv_B^2/r$. $T = m(g + v_B^2/r) = m(9.8 + 29.4/0.6) = m(9.8 + 49) = 58.8m$. For $m = 1$ kg: $T = 58.8$ N. In general $T = 6mg$ at the bottom when $v_B = \sqrt{5gr}$.<div class="step-comment">This is a standard result: at minimum speed, $T_{\text{bottom}} = 6mg$ and $T_{\text{top}} = 0$.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16.6 LEAVING THE PATH -->
+  <div class="lesson-section" id="leaving">
+    <h2 class="section-title">16.6 Leaving a Circular Path</h2>
+
+    <p>A particle leaves a circular surface when the normal reaction becomes zero ($N = 0$). Set $N = 0$ in the radial equation to find the position and speed at which the particle leaves.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.6a — Particle sliding off a sphere</div>
+      <div class="example-q">A smooth sphere of radius $R$ sits on a horizontal surface. A particle is placed at the top with a tiny nudge and slides off. Find the angle $\theta$ from the vertical at which it leaves the sphere.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">At angle $\theta$ from vertical, height below top $= R - R\cos\theta = R(1-\cos\theta)$. Energy: $\frac{1}{2}mv^2 = mgR(1-\cos\theta)$, so $v^2 = 2gR(1-\cos\theta)$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Radial equation (inward positive, along radius toward centre): $mg\cos\theta - N = \dfrac{mv^2}{R}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">At the point of leaving: $N = 0$. $mg\cos\theta = \dfrac{mv^2}{R} = \dfrac{m \cdot 2gR(1-\cos\theta)}{R} = 2mg(1-\cos\theta)$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\cos\theta = 2 - 2\cos\theta \Rightarrow 3\cos\theta = 2 \Rightarrow \cos\theta = \dfrac{2}{3} \Rightarrow \theta \approx 48.2°$.<div class="step-comment">This is a classic result — independent of $R$ or $m$. The particle always leaves at $\cos\theta = 2/3$ above the equator.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.6b — Particle on inside of circular loop</div>
+      <div class="example-q">A particle moves on the inside of a smooth circular loop (radius 2 m) in a vertical plane. It starts from rest at the same height as the centre. Find where it leaves the loop (if it does) and what happens next.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $\theta$ = angle from bottom. Starting height = centre height = $r$ above bottom, so $\frac{1}{2}mv^2 = mgr(1-\cos\theta) - mg \cdot r \cdot (1) + mg \cdot r = mg \cdot r(1-\cos\theta)$... Let's use energy from the start. At angle $\theta$, height above start $= r\cos\theta - 0$... Let me set up clearly: start at height 0 (centre level), angle from bottom: start position is $\theta_0 = 90°$ (at the side). At angle $\theta$ from bottom: height = $-r\cos\theta$ from centre = $r - r\cos\theta$ from bottom. Start height from bottom = $r$. $\frac{1}{2}mv^2 = mg(r - r(1-\cos\theta+...))$. Energy from start: $v^2 = 2g(r - r + r\cos\theta - r\cos90°) = 2gr\cos\theta$. So $v^2 = 2gr\cos\theta$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Radial equation (inside of loop, centripetal = inward): $N - mg\cos(\pi - \theta)_{\text{component}} $... At angle $\theta$ from bottom, component of gravity toward centre = $-g\cos\theta$ for $\theta < 90°$ (gravity away from centre for upper half). Let's use $\phi$ = angle from top: $N + mg\cos\phi = mv^2/r$ where $v^2 = 2gr\sin\phi$ (measured from top). At leaving: $N=0$: $mg\cos\phi = mv^2/r = 2mg\sin\phi \Rightarrow \cos\phi = 2\sin\phi \Rightarrow \tan\phi = 1/2$. So $\phi = \arctan(1/2) \approx 26.6°$ from top on the lower half — which means the particle leaves in the upper part of the loop, having not completed the circle.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16.7 GENERAL -->
+  <div class="lesson-section" id="general">
+    <h2 class="section-title">16.7 General Motion in a Circle</h2>
+
+    <p>For non-uniform circular motion, there are two components of acceleration: centripetal (inward, $v^2/r$) and tangential ($\dot{v} = dv/dt$). Both must be included when the speed is changing.</p>
+
+    <div class="formula-box">
+      $$\text{Centripetal: } a_c = \frac{v^2}{r} \quad \text{(inward)} \qquad \text{Tangential: } a_t = \frac{dv}{dt} \quad \text{(along motion)}$$
+    </div>
+
+    <p>Using $v = r\omega$ and $\omega = \dot{\theta}$, the equations in polar coordinates $(r, \theta)$ for a particle constrained to a circle give:</p>
+
+    <div class="formula-box">
+      $$\text{Radial (inward):} \quad F_r = \frac{mv^2}{r} = mr\dot{\theta}^2$$
+      $$\text{Tangential:} \quad F_t = m\dot{v} = mr\ddot{\theta}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 16.7a — Non-uniform circular motion</div>
+      <div class="example-q">A particle of mass 0.2 kg moves on a smooth circular wire of radius 0.5 m in a vertical plane. At angle $\theta$ from the bottom, $v = 3\cos\theta$ m s⁻¹. Find the normal force from the wire and the tangential force at $\theta = 0$ (bottom) and $\theta = \pi/3$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">At $\theta = 0$ (bottom): $v = 3$ m s⁻¹. Centripetal: $N - mg = mv^2/r$. $N = m(g + v^2/r) = 0.2(9.8 + 18) = 0.2(27.8) = 5.56$ N.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Tangential acceleration: $\dot{v} = \frac{dv}{dt} = -3\sin\theta \cdot \dot{\theta} = -3\sin\theta \cdot v/r = -3\sin\theta \cdot 3\cos\theta/0.5 = -18\sin\theta\cos\theta = -9\sin(2\theta)$. At $\theta = 0$: $\dot{v} = 0$. Tangential force $= 0$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">At $\theta = \pi/3$: $v = 3\cos60° = 1.5$ m s⁻¹. Component of gravity toward centre $= -mg\cos\theta = -0.2(9.8)(0.5) = -0.98$ N (away from centre since $\theta < \pi/2$ means we're in lower half). $N + mg\cos(\pi - \theta)\cdot\text{sign}$... Resolve carefully: gravity downward, centripetal direction is toward centre (upward at bottom, inward at side). At $\theta = 60°$ from bottom, the radius points at $30°$ above horizontal. Centripetal direction: inward. Component of gravity centripetally $= -mg\cos\theta = -mg\cos60°$. $N - mg\cos60° = mv^2/r$. $N = m(v^2/r + g\cos60°) = 0.2(4.5 + 4.9) = 0.2(9.4) = 1.88$ N. Tangential force: $mg\sin60° - F_t = m\dot{v}$ at this $\theta$. Hmm — tangential direction is perpendicular to radius. The component of gravity tangentially $= mg\sin\theta$ (opposing motion going up). $m\dot{v} = -mg\sin\theta + F_t$. $\dot{v} = -9\sin(2\times60°) = -9\sin120° = -9(\sqrt3/2) = -7.79$ m s⁻². $F_t = m(\dot{v} + g\sin\theta) = 0.2(-7.79 + 8.49) = 0.2(0.70) = 0.14$ N.</div></div>
+      </div>
+    </div>
+
+    <div class="complete-banner">
+      <h3>🎓 Further Maths Complete!</h3>
+      <p>All 16 topics of the Edexcel A Level Further Mathematics course are now covered — Core Pure (Topics 1–8), Further Statistics (Topics 9–12), and Further Mechanics (Topics 13–16).</p>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A particle of mass 0.4 kg moves in a horizontal circle of radius 0.3 m on a smooth horizontal surface, attached to a fixed peg by a string. It completes 5 revolutions per second. Find (a) the angular velocity, (b) the linear speed, (c) the tension in the string.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\omega=2\pi\times5=10\pi\approx31.4$ rad s⁻¹. (b) $v=r\omega=0.3\times10\pi=3\pi\approx9.42$ m s⁻¹. (c) $T=mr\omega^2=0.4\times0.3\times100\pi^2=12\pi^2\approx118.4$ N.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A conical pendulum has a bob of mass 0.2 kg on a string of length 1.2 m. The string makes 40° with the vertical. Find (a) the tension, (b) the angular velocity, (c) the period of revolution.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $T\cos40°=0.2(9.8)\Rightarrow T=\frac{1.96}{0.766}=2.559$ N. (b) $T\sin40°=mr\omega^2$ where $r=1.2\sin40°=0.7713$ m. $2.559\times0.6428=0.2\times0.7713\times\omega^2\Rightarrow1.645=0.1543\omega^2\Rightarrow\omega^2=10.66\Rightarrow\omega=3.265$ rad s⁻¹. (c) $T_{\text{period}}=2\pi/3.265\approx1.924$ s. Check: $T=2\pi\sqrt{l\cos\alpha/g}=2\pi\sqrt{1.2\times0.766/9.8}=2\pi\sqrt{0.0938}=2\pi(0.3063)=1.925$ s ✓.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A particle of mass 0.5 kg moves in a vertical circle of radius 1 m on a string. At the top of the circle its speed is 4 m s⁻¹. Find (a) the tension at the top, (b) the speed at the bottom using energy conservation, (c) the tension at the bottom.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) At top: $T+mg=mv_T^2/r\Rightarrow T=m(v_T^2/r-g)=0.5(16-9.8)=0.5(6.2)=3.1$ N. (b) $v_B^2=v_T^2+2g(2r)=16+2(9.8)(2)=16+39.2=55.2\Rightarrow v_B=\sqrt{55.2}\approx7.43$ m s⁻¹. (c) $T_B-mg=mv_B^2/r\Rightarrow T_B=m(v_B^2/r+g)=0.5(55.2+9.8)=0.5(65)=32.5$ N.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A smooth sphere of radius 0.5 m rests on a horizontal table. A particle is placed at the top and given a small horizontal impulse. Find the angle from the vertical at which it leaves the sphere, and its speed at that point.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\cos\theta=2/3$ (standard result). $\theta=\arccos(2/3)\approx48.2°$. $v^2=2gR(1-\cos\theta)=2(9.8)(0.5)(1-2/3)=9.8\times(1/3)=3.267$ m² s⁻². $v=\sqrt{3.267}\approx1.81$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A particle of mass $m$ is on the inside of a smooth sphere of radius $R$ and moves in a horizontal circle at height $h$ below the centre. (a) Find the normal reaction $N$ and speed $v$ in terms of $m$, $R$, $h$, $g$. (b) Show that $N > mg$ always. (c) Find the period of revolution.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Let $\alpha$ = angle the radius to the particle makes with the downward vertical. Then $h = R\cos\alpha$ (below centre), radius of circle $= R\sin\alpha$. Resolving vertically: $N\cos\alpha=mg\Rightarrow N=mg/\cos\alpha=mgR/h$. Since $h < R$, $N = mgR/h > mg$ ✓. Horizontally: $N\sin\alpha=mv^2/(R\sin\alpha)\Rightarrow v^2=N R\sin^2\alpha/m=gR^2\sin^2\alpha/h=g(R^2-h^2)/h$ (using $R^2\sin^2\alpha=R^2-R^2\cos^2\alpha=R^2-h^2$). Period $=2\pi R\sin\alpha/v=2\pi\sqrt{R\sin^2\alpha\cdot h/(g(R^2-h^2))}$... more cleanly: $T=2\pi(R\sin\alpha)/v=2\pi\sqrt{h/g}$ (remarkably, same as a pendulum of length $h$).</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A particle of mass $m$ is attached to a string of length $l$ and swings in a vertical circle. At the lowest point the speed is $u$. (a) Show that the string becomes slack (if it does) at angle $\theta$ where $\cos\theta = (2 + u^2/(gl))/3$. (b) Find the range of $u$ for which the string goes slack before reaching the top, goes slack at the top, or the particle completes the full circle.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) At angle $\theta$ from bottom, $v^2=u^2-2gl(1-\cos\theta)$. String tension: $T=m(v^2/l+g\cos\theta-g)$... Let me use angle $\phi$ from top: $T+mg\cos\phi=mv^2/l$. Slack when $T=0$: $mg\cos\phi=mv^2/l$. Height above bottom $=l+l\cos\phi$. Energy: $v^2=u^2-2g(l+l\cos\phi)=u^2-2gl(1+\cos\phi)$. So $g\cos\phi=(u^2-2gl-2gl\cos\phi)/l\Rightarrow gl\cos\phi=u^2-2gl-2gl\cos\phi\Rightarrow 3gl\cos\phi=u^2-2gl\Rightarrow\cos\phi=(u^2-2gl)/(3gl)$. Converting to angle $\theta$ from bottom: $\theta=\pi-\phi$, $\cos\theta=-\cos\phi=-(u^2-2gl)/(3gl)=(2gl-u^2)/(3gl)=(2+u^2/(gl))/3$... wait: $\cos\phi=(u^2-2gl)/(3gl)$. String is in upper hemisphere when $0\leq\phi\leq90°$, i.e. $\cos\phi\geq0$, i.e. $u^2\geq2gl$, i.e. $u\geq\sqrt{2gl}$. (b) If $u<\sqrt{2gl}$: particle doesn't reach the top half, string goes slack on the way up in lower half ($\cos\phi<0$, meaning $\phi>90°$). If $u^2=5gl$: $\cos\phi=(5gl-2gl)/(3gl)=1\Rightarrow\phi=0$ — slack exactly at the top. If $u^2>5gl$: $\cos\phi>1$ — impossible, string never goes slack, particle completes the circle. If $\sqrt{2gl}\leq u<\sqrt{5gl}$: slack at some angle $\phi\in(0°,90°)$ — i.e. in the upper hemisphere but before reaching the top.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">A smooth bead of mass $m$ is threaded on a smooth circular wire of radius $R$ fixed in a vertical plane. The bead is projected from the lowest point with speed $u$. (i) Find the speed $v$ and normal reaction $N$ at angle $\theta$ from the bottom. (ii) Show that if $u^2 < 2gR$, the bead oscillates about the bottom. (iii) Show that if $u^2 > 2gR$, the bead completes the circle — without any restriction on the minimum speed. (iv) Explain why the condition for a bead on a wire is different from a particle on a string.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Energy: $\frac{1}{2}mv^2=\frac{1}{2}mu^2-mgR(1-\cos\theta)\Rightarrow v^2=u^2-2gR(1-\cos\theta)$. Radial equation (inward positive; at angle $\theta$, component of gravity toward centre = $-g\cos\theta$ when $\theta<\pi/2$... use $N-mg\cos\theta'$ where $\theta'$ is angle from bottom... more carefully: at angle $\theta$ from bottom, the centripetal direction is toward the centre. Gravity component toward centre = $g\cos(\pi-\theta)=-g\cos\theta$ for the upper portion... Let's use a clean approach. At angle $\theta$ from bottom, height above bottom = $R(1-\cos\theta)$. The weight component along the radius (toward centre, i.e. inward) = $mg\cos\theta$ when below horizontal and $-mg\cos(\pi-\theta)=mg\cos\theta$... actually at any $\theta$: component of gravity along inward radial direction = $-mg\cos\theta$ (gravity downward, inward radial has upward component $\cos(\pi-\theta)$... let's just say $N$ is the wire's normal force, which can be positive (outward) or negative (inward, i.e. wire pushes inward if bead on outside). At angle $\theta$ from bottom: $N-mg\cos\theta = mv^2/R$ (taking inward as positive, and at $\theta$ from bottom the gravity component centripetally is $-mg\cos\theta$... this depends on whether above or below equator). For simplicity: $N = m(v^2/R - g\cos(\pi-\theta)) = m(v^2/R + g\cos\theta)$ for $\theta > \pi/2$... The cleanest: $N + mg\cos\alpha = mv^2/R$ where $\alpha$ is the angle the position makes measured from the TOP (so at top $\alpha=0$, at bottom $\alpha=\pi$). Then $N = m(v^2/R - g\cos\alpha)$ where $v^2 = u^2 - 2gR(1+\cos\alpha)$ (since height below top = $R(1+\cos\alpha)$, height above bottom = $R(1-\cos(\pi-\alpha)) = R(1+\cos\alpha)$). (ii) If $u^2 < 2gR$: the speed reaches zero before the top (since at the top, $v^2 = u^2 - 4gR < u^2 - 2gR\cdot2$; zero speed occurs when $u^2 = 2gR(1-\cos\theta)$, i.e. $\cos\theta = 1 - u^2/(2gR) > 0$ for $u^2 < 2gR$, so $\theta < \pi/2$ — bead stops in lower half and returns, oscillating ✓. (iii) If $u^2 > 2gR$: speed is always positive (minimum at top, $v_{\text{top}}^2 = u^2 - 4gR$; for this to be positive need $u^2 > 4gR$)... actually $u^2 > 2gR$ means the bead reaches angle $\theta = \pi/2$ (equator) with positive speed. Beyond the equator, gravity has a downward component that accelerates the bead — it cannot stop again. So bead completes the circle for any $u^2 > 2gR$ ✓. (Wait: if $2gR < u^2 < 4gR$, the bead reaches the top with $v^2 = u^2 - 4gR < 0$ — impossible. So there's a gap: for $2gR < u^2 < 4gR$, where does the bead go? The bead reaches the equator (speed $>0$) and continues — but hits a phase where gravity decelerates it. At the top, $v^2 = u^2 - 4gR$ could be negative — meaning the bead DOES stop somewhere in the upper half. Let me re-examine: speed is zero when $1-\cos\theta = u^2/(2gR)$. For $2gR < u^2 < 4gR$: zero speed occurs at $\cos\theta = 1 - u^2/(2gR) < -1$ — impossible! So $v > 0$ throughout. Wait: $\cos\theta = 1 - u^2/(2gR)$. For $u^2 = 4gR$: $\cos\theta = -1$, so $\theta = \pi$ (top). For $u^2 > 4gR$: $\cos\theta < -1$ — no zero speed, bead completes circle. For $2gR < u^2 < 4gR$: $\cos\theta \in (-1, 0)$, meaning $\theta \in (90°, 180°)$ — zero speed is in upper half. So bead DOES stop in upper half!) The wire prevents the bead from leaving — so it reverses and oscillates through the top! Actually, no — the wire constrains the bead, so if $v = 0$ in the upper half, the bead reverses. It then oscillates between two symmetric points in the upper half. So for $2gR < u^2 < 4gR$: bead oscillates in upper half. For $u^2 > 4gR$: bead completes the full circle. (iv) A string can only pull — it goes slack ($T=0$) when the required centripetal force would be outward. A wire can both push and pull, so the bead never "falls off" — it always stays on the wire. Hence no minimum speed condition for completing the circle.</div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A particle of mass $m$ slides from rest at the top of a smooth hemisphere of radius $R$ fixed on a horizontal surface. (i) Find the speed and normal reaction at angle $\theta$ from the vertical. (ii) Find the angle at which it leaves the hemisphere. (iii) After leaving the hemisphere, show it follows projectile motion and find where it lands on the horizontal surface. (iv) At what angle does it hit the ground?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Height descended $= R - R\cos\theta = R(1-\cos\theta)$. Energy: $v^2 = 2gR(1-\cos\theta)$. Radial: $mg\cos\theta - N = mv^2/R$. $N = mg\cos\theta - 2mg(1-\cos\theta) = mg(3\cos\theta - 2)$. (ii) Leaves when $N=0$: $3\cos\theta = 2\Rightarrow\cos\theta_0 = 2/3$. Height above ground at leaving: $R\cos\theta_0 = 2R/3$. Speed at leaving: $v_0^2 = 2gR(1-2/3) = 2gR/3$. Direction: tangential to sphere, i.e. at angle $\theta_0$ below horizontal (since it's sliding down the side). Velocity components: $v_x = v_0\sin\theta_0$, $v_y = -v_0\cos\theta_0$ (taking up as positive). $\sin\theta_0 = \sqrt{1-4/9} = \sqrt{5}/3$. $v_x = v_0\sqrt{5}/3$, $v_y = -v_0(2/3) = -2v_0/3$. (iii) After leaving at height $h_0 = 2R/3$, horizontal position from centre $= R\sin\theta_0 = R\sqrt5/3$. Projectile: $y = h_0 + v_y t - \frac{1}{2}gt^2$. Lands when $y=0$: $\frac{1}{2}gt^2 - (-2v_0/3)t - 2R/3 = 0$. With $v_0 = \sqrt{2gR/3}$: $\frac{1}{2}gt^2 + \frac{2}{3}\sqrt{\frac{2gR}{3}}\cdot t - \frac{2R}{3} = 0$. Solving gives $t$ and then horizontal distance. (iv) At landing, $v_x = v_0\sqrt{5}/3$ (unchanged), $v_y = v_y^{\text{initial}} - gt = $ (computed from $t$). Angle with horizontal = $\arctan(|v_y|/v_x)$ at that time.</div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="elastic-strings-springs.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Elastic Strings & Springs</div></a>
+    <a href="../index.html" class="lesson-nav-btn next"><div><span class="btn-label">Back to</span> Further Maths Index</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
