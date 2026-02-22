@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Differential Equations — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 07</div>
+  <a href="#first-order" class="sidebar-link active"><span class="sidebar-num">7.1</span> First-Order: Separable</a>
+  <a href="#integrating-factor" class="sidebar-link"><span class="sidebar-num">7.2</span> First-Order: Integrating Factor</a>
+  <a href="#second-order-homo" class="sidebar-link"><span class="sidebar-num">7.3</span> Second-Order: Homogeneous</a>
+  <a href="#auxiliary" class="sidebar-link"><span class="sidebar-num">7.4</span> The Auxiliary Equation</a>
+  <a href="#particular" class="sidebar-link"><span class="sidebar-num">7.5</span> Particular Integrals</a>
+  <a href="#general" class="sidebar-link"><span class="sidebar-num">7.6</span> General Solution & Boundary Conditions</a>
+  <a href="#substitution" class="sidebar-link"><span class="sidebar-num">7.7</span> Substitution Methods</a>
+  <a href="#systems" class="sidebar-link"><span class="sidebar-num">7.8</span> Coupled Differential Equations</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 07</div>
+    <div class="topic-num-badge">Topic 07 · Core Pure</div>
+    <h1 class="topic-title">Differential Equations</h1>
+    <p class="topic-intro">From simple separable equations to second-order linear ODEs with constant coefficients. The mathematical language of physics, engineering, and everything that changes over time.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 2, Chapters 4–5</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#first-order">7.1 — First-Order: Separable</a></li>
+      <li><a href="#integrating-factor">7.2 — First-Order: Integrating Factor</a></li>
+      <li><a href="#second-order-homo">7.3 — Second-Order: Homogeneous</a></li>
+      <li><a href="#auxiliary">7.4 — The Auxiliary Equation</a></li>
+      <li><a href="#particular">7.5 — Particular Integrals</a></li>
+      <li><a href="#general">7.6 — General Solution & Boundary Conditions</a></li>
+      <li><a href="#substitution">7.7 — Substitution Methods</a></li>
+      <li><a href="#systems">7.8 — Coupled Differential Equations</a></li>
+    </ul>
+  </div>
+
+  <!-- 7.1 SEPARABLE -->
+  <div class="lesson-section" id="first-order">
+    <h2 class="section-title">7.1 First-Order: Separable Equations</h2>
+    <p>A first-order ODE is <strong>separable</strong> if it can be written as $g(y)\,dy = f(x)\,dx$ — variables on opposite sides. Integrate both sides to find the general solution.</p>
+
+    <div class="formula-box">
+      $$\frac{dy}{dx} = f(x)g(y) \implies \int \frac{1}{g(y)}\,dy = \int f(x)\,dx$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.1a</div>
+      <div class="example-q">Solve $\dfrac{dy}{dx} = xy^2$, given $y = 1$ when $x = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Separate: $\dfrac{1}{y^2}\,dy = x\,dx$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Integrate: $-\dfrac{1}{y} = \dfrac{x^2}{2} + c$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Apply $y=1$, $x=0$: $-1 = 0 + c$, so $c = -1$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Rearrange: $y = \dfrac{1}{1 - x^2/2} = \dfrac{2}{2-x^2}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.1b</div>
+      <div class="example-q">Solve $\dfrac{dy}{dx} = \dfrac{y\ln y}{x}$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Separate: $\dfrac{1}{y\ln y}\,dy = \dfrac{1}{x}\,dx$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Left side: let $u = \ln y$, $du = \frac{1}{y}\,dy$: $\displaystyle\int\frac{du}{u} = \ln|\ln y|$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\ln|\ln y| = \ln|x| + c$, so $\ln y = Ax$ for some constant $A$, giving $y = e^{Ax}$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.2 INTEGRATING FACTOR -->
+  <div class="lesson-section" id="integrating-factor">
+    <h2 class="section-title">7.2 First-Order: Integrating Factor</h2>
+    <p>For first-order linear ODEs of the form $\dfrac{dy}{dx} + P(x)y = Q(x)$, multiply through by the <strong>integrating factor</strong> $I = e^{\int P\,dx}$. This turns the left side into an exact derivative.</p>
+
+    <div class="formula-box">
+      $$\frac{dy}{dx} + P(x)y = Q(x) \implies I = e^{\int P(x)\,dx}$$
+      $$\frac{d}{dx}(Iy) = IQ(x) \implies Iy = \int IQ(x)\,dx$$
+    </div>
+
+    <div class="key-point">
+      <strong>Why it works</strong>
+      After multiplying by $I = e^{\int P\,dx}$, the left side becomes $\frac{d}{dx}(Iy)$ by the product rule — since $I' = PI$. So the equation becomes $\frac{d}{dx}(Iy) = IQ$, which integrates directly.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.2a</div>
+      <div class="example-q">Solve $\dfrac{dy}{dx} + \dfrac{2y}{x} = x^2$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$P(x) = \dfrac{2}{x}$. Integrating factor: $I = e^{\int 2/x\,dx} = e^{2\ln x} = x^2$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Multiply through: $x^2\dfrac{dy}{dx} + 2xy = x^4$, i.e. $\dfrac{d}{dx}(x^2 y) = x^4$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Integrate: $x^2 y = \dfrac{x^5}{5} + c$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">General solution: $y = \dfrac{x^3}{5} + \dfrac{c}{x^2}$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.3 SECOND ORDER HOMOGENEOUS -->
+  <div class="lesson-section" id="second-order-homo">
+    <h2 class="section-title">7.3 Second-Order Homogeneous ODEs</h2>
+    <p>The standard form is:</p>
+    <div class="formula-box">
+      $$a\frac{d^2y}{dx^2} + b\frac{dy}{dx} + cy = 0$$
+    </div>
+    <p>where $a$, $b$, $c$ are constants. The general solution is built from exponential functions found via the <strong>auxiliary equation</strong>.</p>
+
+    <div class="key-point">
+      <strong>Structure of the Solution</strong>
+      A second-order linear ODE always has a general solution with exactly two arbitrary constants. These are determined by initial or boundary conditions. The complementary function (CF) is the full solution to the homogeneous equation.
+    </div>
+  </div>
+
+  <!-- 7.4 AUXILIARY EQUATION -->
+  <div class="lesson-section" id="auxiliary">
+    <h2 class="section-title">7.4 The Auxiliary Equation</h2>
+    <p>Try the solution $y = e^{mx}$. Substituting gives $am^2 + bm + c = 0$ — the <strong>auxiliary equation</strong>. The nature of its roots determines the form of the complementary function.</p>
+
+    <div class="formula-box">
+      $$am^2 + bm + c = 0$$
+    </div>
+
+    <h3 class="subsection">Case 1: Two distinct real roots $m_1 \neq m_2$</h3>
+    <div class="formula-box">
+      $$y = Ae^{m_1 x} + Be^{m_2 x}$$
+    </div>
+
+    <h3 class="subsection">Case 2: Repeated real root $m_1 = m_2 = m$</h3>
+    <div class="formula-box">
+      $$y = (A + Bx)e^{mx}$$
+    </div>
+    <p>The extra factor of $x$ is essential — without it you only have one independent solution.</p>
+
+    <h3 class="subsection">Case 3: Complex conjugate roots $m = p \pm qi$</h3>
+    <div class="formula-box">
+      $$y = e^{px}(A\cos qx + B\sin qx)$$
+    </div>
+    <p>This arises from $e^{(p+qi)x} = e^{px}(\cos qx + i\sin qx)$ combined with its conjugate.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.4a</div>
+      <div class="example-q">Find the general solution of $\dfrac{d^2y}{dx^2} - 5\dfrac{dy}{dx} + 6y = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Auxiliary equation: $m^2 - 5m + 6 = 0 \Rightarrow (m-2)(m-3) = 0$, so $m = 2$ or $m = 3$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Two distinct real roots → $y = Ae^{2x} + Be^{3x}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.4b</div>
+      <div class="example-q">Find the general solution of $\dfrac{d^2y}{dx^2} + 4\dfrac{dy}{dx} + 4y = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Auxiliary: $m^2 + 4m + 4 = 0 \Rightarrow (m+2)^2 = 0$, so $m = -2$ (repeated).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Repeated root → $y = (A+Bx)e^{-2x}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.4c</div>
+      <div class="example-q">Find the general solution of $\dfrac{d^2y}{dx^2} - 4\dfrac{dy}{dx} + 13y = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Auxiliary: $m^2 - 4m + 13 = 0$. Discriminant: $16 - 52 < 0$. $m = \dfrac{4 \pm \sqrt{-36}}{2} = 2 \pm 3i$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Complex roots $p=2$, $q=3$ → $y = e^{2x}(A\cos 3x + B\sin 3x)$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.5 PARTICULAR INTEGRALS -->
+  <div class="lesson-section" id="particular">
+    <h2 class="section-title">7.5 Particular Integrals</h2>
+    <p>For the <strong>non-homogeneous</strong> equation $a y'' + b y' + cy = f(x)$, the general solution is:</p>
+    <div class="formula-box">
+      $$y = \underbrace{\text{CF}}_{\text{complementary function}} + \underbrace{\text{PI}}_{\text{particular integral}}$$
+    </div>
+    <p>The PI is any single solution to the full equation. Guess its form based on $f(x)$:</p>
+
+    <div class="formula-box">
+      $$f(x) = ke^{\lambda x} \implies \text{try } y_p = \lambda e^{\lambda x}$$
+      $$f(x) = k\sin nx \text{ or } k\cos nx \implies \text{try } y_p = p\cos nx + q\sin nx$$
+      $$f(x) = \text{polynomial degree } n \implies \text{try } y_p = \text{polynomial degree } n$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ When the trial PI is part of the CF</strong>
+      If your trial PI already appears in the complementary function, multiply it by $x$. If that also appears, multiply by $x^2$. For example, if $f(x) = e^{2x}$ but $e^{2x}$ is already in the CF, try $xe^{2x}$ as the PI instead.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.5a</div>
+      <div class="example-q">Find the general solution of $\dfrac{d^2y}{dx^2} - 5\dfrac{dy}{dx} + 6y = 2e^x$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">CF (from 7.4a): $y_c = Ae^{2x} + Be^{3x}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Try PI: $y_p = \lambda e^x$. Then $y_p' = \lambda e^x$, $y_p'' = \lambda e^x$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Substitute: $\lambda e^x - 5\lambda e^x + 6\lambda e^x = 2e^x \Rightarrow 2\lambda = 2 \Rightarrow \lambda = 1$. So $y_p = e^x$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">General solution: $y = Ae^{2x} + Be^{3x} + e^x$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.5b</div>
+      <div class="example-q">Find a particular integral for $y'' + y = \sin 2x$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Try $y_p = p\cos 2x + q\sin 2x$. Then $y_p'' = -4p\cos 2x - 4q\sin 2x$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Substitute: $(-4p+p)\cos 2x + (-4q+q)\sin 2x = \sin 2x$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$-3p = 0$ and $-3q = 1$, so $p = 0$, $q = -\dfrac{1}{3}$. Thus $y_p = -\dfrac{\sin 2x}{3}$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.6 GENERAL SOLUTION & BCs -->
+  <div class="lesson-section" id="general">
+    <h2 class="section-title">7.6 General Solution & Boundary Conditions</h2>
+    <p>The general solution $y = \text{CF} + \text{PI}$ contains two arbitrary constants. These are pinned down by <strong>initial conditions</strong> (values of $y$ and $y'$ at a single point) or <strong>boundary conditions</strong> (values of $y$ at two different points).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.6a</div>
+      <div class="example-q">Solve $y'' - 5y' + 6y = 2e^x$ given $y = 1$ and $y' = 0$ when $x = 0$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">From 7.5a: $y = Ae^{2x} + Be^{3x} + e^x$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$y' = 2Ae^{2x} + 3Be^{3x} + e^x$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">At $x=0$: $y=1 \Rightarrow A + B + 1 = 1 \Rightarrow A + B = 0$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">At $x=0$: $y'=0 \Rightarrow 2A + 3B + 1 = 0 \Rightarrow 2A + 3B = -1$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">From $A = -B$: $-2B + 3B = -1 \Rightarrow B = -1$, $A = 1$.</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-content">Particular solution: $y = e^{2x} - e^{3x} + e^x$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.7 SUBSTITUTION -->
+  <div class="lesson-section" id="substitution">
+    <h2 class="section-title">7.7 Substitution Methods</h2>
+    <p>Some ODEs can be reduced to a standard form by a substitution, either given in the question or suggested by the structure of the equation.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.7a — Bernoulli Equation</div>
+      <div class="example-q">Use the substitution $v = y^{1-n}$ to solve the Bernoulli equation $\dfrac{dy}{dx} + P(x)y = Q(x)y^n$. Apply to $\dfrac{dy}{dx} - \dfrac{y}{x} = xy^2$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Here $n=2$, so let $v = y^{-1} = 1/y$. Then $\dfrac{dv}{dx} = -y^{-2}\dfrac{dy}{dx}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Divide the ODE by $y^2$: $y^{-2}\dfrac{dy}{dx} - \dfrac{1}{xy} = x$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Substitute $v = 1/y$, $-dv/dx = y^{-2}dy/dx$: $-\dfrac{dv}{dx} - \dfrac{v}{x} = x$, i.e. $\dfrac{dv}{dx} + \dfrac{v}{x} = -x$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Linear in $v$! Integrating factor $I = x$: $\dfrac{d}{dx}(xv) = -x^2 \Rightarrow xv = -\dfrac{x^3}{3} + c$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">So $v = -\dfrac{x^2}{3} + \dfrac{c}{x}$, i.e. $\dfrac{1}{y} = \dfrac{c}{x} - \dfrac{x^2}{3}$, giving $y = \dfrac{3x}{3c-x^3}$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.7b — Reduction of Order</div>
+      <div class="example-q">Given that $y_1 = e^x$ is a solution of $y'' - 2y' + y = 0$, use the substitution $y = ve^x$ to find the general solution.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$y = ve^x$, $y' = v'e^x + ve^x$, $y'' = v''e^x + 2v'e^x + ve^x$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Substitute: $e^x(v'' + 2v' + v) - 2e^x(v' + v) + ve^x = 0$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Simplify: $e^x(v'' + 2v' + v - 2v' - 2v + v) = e^x\cdot v'' = 0$, so $v'' = 0$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$v = A + Bx$, so $y = (A+Bx)e^x$ ✓ — confirms repeated root result.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.8 COUPLED -->
+  <div class="lesson-section" id="systems">
+    <h2 class="section-title">7.8 Coupled Differential Equations</h2>
+    <p>A <strong>system of coupled ODEs</strong> involves two (or more) functions of $t$ that depend on each other. The standard approach is to eliminate one variable to get a single second-order ODE.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 7.8a</div>
+      <div class="example-q">Solve the coupled system: $\dfrac{dx}{dt} = x + y$, $\dfrac{dy}{dt} = x - y$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">From the first equation: $y = \dot{x} - x$ (where dot = $d/dt$).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Differentiate: $\dot{y} = \ddot{x} - \dot{x}$. Substitute into the second equation: $\ddot{x} - \dot{x} = x - (\dot{x} - x) = 2x - \dot{x}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\ddot{x} - 2x = 0$. Auxiliary: $m^2 = 2 \Rightarrow m = \pm\sqrt{2}$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$x = Ae^{\sqrt{2}t} + Be^{-\sqrt{2}t}$</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$y = \dot{x} - x = (\sqrt{2}-1)Ae^{\sqrt{2}t} + (-\sqrt{2}-1)Be^{-\sqrt{2}t}$</div></div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Method Summary</strong>
+      (1) Express one variable in terms of the other and its derivatives. (2) Differentiate and substitute to get a single second-order ODE. (3) Solve it. (4) Back-substitute to find the second variable — use the original equations, not new arbitrary constants.
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Solve the following separable ODEs: (a) $\dfrac{dy}{dx} = \dfrac{x}{y}$, (b) $\dfrac{dy}{dx} = e^{x+y}$, (c) $\dfrac{dy}{dx} = \dfrac{\sin x}{y^2}$ with $y=1$ when $x=0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $y\,dy=x\,dx \Rightarrow y^2=x^2+c$. (b) $e^{-y}dy=e^x dx \Rightarrow -e^{-y}=e^x+c$. (c) $y^2\,dy=\sin x\,dx \Rightarrow \frac{y^3}{3}=-\cos x+c$. At $x=0,y=1$: $\frac{1}{3}=-1+c \Rightarrow c=\frac{4}{3}$. So $y^3=4-3\cos x$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Solve using an integrating factor: $\dfrac{dy}{dx} - 3y = e^{2x}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$I=e^{-3x}$. Multiply: $\frac{d}{dx}(e^{-3x}y)=e^{-x}$. Integrate: $e^{-3x}y=-e^{-x}+c$. So $y=-e^{2x}+ce^{3x}$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Find the general solution of each: (a) $y''-3y'-4y=0$, (b) $y''+6y'+9y=0$, (c) $y''+2y'+5y=0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $m^2-3m-4=0 \Rightarrow (m-4)(m+1)=0$, so $y=Ae^{4x}+Be^{-x}$. (b) $(m+3)^2=0$, repeated, so $y=(A+Bx)e^{-3x}$. (c) $m=-1\pm2i$, so $y=e^{-x}(A\cos2x+B\sin2x)$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Find the general solution of $y'' - y' - 2y = 6e^{3x}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">CF: $m^2-m-2=(m-2)(m+1)=0$, so $y_c=Ae^{2x}+Be^{-x}$. PI: try $y_p=\lambda e^{3x}$: $9\lambda-3\lambda-2\lambda=6 \Rightarrow 4\lambda=6 \Rightarrow \lambda=\frac{3}{2}$. General solution: $y=Ae^{2x}+Be^{-x}+\frac{3}{2}e^{3x}$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Solve $y'' + 4y = 8x^2$ with $y(0) = 1$, $y'(0) = 0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">CF: $m^2+4=0 \Rightarrow m=\pm2i$, so $y_c=A\cos2x+B\sin2x$. PI: try $y_p=ax^2+bx+c$. $y_p''=2a$. Substitute: $2a+4(ax^2+bx+c)=8x^2 \Rightarrow 4a=8,4b=0,2a+4c=0 \Rightarrow a=2,b=0,c=-1$. So $y_p=2x^2-1$. General: $y=A\cos2x+B\sin2x+2x^2-1$. ICs: $y(0)=A-1=1\Rightarrow A=2$. $y'=-2A\sin2x+2B\cos2x+4x$: $y'(0)=2B=0\Rightarrow B=0$. Solution: $y=2\cos2x+2x^2-1$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Find the general solution of $y'' - 4y' + 4y = e^{2x}$. (Note: the trial PI clashes with the CF.)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">CF: $(m-2)^2=0$, so $y_c=(A+Bx)e^{2x}$. Trial $\lambda e^{2x}$ is in CF; trial $\lambda xe^{2x}$ is also in CF. Try $y_p=\lambda x^2 e^{2x}$. $y_p'=\lambda e^{2x}(2x^2+2x)$, $y_p''=\lambda e^{2x}(4x^2+8x+2)$. Substitute: $\lambda e^{2x}[(4x^2+8x+2)-4(2x^2+2x)+(4x^2)]=\lambda e^{2x}\cdot2=e^{2x}$. So $\lambda=\frac{1}{2}$. General solution: $y=(A+Bx)e^{2x}+\frac{x^2}{2}e^{2x}$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Solve the coupled system $\dot{x} = 3x - 2y$, $\dot{y} = 2x - y$ with $x(0) = 1$, $y(0) = 0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">From first: $y=\frac{3x-\dot{x}}{2}$. Differentiate: $\dot{y}=\frac{3\dot{x}-\ddot{x}}{2}$. Sub into second: $\frac{3\dot{x}-\ddot{x}}{2}=2x-\frac{3x-\dot{x}}{2} \Rightarrow 3\dot{x}-\ddot{x}=4x-3x+\dot{x}=x+\dot{x} \Rightarrow \ddot{x}-2\dot{x}+x=0$. Aux: $(m-1)^2=0$, so $x=(A+Bt)e^t$. $y=\frac{3x-\dot{x}}{2}$: $\dot{x}=(A+Bt)e^t+Be^t=(A+B+Bt)e^t$. $y=\frac{(3A+3Bt)e^t-(A+B+Bt)e^t}{2}=\frac{(2A-B+2Bt)e^t}{2}$. ICs: $x(0)=A=1$. $y(0)=\frac{2A-B}{2}=0\Rightarrow B=2$. Solution: $x=(1+2t)e^t$, $y=te^t$.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">By using the substitution $y = vx$, solve the homogeneous equation $\dfrac{dy}{dx} = \dfrac{x^2 + y^2}{xy}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Let $y=vx$, $\frac{dy}{dx}=v+x\frac{dv}{dx}$. RHS $=\frac{x^2+v^2x^2}{vx^2}=\frac{1+v^2}{v}$. So $v+x\frac{dv}{dx}=\frac{1+v^2}{v} \Rightarrow x\frac{dv}{dx}=\frac{1+v^2-v^2}{v}=\frac{1}{v}$. Separate: $v\,dv=\frac{dx}{x} \Rightarrow \frac{v^2}{2}=\ln|x|+c$. Back-substitute: $\frac{y^2}{2x^2}=\ln|x|+c$, i.e. $y^2=2x^2(\ln|x|+c)$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">The equation $x^2y'' + xy' - y = x^2$ is an <em>Euler–Cauchy equation</em>. (i) Use the substitution $x = e^t$ to transform it into a second-order ODE with constant coefficients (in terms of $t$ and $y$). (ii) Solve the transformed equation. (iii) Write the solution in terms of $x$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) With $x=e^t$: $\frac{dy}{dx}=\frac{1}{x}\frac{dy}{dt}$, $\frac{d^2y}{dx^2}=\frac{1}{x^2}\left(\frac{d^2y}{dt^2}-\frac{dy}{dt}\right)$. Substituting: $\frac{d^2y}{dt^2}-\frac{dy}{dt}+\frac{dy}{dt}-y=e^{2t}$, i.e. $\frac{d^2y}{dt^2}-y=e^{2t}$. (ii) CF: $m^2-1=0\Rightarrow y_c=Ae^t+Be^{-t}$. PI: try $\lambda e^{2t}$: $4\lambda-\lambda=1\Rightarrow\lambda=\frac{1}{3}$. General: $y=Ae^t+Be^{-t}+\frac{e^{2t}}{3}$. (iii) Replace $e^t=x$: $y=Ax+\frac{B}{x}+\frac{x^2}{3}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">The simple harmonic oscillator with damping satisfies $\ddot{x} + 2k\dot{x} + \omega^2 x = 0$ where $k, \omega > 0$. (i) Find the general solution in all three cases: overdamped ($k > \omega$), critically damped ($k = \omega$), underdamped ($k < \omega$). (ii) Show that in the underdamped case, the amplitude decays exponentially. (iii) In the underdamped case, find the times $t_n$ at which $\dot{x} = 0$ and show they are equally spaced — find this spacing.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Aux: $m^2+2km+\omega^2=0$, $m=-k\pm\sqrt{k^2-\omega^2}$. Overdamped ($k>\omega$): $x=Ae^{m_1t}+Be^{m_2t}$ (two real roots). Critically damped ($k=\omega$): $x=(A+Bt)e^{-kt}$. Underdamped ($k<\omega$): let $\mu=\sqrt{\omega^2-k^2}$; $x=e^{-kt}(A\cos\mu t+B\sin\mu t)$. (ii) Write $A\cos\mu t+B\sin\mu t=R\cos(\mu t-\phi)$ where $R=\sqrt{A^2+B^2}$. Then $|x|\leq Re^{-kt}\to0$ — amplitude $Re^{-kt}$ decays exponentially ✓. (iii) $\dot{x}=e^{-kt}[(-kA+\mu B)\cos\mu t+(-kB-\mu A)\sin\mu t]=0$. This gives $\tan\mu t=\frac{-kA+\mu B}{kB+\mu A}=\text{const}$, so $\mu t_n = \arctan(\cdots)+n\pi$. Spacing $t_{n+1}-t_n=\frac{\pi}{\mu}=\frac{\pi}{\sqrt{\omega^2-k^2}}$, the half-period of oscillation.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="hyperbolic-functions.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Hyperbolic Functions</div></a>
+    <a href="proof-by-induction.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Proof by Induction</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
