@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentum & Impulse — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 13</div>
+  <a href="#momentum" class="sidebar-link active"><span class="sidebar-num">13.1</span> Momentum & Conservation</a>
+  <a href="#impulse" class="sidebar-link"><span class="sidebar-num">13.2</span> Impulse & the Impulse-Momentum Theorem</a>
+  <a href="#collisions-1d" class="sidebar-link"><span class="sidebar-num">13.3</span> Collisions in 1D & Newton's Law</a>
+  <a href="#collisions-2d" class="sidebar-link"><span class="sidebar-num">13.4</span> Oblique Collisions</a>
+  <a href="#coefficient" class="sidebar-link"><span class="sidebar-num">13.5</span> Coefficient of Restitution</a>
+  <a href="#successive" class="sidebar-link"><span class="sidebar-num">13.6</span> Successive Collisions</a>
+  <a href="#variable-mass" class="sidebar-link"><span class="sidebar-num">13.7</span> Variable Mass (Introduction)</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 13</div>
+    <div class="topic-num-badge">Topic 13 · Further Mechanics</div>
+    <h1 class="topic-title">Momentum & Impulse</h1>
+    <p class="topic-intro">The mathematics of collisions — from Newton's experimental law and the coefficient of restitution to oblique impacts and the elegant theory of variable mass systems.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Mechanics 1, Chapters 1–2</div>
+      <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#momentum">13.1 — Momentum & Conservation</a></li>
+      <li><a href="#impulse">13.2 — Impulse & the Impulse-Momentum Theorem</a></li>
+      <li><a href="#collisions-1d">13.3 — Collisions in 1D & Newton's Law</a></li>
+      <li><a href="#collisions-2d">13.4 — Oblique Collisions</a></li>
+      <li><a href="#coefficient">13.5 — Coefficient of Restitution</a></li>
+      <li><a href="#successive">13.6 — Successive Collisions</a></li>
+      <li><a href="#variable-mass">13.7 — Variable Mass (Introduction)</a></li>
+    </ul>
+  </div>
+
+  <!-- 13.1 MOMENTUM -->
+  <div class="lesson-section" id="momentum">
+    <h2 class="section-title">13.1 Momentum & Conservation</h2>
+
+    <p>The <strong>linear momentum</strong> of a particle of mass $m$ moving with velocity $\mathbf{v}$ is $\mathbf{p} = m\mathbf{v}$. Momentum is a vector quantity measured in kg m s⁻¹.</p>
+
+    <div class="formula-box">
+      $$\mathbf{p} = m\mathbf{v} \qquad \text{(kg m s}^{-1}\text{)}$$
+      $$\text{Conservation of momentum: } m_1\mathbf{u}_1 + m_2\mathbf{u}_2 = m_1\mathbf{v}_1 + m_2\mathbf{v}_2$$
+    </div>
+
+    <p>The <strong>principle of conservation of linear momentum</strong> states that the total momentum of a system of particles is constant provided no external forces act. This follows directly from Newton's third law — internal forces between particles cancel in pairs.</p>
+
+    <div class="key-point">
+      <strong>When is momentum conserved?</strong>
+      Momentum is conserved when there is no net external force on the system. In collision problems, the collision itself is so brief that external forces (gravity, friction) have negligible impulse during the impact, so momentum is always conserved during collisions. However, between collisions, external forces act and momentum changes.
+    </div>
+  </div>
+
+  <!-- 13.2 IMPULSE -->
+  <div class="lesson-section" id="impulse">
+    <h2 class="section-title">13.2 Impulse & the Impulse-Momentum Theorem</h2>
+
+    <p>The <strong>impulse</strong> of a force $\mathbf{F}$ acting over time interval $[t_1, t_2]$ is:</p>
+
+    <div class="formula-box">
+      $$\mathbf{J} = \int_{t_1}^{t_2} \mathbf{F}\,dt \qquad \text{(N s = kg m s}^{-1}\text{)}$$
+    </div>
+
+    <p>For a constant force: $\mathbf{J} = \mathbf{F}(t_2 - t_1) = \mathbf{F}\Delta t$.</p>
+
+    <p>The <strong>impulse-momentum theorem</strong> connects impulse to the change in momentum:</p>
+
+    <div class="formula-box">
+      $$\mathbf{J} = m\mathbf{v} - m\mathbf{u} = \Delta\mathbf{p}$$
+    </div>
+
+    <p>This follows directly from Newton's second law: $\mathbf{F} = \dfrac{d\mathbf{p}}{dt}$, so $\int \mathbf{F}\,dt = \Delta\mathbf{p}$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.2a</div>
+      <div class="example-q">A force $F = (6t^2 - 4t)$ N acts on a 2 kg particle for $0 \leq t \leq 3$ s. If the particle has initial velocity 5 m s⁻¹, find its final velocity.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Impulse: $J = \displaystyle\int_0^3 (6t^2-4t)\,dt = \left[2t^3 - 2t^2\right]_0^3 = (54-18) - 0 = 36$ N s</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Impulse-momentum: $J = m(v - u)$. $36 = 2(v - 5)$. $v = 5 + 18 = 23$ m s⁻¹</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.3 COLLISIONS 1D -->
+  <div class="lesson-section" id="collisions-1d">
+    <h2 class="section-title">13.3 Collisions in 1D & Newton's Law of Restitution</h2>
+
+    <p>For a direct collision between two particles moving along the same line, we have two equations:</p>
+
+    <div class="formula-box">
+      $$\text{Conservation of momentum: } m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2$$
+      $$\text{Newton's Law of Restitution: } v_2 - v_1 = e(u_1 - u_2)$$
+    </div>
+
+    <p>where $e$ is the <strong>coefficient of restitution</strong>, $0 \leq e \leq 1$. The law states: the speed of separation equals $e$ times the speed of approach.</p>
+
+    <table style="width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem">
+      <tr style="background:var(--surface2)"><th style="padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase">Value of $e$</th><th style="padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase">Type of collision</th><th style="padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase">Energy</th></tr>
+      <tr><td style="padding:0.55rem 1rem;border:1px solid var(--border)">$e = 1$</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">Perfectly elastic</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">No kinetic energy lost</td></tr>
+      <tr style="background:rgba(255,255,255,0.02)"><td style="padding:0.55rem 1rem;border:1px solid var(--border)">$0 < e < 1$</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">Partially elastic</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">Some KE lost as heat/sound</td></tr>
+      <tr><td style="padding:0.55rem 1rem;border:1px solid var(--border)">$e = 0$</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">Perfectly inelastic (coalesce)</td><td style="padding:0.55rem 1rem;border:1px solid var(--border)">Maximum KE lost</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.3a</div>
+      <div class="example-q">Particle A (mass 3 kg, velocity 6 m s⁻¹) collides directly with particle B (mass 2 kg, velocity 1 m s⁻¹) moving in the same direction. Given $e = 0.5$, find the velocities after collision and the kinetic energy lost.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Conservation of momentum: $3(6) + 2(1) = 3v_A + 2v_B \Rightarrow 20 = 3v_A + 2v_B$ &nbsp; (1)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Newton's law: $v_B - v_A = 0.5(6-1) = 2.5$ &nbsp; (2)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">From (2): $v_B = v_A + 2.5$. Sub into (1): $3v_A + 2(v_A + 2.5) = 20 \Rightarrow 5v_A = 15 \Rightarrow v_A = 3$ m s⁻¹, $v_B = 5.5$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">KE before: $\frac{1}{2}(3)(36) + \frac{1}{2}(2)(1) = 54 + 1 = 55$ J. KE after: $\frac{1}{2}(3)(9) + \frac{1}{2}(2)(30.25) = 13.5 + 30.25 = 43.75$ J. KE lost $= 55 - 43.75 = 11.25$ J.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.4 OBLIQUE -->
+  <div class="lesson-section" id="collisions-2d">
+    <h2 class="section-title">13.4 Oblique Collisions</h2>
+
+    <p>When a smooth sphere collides obliquely with a smooth plane (or another sphere), the impulse acts only along the <strong>line of centres</strong> (perpendicular to the surface). Components parallel to the surface are unchanged.</p>
+
+    <div class="formula-box">
+      $$\text{Along the line of centres: Newton's Law of Restitution applies}$$
+      $$\text{Perpendicular to line of centres: velocity component unchanged}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Smooth sphere hitting a smooth wall</strong>
+      Take the wall as horizontal. The component of velocity parallel to the wall is unchanged. The component perpendicular to the wall satisfies $v_\perp = e \cdot u_\perp$ (speed of separation = $e$ × speed of approach, reversed in direction).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.4a — Ball striking a wall</div>
+      <div class="example-q">A ball strikes a smooth vertical wall with velocity $(4\mathbf{i} - 3\mathbf{j})$ m s⁻¹, where $\mathbf{i}$ is perpendicular to the wall (towards it) and $\mathbf{j}$ is parallel. Given $e = 0.6$, find the velocity after impact and the angle of rebound.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Component perpendicular to wall: $u_\perp = 4$ m s⁻¹ (towards wall). After: $v_\perp = -e \cdot u_\perp = -0.6(4) = -2.4$ m s⁻¹ (away from wall).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Component parallel to wall: unchanged. $v_\parallel = -3$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Velocity after: $(-2.4\mathbf{i} - 3\mathbf{j})$ m s⁻¹. Speed $= \sqrt{5.76 + 9} = \sqrt{14.76} \approx 3.84$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Angle to wall: $\tan\theta = \dfrac{2.4}{3} \Rightarrow \theta = \arctan(0.8) \approx 38.7°$.<div class="step-comment">Note the angle of rebound ≠ angle of incidence (which was $\arctan(4/3) \approx 53.1°$ to the wall) because $e < 1$.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.4b — Oblique collision between spheres</div>
+      <div class="example-q">Two equal smooth spheres collide when their line of centres makes 30° to the direction of motion of sphere A (which was moving at 10 m s⁻¹; sphere B was at rest). With $e = 0.8$, find the velocities after impact.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Resolve A's velocity: along line of centres: $10\cos30° = 5\sqrt{3}$ m s⁻¹; perpendicular: $10\sin30° = 5$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Along line of centres, momentum: $m(5\sqrt{3}) = mv_A' + mv_B'$, so $v_A' + v_B' = 5\sqrt{3}$. Newton's law: $v_B' - v_A' = 0.8(5\sqrt{3}) = 4\sqrt{3}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Adding: $2v_B' = 9\sqrt{3}$, so $v_B' = \dfrac{9\sqrt{3}}{2}$ m s⁻¹ along line of centres. $v_A' = \dfrac{\sqrt{3}}{2}$ m s⁻¹ along line of centres.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Perpendicular component of A unchanged: still 5 m s⁻¹. B had no perpendicular component and still has none. Compose final velocities to get speed and direction for each sphere.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.5 COEFFICIENT -->
+  <div class="lesson-section" id="coefficient">
+    <h2 class="section-title">13.5 Coefficient of Restitution — Deeper Results</h2>
+
+    <h3 class="subsection">Energy lost in a direct collision</h3>
+
+    <div class="formula-box">
+      $$\text{KE lost} = \frac{m_1 m_2 (1-e^2)(u_1-u_2)^2}{2(m_1+m_2)}$$
+    </div>
+
+    <p>This confirms: KE lost $= 0$ when $e = 1$ (elastic), and KE lost is maximum when $e = 0$ (perfectly inelastic). The loss is always non-negative since $e \leq 1$.</p>
+
+    <h3 class="subsection">Collision with a fixed surface</h3>
+    <p>For a particle bouncing on a horizontal floor: if it falls from height $h_0$, the height after the $n$th bounce is $h_n = e^{2n} h_0$. The total distance travelled is:</p>
+
+    <div class="formula-box">
+      $$d_{\text{total}} = h_0\left(\frac{1+e^2}{1-e^2}\right)$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.5a</div>
+      <div class="example-q">A ball is dropped from 2 m. The coefficient of restitution between the ball and the floor is $e = 0.6$. Find the height after the 3rd bounce and the total distance travelled before the ball comes to rest.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Height after $n$th bounce: $h_n = e^{2n}h_0 = (0.36)^n \times 2$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">After 3rd bounce: $h_3 = (0.36)^3 \times 2 = 0.046656 \times 2 \approx 0.0933$ m.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Total distance: $d = 2 \times \dfrac{1+0.36}{1-0.36} = 2 \times \dfrac{1.36}{0.64} = 2 \times 2.125 = 4.25$ m.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.6 SUCCESSIVE -->
+  <div class="lesson-section" id="successive">
+    <h2 class="section-title">13.6 Successive Collisions</h2>
+
+    <p>When three or more particles are in a line, collisions occur sequentially. After each collision, check whether the resulting velocities cause a further collision — a particle can only catch up with the one ahead if it's moving faster.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Order matters</strong>
+      Always determine which collision happens first. After each impact, recheck all relative velocities to see if subsequent collisions are possible. It is physically impossible for a faster particle to pass through a slower one — if $v_A > v_B$ after a collision and they're moving in the same direction, another collision will occur.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.6a</div>
+      <div class="example-q">Three particles A (3 kg, 4 m s⁻¹), B (2 kg, 0 m s⁻¹), C (1 kg, 0 m s⁻¹) lie in that order on a smooth surface. $e = 0.5$ for all collisions. Find all velocities after all collisions are complete.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><strong>A hits B:</strong> Momentum: $3(4)+0 = 3v_A+2v_B \Rightarrow 12=3v_A+2v_B$. Newton's: $v_B-v_A=0.5(4)=2$. Solving: $v_A = \frac{8}{5}=1.6$ m s⁻¹, $v_B = 3.6$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Check: $v_B = 3.6 > v_A = 1.6$ ✓ — A and B separate. B moves towards C.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><strong>B hits C:</strong> Momentum: $2(3.6)+0 = 2v_B+v_C \Rightarrow 7.2=2v_B+v_C$. Newton's: $v_C-v_B=0.5(3.6)=1.8$. Solving: $v_B=\frac{7.2-1.8}{3}=\frac{5.4}{3}=1.8$ m s⁻¹, $v_C = 3.6$ m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Check if A catches B: $v_A = 1.6 < v_B = 1.8$ ✓ — no further collisions. Final: A at 1.6, B at 1.8, C at 3.6 m s⁻¹.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.7 VARIABLE MASS -->
+  <div class="lesson-section" id="variable-mass">
+    <h2 class="section-title">13.7 Variable Mass (Introduction)</h2>
+
+    <p>When a body's mass changes with time (e.g. a rocket expelling fuel, or a raindrop collecting mass), Newton's second law must be applied carefully. The <strong>rocket equation</strong> is:</p>
+
+    <div class="formula-box">
+      $$m\frac{dv}{dt} = F_{\text{ext}} - u\frac{dm}{dt}$$
+    </div>
+
+    <p>where $m$ is the current mass, $v$ is the body's velocity, $F_{\text{ext}}$ is the net external force, and $u$ is the speed of the ejected mass relative to the rocket. The term $-u\frac{dm}{dt}$ is the <strong>thrust</strong>. Since $\frac{dm}{dt} < 0$ (mass decreasing), thrust is positive (forward).</p>
+
+    <div class="key-point">
+      <strong>Derivation insight</strong>
+      Consider a rocket of mass $m$ at time $t$. In time $\delta t$ it ejects mass $|\delta m|$ at relative speed $u$. By conservation of momentum applied to the rocket + ejected gas system: $mv = (m+\delta m)(v+\delta v) + |\delta m|(v - u)$. Expanding and taking limits gives the rocket equation.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 13.7a</div>
+      <div class="example-q">A rocket in deep space (no gravity) has initial mass 1000 kg (including 700 kg fuel). It ejects gas at 3000 m s⁻¹ relative to itself. Find its speed when all fuel is exhausted.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">No external forces: $m\dfrac{dv}{dt} = -u\dfrac{dm}{dt}$ where $u = 3000$ m s⁻¹ and $\dfrac{dm}{dt} < 0$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Rearrange: $dv = -u\dfrac{dm}{m}$. Integrate: $v - 0 = -u\ln\!\left(\dfrac{m_f}{m_0}\right) = u\ln\!\left(\dfrac{m_0}{m_f}\right)$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$m_0 = 1000$ kg, $m_f = 300$ kg (only shell remains). $v = 3000\ln\!\left(\dfrac{1000}{300}\right) = 3000\ln(10/3) \approx 3000 \times 1.204 = 3612$ m s⁻¹.<div class="step-comment">This is the Tsiolkovsky rocket equation — the fundamental result of rocket propulsion theory.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A force $F = (12 - 3t)$ N acts on a 4 kg particle for $0 \leq t \leq 4$ s. The particle starts from rest. Find (a) the impulse of the force, (b) the final velocity, (c) the velocity when $F = 0$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $J=\int_0^4(12-3t)dt=[12t-\frac{3t^2}{2}]_0^4=48-24=24$ N s. (b) $J=mv-mu$: $24=4v-0$, so $v=6$ m s⁻¹. (c) $F=0$ when $t=4$ s, which is the end of the interval, so $v=6$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Particle P (mass 5 kg, velocity 8 m s⁻¹) collides directly with particle Q (mass 3 kg, velocity 2 m s⁻¹) moving in the same direction. After collision P has velocity 5 m s⁻¹. Find (a) Q's velocity after collision, (b) the coefficient of restitution, (c) kinetic energy lost.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Momentum: $5(8)+3(2)=5(5)+3v_Q \Rightarrow 46=25+3v_Q \Rightarrow v_Q=7$ m s⁻¹. (b) Speed of approach $=8-2=6$; speed of separation $=7-5=2$. $e=2/6=1/3$. (c) KE before $=\frac{1}{2}(5)(64)+\frac{1}{2}(3)(4)=160+6=166$ J. KE after $=\frac{1}{2}(5)(25)+\frac{1}{2}(3)(49)=62.5+73.5=136$ J. KE lost $=30$ J.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A ball is dropped from height 5 m onto a floor with coefficient of restitution $e = 0.7$. Find (a) the height reached after the first bounce, (b) the height after the 4th bounce, (c) the total distance travelled.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $h_1=e^2\times5=0.49\times5=2.45$ m. (b) $h_4=(0.49)^4\times5=(0.0576)(5)=0.288$ m. (c) Total $=5\times\frac{1+0.49}{1-0.49}=5\times\frac{1.49}{0.51}=5\times2.922=14.6$ m.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A ball moving at $12$ m s⁻¹ strikes a smooth wall at 60° to the wall. Given $e = 0.5$, find the speed and direction of the ball after impact.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Component parallel to wall: $12\cos60°=6$ m s⁻¹ (unchanged). Component perpendicular to wall (towards wall): $12\sin60°=6\sqrt{3}$ m s⁻¹. After: $v_\perp=e\times6\sqrt{3}=3\sqrt{3}$ m s⁻¹ (away). Speed $=\sqrt{36+27}=\sqrt{63}=3\sqrt{7}\approx7.94$ m s⁻¹. Angle to wall: $\tan\theta=\frac{3\sqrt{3}}{6}=\frac{\sqrt{3}}{2}$, so $\theta=\arctan(\frac{\sqrt{3}}{2})\approx40.9°$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Particles A (mass $m$, velocity $u$) and B (mass $2m$, at rest) collide directly with coefficient of restitution $e$. (a) Find the velocities of A and B after the collision in terms of $m$, $u$ and $e$. (b) Show that A reverses direction if and only if $e > \frac{1}{2}$. (c) Find the fraction of kinetic energy lost.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Momentum: $mu=mv_A+2mv_B \Rightarrow u=v_A+2v_B$. Newton's: $v_B-v_A=eu$. From second: $v_B=v_A+eu$. Sub: $u=v_A+2v_A+2eu \Rightarrow v_A=\frac{u(1-2e)}{3}$, $v_B=\frac{u(1+e)}{3}$. (b) A reverses if $v_A<0$, i.e. $1-2e<0$, i.e. $e>\frac{1}{2}$ ✓. (c) Initial KE $=\frac{1}{2}mu^2$. Final KE $=\frac{1}{2}m\left(\frac{u(1-2e)}{3}\right)^2+\frac{1}{2}(2m)\left(\frac{u(1+e)}{3}\right)^2=\frac{mu^2}{18}[(1-2e)^2+2(1+e)^2]=\frac{mu^2}{18}[1-4e+4e^2+2+4e+2e^2]=\frac{mu^2}{18}[3+6e^2]=\frac{mu^2(1+2e^2)}{6}$. Fraction lost $=1-\frac{(1+2e^2)/6}{1/2}=1-\frac{(1+2e^2)}{3}=\frac{2(1-e^2)}{3}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A rocket of initial mass 500 kg (400 kg fuel) ejects gas at 2500 m s⁻¹ relative to the rocket. It fires vertically upward against gravity ($g = 9.8$ m s⁻¹²). The fuel burns at a rate of 20 kg s⁻¹. Find the initial acceleration and the velocity when the fuel runs out (use the rocket equation).</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Thrust $=u|\dot{m}|=2500\times20=50000$ N. Initial weight $=500\times9.8=4900$ N. Net upward force $=50000-4900=45100$ N. Initial acceleration $=\frac{45100}{500}=90.2$ m s⁻². For velocity when fuel exhausted: use rocket equation $m\frac{dv}{dt}=-mg-u\frac{dm}{dt}$ (gravity acts down). Fuel lasts $400/20=20$ s. Integrating (approximately, treating $g$ as constant): $\Delta v=u\ln\frac{m_0}{m_f}-g\Delta t=2500\ln\frac{500}{100}-9.8(20)=2500\ln5-196=2500(1.609)-196=4023-196=3827$ m s⁻¹.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Three identical particles A, B, C of mass $m$ lie in a line with B between A and C. A moves at speed $u$ towards B (which is at rest), and C is at rest. All collisions have the same coefficient of restitution $e$. (i) Show that after A hits B, B moves at $\frac{u(1+e)}{2}$ and A at $\frac{u(1-e)}{2}$. (ii) Show that B then hits C, and find the velocity of C after B hits C. (iii) Determine the condition on $e$ for A to hit B a second time. (iv) Find the total kinetic energy remaining after all collisions are complete when $e = 1$ (elastic). Comment.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Momentum: $mu=mv_A+mv_B\Rightarrow u=v_A+v_B$. Newton's: $v_B-v_A=eu$. Adding: $2v_B=u(1+e)\Rightarrow v_B=\frac{u(1+e)}{2}$, $v_A=\frac{u(1-e)}{2}$ ✓. (ii) $v_B=\frac{u(1+e)}{2}>0$ always (since $e\geq0$), so B moves towards C ✓. B hits C: identical particles, same $e$. By the same formula with $v_B$ as initial speed: after, C gets speed $\frac{v_B(1+e)}{2}=\frac{u(1+e)^2}{4}$, and B gets $\frac{v_B(1-e)}{2}=\frac{u(1+e)(1-e)}{4}=\frac{u(1-e^2)}{4}$. (iii) A hits B again if $v_A>v_B'$ (A is faster than B after B-C collision): $\frac{u(1-e)}{2}>\frac{u(1-e^2)}{4}\Rightarrow 2(1-e)>(1-e^2)=(1-e)(1+e)\Rightarrow 2>(1+e)$ (dividing by $1-e>0$ for $e<1$): $e<1$. So A always hits B again unless $e=1$ (elastic case). (iv) For $e=1$: $v_A=0$, $v_B=0$, $v_C=u$. Total KE $=\frac{1}{2}mu^2$ — all KE transferred to C. Energy is conserved in elastic collisions ✓. The original KE of A has been perfectly transferred to C, with A and B stationary — a classic elastic chain result.</div>
+      </div>
+      <div class="q-marks">[12 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A smooth ball is projected from a point on a smooth horizontal floor with speed $V$ at angle $\alpha$ to the horizontal. It bounces repeatedly. The coefficient of restitution between the ball and the floor is $e$. (i) Show that the horizontal distances between successive bounces form a geometric sequence, and find the common ratio. (ii) Find the total horizontal distance travelled before the ball comes to rest. (iii) Find the total time of flight.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Horizontal velocity $V_x=V\cos\alpha$ is unchanged throughout (floor is smooth, no horizontal impulse). Vertical velocity just before first bounce: $V_y=V\sin\alpha$ (taking downward as positive at impact). After first bounce: vertical speed $=eV\sin\alpha$. Time of $n$th flight: $t_n=\frac{2e^{n-1}V\sin\alpha}{g}$ (using $e^{n-1}$ for the vertical speed before the $n$th impact). Horizontal distance of $n$th flight: $d_n=V\cos\alpha\cdot t_n=\frac{2V^2\sin\alpha\cos\alpha}{g}\cdot e^{n-1}=\frac{V^2\sin2\alpha}{g}\cdot e^{n-1}$. This is geometric with first term $d_1=\frac{V^2\sin2\alpha}{g}$ and common ratio $e$ ✓. (ii) Total $=d_1\cdot\frac{1}{1-e}=\frac{V^2\sin2\alpha}{g(1-e)}$ (geometric series, $e<1$). (iii) Total time $=\sum_{n=1}^\infty t_n=\frac{2V\sin\alpha}{g}\sum_{n=0}^\infty e^n=\frac{2V\sin\alpha}{g(1-e)}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="further-correlation-regression.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Correlation & Regression</div></a>
+    <a href="work-energy-power.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Work, Energy & Power</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
