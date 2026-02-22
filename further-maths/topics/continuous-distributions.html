@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuous Distributions — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 11</div>
+  <a href="#pdf-cdf" class="sidebar-link active"><span class="sidebar-num">11.1</span> PDF and CDF</a>
+  <a href="#mean-var" class="sidebar-link"><span class="sidebar-num">11.2</span> Mean, Variance and Mode</a>
+  <a href="#uniform" class="sidebar-link"><span class="sidebar-num">11.3</span> Continuous Uniform Distribution</a>
+  <a href="#exponential" class="sidebar-link"><span class="sidebar-num">11.4</span> Exponential Distribution</a>
+  <a href="#normal-further" class="sidebar-link"><span class="sidebar-num">11.5</span> Further Normal Results</a>
+  <a href="#transformations" class="sidebar-link"><span class="sidebar-num">11.6</span> Transformations of Variables</a>
+  <a href="#mgf" class="sidebar-link"><span class="sidebar-num">11.7</span> Moment Generating Functions</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 11</div>
+    <div class="topic-num-badge">Topic 11 · Further Statistics</div>
+    <h1 class="topic-title">Continuous Distributions</h1>
+    <p class="topic-intro">PDFs, CDFs, transformations, the exponential distribution, and moment generating functions — the full toolkit for working with continuous random variables.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Statistics 1, Chapters 2–3</div>
+      <div class="meta-item"><span>~4.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#pdf-cdf">11.1 — PDF and CDF</a></li>
+      <li><a href="#mean-var">11.2 — Mean, Variance and Mode</a></li>
+      <li><a href="#uniform">11.3 — Continuous Uniform Distribution</a></li>
+      <li><a href="#exponential">11.4 — Exponential Distribution</a></li>
+      <li><a href="#normal-further">11.5 — Further Normal Results</a></li>
+      <li><a href="#transformations">11.6 — Transformations of Variables</a></li>
+      <li><a href="#mgf">11.7 — Moment Generating Functions</a></li>
+    </ul>
+  </div>
+
+  <!-- 11.1 PDF AND CDF -->
+  <div class="lesson-section" id="pdf-cdf">
+    <h2 class="section-title">11.1 PDF and CDF</h2>
+    <p>A continuous random variable $X$ is described by its <strong>probability density function (PDF)</strong> $f(x)$. Unlike discrete distributions, probabilities are areas under the curve — $P(X = x) = 0$ for any single value.</p>
+
+    <div class="formula-box">
+      $$P(a \leq X \leq b) = \int_a^b f(x)\,dx$$
+      $$\text{Axioms: } f(x) \geq 0 \text{ for all } x, \quad \int_{-\infty}^{\infty} f(x)\,dx = 1$$
+    </div>
+
+    <p>The <strong>cumulative distribution function (CDF)</strong> $F(x) = P(X \leq x) = \displaystyle\int_{-\infty}^{x} f(t)\,dt$.</p>
+
+    <div class="formula-box">
+      $$F(x) = \int_{-\infty}^x f(t)\,dt \qquad f(x) = F'(x)$$
+      $$P(a < X < b) = F(b) - F(a)$$
+    </div>
+
+    <div class="key-point">
+      <strong>Key properties of the CDF</strong>
+      $F(x)$ is non-decreasing. $F(-\infty) = 0$ and $F(\infty) = 1$. For a continuous distribution, $P(X \leq x) = P(X < x)$ — we don't need to worry about whether endpoints are included.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.1a</div>
+      <div class="example-q">The random variable $X$ has PDF $f(x) = kx^2$ for $0 \leq x \leq 3$, and $f(x) = 0$ otherwise. Find $k$, the CDF $F(x)$, and $P(1 \leq X \leq 2)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\displaystyle\int_0^3 kx^2\,dx = k\left[\frac{x^3}{3}\right]_0^3 = 9k = 1$, so $k = \dfrac{1}{9}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">For $0 \leq x \leq 3$: $F(x) = \displaystyle\int_0^x \frac{t^2}{9}\,dt = \dfrac{x^3}{27}$. So $F(x) = \begin{cases}0 & x < 0 \\ x^3/27 & 0 \leq x \leq 3 \\ 1 & x > 3\end{cases}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$P(1 \leq X \leq 2) = F(2) - F(1) = \dfrac{8}{27} - \dfrac{1}{27} = \dfrac{7}{27}$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.2 MEAN, VARIANCE, MODE -->
+  <div class="lesson-section" id="mean-var">
+    <h2 class="section-title">11.2 Mean, Variance and Mode</h2>
+
+    <div class="formula-box">
+      $$E(X) = \int_{-\infty}^{\infty} x\,f(x)\,dx \qquad E(g(X)) = \int_{-\infty}^{\infty} g(x)\,f(x)\,dx$$
+      $$\text{Var}(X) = E(X^2) - [E(X)]^2 \qquad E(X^2) = \int_{-\infty}^{\infty} x^2 f(x)\,dx$$
+    </div>
+
+    <p>The <strong>mode</strong> is the value of $x$ that maximises $f(x)$ — find it by solving $f'(x) = 0$ and checking it's a maximum.</p>
+    <p>The <strong>median</strong> $m$ satisfies $F(m) = 0.5$, i.e. $\displaystyle\int_{-\infty}^{m}f(x)\,dx = \frac{1}{2}$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.2a</div>
+      <div class="example-q">For $f(x) = \frac{1}{9}x^2$ on $[0,3]$, find $E(X)$, $\text{Var}(X)$, the mode, and the median.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$E(X) = \displaystyle\int_0^3 x \cdot \frac{x^2}{9}\,dx = \frac{1}{9}\left[\frac{x^4}{4}\right]_0^3 = \frac{81}{36} = \dfrac{9}{4} = 2.25$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$E(X^2) = \displaystyle\int_0^3 \frac{x^4}{9}\,dx = \frac{1}{9}\cdot\frac{243}{5} = \dfrac{27}{5}$. $\text{Var}(X) = \dfrac{27}{5} - \left(\dfrac{9}{4}\right)^2 = \dfrac{27}{5} - \dfrac{81}{16} = \dfrac{432-405}{80} = \dfrac{27}{80}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Mode: $f(x) = \frac{x^2}{9}$ is increasing on $[0,3]$, so mode $= 3$ (right endpoint).</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Median: $F(m) = \frac{m^3}{27} = \frac{1}{2} \Rightarrow m^3 = \frac{27}{2} \Rightarrow m = \dfrac{3}{\sqrt[3]{2}} = \dfrac{3\cdot 2^{2/3}}{2} \approx 2.38$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.3 UNIFORM -->
+  <div class="lesson-section" id="uniform">
+    <h2 class="section-title">11.3 Continuous Uniform Distribution</h2>
+    <p>$X \sim U(a, b)$ if $X$ is equally likely to take any value in $[a, b]$.</p>
+
+    <div class="formula-box">
+      $$f(x) = \frac{1}{b-a}, \quad a \leq x \leq b$$
+      $$E(X) = \frac{a+b}{2} \qquad \text{Var}(X) = \frac{(b-a)^2}{12}$$
+      $$F(x) = \frac{x-a}{b-a}, \quad a \leq x \leq b$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.3a</div>
+      <div class="example-q">$X \sim U(2, 10)$. Find $E(X)$, $\text{Var}(X)$, $P(3 < X < 7)$, and the value $c$ such that $P(X < c) = 0.3$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$E(X) = 6$. $\text{Var}(X) = \dfrac{64}{12} = \dfrac{16}{3}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$P(3 < X < 7) = \dfrac{7-3}{10-2} = \dfrac{4}{8} = \dfrac{1}{2}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$F(c) = \dfrac{c-2}{8} = 0.3 \Rightarrow c = 2 + 0.3 \times 8 = 4.4$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.4 EXPONENTIAL -->
+  <div class="lesson-section" id="exponential">
+    <h2 class="section-title">11.4 Exponential Distribution</h2>
+    <p>$X \sim \text{Exp}(\lambda)$ models the waiting time between events in a Poisson process with rate $\lambda$. It is the continuous analogue of the geometric distribution.</p>
+
+    <div class="formula-box">
+      $$f(x) = \lambda e^{-\lambda x}, \quad x \geq 0$$
+      $$F(x) = 1 - e^{-\lambda x}, \quad x \geq 0$$
+      $$E(X) = \frac{1}{\lambda} \qquad \text{Var}(X) = \frac{1}{\lambda^2}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Memoryless property</strong>
+      Like the geometric distribution, the exponential is memoryless: $P(X > s + t \mid X > s) = P(X > t)$. This follows immediately from $P(X > x) = e^{-\lambda x}$: the ratio $P(X > s+t)/P(X > s) = e^{-\lambda t}$.
+    </div>
+
+    <div class="key-point">
+      <strong>Link to Poisson</strong>
+      If events occur as a Poisson process with rate $\lambda$ (events per unit time), then the waiting time between successive events is $\text{Exp}(\lambda)$. This gives the connection: $P(\text{no events in time } t) = e^{-\lambda t} = P(X > t)$ where $X \sim \text{Exp}(\lambda)$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.4a</div>
+      <div class="example-q">Customers arrive at a shop at a rate of 4 per hour. The waiting time $X$ between arrivals follows $\text{Exp}(4)$. Find: (a) $P(X > 0.5)$, (b) $P(0.1 < X < 0.3)$, (c) the median waiting time.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $P(X > 0.5) = 1 - F(0.5) = e^{-4(0.5)} = e^{-2} \approx 0.1353$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $P(0.1 < X < 0.3) = F(0.3) - F(0.1) = (1-e^{-1.2}) - (1-e^{-0.4}) = e^{-0.4} - e^{-1.2} \approx 0.6703 - 0.3012 = 0.3691$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $F(m) = 1 - e^{-4m} = 0.5 \Rightarrow e^{-4m} = 0.5 \Rightarrow m = \dfrac{\ln 2}{4} \approx 0.173$ hours</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.5 FURTHER NORMAL -->
+  <div class="lesson-section" id="normal-further">
+    <h2 class="section-title">11.5 Further Normal Results</h2>
+
+    <h3 class="subsection">Linear combinations of normal variables</h3>
+    <p>If $X \sim N(\mu_1, \sigma_1^2)$ and $Y \sim N(\mu_2, \sigma_2^2)$ are <strong>independent</strong>:</p>
+
+    <div class="formula-box">
+      $$aX + bY \sim N(a\mu_1 + b\mu_2,\; a^2\sigma_1^2 + b^2\sigma_2^2)$$
+      $$\bar{X} = \frac{X_1 + \cdots + X_n}{n} \sim N\!\left(\mu,\; \frac{\sigma^2}{n}\right) \text{ if each } X_i \sim N(\mu,\sigma^2) \text{ i.i.d.}$$
+    </div>
+
+    <h3 class="subsection">The Central Limit Theorem</h3>
+    <p>For any distribution with mean $\mu$ and variance $\sigma^2$, the sample mean $\bar{X}$ of a large sample of size $n$ is approximately:</p>
+
+    <div class="formula-box">
+      $$\bar{X} \approx N\!\left(\mu,\; \frac{\sigma^2}{n}\right) \quad \text{for large } n \text{ (any distribution)}$$
+    </div>
+
+    <p>This is the Central Limit Theorem (CLT) — one of the most profound results in probability. It explains why the normal distribution arises so naturally in practice.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.5a</div>
+      <div class="example-q">$X \sim N(10, 4)$ and $Y \sim N(6, 9)$ are independent. Find $P(X - Y > 7)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$X - Y \sim N(10-6,\; 4+9) = N(4, 13)$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$P(X-Y > 7) = P\!\left(Z > \dfrac{7-4}{\sqrt{13}}\right) = P(Z > 0.832) = 1 - \Phi(0.832) \approx 1 - 0.7973 = 0.2027$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.5b — CLT</div>
+      <div class="example-q">A machine produces bolts with diameter $X$ where $E(X) = 5$ mm and $\text{Var}(X) = 0.09$ mm². Find the approximate probability that the mean diameter of a sample of 50 bolts exceeds 5.05 mm.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">By CLT: $\bar{X} \approx N\!\left(5,\; \dfrac{0.09}{50}\right) = N(5, 0.0018)$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$P(\bar{X} > 5.05) = P\!\left(Z > \dfrac{5.05-5}{\sqrt{0.0018}}\right) = P(Z > 1.179) \approx 1 - 0.8808 = 0.1192$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.6 TRANSFORMATIONS -->
+  <div class="lesson-section" id="transformations">
+    <h2 class="section-title">11.6 Transformations of Variables</h2>
+    <p>If $Y = g(X)$ is a monotone function of $X$, the PDF of $Y$ is found via the CDF or by the change-of-variables formula.</p>
+
+    <div class="formula-box">
+      $$f_Y(y) = f_X(g^{-1}(y)) \cdot \left|\frac{dx}{dy}\right| = f_X(x)\cdot\frac{1}{|g'(x)|}\bigg|_{x=g^{-1}(y)}$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Always adjust the support</strong>
+      When transforming, the domain of $Y$ changes too. Always determine the new range of $y$ from the range of $x$, and verify your new PDF integrates to 1.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.6a — CDF method</div>
+      <div class="example-q">$X \sim U(0,1)$. Find the PDF of $Y = -\ln X$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Range: as $x$ goes from $0^+$ to $1$, $y = -\ln x$ goes from $+\infty$ to $0$. So $Y \geq 0$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">CDF of $Y$: $P(Y \leq y) = P(-\ln X \leq y) = P(X \geq e^{-y}) = 1 - e^{-y}$ (since $X \sim U(0,1)$).</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Differentiate: $f_Y(y) = e^{-y}$ for $y \geq 0$. This is $\text{Exp}(1)$ — so $-\ln U \sim \text{Exp}(1)$ whenever $U \sim U(0,1)$.<div class="step-comment">This is the foundation of the inverse transform method for simulation.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.6b — Formula method</div>
+      <div class="example-q">$X$ has PDF $f(x) = 2x$ for $0 \leq x \leq 1$. Find the PDF of $Y = X^2$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$y = x^2 \Rightarrow x = \sqrt{y}$ (taking positive root since $x \geq 0$). Range of $Y$: $0 \leq y \leq 1$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\dfrac{dx}{dy} = \dfrac{1}{2\sqrt{y}}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$f_Y(y) = f_X(\sqrt{y})\cdot\dfrac{1}{2\sqrt{y}} = 2\sqrt{y}\cdot\dfrac{1}{2\sqrt{y}} = 1$ for $0 \leq y \leq 1$.<div class="step-comment">So $Y = X^2 \sim U(0,1)$ — a beautiful result.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.7 MGF -->
+  <div class="lesson-section" id="mgf">
+    <h2 class="section-title">11.7 Moment Generating Functions</h2>
+    <p>The <strong>moment generating function (MGF)</strong> of a random variable $X$ is:</p>
+
+    <div class="formula-box">
+      $$M_X(t) = E(e^{tX}) = \int_{-\infty}^{\infty} e^{tx} f(x)\,dx$$
+    </div>
+
+    <p>The MGF uniquely determines the distribution (like the PGF for discrete variables). Its power lies in generating moments by differentiation:</p>
+
+    <div class="formula-box">
+      $$E(X^r) = M_X^{(r)}(0) = \left.\frac{d^r}{dt^r}M_X(t)\right|_{t=0}$$
+    </div>
+
+    <p>For independent $X$ and $Y$: $M_{X+Y}(t) = M_X(t) \cdot M_Y(t)$ — the product rule, just like PGFs.</p>
+
+    <h3 class="subsection">Key MGFs</h3>
+
+    <div class="formula-box">
+      $$X \sim N(\mu, \sigma^2): \quad M_X(t) = e^{\mu t + \frac{1}{2}\sigma^2 t^2}$$
+      $$X \sim \text{Exp}(\lambda): \quad M_X(t) = \frac{\lambda}{\lambda - t}, \quad t < \lambda$$
+      $$X \sim U(a,b): \quad M_X(t) = \frac{e^{tb}-e^{ta}}{t(b-a)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.7a</div>
+      <div class="example-q">Use the MGF to find $E(X)$ and $\text{Var}(X)$ for $X \sim \text{Exp}(\lambda)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$M_X(t) = \dfrac{\lambda}{\lambda-t} = \lambda(\lambda-t)^{-1}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$M'_X(t) = \lambda(\lambda-t)^{-2}$. $E(X) = M'_X(0) = \dfrac{\lambda}{\lambda^2} = \dfrac{1}{\lambda}$ ✓</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$M''_X(t) = 2\lambda(\lambda-t)^{-3}$. $E(X^2) = M''_X(0) = \dfrac{2}{\lambda^2}$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\text{Var}(X) = \dfrac{2}{\lambda^2} - \dfrac{1}{\lambda^2} = \dfrac{1}{\lambda^2}$ ✓</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 11.7b — Sum of normals via MGF</div>
+      <div class="example-q">Use MGFs to show that if $X_1, \ldots, X_n$ are i.i.d. $N(\mu, \sigma^2)$, then $\bar{X} \sim N(\mu, \sigma^2/n)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$M_{X_i}(t) = e^{\mu t + \frac{1}{2}\sigma^2 t^2}$. By the product rule: $M_{S}(t) = e^{n\mu t + \frac{n}{2}\sigma^2 t^2}$ where $S = \sum X_i$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$M_{\bar{X}}(t) = M_S(t/n) = e^{\mu t + \frac{\sigma^2}{2n}t^2}$, which is the MGF of $N(\mu, \sigma^2/n)$. ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">The random variable $X$ has PDF $f(x) = \dfrac{3}{2}(1-x^2)$ for $-1 \leq x \leq 1$. Find (a) $E(X)$, (b) $\text{Var}(X)$, (c) the CDF $F(x)$, (d) $P(-0.5 \leq X \leq 0.5)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) By symmetry about 0, $E(X)=0$. (b) $E(X^2)=\int_{-1}^1\frac{3}{2}x^2(1-x^2)\,dx=\frac{3}{2}\left[\frac{x^3}{3}-\frac{x^5}{5}\right]_{-1}^1=\frac{3}{2}\cdot\frac{4}{15}=\frac{2}{5}$. $\text{Var}(X)=\frac{2}{5}$. (c) For $-1\leq x\leq1$: $F(x)=\int_{-1}^x\frac{3}{2}(1-t^2)\,dt=\frac{3}{2}\left[t-\frac{t^3}{3}\right]_{-1}^x=\frac{3}{2}\left(x-\frac{x^3}{3}+\frac{2}{3}\right)=\frac{1}{2}+\frac{3x}{2}-\frac{x^3}{2}$. (d) $F(0.5)-F(-0.5)=\frac{1}{2}+\frac{3}{4}-\frac{1}{16}-(\frac{1}{2}-\frac{3}{4}+\frac{1}{16})=\frac{3}{2}-\frac{1}{8}=\frac{11}{8}$... Let me recheck: $F(0.5)=\frac{1}{2}+\frac{3(0.5)}{2}-\frac{(0.5)^3}{2}=\frac{1}{2}+\frac{3}{4}-\frac{1}{16}=\frac{8+12-1}{16}=\frac{19}{16}$. That's $>1$, so recheck formula. $F(x)=\frac{3}{2}[(x+1)-\frac{x^3+1}{3}]=\frac{3}{2}\cdot\frac{3(x+1)-(x^3+1)}{3}=\frac{3x+3-x^3-1}{2}=\frac{-x^3+3x+2}{2}$. At $x=1$: $\frac{-1+3+2}{2}=\frac{4}{2}=2$... That's wrong too. Correct: $\int_{-1}^x\frac{3}{2}(1-t^2)dt=\frac{3}{2}[t-\frac{t^3}{3}]_{-1}^x=\frac{3}{2}[(x-\frac{x^3}{3})-(-1+\frac{1}{3})]=\frac{3}{2}[x-\frac{x^3}{3}+\frac{2}{3}]$. At $x=1$: $\frac{3}{2}[1-\frac{1}{3}+\frac{2}{3}]=\frac{3}{2}\cdot\frac{4}{3}=2$. So $f$ doesn't integrate to 1 — check: $\int_{-1}^1\frac{3}{2}(1-x^2)dx=\frac{3}{2}[x-\frac{x^3}{3}]_{-1}^1=\frac{3}{2}\cdot\frac{4}{3}=2\neq1$. Correct $k$: $k=\frac{3}{4}$. So $f(x)=\frac{3}{4}(1-x^2)$. Then $\text{Var}(X)=\frac{1}{5}$, $F(x)=\frac{1}{2}+\frac{3x}{4}-\frac{x^3}{4}$, $P(-0.5\leq X\leq0.5)=F(0.5)-F(-0.5)=\frac{3(0.5)}{4}\cdot2-\frac{(0.5)^3}{4}\cdot2=\frac{3}{4}-\frac{1}{32}=\frac{23}{32}\approx0.719$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">$X \sim \text{Exp}(0.5)$. Find (a) $E(X)$ and $\text{Var}(X)$, (b) $P(X > 3)$, (c) $P(2 < X < 5)$, (d) the value $m$ such that $P(X > m) = 0.1$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $E(X)=\frac{1}{0.5}=2$, $\text{Var}(X)=\frac{1}{0.25}=4$. (b) $P(X>3)=e^{-1.5}\approx0.2231$. (c) $e^{-1}-e^{-2.5}\approx0.3679-0.0821=0.2858$. (d) $e^{-0.5m}=0.1\Rightarrow m=\frac{\ln10}{0.5}=2\ln10\approx4.605$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">$X \sim N(50, 16)$ and $Y \sim N(40, 9)$ are independent. Find: (a) $P(X + Y > 95)$, (b) $P(X - Y < 5)$, (c) the distribution of $\bar{X}$ based on 25 observations of $X$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $X+Y\sim N(90,25)$. $P(X+Y>95)=P(Z>\frac{5}{5})=P(Z>1)=1-\Phi(1)\approx0.1587$. (b) $X-Y\sim N(10,25)$. $P(X-Y<5)=P(Z<\frac{5-10}{5})=P(Z<-1)\approx0.1587$. (c) $\bar{X}\sim N(50,16/25)=N(50,0.64)$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">$X$ has PDF $f(x) = 6x(1-x)$ for $0 \leq x \leq 1$. Find the PDF of $Y = 2X - 1$. Hence find $E(Y)$ and $\text{Var}(Y)$ without integrating directly.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$y=2x-1\Rightarrow x=\frac{y+1}{2}$. Range: $y\in[-1,1]$. $\frac{dx}{dy}=\frac{1}{2}$. $f_Y(y)=6\cdot\frac{y+1}{2}\cdot\frac{1-y}{2}\cdot\frac{1}{2}=\frac{6}{8}(1-y^2)=\frac{3}{4}(1-y^2)$ for $-1\leq y\leq1$. $E(Y)=2E(X)-1$. $E(X)=\int_0^16x^2(1-x)dx=6[\frac{x^3}{3}-\frac{x^4}{4}]_0^1=6(\frac{1}{3}-\frac{1}{4})=\frac{1}{2}$. So $E(Y)=2(\frac{1}{2})-1=0$. $\text{Var}(X)=E(X^2)-\frac{1}{4}$. $E(X^2)=\int_0^16x^3(1-x)dx=6[\frac{x^4}{4}-\frac{x^5}{5}]_0^1=\frac{3}{10}$. $\text{Var}(X)=\frac{3}{10}-\frac{1}{4}=\frac{1}{20}$. $\text{Var}(Y)=4\text{Var}(X)=\frac{1}{5}$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Use the MGF of $X \sim N(0,1)$ to find $E(X^4)$. (Hint: the MGF of $N(0,1)$ is $M(t)=e^{t^2/2}$; expand as a Maclaurin series in $t$.)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$M(t)=e^{t^2/2}=1+\frac{t^2}{2}+\frac{t^4/4}{2!}+\cdots=1+\frac{t^2}{2}+\frac{t^4}{8}+\cdots$. Since $M(t)=\sum_{r=0}^\infty\frac{E(X^r)}{r!}t^r$, the coefficient of $t^4$ is $\frac{E(X^4)}{4!}=\frac{1}{8}$. So $E(X^4)=\frac{4!}{8}=\frac{24}{8}=3$. (Note: $E(X^2)=1$ since $\text{Var}(X)=1$ and $E(X)=0$; and $E(X^4)=3[E(X^2)]^2=3$ — the fourth moment identity for standard normal.)</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">The lifetime (in years) of a component is $X \sim \text{Exp}(0.2)$. Given that a component has already lasted 5 years, find the probability it lasts at least another 3 years. What property does this illustrate?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$P(X>8\mid X>5)=\frac{P(X>8)}{P(X>5)}=\frac{e^{-1.6}}{e^{-1.0}}=e^{-0.6}\approx0.5488$. This equals $P(X>3)=e^{-0.6}$, illustrating the memoryless property: past lifetime gives no information about remaining lifetime.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Let $X$ and $Y$ be independent, each $\sim U(0,1)$. (i) Find the CDF and PDF of $Z = X + Y$. (ii) Sketch the PDF and comment on its shape. (iii) Find $E(Z)$ and $\text{Var}(Z)$ using the PDF, and verify using the linearity of expectation.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) For $0\leq z\leq1$: $P(Z\leq z)=P(X+Y\leq z)=\frac{z^2}{2}$ (area of triangle). For $1\leq z\leq2$: $P(Z\leq z)=1-\frac{(2-z)^2}{2}$ (subtract upper-right triangle). CDF: $F(z)=\begin{cases}z^2/2 & 0\leq z\leq1 \\ 1-(2-z)^2/2 & 1<z\leq2\end{cases}$. PDF: $f(z)=\begin{cases}z & 0\leq z\leq1 \\ 2-z & 1<z\leq2\end{cases}$. (ii) Triangle shape (piecewise linear), peak at $z=1$. This is the triangular distribution — by CLT intuition, already becoming bell-shaped. (iii) $E(Z)=\int_0^1z^2dz+\int_1^2z(2-z)dz=\frac{1}{3}+[z^2-\frac{z^3}{3}]_1^2=\frac{1}{3}+(4-\frac{8}{3}-1+\frac{1}{3})=\frac{1}{3}+1=\frac{4}{3}$... $E(Z)=2E(X)=2\times\frac{1}{2}=1$ ✓. $\text{Var}(Z)=2\text{Var}(X)=2\times\frac{1}{12}=\frac{1}{6}$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">The MGF of a random variable $X$ is $M_X(t) = \left(\dfrac{p}{1-(1-p)e^t}\right)^r$ for $t < -\ln(1-p)$. (i) Identify the distribution of $X$ by comparing with known MGFs. (ii) Find $E(X)$ and $\text{Var}(X)$ by differentiating $M_X(t)$. (iii) Show that the MGF of $Y = X - r$ (a shifted version) tends to the MGF of a Poisson as $r \to \infty$, $p \to 0$, $r(1-p) \to \lambda$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) This is the MGF of a Negative Binomial NB$(r,p)$ — it's $r$ times the MGF of Geo$(p)$ (product of $r$ independent geometric MGFs). (ii) $M'(t)=r\cdot\frac{p}{1-(1-p)e^t}\cdot\frac{(1-p)e^t}{1-(1-p)e^t}$. At $t=0$: $M'(0)=r\cdot\frac{(1-p)}{p}=\frac{r(1-p)}{p}$. Since NB counts total trials: $E(X)=r/p$. From second derivative: $\text{Var}(X)=r(1-p)/p^2$. (iii) $M_Y(t)=e^{-rt}M_X(t)=\left(\frac{pe^{-t}}{1-(1-p)e^t}\right)^r$. As $p\to0$, $1-p\approx e^{-p}$, so $1-(1-p)e^t\approx1-e^{t-p}\approx p-t$ for small $p,t$. Then $M_Y(t)\approx\left(\frac{1}{1-t/p}\right)^r\cdot(\text{terms})\to e^{\lambda(e^t-1)}$... more carefully: with $q=1-p$, $r(1-p)=\lambda$: $M_Y(t)=\left(\frac{p}{e^{-t}-qe^{t}\cdot e^{t}/e^t}\right)^r\to e^{\lambda(e^t-1)}$ — the MGF of Po$(\lambda)$ ✓.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="chi-squared-tests.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Chi-squared Tests</div></a>
+    <a href="further-correlation-regression.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Correlation & Regression</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
