@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrophysics — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .option-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:#c084fc;margin-top:0.8rem}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  .complete-banner{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(251,191,36,0.08));border:1px solid rgba(245,158,11,0.4);border-radius:16px;padding:2rem;margin:3rem 0;text-align:center}
+  .complete-banner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--accent);margin-bottom:0.5rem}
+  .complete-banner p{color:var(--muted);font-size:0.95rem;margin:0}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 09</div>
+  <a href="#telescopes" class="sidebar-link active"><span class="sidebar-num">9.1</span> Telescopes</a>
+  <a href="#classification" class="sidebar-link"><span class="sidebar-num">9.2</span> Classification of Stars</a>
+  <a href="#hr-diagram" class="sidebar-link"><span class="sidebar-num">9.3</span> The Hertzsprung-Russell Diagram</a>
+  <a href="#stellar-evolution" class="sidebar-link"><span class="sidebar-num">9.4</span> Stellar Evolution</a>
+  <a href="#distance" class="sidebar-link"><span class="sidebar-num">9.5</span> Distances & Standard Candles</a>
+  <a href="#cosmology" class="sidebar-link"><span class="sidebar-num">9.6</span> Cosmology & the Expanding Universe</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 09</div>
+    <div class="topic-num-badge">Topic 09 · AQA Physics</div>
+    <div class="option-badge">★ Option topic — Paper 3 Section B</div>
+    <h1 class="topic-title">Astrophysics</h1>
+    <p class="topic-intro">From telescope optics to the fate of the universe — astrophysics applies every branch of physics to the grandest scale. This option appears on Paper 3 Section B and rewards students who can connect theory to observation.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.9.1</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#telescopes">9.1 — Telescopes</a></li>
+      <li><a href="#classification">9.2 — Classification of Stars</a></li>
+      <li><a href="#hr-diagram">9.3 — The Hertzsprung-Russell Diagram</a></li>
+      <li><a href="#stellar-evolution">9.4 — Stellar Evolution</a></li>
+      <li><a href="#distance">9.5 — Distances & Standard Candles</a></li>
+      <li><a href="#cosmology">9.6 — Cosmology & the Expanding Universe</a></li>
+    </ul>
+  </div>
+
+  <!-- 9.1 TELESCOPES -->
+  <div class="lesson-section" id="telescopes">
+    <h2 class="section-title">9.1 Telescopes</h2>
+
+    <p>Telescopes collect and focus electromagnetic radiation from distant sources. The two key properties of any telescope are: <strong>collecting power</strong> (proportional to aperture area $\propto D^2$) and <strong>resolving power</strong> (ability to distinguish two closely separated objects).</p>
+
+    <div class="formula-box">
+      $$M = \frac{f_o}{f_e} \qquad \text{(angular magnification, normal adjustment)}$$
+      $$\theta_{\min} = \frac{\lambda}{D} \qquad \text{(Rayleigh criterion — minimum resolvable angle)}$$
+    </div>
+
+    <p>A refracting telescope uses two converging lenses: objective (long focal length $f_o$, large diameter) and eyepiece (short focal length $f_e$). The image of a distant object formed by the objective lies at its focal point; the eyepiece acts as a magnifying glass for this intermediate image. In normal adjustment, the final image is at infinity and the lenses are separated by $f_o + f_e$.</p>
+
+    <p>A reflecting telescope uses a curved primary mirror instead of an objective lens — avoiding chromatic aberration, easier to make large, and can observe at all EM wavelengths (unlike glass which absorbs UV, IR). The world's largest optical telescopes (e.g. ELT, diameter 39 m) are all reflectors.</p>
+
+    <table>
+      <tr><th>Type</th><th>Wavelength range</th><th>Location</th><th>Why non-optical placed there</th></tr>
+      <tr><td>Optical (visible)</td><td>400–700 nm</td><td>Ground (high altitude)</td><td>Atmosphere transparent; above clouds</td></tr>
+      <tr><td>Radio</td><td>mm–m</td><td>Ground</td><td>Atmosphere transparent to radio waves</td></tr>
+      <tr><td>Infrared</td><td>700 nm – 1 mm</td><td>Space or high altitude</td><td>Water vapour absorbs IR</td></tr>
+      <tr><td>X-ray / Gamma</td><td>$< 10$ nm</td><td>Space only</td><td>Atmosphere completely absorbs X/gamma</td></tr>
+      <tr><td>UV</td><td>10–400 nm</td><td>Space only</td><td>Ozone layer absorbs UV</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.1a</div>
+      <div class="example-q">A refracting telescope has an objective of focal length 1.2 m and an eyepiece of focal length 40 mm. Find (a) the angular magnification, (b) the length of the telescope in normal adjustment, (c) the minimum angular separation of two stars that can just be resolved, if the objective diameter is 80 mm and the wavelength is 550 nm.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $M = f_o/f_e = 1200/40 = 30$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $L = f_o + f_e = 1200 + 40 = 1240$ mm $= 1.24$ m.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $\theta_{\min} = \lambda/D = 550\times10^{-9}/0.080 = 6.875\times10^{-6}$ rad $= 6.9\,\mu$rad.<div class="step-comment">This is the diffraction limit — stars closer than 6.9 μrad apart cannot be resolved. The Hubble Space Telescope (D = 2.4 m) resolves to ~0.05 arcseconds = $2.4\times10^{-7}$ rad.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.2 CLASSIFICATION OF STARS -->
+  <div class="lesson-section" id="classification">
+    <h2 class="section-title">9.2 Classification of Stars</h2>
+
+    <p>Stars are classified by their spectra (which reveal temperature and composition) and their luminosity. The key physical relationships:</p>
+
+    <div class="formula-box">
+      $$L = 4\pi r^2 \sigma T^4 \qquad \text{(Stefan-Boltzmann Law)}$$
+      $$\lambda_{\max} T = 2.898\times10^{-3}\text{ m K} \qquad \text{(Wien's Displacement Law)}$$
+      $$F = \frac{L}{4\pi d^2} \qquad \text{(flux = power per unit area at distance }d\text{)}$$
+      $$\sigma = 5.67\times10^{-8}\text{ W m}^{-2}\text{ K}^{-4}$$
+    </div>
+
+    <p>Wien's law tells us a star's surface temperature from the peak wavelength of its spectrum. Stefan-Boltzmann gives the total power (luminosity) from radius and temperature. Together they allow us to find a star's radius from its luminosity and temperature.</p>
+
+    <table>
+      <tr><th>Spectral class</th><th>Colour</th><th>Surface temperature (K)</th><th>Example</th></tr>
+      <tr><td>O</td><td>Blue-violet</td><td>$> 30000$</td><td>Rigel (hot component)</td></tr>
+      <tr><td>B</td><td>Blue-white</td><td>10000–30000</td><td>Rigel</td></tr>
+      <tr><td>A</td><td>White</td><td>7500–10000</td><td>Sirius, Vega</td></tr>
+      <tr><td>F</td><td>Yellow-white</td><td>6000–7500</td><td>Procyon</td></tr>
+      <tr><td>G</td><td>Yellow</td><td>5200–6000</td><td>Sun</td></tr>
+      <tr><td>K</td><td>Orange</td><td>3700–5200</td><td>Arcturus</td></tr>
+      <tr><td>M</td><td>Red</td><td>$< 3700$</td><td>Betelgeuse</td></tr>
+    </table>
+
+    <p>Mnemonic: <em>Oh Be A Fine Girl/Guy, Kiss Me</em>. The spectral classes have subclasses 0–9 (e.g. G2 for the Sun, meaning it is near the hot end of the G class).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.2a</div>
+      <div class="example-q">The Sun has surface temperature 5778 K and radius $6.96\times10^8$ m. (a) Find its peak emission wavelength. (b) Find its total luminosity. (c) The star Betelgeuse has temperature 3500 K and luminosity $1.26\times10^{31}$ W. Find its radius and compare to the Sun's radius.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $\lambda_{\max} = 2.898\times10^{-3}/T = 2.898\times10^{-3}/5778 = 5.015\times10^{-7}$ m $= 502$ nm (green-yellow — the Sun emits most strongly in the green, but appears yellow/white due to atmospheric scattering).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $L = 4\pi r^2\sigma T^4 = 4\pi(6.96\times10^8)^2\times5.67\times10^{-8}\times5778^4 = 4\pi\times4.844\times10^{17}\times5.67\times10^{-8}\times1.115\times10^{15} = 3.83\times10^{26}$ W.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $L = 4\pi r^2\sigma T^4$. $r = \sqrt{L/4\pi\sigma T^4} = \sqrt{1.26\times10^{31}/(4\pi\times5.67\times10^{-8}\times(3500)^4)}$. $(3500)^4 = 1.501\times10^{14}$. Denominator $= 4\pi\times5.67\times10^{-8}\times1.501\times10^{14} = 1.069\times10^8$. $r = \sqrt{1.26\times10^{31}/1.069\times10^8} = \sqrt{1.179\times10^{23}} = 3.43\times10^{11}$ m. Ratio: $r_{\rm Bel}/r_{\odot} = 3.43\times10^{11}/6.96\times10^8 = 493$. Betelgeuse is ~500 times larger than the Sun — a true red supergiant.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.3 HR DIAGRAM -->
+  <div class="lesson-section" id="hr-diagram">
+    <h2 class="section-title">9.3 The Hertzsprung-Russell Diagram</h2>
+
+    <p>The HR diagram plots luminosity (or absolute magnitude) against temperature (or spectral class). Temperature increases to the left; luminosity increases upward. Most stars fall along the <strong>main sequence</strong> — a diagonal band from top-left (hot, luminous, massive) to bottom-right (cool, dim, low mass).</p>
+
+    <div class="key-point">
+      <strong>The four main regions of the HR diagram</strong>
+      <strong>Main sequence:</strong> hydrogen burning stars; position determined by mass. Sun is a G2 star at absolute magnitude +4.8. <strong>Giants:</strong> upper-right — evolved stars with expanded outer layers, lower temperatures but large radii give high luminosity. <strong>Supergiants:</strong> very top — most luminous, rare, short-lived. <strong>White dwarfs:</strong> bottom-left — hot but tiny (Earth-sized), very low luminosity. From $L = 4\pi r^2\sigma T^4$: lines of constant radius run diagonally across the diagram.
+    </div>
+
+    <p>The Sun spends ~10 billion years on the main sequence, fusing hydrogen in its core. Once core hydrogen is exhausted, it will expand to become a red giant, then shed its outer layers to form a planetary nebula, leaving a white dwarf remnant.</p>
+  </div>
+
+  <!-- 9.4 STELLAR EVOLUTION -->
+  <div class="lesson-section" id="stellar-evolution">
+    <h2 class="section-title">9.4 Stellar Evolution</h2>
+
+    <p>The ultimate fate of a star depends almost entirely on its initial mass. All stars form from gravitational collapse of a nebula (giant cloud of gas and dust).</p>
+
+    <table>
+      <tr><th>Initial mass</th><th>Main sequence life</th><th>Post-main-sequence evolution</th><th>Final remnant</th></tr>
+      <tr><td>$< 0.08\,M_\odot$</td><td>Never — too cool for fusion</td><td>Remains as brown dwarf</td><td>Brown dwarf</td></tr>
+      <tr><td>$0.08$–$8\,M_\odot$ (like Sun)</td><td>~$10$ billion years</td><td>Red giant → planetary nebula</td><td>White dwarf</td></tr>
+      <tr><td>$8$–$20\,M_\odot$</td><td>~10–100 million years</td><td>Red supergiant → supernova</td><td>Neutron star</td></tr>
+      <tr><td>$> 20\,M_\odot$</td><td>~few million years</td><td>Red supergiant → supernova</td><td>Black hole</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Chandrasekhar limit — 1.4 solar masses</strong>
+      White dwarfs are supported by electron degeneracy pressure. Above 1.4 solar masses, this cannot support the star against gravity and it collapses. For a neutron star, the equivalent limit (Tolman-Oppenheimer-Volkoff) is ~2–3 solar masses. Above this, collapse continues to a black hole. Stars must lose mass (through stellar winds or mass transfer) to avoid these limits — many end their lives with less mass than they started with.
+    </div>
+
+    <h3 class="subsection">Supernovae and nucleosynthesis</h3>
+    <p>Elements up to iron (Fe) are synthesised by nuclear fusion in stellar cores. Elements heavier than iron require supernova explosions — the extreme conditions allow neutron capture to build heavier nuclei. Every atom of gold, uranium, and most heavy elements was forged in a supernova or neutron star merger billions of years ago. As Carl Sagan noted: we are, quite literally, made of star stuff.</p>
+  </div>
+
+  <!-- 9.5 DISTANCES -->
+  <div class="lesson-section" id="distance">
+    <h2 class="section-title">9.5 Distances & Standard Candles</h2>
+
+    <p>Measuring distances to stars and galaxies requires a hierarchy of methods — the <strong>cosmic distance ladder</strong>.</p>
+
+    <div class="formula-box">
+      $$p = \frac{1}{d} \qquad \text{(parallax angle } p \text{ in arcseconds, distance } d \text{ in parsecs)}$$
+      $$1\text{ pc} = 3.086\times10^{16}\text{ m} = 3.26\text{ ly} \qquad 1\text{ ly} = 9.46\times10^{15}\text{ m}$$
+      $$m - M = 5\log_{10}(d/10) \qquad \text{(distance modulus, }d\text{ in parsecs)}$$
+    </div>
+
+    <p><strong>Parallax</strong> uses the apparent shift in a nearby star's position as Earth orbits the Sun (baseline = 1 AU). Reliable to ~100 pc (Hipparcos) or ~1000 pc (Gaia). Beyond parallax range, <strong>standard candles</strong> are used — objects of known luminosity:</p>
+
+    <table>
+      <tr><th>Standard candle</th><th>Distance range</th><th>Principle</th></tr>
+      <tr><td>Cepheid variables</td><td>Up to ~30 Mpc</td><td>Period-luminosity relation: longer period → higher luminosity</td></tr>
+      <tr><td>Type Ia supernovae</td><td>Up to ~1000 Mpc</td><td>All reach same peak luminosity (~$10^{43}$ W) — "standard bombs"</td></tr>
+    </table>
+
+    <p>Knowing luminosity $L$ and measuring flux $F$: $d = \sqrt{L/4\pi F}$. Type Ia supernovae allowed the discovery (1998) that the universe's expansion is accelerating — attributed to <strong>dark energy</strong>.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.5a</div>
+      <div class="example-q">A Cepheid variable in a distant galaxy has a measured flux of $3.0\times10^{-18}$ W m⁻² and, from its period-luminosity relationship, a known luminosity of $4.0\times10^{29}$ W. Find (a) the distance to the galaxy in metres and in Mpc.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$F = L/4\pi d^2$. $d = \sqrt{L/4\pi F} = \sqrt{4.0\times10^{29}/(4\pi\times3.0\times10^{-18})}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$d = \sqrt{4.0\times10^{29}/3.770\times10^{-17}} = \sqrt{1.061\times10^{46}} = 1.030\times10^{23}$ m.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">In Mpc: $1\text{ Mpc} = 3.086\times10^{22}$ m. $d = 1.030\times10^{23}/3.086\times10^{22} = 3.34$ Mpc.<div class="step-comment">This is comparable to the distance to the Andromeda galaxy (~0.78 Mpc) — within the range Hubble used to establish that "spiral nebulae" are actually entire galaxies far outside our own.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.6 COSMOLOGY -->
+  <div class="lesson-section" id="cosmology">
+    <h2 class="section-title">9.6 Cosmology & the Expanding Universe</h2>
+
+    <p>In 1929, Hubble showed that distant galaxies are receding and that their recession speed is proportional to their distance — the universe is expanding.</p>
+
+    <div class="formula-box">
+      $$v = H_0 d \qquad \text{(Hubble's Law)}$$
+      $$H_0 \approx 70\text{ km s}^{-1}\text{ Mpc}^{-1} = 2.2\times10^{-18}\text{ s}^{-1}$$
+      $$z = \frac{\Delta\lambda}{\lambda_0} = \frac{v}{c} \qquad \text{(redshift; valid for }v \ll c\text{)}$$
+      $$t_H = \frac{1}{H_0} \approx 14\text{ Ga} \qquad \text{(Hubble time — approximate age of universe)}$$
+    </div>
+
+    <p>The recession of galaxies is detected via <strong>cosmological redshift</strong> — the stretching of photon wavelengths as space itself expands. This is not a Doppler effect due to motion through space, but due to the expansion of space itself.</p>
+
+    <div class="key-point">
+      <strong>The Big Bang model — key evidence</strong>
+      (1) Hubble's Law — all galaxies receding; reverse time and everything converges to a single point. (2) Cosmic Microwave Background (CMB) — uniform microwave radiation of temperature 2.73 K filling the universe; relic radiation from when the universe cooled enough for atoms to form (~380,000 years after the Big Bang). (3) Abundance of light elements — Big Bang nucleosynthesis predicts ~75% hydrogen, ~25% helium, trace deuterium and lithium — matches observations perfectly. The CMB was predicted by Gamow, Alpher, and Herman in 1948 and accidentally discovered by Penzias and Wilson in 1964.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.6a — Hubble's Law</div>
+      <div class="example-q">A galaxy shows a hydrogen absorption line at 657 nm that is normally at 656 nm. (a) Find the redshift $z$. (b) Find the recession speed. (c) Find the distance to the galaxy. (d) Find the approximate look-back time.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $z = \Delta\lambda/\lambda_0 = (657-656)/656 = 1/656 = 1.524\times10^{-3}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $v = zc = 1.524\times10^{-3}\times3\times10^8 = 4.57\times10^5$ m s⁻¹ $= 457$ km s⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $d = v/H_0 = 457/70 = 6.53$ Mpc $= 6.53\times3.086\times10^{22} = 2.01\times10^{23}$ m.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(d) Look-back time $= d/c = 2.01\times10^{23}/3\times10^8 = 6.7\times10^{14}$ s $= 21.2$ million years.<div class="step-comment">We see this galaxy as it was 21 million years ago — before the first members of our genus, Homo, walked the Earth. This is the wonder of observational astronomy: every telescope is also a time machine.</div></div></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Dark matter and dark energy</h3>
+    <p>Observations show that the universe contains much more than the visible matter we can detect. <strong>Dark matter</strong> (~27% of the universe) is inferred from galaxy rotation curves, gravitational lensing, and galaxy cluster dynamics — matter that interacts gravitationally but not electromagnetically. <strong>Dark energy</strong> (~68%) is inferred from the accelerating expansion of the universe, detected via Type Ia supernovae. Only ~5% of the universe is ordinary (baryonic) matter. The nature of both dark matter and dark energy remains one of the greatest unsolved problems in physics.</p>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A star has a surface temperature of 12000 K and radius $2.1\times10^9$ m. Find (a) the peak emission wavelength and the colour of the star, (b) the total luminosity of the star, (c) the flux received by a detector $4.0\times10^{17}$ m from the star.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\lambda_{\max} = 2.898\times10^{-3}/12000 = 2.415\times10^{-7}$ m $= 241.5$ nm — ultraviolet. The star appears blue-white (most visible emission is at short wavelengths). Spectral class B or A. (b) $L = 4\pi r^2\sigma T^4 = 4\pi(2.1\times10^9)^2\times5.67\times10^{-8}\times(12000)^4 = 4\pi\times4.41\times10^{18}\times5.67\times10^{-8}\times2.074\times10^{16} = 4\pi\times4.41\times10^{18}\times1.176\times10^9 = 4\pi\times5.186\times10^{27} = 6.51\times10^{28}$ W. (c) $F = L/4\pi d^2 = 6.51\times10^{28}/(4\pi\times(4.0\times10^{17})^2) = 6.51\times10^{28}/(4\pi\times1.6\times10^{35}) = 6.51\times10^{28}/2.011\times10^{36} = 3.24\times10^{-8}$ W m⁻².</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">A galaxy is observed to have a redshift of $z = 0.045$. (a) Find its recession speed. (b) Find its distance in Mpc and in metres. (c) Find the wavelength of the Lyman-alpha line (normally at 122 nm) as observed from Earth for this galaxy. (d) Explain what the redshift tells us about the universe.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $v = zc = 0.045\times3\times10^8 = 1.35\times10^7$ m s⁻¹ $= 13500$ km s⁻¹. (b) $d = v/H_0 = 13500/70 = 192.9$ Mpc $= 192.9\times3.086\times10^{22} = 5.95\times10^{24}$ m. (c) $\Delta\lambda = z\lambda_0 = 0.045\times122 = 5.49$ nm. Observed $\lambda = 122 + 5.49 = 127.5$ nm. (d) The redshift shows the galaxy is moving away from us. Combined with the pattern across all galaxies (recession speed proportional to distance — Hubble's Law), this tells us the universe is expanding uniformly in all directions. Running this expansion back in time suggests the universe originated in a hot, dense state — the Big Bang — approximately 13.8 billion years ago.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A Cepheid variable is observed in a distant galaxy. Its period is 30 days, and from the period-luminosity relationship, this corresponds to an absolute magnitude $M = -4.5$, equivalent to luminosity $L = 3.0\times10^{30}$ W. The observed flux is $F = 5.0\times10^{-17}$ W m⁻². (a) Find the distance to the galaxy in metres, parsecs, and Mpc. (b) Using Hubble's Law, find the expected recession speed of this galaxy. (c) A hydrogen line normally at 656 nm is observed from this galaxy. Find the expected observed wavelength. (d) Explain why Cepheid variables are important in establishing the cosmic distance scale.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $d = \sqrt{L/4\pi F} = \sqrt{3.0\times10^{30}/(4\pi\times5.0\times10^{-17})} = \sqrt{3.0\times10^{30}/6.283\times10^{-16}} = \sqrt{4.774\times10^{45}} = 6.91\times10^{22}$ m. In parsecs: $6.91\times10^{22}/3.086\times10^{16} = 2.239\times10^6$ pc $= 2.24$ Mpc. (b) $v = H_0 d = 70\times2.24 = 156.8$ km s⁻¹ $= 1.568\times10^5$ m s⁻¹. (c) $z = v/c = 1.568\times10^5/3\times10^8 = 5.227\times10^{-4}$. Observed $\lambda = 656\times(1+z) = 656\times1.0005227 = 656.34$ nm (very small shift — this galaxy is relatively close). (d) Cepheid variables have a well-established period-luminosity relationship: the longer the period of pulsation, the greater the luminosity. By observing the pulsation period (which is easy to measure regardless of distance), astronomers can determine the intrinsic luminosity. Comparing this to the observed flux gives the distance via $d = \sqrt{L/4\pi F}$. Cepheids were crucial for Hubble's 1924 discovery that Andromeda is a separate galaxy, not a nebula in the Milky Way, fundamentally changing our understanding of the scale of the universe.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">The Sun is a main sequence star with mass $1.99\times10^{30}$ kg, radius $6.96\times10^8$ m, surface temperature 5778 K, and luminosity $3.83\times10^{26}$ W. In approximately 5 billion years, it will leave the main sequence and eventually become a white dwarf. (a) Using Stefan-Boltzmann, verify the Sun's luminosity. (b) The Sun converts mass to energy at the rate given by $\Delta m/\Delta t = L/c^2$. Calculate this rate in kg s⁻¹. (c) Each proton-proton fusion cycle converts 4 protons ($4\times1.0073$ u) into a helium-4 nucleus ($4.0015$ u) plus other particles. Calculate the energy released per cycle in joules. (d) Hence estimate the number of proton-proton cycles per second in the Sun's core. (e) Describe the sequence of events that will occur when the Sun exhausts its core hydrogen supply, and identify where on the HR diagram the Sun will move at each stage. (f) Why is the fate of a star with initial mass $15\,M_\odot$ fundamentally different from the Sun's fate?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $L = 4\pi r^2\sigma T^4 = 4\pi\times(6.96\times10^8)^2\times5.67\times10^{-8}\times(5778)^4$. $r^2 = 4.844\times10^{17}$. $T^4 = 5778^4 = 1.114\times10^{15}$. $L = 4\pi\times4.844\times10^{17}\times5.67\times10^{-8}\times1.114\times10^{15} = 4\pi\times4.844\times10^{17}\times6.316\times10^7 = 4\pi\times3.060\times10^{25} = 3.84\times10^{26}$ W ✓ (agrees with given value). (b) $\Delta m/\Delta t = L/c^2 = 3.83\times10^{26}/(3\times10^8)^2 = 3.83\times10^{26}/9\times10^{16} = 4.26\times10^9$ kg s⁻¹ $\approx 4.3$ billion kg per second. (c) Mass before: $4\times1.0073 = 4.0292$ u. Mass after: He-4 = $4.0015$ u. Mass defect $= 4.0292 - 4.0015 = 0.0277$ u. Energy $= 0.0277\times1.661\times10^{-27}\times(3\times10^8)^2 = 0.0277\times1.661\times10^{-27}\times9\times10^{16} = 4.134\times10^{-12}$ J. Or: $0.0277\times931.5 = 25.8$ MeV $= 4.13\times10^{-12}$ J. (d) Cycles/s $= L/E_{\rm cycle} = 3.83\times10^{26}/4.134\times10^{-12} = 9.26\times10^{37}$ cycles per second. (e) Sequence: Core hydrogen exhausted → core contracts and heats up; shell hydrogen burning begins → outer layers expand and cool: the Sun becomes a red giant (moves right and upward on HR diagram — luminosity increases greatly, temperature falls). Core heats enough for helium fusion (triple-alpha process) to begin — Sun briefly moves back toward main sequence or onto the horizontal branch. Helium exhausted in core → second red giant expansion, helium shell burning → thermal pulses eject outer layers → planetary nebula forms (hot core exposed — moves left on HR diagram, very high temperature, high luminosity). Remaining core (~0.6 solar masses) contracts to a white dwarf (moves to bottom-left: hot and small, dim — well below main sequence). White dwarf cools over billions of years (moves rightward along bottom of HR diagram) eventually becoming a black dwarf (theoretical — the universe isn't old enough for any white dwarfs to have cooled this far). (f) A $15\,M_\odot$ star burns fuel much faster (luminosity $\propto M^{3.5}$, so ~$15^{3.5}\approx 10000$ times more luminous than the Sun) — main sequence lifetime only ~10 million years. Higher mass means nuclear burning progresses beyond helium: it fuses carbon, neon, oxygen, silicon, building up an onion-shell structure. The iron core that forms cannot be further fused (iron has highest binding energy per nucleon — no energy released). When the iron core exceeds ~1.4 solar masses, electron degeneracy pressure cannot support it; it collapses in milliseconds, triggering a Type II supernova explosion. The remaining core (~1.4–2.5 solar masses) becomes a neutron star; if larger, a black hole. Unlike the Sun, which will end quietly as a white dwarf, this star will destroy itself in one of the most energetic events in the universe, seeding interstellar space with heavy elements.</div>
+      </div>
+      <div class="q-marks">[16 marks]</div>
+    </div>
+  </div>
+
+  <!-- COMPLETION BANNER -->
+  <div class="complete-banner">
+    <h3>🎉 Physics Complete!</h3>
+    <p>All 9 topics of AQA A Level Physics are now covered. Topics 01–05 (Year 1) and Topics 06–09 (Year 2 + Astrophysics option) — every subtopic, worked example, and three-tier practice question set.</p>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="nuclear-physics.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Nuclear Physics</div></a>
+    <a href="../index.html" class="lesson-nav-btn next"><div><span class="btn-label">Back to</span> Physics Index</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
