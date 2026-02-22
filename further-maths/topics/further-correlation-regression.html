@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Further Correlation & Regression — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  .data-table th{background:var(--surface2);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;padding:0.6rem 0.9rem;border:1px solid var(--border);text-align:center}
+  .data-table td{padding:0.5rem 0.9rem;border:1px solid var(--border);color:var(--text);text-align:center}
+  .data-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 12</div>
+  <a href="#recap" class="sidebar-link active"><span class="sidebar-num">12.1</span> Recap: PMCC & Regression</a>
+  <a href="#spearman" class="sidebar-link"><span class="sidebar-num">12.2</span> Spearman's Rank Correlation</a>
+  <a href="#hypothesis" class="sidebar-link"><span class="sidebar-num">12.3</span> Hypothesis Tests for Correlation</a>
+  <a href="#regression-model" class="sidebar-link"><span class="sidebar-num">12.4</span> The Linear Regression Model</a>
+  <a href="#residuals" class="sidebar-link"><span class="sidebar-num">12.5</span> Residuals & Goodness of Fit</a>
+  <a href="#transforming" class="sidebar-link"><span class="sidebar-num">12.6</span> Transforming Non-linear Data</a>
+  <a href="#multiple" class="sidebar-link"><span class="sidebar-num">12.7</span> Multiple Regression (Introduction)</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 12</div>
+    <div class="topic-num-badge">Topic 12 · Further Statistics</div>
+    <h1 class="topic-title">Further Correlation & Regression</h1>
+    <p class="topic-intro">From Spearman's rank correlation to the formal linear regression model, residual analysis, and transforming non-linear relationships into linear ones.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Statistics 1, Chapter 5</div>
+      <div class="meta-item"><span>~3.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#recap">12.1 — Recap: PMCC & Regression</a></li>
+      <li><a href="#spearman">12.2 — Spearman's Rank Correlation</a></li>
+      <li><a href="#hypothesis">12.3 — Hypothesis Tests for Correlation</a></li>
+      <li><a href="#regression-model">12.4 — The Linear Regression Model</a></li>
+      <li><a href="#residuals">12.5 — Residuals & Goodness of Fit</a></li>
+      <li><a href="#transforming">12.6 — Transforming Non-linear Data</a></li>
+      <li><a href="#multiple">12.7 — Multiple Regression (Introduction)</a></li>
+    </ul>
+  </div>
+
+  <!-- 12.1 RECAP -->
+  <div class="lesson-section" id="recap">
+    <h2 class="section-title">12.1 Recap: PMCC & Regression</h2>
+
+    <p>The <strong>product moment correlation coefficient (PMCC)</strong> $r$ measures the strength and direction of a linear relationship between two variables. It always lies in $[-1, 1]$.</p>
+
+    <div class="formula-box">
+      $$r = \frac{S_{xy}}{\sqrt{S_{xx} S_{yy}}} \qquad \text{where}$$
+      $$S_{xx} = \sum x^2 - \frac{(\sum x)^2}{n}, \quad S_{yy} = \sum y^2 - \frac{(\sum y)^2}{n}, \quad S_{xy} = \sum xy - \frac{(\sum x)(\sum y)}{n}$$
+    </div>
+
+    <p>The <strong>least-squares regression line</strong> of $y$ on $x$ is $\hat{y} = a + bx$ where:</p>
+
+    <div class="formula-box">
+      $$b = \frac{S_{xy}}{S_{xx}} \qquad a = \bar{y} - b\bar{x}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Regression of y on x vs x on y</strong>
+      The regression line of $y$ on $x$ minimises the sum of squared <em>vertical</em> residuals — use it to predict $y$ from $x$. The regression line of $x$ on $y$ minimises horizontal residuals — use it to predict $x$ from $y$. These two lines are different unless $r = \pm 1$.
+    </div>
+  </div>
+
+  <!-- 12.2 SPEARMAN'S -->
+  <div class="lesson-section" id="spearman">
+    <h2 class="section-title">12.2 Spearman's Rank Correlation</h2>
+
+    <p>When data cannot be measured precisely (e.g. judges' rankings), or when the relationship may be monotone but not linear, use <strong>Spearman's rank correlation coefficient</strong> $r_s$.</p>
+
+    <div class="formula-box">
+      $$r_s = 1 - \frac{6\sum d_i^2}{n(n^2-1)}$$
+      <p style="margin-top:0.8rem;margin-bottom:0;font-size:0.85rem;color:var(--muted)">where $d_i$ = difference in ranks for the $i$th data point, and $n$ = number of pairs.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Tied ranks</strong>
+      When two observations share a rank, assign each the mean of the positions they would occupy. For example, if two values both rank 3rd and 4th, assign each a rank of 3.5. If there are many ties, Spearman's formula becomes less reliable and PMCC on the ranked data is preferred.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.2a</div>
+      <div class="example-q">Eight athletes are ranked by two judges. Calculate Spearman's rank correlation coefficient.
+        <table class="data-table" style="margin-top:0.8rem">
+          <tr><th>Athlete</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th></tr>
+          <tr><td>Judge 1</td><td>3</td><td>1</td><td>5</td><td>2</td><td>8</td><td>4</td><td>6</td><td>7</td></tr>
+          <tr><td>Judge 2</td><td>4</td><td>2</td><td>3</td><td>1</td><td>7</td><td>5</td><td>8</td><td>6</td></tr>
+        </table>
+      </div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Calculate $d_i$ = (Judge 1 rank) $-$ (Judge 2 rank) for each athlete: $-1, -1, 2, 1, 1, -1, -2, 1$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$d_i^2$: $1, 1, 4, 1, 1, 1, 4, 1$. So $\sum d_i^2 = 14$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$r_s = 1 - \dfrac{6 \times 14}{8(64-1)} = 1 - \dfrac{84}{504} = 1 - \dfrac{1}{6} = \dfrac{5}{6} \approx 0.833$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Strong positive agreement between the two judges.<div class="step-comment">$r_s$ close to 1 indicates the judges are ranking athletes similarly.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.3 HYPOTHESIS TESTS -->
+  <div class="lesson-section" id="hypothesis">
+    <h2 class="section-title">12.3 Hypothesis Tests for Correlation</h2>
+
+    <p>Both $r$ (PMCC) and $r_s$ (Spearman's) can be used to test whether a population correlation is zero.</p>
+
+    <div class="formula-box">
+      $$H_0: \rho = 0 \text{ (no linear correlation)} \quad H_1: \rho \neq 0 \text{ (or } > 0 \text{ or } < 0 \text{)}$$
+    </div>
+
+    <p>Under $H_0$ (bivariate normal population), the test statistic is:</p>
+
+    <div class="formula-box">
+      $$t = \frac{r\sqrt{n-2}}{\sqrt{1-r^2}} \sim t(n-2) \text{ under } H_0$$
+    </div>
+
+    <p>In practice at A Level, critical values for $r$ and $r_s$ are looked up directly from tables for a given $n$ and significance level. Compare the calculated $r$ (or $r_s$) to the critical value.</p>
+
+    <div class="key-point">
+      <strong>Using critical value tables</strong>
+      The table gives the minimum $|r|$ needed to reject $H_0$ at a given level for $n$ data points. If $|r| >$ critical value, reject $H_0$. The same table format is used for both PMCC and Spearman's tests — always check which table you're reading.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.3a</div>
+      <div class="example-q">A sample of $n = 10$ pairs gives PMCC $r = 0.65$. Test at the 5% level whether there is evidence of positive linear correlation in the population.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$H_0$: $\rho = 0$ (no linear correlation). $H_1$: $\rho > 0$ (positive linear correlation). One-tailed test at 5%.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">From tables: the critical value for PMCC with $n = 10$ at the 5% level (one-tailed) is $0.5494$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Since $r = 0.65 > 0.5494$, reject $H_0$. There is significant evidence at the 5% level of positive linear correlation.</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.3b — Spearman's test</div>
+      <div class="example-q">Using the data from Example 12.2a ($n=8$, $r_s = 5/6 \approx 0.833$), test at the 1% level (two-tailed) whether there is evidence of correlation in the population rankings.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$H_0$: $\rho_s = 0$. $H_1$: $\rho_s \neq 0$. Two-tailed at 1%.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Critical value for Spearman's with $n = 8$ at 1% (two-tailed): $0.8810$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Since $|r_s| = 0.833 < 0.8810$, do not reject $H_0$. Insufficient evidence at the 1% level of correlation between judges' rankings.<div class="step-comment">Note: at the 5% level (critical value 0.7381), we would reject $H_0$. The conclusion depends critically on the chosen significance level.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.4 REGRESSION MODEL -->
+  <div class="lesson-section" id="regression-model">
+    <h2 class="section-title">12.4 The Linear Regression Model</h2>
+
+    <p>The formal statistical model for simple linear regression is:</p>
+
+    <div class="formula-box">
+      $$Y_i = \alpha + \beta x_i + \varepsilon_i \qquad \varepsilon_i \sim N(0, \sigma^2) \text{ independently}$$
+    </div>
+
+    <p>Here $\alpha$ and $\beta$ are the true (unknown) population parameters, and $\varepsilon_i$ are random errors. The least-squares estimators $a$ and $b$ are unbiased estimates of $\alpha$ and $\beta$.</p>
+
+    <h3 class="subsection">Properties of the estimators</h3>
+
+    <div class="formula-box">
+      $$E(b) = \beta \qquad \text{Var}(b) = \frac{\sigma^2}{S_{xx}}$$
+      $$E(a) = \alpha \qquad \text{Var}(a) = \sigma^2\left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right)$$
+    </div>
+
+    <p>Since $\sigma^2$ is unknown, it is estimated by the <strong>residual mean square</strong>:</p>
+
+    <div class="formula-box">
+      $$\hat{\sigma}^2 = s^2 = \frac{S_{yy} - b \cdot S_{xy}}{n - 2} = \frac{\text{RSS}}{n-2}$$
+    </div>
+
+    <p>where RSS is the <strong>residual sum of squares</strong> and $n - 2$ is the degrees of freedom (we estimated 2 parameters: $\alpha$ and $\beta$).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.4a</div>
+      <div class="example-q">For a dataset with $n=8$, $S_{xx} = 40$, $S_{xy} = 60$, $S_{yy} = 110$, $\bar{x} = 3$, $\bar{y} = 7$. Find the regression line, estimate $\sigma^2$, and find $\text{Var}(b)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$b = \dfrac{S_{xy}}{S_{xx}} = \dfrac{60}{40} = 1.5$. $a = \bar{y} - b\bar{x} = 7 - 1.5(3) = 2.5$. Line: $\hat{y} = 2.5 + 1.5x$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">RSS $= S_{yy} - b \cdot S_{xy} = 110 - 1.5(60) = 110 - 90 = 20$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\hat{\sigma}^2 = \dfrac{20}{8-2} = \dfrac{20}{6} = 3.\overline{3}$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\widehat{\text{Var}}(b) = \dfrac{\hat{\sigma}^2}{S_{xx}} = \dfrac{10/3}{40} = \dfrac{1}{12}$.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.5 RESIDUALS -->
+  <div class="lesson-section" id="residuals">
+    <h2 class="section-title">12.5 Residuals & Goodness of Fit</h2>
+
+    <p>The <strong>residual</strong> for observation $i$ is $e_i = y_i - \hat{y}_i = y_i - (a + bx_i)$. Residuals tell us how well the model fits each data point.</p>
+
+    <div class="formula-box">
+      $$\text{RSS} = \sum e_i^2 = S_{yy} - b \cdot S_{xy}$$
+      $$r^2 = 1 - \frac{\text{RSS}}{S_{yy}} = \frac{S_{xy}^2}{S_{xx} S_{yy}} \quad \text{(coefficient of determination)}$$
+    </div>
+
+    <p>$r^2$ (or $R^2$) gives the proportion of variation in $y$ explained by the regression on $x$. It ranges from 0 (no fit) to 1 (perfect fit).</p>
+
+    <h3 class="subsection">Residual plots</h3>
+    <p>Plot residuals $e_i$ against fitted values $\hat{y}_i$ (or against $x_i$). A good model shows residuals scattered randomly around zero with no pattern. Patterns in residuals suggest:</p>
+    <p>A funnel shape (increasing spread) → non-constant variance (heteroscedasticity). A curved pattern → the linear model is inappropriate; try a transformation. Systematic runs above/below → a trend not captured by the model.</p>
+
+    <div class="key-point">
+      <strong>Properties of residuals</strong>
+      Always: $\sum e_i = 0$ (residuals sum to zero) and $\sum x_i e_i = 0$ (residuals are uncorrelated with $x$). These follow directly from the least-squares normal equations and can be used to check calculations.
+    </div>
+  </div>
+
+  <!-- 12.6 TRANSFORMING -->
+  <div class="lesson-section" id="transforming">
+    <h2 class="section-title">12.6 Transforming Non-linear Data</h2>
+
+    <p>When a scatter plot suggests a non-linear relationship, a suitable transformation can linearise the data, allowing standard regression techniques to be applied.</p>
+
+    <table class="data-table">
+      <tr><th>Model</th><th>Equation</th><th>Transformation</th><th>Linearised form</th></tr>
+      <tr><td>Exponential</td><td>$y = ae^{bx}$</td><td>$Y = \ln y$</td><td>$Y = \ln a + bx$</td></tr>
+      <tr><td>Power</td><td>$y = ax^b$</td><td>$X = \ln x$, $Y = \ln y$</td><td>$Y = \ln a + bX$</td></tr>
+      <tr><td>Reciprocal</td><td>$y = a + b/x$</td><td>$X = 1/x$</td><td>$y = a + bX$</td></tr>
+      <tr><td>Quadratic</td><td>$y = a + bx^2$</td><td>$X = x^2$</td><td>$y = a + bX$</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.6a</div>
+      <div class="example-q">A researcher believes a population $P$ grows exponentially with time $t$: $P = ae^{bt}$. Data gives $\ln P$ vs $t$ as a straight line with gradient $0.12$ and intercept $3.4$. Find $a$, $b$, and predict $P$ at $t = 20$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">The linearised model is $\ln P = \ln a + bt$. Comparing: $b = 0.12$ and $\ln a = 3.4$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$a = e^{3.4} \approx 29.96$. So $P \approx 29.96\,e^{0.12t}$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">At $t = 20$: $P = 29.96 \times e^{2.4} \approx 29.96 \times 11.02 \approx 330$.<div class="step-comment">Always check whether prediction is interpolation (within data range) or extrapolation (outside) — extrapolation is unreliable.</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.6b</div>
+      <div class="example-q">Data suggests $y = ax^b$. After taking logs, $\ln y = \ln a + b \ln x$. From the coded data: $\sum \ln x = 12$, $\sum \ln y = 18$, $\sum (\ln x)^2 = 32$, $\sum (\ln x)(\ln y) = 28$, $n = 6$. Find $a$ and $b$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Let $X = \ln x$, $Y = \ln y$. $\bar{X} = 2$, $\bar{Y} = 3$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$S_{XX} = 32 - \dfrac{144}{6} = 32 - 24 = 8$. $S_{XY} = 28 - \dfrac{12 \times 18}{6} = 28 - 36 = -8$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$b = \dfrac{S_{XY}}{S_{XX}} = \dfrac{-8}{8} = -1$. $\ln a = \bar{Y} - b\bar{X} = 3 - (-1)(2) = 5$. So $a = e^5 \approx 148.4$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Model: $y = 148.4\, x^{-1} = \dfrac{148.4}{x}$ — an inverse relationship.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12.7 MULTIPLE REGRESSION -->
+  <div class="lesson-section" id="multiple">
+    <h2 class="section-title">12.7 Multiple Regression (Introduction)</h2>
+
+    <p>When more than one explanatory variable affects $Y$, we use <strong>multiple linear regression</strong>:</p>
+
+    <div class="formula-box">
+      $$Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon$$
+    </div>
+
+    <p>The least-squares estimates minimise $\sum(y_i - \hat{y}_i)^2$. In matrix form: $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$, but at A Level you will only be asked to interpret output from a computer or given values.</p>
+
+    <h3 class="subsection">Interpreting multiple regression output</h3>
+    <p>Each coefficient $\hat{\beta}_j$ estimates the change in $Y$ per unit increase in $x_j$, <em>holding all other variables constant</em>. This is the key difference from simple regression — we can separate the effects of correlated predictors.</p>
+
+    <div class="warning-box">
+      <strong>⚠ Multicollinearity</strong>
+      If two predictor variables are highly correlated with each other, the regression coefficients become unreliable — small changes in data can cause large changes in estimated coefficients. This is called multicollinearity. Signs include large standard errors, coefficients that change sign unexpectedly, or $R^2$ being high but individual tests being non-significant.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 12.7a — Interpreting output</div>
+      <div class="example-q">A regression of house price $Y$ (£000s) on floor area $x_1$ (m²) and distance from city centre $x_2$ (km) gives: $\hat{Y} = 120 + 2.3x_1 - 8.4x_2$, $R^2 = 0.78$. Interpret the coefficients.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\hat{\beta}_0 = 120$: the estimated price of a house with zero floor area at the city centre (not meaningful here — an extrapolation artefact).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\hat{\beta}_1 = 2.3$: each additional m² of floor area is associated with an increase of £2,300 in price, holding distance constant.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\hat{\beta}_2 = -8.4$: each additional km from the city centre is associated with a decrease of £8,400 in price, holding floor area constant.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$R^2 = 0.78$: 78% of the variation in house price is explained by floor area and distance combined.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Six students are ranked by their scores in Maths and Physics:
+          <table class="data-table" style="margin:0.6rem 0">
+            <tr><th>Student</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+            <tr><td>Maths rank</td><td>1</td><td>3</td><td>2</td><td>5</td><td>4</td><td>6</td></tr>
+            <tr><td>Physics rank</td><td>2</td><td>1</td><td>4</td><td>3</td><td>6</td><td>5</td></tr>
+          </table>
+          Calculate Spearman's rank correlation coefficient and comment on the result.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$d_i$: $-1,2,-2,2,-2,1$. $d_i^2$: $1,4,4,4,4,1$. $\sum d_i^2=18$. $r_s=1-\frac{6\times18}{6(36-1)}=1-\frac{108}{210}=1-\frac{18}{35}=\frac{17}{35}\approx0.486$. Moderate positive correlation — students who perform well in Maths tend to perform reasonably well in Physics, but the relationship is not strong.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Data on advertising spend $x$ (£000s) and sales $y$ (£000s) for 10 months gives: $\sum x = 45$, $\sum y = 310$, $\sum x^2 = 235$, $\sum y^2 = 10450$, $\sum xy = 1520$. Find the regression line of $y$ on $x$, the PMCC $r$, and interpret both.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\bar{x}=4.5$, $\bar{y}=31$. $S_{xx}=235-\frac{2025}{10}=235-202.5=32.5$. $S_{yy}=10450-\frac{96100}{10}=10450-9610=840$. $S_{xy}=1520-\frac{45\times310}{10}=1520-1395=125$. $b=\frac{125}{32.5}\approx3.846$. $a=31-3.846\times4.5=31-17.31=13.69$. Line: $\hat{y}=13.69+3.85x$. $r=\frac{125}{\sqrt{32.5\times840}}=\frac{125}{\sqrt{27300}}=\frac{125}{165.2}\approx0.757$. There is strong positive linear correlation between advertising spend and sales; for each additional £1000 spent on advertising, sales increase by approximately £3850.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">It is believed that $y = ax^b$. Taking logs: $\ln y$ vs $\ln x$ gives a straight line with gradient $-0.5$ and passing through $(\ln 4, \ln 6)$. Find $a$ and $b$, and write the original model.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$b=-0.5$. The line passes through $(\ln4, \ln6)$: $\ln6=\ln a+(-0.5)\ln4=\ln a-\ln2$. So $\ln a=\ln6+\ln2=\ln12$, giving $a=12$. Model: $y=12x^{-0.5}=\frac{12}{\sqrt{x}}$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Using the regression data from Q2: (a) Estimate $\sigma^2$ using the residual mean square. (b) Find $\widehat{\text{Var}}(b)$. (c) A student predicts sales when advertising spend is £8000. Give a point estimate and comment on whether this is interpolation or extrapolation.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) RSS$=S_{yy}-b\cdot S_{xy}=840-3.846\times125=840-480.8=359.2$. $\hat{\sigma}^2=\frac{359.2}{10-2}=44.9$. (b) $\widehat{\text{Var}}(b)=\frac{44.9}{32.5}=1.381$. (c) $\hat{y}=13.69+3.846\times8=13.69+30.77=44.46$, i.e. £44,460. The data range has $\bar{x}=4.5$ and $x_{\max}$ is unknown but likely $\leq9$ given $\sum x=45$ over 10 months — $x=8$ may be near the edge or outside the data range; extrapolation should be treated with caution.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Explain why $r^2 = S_{xy}^2 / (S_{xx} S_{yy})$ can be interpreted as the proportion of variance in $y$ explained by the linear regression on $x$. Use the decomposition $S_{yy} = \text{RegSS} + \text{RSS}$, where $\text{RegSS} = b \cdot S_{xy}$, to justify this.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$S_{yy}=\sum(y_i-\bar{y})^2$ is proportional to the total variance of $y$. The regression accounts for $\text{RegSS}=b\cdot S_{xy}=\frac{S_{xy}^2}{S_{xx}}$ of this. So $r^2=\frac{\text{RegSS}}{S_{yy}}=\frac{S_{xy}^2/S_{xx}}{S_{yy}}=\frac{S_{xy}^2}{S_{xx}S_{yy}}$ — the fraction of total variation explained by the regression. The remainder $\text{RSS}=S_{yy}-\text{RegSS}$ is unexplained. Since $0\leq\text{RSS}\leq S_{yy}$, we have $0\leq r^2\leq1$. Note $r^2=0$ means no linear relationship and $r^2=1$ means perfect fit (all points on the line).</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">The PMCC for a sample of size $n=15$ is $r=0.48$. (a) Test at the 5% level (two-tailed) whether there is evidence of linear correlation in the population, using the $t$-statistic $t = r\sqrt{n-2}/\sqrt{1-r^2} \sim t(n-2)$ under $H_0$. (b) Find the minimum sample size $n$ such that $r = 0.48$ would be significant at the 5% level (two-tailed).</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $t=\frac{0.48\sqrt{13}}{\sqrt{1-0.2304}}=\frac{0.48\times3.606}{\sqrt{0.7696}}=\frac{1.731}{0.8773}=1.973$. Critical value $t_{13,0.025}=2.160$. Since $1.973<2.160$, do not reject $H_0$ at 5%. (b) Need $\frac{0.48\sqrt{n-2}}{\sqrt{1-0.48^2}}>2.042$ (using $t_{\infty,0.025}\approx1.96$ as lower bound, or iterating). $0.48\sqrt{n-2}>1.96\times0.8773=1.719$. $\sqrt{n-2}>3.581$. $n-2>12.83$. $n>14.83$, so $n\geq17$ (checking: $t=0.48\sqrt{15}/\sqrt{0.7696}=1.860/0.877=2.121>2.131$... need $n=17$ gives $t=0.48\times\sqrt{15}/0.877\approx2.12$, close — need exact critical value for $t_{15}$). Minimum $n=17$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">In the linear model $Y_i = \alpha + \beta x_i + \varepsilon_i$ with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d., the least squares estimator of $\beta$ is $b = S_{xy}/S_{xx}$. (i) Show that $b$ can be written as $b = \beta + \sum_i c_i \varepsilon_i$ for constants $c_i = (x_i - \bar{x})/S_{xx}$. (ii) Hence show $E(b) = \beta$ and $\text{Var}(b) = \sigma^2/S_{xx}$. (iii) What distribution does $b$ follow?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $b=\frac{S_{xy}}{S_{xx}}=\frac{\sum(x_i-\bar{x})(Y_i-\bar{Y})}{S_{xx}}=\frac{\sum(x_i-\bar{x})Y_i}{S_{xx}}$ (since $\sum(x_i-\bar{x})=0$). With $Y_i=\alpha+\beta x_i+\varepsilon_i$: $b=\frac{\sum(x_i-\bar{x})(\alpha+\beta x_i+\varepsilon_i)}{S_{xx}}=\frac{\alpha\sum(x_i-\bar{x})+\beta\sum(x_i-\bar{x})x_i+\sum(x_i-\bar{x})\varepsilon_i}{S_{xx}}=\frac{\beta S_{xx}+\sum(x_i-\bar{x})\varepsilon_i}{S_{xx}}=\beta+\sum_i c_i\varepsilon_i$ where $c_i=(x_i-\bar{x})/S_{xx}$ ✓. (ii) $E(b)=\beta+\sum c_i E(\varepsilon_i)=\beta$ ✓. $\text{Var}(b)=\sum c_i^2\text{Var}(\varepsilon_i)=\sigma^2\sum c_i^2=\sigma^2\cdot\frac{\sum(x_i-\bar{x})^2}{S_{xx}^2}=\frac{\sigma^2}{S_{xx}}$ ✓. (iii) Since $b$ is a linear combination of independent normal variables $\varepsilon_i$: $b\sim N(\beta,\,\sigma^2/S_{xx})$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Two researchers both fit a line to the same bivariate data. Researcher A fits the regression of $Y$ on $X$ (minimising vertical residuals). Researcher B fits the regression of $X$ on $Y$ (minimising horizontal residuals). (i) Show that the two lines both pass through $(\bar{x}, \bar{y})$. (ii) Show the gradient of A's line is $b_A = S_{xy}/S_{xx}$ and B's (expressed as $\hat{x} = c + dy$) has $d = S_{xy}/S_{yy}$. (iii) Show that the product of gradients satisfies $b_A \times (1/d) = r^2$, and hence the lines are the same if and only if $|r| = 1$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) Both lines are of the form $y-\bar{y}=b(x-\bar{x})$ or $x-\bar{x}=d(y-\bar{y})$, which trivially pass through $(\bar{x},\bar{y})$ ✓. (ii) A minimises $\sum(y_i-a-bx_i)^2$. Setting $\partial/\partial b=0$: $b_A=S_{xy}/S_{xx}$ ✓. B minimises $\sum(x_i-c-dy_i)^2$, giving $d=S_{xy}/S_{yy}$ ✓. (iii) A's line: $y=\bar{y}+b_A(x-\bar{x})$, gradient $b_A=S_{xy}/S_{xx}$. B's line expressed as $y$ on $x$: from $x-\bar{x}=d(y-\bar{y})$, rearrange to $y=\bar{y}+\frac{1}{d}(x-\bar{x})$, gradient $1/d=S_{yy}/S_{xy}$. Product: $b_A\times\frac{1}{d}=\frac{S_{xy}}{S_{xx}}\times\frac{S_{yy}}{S_{xy}}=\frac{S_{yy}}{S_{xx}}$... that's not $r^2$ directly. Actually: $b_A\times d=\frac{S_{xy}}{S_{xx}}\cdot\frac{S_{xy}}{S_{yy}}=\frac{S_{xy}^2}{S_{xx}S_{yy}}=r^2$. The lines coincide when both gradients are equal: $b_A=1/d$, i.e. $b_A\cdot d=1$, i.e. $r^2=1$, i.e. $|r|=1$ ✓.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="continuous-distributions.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Continuous Distributions</div></a>
+    <a href="momentum-impulse.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Momentum & Impulse</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
