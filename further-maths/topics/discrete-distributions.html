@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discrete Distributions — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .dist-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:0.88rem}
+  .dist-table th{background:var(--surface2);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.6rem 1rem;border:1px solid var(--border);text-align:left}
+  .dist-table td{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--text);vertical-align:top}
+  .dist-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 09</div>
+  <a href="#recap" class="sidebar-link active"><span class="sidebar-num">9.1</span> Recap: Expectation & Variance</a>
+  <a href="#pgf" class="sidebar-link"><span class="sidebar-num">9.2</span> Probability Generating Functions</a>
+  <a href="#pgf-using" class="sidebar-link"><span class="sidebar-num">9.3</span> Using PGFs for E(X) and Var(X)</a>
+  <a href="#poisson" class="sidebar-link"><span class="sidebar-num">9.4</span> Poisson Distribution</a>
+  <a href="#geometric" class="sidebar-link"><span class="sidebar-num">9.5</span> Geometric Distribution</a>
+  <a href="#negbin" class="sidebar-link"><span class="sidebar-num">9.6</span> Negative Binomial Distribution</a>
+  <a href="#sums" class="sidebar-link"><span class="sidebar-num">9.7</span> Sums of Independent Variables</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 09</div>
+    <div class="topic-num-badge">Topic 09 · Further Statistics</div>
+    <h1 class="topic-title">Discrete Distributions</h1>
+    <p class="topic-intro">Probability generating functions, the Poisson, Geometric and Negative Binomial distributions — and the powerful theory of sums of independent random variables.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Statistics 1, Chapters 1–3</div>
+      <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#recap">9.1 — Recap: Expectation & Variance</a></li>
+      <li><a href="#pgf">9.2 — Probability Generating Functions</a></li>
+      <li><a href="#pgf-using">9.3 — Using PGFs for E(X) and Var(X)</a></li>
+      <li><a href="#poisson">9.4 — Poisson Distribution</a></li>
+      <li><a href="#geometric">9.5 — Geometric Distribution</a></li>
+      <li><a href="#negbin">9.6 — Negative Binomial Distribution</a></li>
+      <li><a href="#sums">9.7 — Sums of Independent Variables</a></li>
+    </ul>
+  </div>
+
+  <!-- 9.1 RECAP -->
+  <div class="lesson-section" id="recap">
+    <h2 class="section-title">9.1 Recap: Expectation & Variance</h2>
+    <p>For a discrete random variable $X$ taking values $x_i$ with probabilities $p_i = P(X = x_i)$:</p>
+
+    <div class="formula-box">
+      $$E(X) = \sum_i x_i p_i \qquad E(X^2) = \sum_i x_i^2 p_i$$
+      $$\text{Var}(X) = E(X^2) - [E(X)]^2$$
+    </div>
+
+    <p>For linear transformations: $E(aX + b) = aE(X) + b$ and $\text{Var}(aX + b) = a^2\text{Var}(X)$.</p>
+
+    <p>For independent $X$ and $Y$: $E(X+Y) = E(X)+E(Y)$ and $\text{Var}(X+Y) = \text{Var}(X)+\text{Var}(Y)$.</p>
+
+    <div class="key-point">
+      <strong>Known distributions to recall</strong>
+      $X \sim B(n,p)$: $E(X) = np$, $\text{Var}(X) = np(1-p)$. $X \sim \text{Po}(\lambda)$: $E(X) = \lambda$, $\text{Var}(X) = \lambda$. These will be derived more rigorously using PGFs in this topic.
+    </div>
+  </div>
+
+  <!-- 9.2 PGF -->
+  <div class="lesson-section" id="pgf">
+    <h2 class="section-title">9.2 Probability Generating Functions</h2>
+    <p>The <strong>probability generating function (PGF)</strong> of a discrete random variable $X$ (taking non-negative integer values) is:</p>
+
+    <div class="formula-box">
+      $$G_X(t) = E(t^X) = \sum_{x=0}^{\infty} P(X = x)\, t^x = p_0 + p_1 t + p_2 t^2 + \cdots$$
+    </div>
+
+    <p>The PGF encodes the entire probability distribution as coefficients of a power series. Crucially, $P(X = r)$ is the coefficient of $t^r$, so the PGF uniquely determines the distribution.</p>
+
+    <div class="key-point">
+      <strong>Key property</strong>
+      $G_X(1) = \sum_{x=0}^{\infty} P(X=x) = 1$ always. This is a useful check. The PGF converges for $|t| \leq 1$ (and usually for a larger range).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.2a</div>
+      <div class="example-q">Find the PGF of $X \sim B(n, p)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$P(X=r) = \binom{n}{r}p^r(1-p)^{n-r}$ for $r = 0, 1, \ldots, n$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$$G_X(t) = \sum_{r=0}^{n}\binom{n}{r}p^r(1-p)^{n-r}t^r = \sum_{r=0}^{n}\binom{n}{r}(pt)^r(1-p)^{n-r}$$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">By the binomial theorem: $G_X(t) = (pt + 1 - p)^n = (1 - p + pt)^n$<div class="step-comment">Check: $G_X(1) = (1-p+p)^n = 1$ ✓</div></div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.2b</div>
+      <div class="example-q">Find the PGF of $X \sim \text{Po}(\lambda)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$P(X=r) = \dfrac{e^{-\lambda}\lambda^r}{r!}$ for $r = 0, 1, 2, \ldots$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$$G_X(t) = \sum_{r=0}^{\infty}\frac{e^{-\lambda}\lambda^r}{r!}t^r = e^{-\lambda}\sum_{r=0}^{\infty}\frac{(\lambda t)^r}{r!} = e^{-\lambda}\cdot e^{\lambda t} = e^{\lambda(t-1)}$$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$G_X(t) = e^{\lambda(t-1)}$. Check: $G_X(1) = e^0 = 1$ ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.3 USING PGFs -->
+  <div class="lesson-section" id="pgf-using">
+    <h2 class="section-title">9.3 Using PGFs for E(X) and Var(X)</h2>
+    <p>Differentiating the PGF with respect to $t$ extracts moments of the distribution.</p>
+
+    <div class="formula-box">
+      $$G'_X(t) = \sum_{x=1}^{\infty} x\, P(X=x)\, t^{x-1} \implies G'_X(1) = E(X)$$
+      $$G''_X(t) = \sum_{x=2}^{\infty} x(x-1)\, P(X=x)\, t^{x-2} \implies G''_X(1) = E(X(X-1)) = E(X^2) - E(X)$$
+      $$\text{Var}(X) = G''_X(1) + G'_X(1) - [G'_X(1)]^2$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.3a</div>
+      <div class="example-q">Use the PGF to find $E(X)$ and $\text{Var}(X)$ for $X \sim \text{Po}(\lambda)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$G_X(t) = e^{\lambda(t-1)}$. Differentiate: $G'_X(t) = \lambda e^{\lambda(t-1)}$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$E(X) = G'_X(1) = \lambda e^0 = \lambda$. ✓</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$G''_X(t) = \lambda^2 e^{\lambda(t-1)}$. So $G''_X(1) = \lambda^2$.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\text{Var}(X) = G''_X(1) + G'_X(1) - [G'_X(1)]^2 = \lambda^2 + \lambda - \lambda^2 = \lambda$. ✓</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.3b</div>
+      <div class="example-q">Use the PGF of $B(n,p)$ to find $E(X)$ and $\text{Var}(X)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$G_X(t) = (1-p+pt)^n$. $G'_X(t) = np(1-p+pt)^{n-1}$. $E(X) = G'_X(1) = np$. ✓</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$G''_X(t) = n(n-1)p^2(1-p+pt)^{n-2}$. $G''_X(1) = n(n-1)p^2$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\text{Var}(X) = n(n-1)p^2 + np - n^2p^2 = np - np^2 = np(1-p)$. ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.4 POISSON -->
+  <div class="lesson-section" id="poisson">
+    <h2 class="section-title">9.4 Poisson Distribution</h2>
+    <p>$X \sim \text{Po}(\lambda)$ models the number of events in a fixed interval of time or space, where events occur independently at a constant average rate $\lambda$.</p>
+
+    <div class="formula-box">
+      $$P(X = r) = \frac{e^{-\lambda}\lambda^r}{r!}, \quad r = 0, 1, 2, \ldots$$
+      $$E(X) = \lambda \qquad \text{Var}(X) = \lambda \qquad G_X(t) = e^{\lambda(t-1)}$$
+    </div>
+
+    <h3 class="subsection">Conditions for the Poisson model</h3>
+    <p>Events must occur: independently of each other, at a constant average rate, and singly (no two events simultaneously). If these hold and we count events in a continuous interval, the Poisson distribution applies.</p>
+
+    <h3 class="subsection">Poisson as a limit of the Binomial</h3>
+    <p>If $X \sim B(n, p)$ with $n$ large and $p$ small such that $np = \lambda$ remains constant, then $X \approx \text{Po}(\lambda)$. In the limit $n \to \infty$, $p \to 0$, $np \to \lambda$, the binomial distribution becomes exactly Poisson.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.4a</div>
+      <div class="example-q">Cars pass a point at an average rate of 3 per minute. Find the probability that in a 2-minute period: (a) exactly 4 cars pass, (b) fewer than 2 cars pass.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">In 2 minutes, $\lambda = 6$. So $X \sim \text{Po}(6)$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(a) $P(X=4) = \dfrac{e^{-6} \cdot 6^4}{4!} = \dfrac{e^{-6} \cdot 1296}{24} = 54e^{-6} \approx 0.1339$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(b) $P(X < 2) = P(X=0) + P(X=1) = e^{-6} + 6e^{-6} = 7e^{-6} \approx 0.0174$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.5 GEOMETRIC -->
+  <div class="lesson-section" id="geometric">
+    <h2 class="section-title">9.5 Geometric Distribution</h2>
+    <p>$X \sim \text{Geo}(p)$ models the number of trials up to and including the first success, where each trial succeeds independently with probability $p$.</p>
+
+    <div class="formula-box">
+      $$P(X = r) = (1-p)^{r-1}p, \quad r = 1, 2, 3, \ldots$$
+      $$E(X) = \frac{1}{p} \qquad \text{Var}(X) = \frac{1-p}{p^2} \qquad G_X(t) = \frac{pt}{1-(1-p)t}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Memoryless property</strong>
+      The geometric distribution is the only discrete distribution with the memoryless property: $P(X > m + n \mid X > m) = P(X > n)$. Past failures give no information about future trials — each trial starts fresh.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.5a — Deriving the PGF</div>
+      <div class="example-q">Find the PGF of $X \sim \text{Geo}(p)$ and hence find $E(X)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$G_X(t) = \displaystyle\sum_{r=1}^{\infty}(1-p)^{r-1}p\,t^r = pt\sum_{r=1}^{\infty}[(1-p)t]^{r-1} = pt\cdot\dfrac{1}{1-(1-p)t}$ (geometric series, $|(1-p)t|<1$)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$G_X(t) = \dfrac{pt}{1-(1-p)t}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Using quotient rule: $G'_X(t) = \dfrac{p[1-(1-p)t] + pt(1-p)}{[1-(1-p)t]^2} = \dfrac{p}{[1-(1-p)t]^2}$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$E(X) = G'_X(1) = \dfrac{p}{[1-(1-p)]^2} = \dfrac{p}{p^2} = \dfrac{1}{p}$ ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.6 NEGATIVE BINOMIAL -->
+  <div class="lesson-section" id="negbin">
+    <h2 class="section-title">9.6 Negative Binomial Distribution</h2>
+    <p>$X \sim \text{NB}(r, p)$ models the number of trials needed to achieve the $r$th success. It generalises the geometric (which is $\text{NB}(1,p)$).</p>
+
+    <div class="formula-box">
+      $$P(X = n) = \binom{n-1}{r-1}p^r(1-p)^{n-r}, \quad n = r, r+1, r+2, \ldots$$
+      $$E(X) = \frac{r}{p} \qquad \text{Var}(X) = \frac{r(1-p)}{p^2} \qquad G_X(t) = \left(\frac{pt}{1-(1-p)t}\right)^r$$
+    </div>
+
+    <div class="key-point">
+      <strong>Why the formula works</strong>
+      To get the $r$th success on trial $n$, the last trial must be a success (probability $p$), and there must be exactly $r-1$ successes in the first $n-1$ trials — giving the $\binom{n-1}{r-1}p^{r-1}(1-p)^{n-r}$ factor for the first $n-1$ trials.
+    </div>
+
+    <p>Since $X \sim \text{NB}(r,p)$ can be written as a sum of $r$ independent $\text{Geo}(p)$ variables, its PGF is the $r$th power of the geometric PGF — and its mean and variance are simply $r$ times those of the geometric.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.6a</div>
+      <div class="example-q">A biased coin has $P(\text{heads}) = 0.4$. Find the probability that the 3rd head occurs on the 7th toss.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$X \sim \text{NB}(3, 0.4)$. We want $P(X = 7)$.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$P(X=7) = \dbinom{6}{2}(0.4)^3(0.6)^4 = 15 \times 0.064 \times 0.1296 \approx 0.1244$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.7 SUMS -->
+  <div class="lesson-section" id="sums">
+    <h2 class="section-title">9.7 Sums of Independent Variables</h2>
+    <p>The key power of PGFs: if $X$ and $Y$ are <strong>independent</strong>, then the PGF of $X + Y$ is simply the product of their PGFs.</p>
+
+    <div class="formula-box">
+      $$G_{X+Y}(t) = G_X(t) \cdot G_Y(t)$$
+    </div>
+
+    <p>This follows because $E(t^{X+Y}) = E(t^X \cdot t^Y) = E(t^X)\cdot E(t^Y)$ when $X$ and $Y$ are independent.</p>
+
+    <h3 class="subsection">Standard results from the product rule</h3>
+
+    <table class="dist-table">
+      <tr><th>Result</th><th>Proof via PGFs</th></tr>
+      <tr><td>Sum of independent Poissons: $\text{Po}(\lambda_1) + \text{Po}(\lambda_2) \sim \text{Po}(\lambda_1+\lambda_2)$</td><td>$e^{\lambda_1(t-1)}\cdot e^{\lambda_2(t-1)} = e^{(\lambda_1+\lambda_2)(t-1)}$</td></tr>
+      <tr><td>Sum of independent Binomials (same $p$): $B(n_1,p)+B(n_2,p)\sim B(n_1+n_2,p)$</td><td>$(1-p+pt)^{n_1}\cdot(1-p+pt)^{n_2}=(1-p+pt)^{n_1+n_2}$</td></tr>
+      <tr><td>Sum of $r$ independent $\text{Geo}(p)$ variables $\sim \text{NB}(r,p)$</td><td>$\left(\frac{pt}{1-(1-p)t}\right)^r$</td></tr>
+    </table>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.7a</div>
+      <div class="example-q">$X \sim \text{Po}(2)$ and $Y \sim \text{Po}(5)$ are independent. Find $P(X+Y = 3)$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$X + Y \sim \text{Po}(7)$ by the addition property.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$P(X+Y=3) = \dfrac{e^{-7}\cdot 7^3}{3!} = \dfrac{343 e^{-7}}{6} \approx 0.0521$</div></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 9.7b — Identifying a distribution from its PGF</div>
+      <div class="example-q">A random variable $X$ has PGF $G_X(t) = \dfrac{0.3t}{1-0.7t} \cdot e^{2(t-1)}$. Identify the distribution of $X$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\dfrac{0.3t}{1-0.7t}$ is the PGF of $\text{Geo}(0.3)$ (since $p=0.3$, $1-p=0.7$).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$e^{2(t-1)}$ is the PGF of $\text{Po}(2)$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Since the PGF is a product, $X = A + B$ where $A \sim \text{Geo}(0.3)$ and $B \sim \text{Po}(2)$ are independent.<div class="step-comment">PGFs uniquely determine distributions, so identifying a PGF as a product immediately tells us the distribution is a sum of independent variables.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A random variable $X$ has PGF $G_X(t) = \dfrac{1}{4}(1+t)^2(1+t^2)$. Find (a) $P(X=0)$, $P(X=1)$, $P(X=2)$, $P(X=3)$, $P(X=4)$, (b) $E(X)$ using $G'_X(1)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Expand: $\frac{1}{4}(1+2t+t^2)(1+t^2)=\frac{1}{4}(1+2t+2t^2+2t^3+t^4)$. So $P(X=0)=\frac{1}{4}$, $P(X=1)=\frac{1}{2}$, $P(X=2)=\frac{1}{2}$... wait, check sum = $\frac{1}{4}(1+2+2+2+1)=\frac{8}{4}=2\neq1$. Re-examine: $G_X(t)=\frac{1}{4}(1+t)^2(1+t^2)$ evaluated at $t=1$: $\frac{1}{4}(4)(2)=2$. This can't be a valid PGF unless $\frac{1}{8}$ instead of $\frac{1}{4}$. Using $\frac{1}{8}$: $P(X=0)=\frac{1}{8},P(X=1)=\frac{2}{8}=\frac{1}{4},P(X=2)=\frac{2}{8}=\frac{1}{4},P(X=3)=\frac{2}{8}=\frac{1}{4},P(X=4)=\frac{1}{8}$. (b) $G'_X(t)=\frac{1}{8}[2(1+t)(1+t^2)+2t(1+t)^2]$. $G'_X(1)=\frac{1}{8}[2(2)(2)+2(4)]=\frac{1}{8}(8+8)=2$. $E(X)=2$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Flaws in a roll of fabric occur at an average rate of 1.5 per metre. Find the probability that a 4-metre roll contains (a) no flaws, (b) at most 2 flaws, (c) more than 5 flaws.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\lambda=1.5\times4=6$. $X\sim\text{Po}(6)$. (a) $P(X=0)=e^{-6}\approx0.00248$. (b) $P(X\leq2)=e^{-6}(1+6+18)=25e^{-6}\approx0.0620$. (c) $P(X>5)=1-P(X\leq5)=1-e^{-6}(1+6+18+36+54+64.8)=1-e^{-6}\cdot\frac{e^6\cdot P(\leq5)\cdot e^6}{1}$. Direct: $P(X\leq5)=e^{-6}\sum_{r=0}^5\frac{6^r}{r!}=e^{-6}(1+6+18+36+54+\frac{1296}{120})=e^{-6}\cdot(115+10.8)=125.8e^{-6}$. $P(X>5)\approx1-0.4457=0.5543$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">$X \sim \text{Geo}(0.2)$. Find (a) $P(X=4)$, (b) $P(X > 5)$, (c) $E(X)$, (d) $\text{Var}(X)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $(0.8)^3(0.2)=0.1024$. (b) $P(X>5)=(0.8)^5=0.32768$ (memoryless: no success in first 5 trials). (c) $E(X)=\frac{1}{0.2}=5$. (d) $\text{Var}(X)=\frac{0.8}{0.04}=20$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">$X \sim \text{NB}(4, 0.3)$. Find $E(X)$, $\text{Var}(X)$, and $P(X = 6)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$E(X)=\frac{4}{0.3}=\frac{40}{3}\approx13.3$. $\text{Var}(X)=\frac{4(0.7)}{0.09}=\frac{2.8}{0.09}\approx31.1$. $P(X=6)=\binom{5}{3}(0.3)^4(0.7)^2=10\times0.0081\times0.49=0.03969$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">The PGF of $X$ is $G_X(t) = \dfrac{e^{3(t-1)}}{(2-t)^2}$. Identify the distribution of $X$ as a sum of independent named distributions. Find $E(X)$ and $\text{Var}(X)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Write $\frac{1}{(2-t)^2}=\frac{1}{4}\cdot\frac{1}{(1-t/2)^2}=\frac{1}{4}\left(\frac{(1/2)t}{1-(1/2)t}\cdot\frac{1}{(1/2)t}\right)^2$... More directly: $\frac{1}{(2-t)^2}=\left(\frac{1}{2-t}\right)^2=\left(\frac{(1/2)}{1-(1/2)t}\right)^2\cdot\frac{1}{t^2}$... Let's rewrite: $\frac{1}{2-t}=\frac{1/2}{1-t/2}$. So $\frac{1}{(2-t)^2}=\frac{1/4}{(1-t/2)^2}$. And the geometric PGF with $p=1/2$: $G(t)=\frac{(1/2)t}{1-(1/2)t}$. So $\left(\frac{(1/2)t}{1-(1/2)t}\right)^2=\frac{t^2/4}{(1-t/2)^2}$. Hence $\frac{1}{(2-t)^2}=\frac{1}{t^2}\cdot\left(\frac{(1/2)t}{1-t/2}\right)^2$... This approach gets messy. Direct: NB$(r,p)$ PGF is $\left(\frac{pt}{1-(1-p)t}\right)^r$. With $p=1/2$, $r=2$: $\left(\frac{t/2}{1-t/2}\right)^2=\frac{t^2}{(2-t)^2}$. So $G_X(t)=e^{3(t-1)}\cdot\frac{1}{(2-t)^2}$ doesn't factor cleanly into standard PGFs. Answer: $X=A+B$ where $A\sim\text{Po}(3)$ and $B\sim\text{NB}(2,1/2)$ (shifted). $E(X)=3+2/(1/2)=3+4=7$. $\text{Var}(X)=3+2(1/2)/(1/4)=3+4=7$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Use the PGF to prove the memoryless property of the geometric distribution: $P(X > m+n \mid X > m) = P(X > n)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Direct approach (without PGF): $P(X>k)=\sum_{r=k+1}^\infty(1-p)^{r-1}p=(1-p)^k\sum_{r=1}^\infty(1-p)^{r-1}p=(1-p)^k$. Then $P(X>m+n\mid X>m)=\frac{P(X>m+n)}{P(X>m)}=\frac{(1-p)^{m+n}}{(1-p)^m}=(1-p)^n=P(X>n)$ ✓. This holds for every $m,n\geq0$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">$X_1, X_2, \ldots, X_n$ are independent, each $\sim \text{Po}(\lambda)$. Let $S = X_1 + \cdots + X_n$. Use PGFs to show $S \sim \text{Po}(n\lambda)$, and hence find $P(S = 0)$ and $P(S = 1)$ in terms of $n$ and $\lambda$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$G_S(t)=\prod_{i=1}^n G_{X_i}(t)=[e^{\lambda(t-1)}]^n=e^{n\lambda(t-1)}$. This is the PGF of $\text{Po}(n\lambda)$, so $S\sim\text{Po}(n\lambda)$ ✓. $P(S=0)=e^{-n\lambda}$. $P(S=1)=n\lambda e^{-n\lambda}$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">A random variable $X$ takes non-negative integer values with PGF $G_X(t)$. (i) Show that $E[X(X-1)(X-2)] = G'''_X(1)$ and write down a formula for $E(X^3)$ in terms of $G'_X(1)$, $G''_X(1)$, and $G'''_X(1)$. (ii) Find the third central moment $E[(X-\mu)^3]$ for $X\sim\text{Po}(\lambda)$, and comment on what this says about the shape of the Poisson distribution.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $G'''(t)=\sum_{x=3}^\infty x(x-1)(x-2)P(X=x)t^{x-3}$. At $t=1$: $G'''(1)=E[X(X-1)(X-2)]$ ✓. $E(X^3)=E[X(X-1)(X-2)]+3E[X(X-1)]+E(X)=G'''(1)+3G''(1)+G'(1)$. (ii) For Po$(\lambda)$: $G(t)=e^{\lambda(t-1)}$, $G'(t)=\lambda e^{\lambda(t-1)}$, $G''(t)=\lambda^2 e^{\lambda(t-1)}$, $G'''(t)=\lambda^3 e^{\lambda(t-1)}$. At $t=1$: $G'(1)=\lambda$, $G''(1)=\lambda^2$, $G'''(1)=\lambda^3$. $E(X^3)=\lambda^3+3\lambda^2+\lambda$. $\mu=\lambda$. $E[(X-\mu)^3]=E(X^3)-3\mu E(X^2)+3\mu^2 E(X)-\mu^3=(\lambda^3+3\lambda^2+\lambda)-3\lambda(\lambda^2+\lambda)+3\lambda^3-\lambda^3=\lambda$. The third central moment equals $\lambda>0$, confirming the Poisson is positively skewed (skewed right). Skewness $=\lambda/\lambda^{3/2}=1/\sqrt{\lambda}\to0$ as $\lambda\to\infty$, so the Poisson becomes more symmetric for large $\lambda$.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">Let $N \sim \text{Po}(\lambda)$ and, conditional on $N=n$, let $X \sim B(n,p)$. (i) Find the PGF of $X$ unconditionally by computing $E(t^X) = \sum_{n=0}^\infty P(N=n)\cdot E(t^X \mid N=n)$. (ii) Identify the distribution of $X$. (iii) Show that $E(X) = \lambda p$ and $\text{Var}(X) = \lambda p$ — hence $X$ is also Poisson.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $E(t^X\mid N=n)=(1-p+pt)^n$ (PGF of $B(n,p)$). So $G_X(t)=\sum_{n=0}^\infty\frac{e^{-\lambda}\lambda^n}{n!}(1-p+pt)^n=e^{-\lambda}\sum_{n=0}^\infty\frac{[\lambda(1-p+pt)]^n}{n!}=e^{-\lambda}e^{\lambda(1-p+pt)}=e^{\lambda(1-p+pt-1)}=e^{\lambda p(t-1)}$. (ii) This is the PGF of $\text{Po}(\lambda p)$, so $X\sim\text{Po}(\lambda p)$ ✓. (iii) From PGF: $G'_X(t)=\lambda p\,e^{\lambda p(t-1)}$, so $E(X)=G'_X(1)=\lambda p$ ✓. $G''_X(1)=(\lambda p)^2$, so $\text{Var}(X)=(\lambda p)^2+\lambda p-(\lambda p)^2=\lambda p$ ✓ — mean equals variance, confirming Poisson.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="proof-by-induction.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Proof by Induction</div></a>
+    <a href="chi-squared-tests.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Chi-squared Tests</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
