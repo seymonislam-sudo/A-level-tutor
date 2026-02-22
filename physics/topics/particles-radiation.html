@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particles & Radiation — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  .particle-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin:0.4rem 0;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;font-size:0.85rem}
+  .particle-name{font-family:'Playfair Display',serif;font-weight:700;color:var(--text)}
+  .particle-prop{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted)}
+  .particle-prop span{color:var(--accent)}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 02</div>
+  <a href="#atomic" class="sidebar-link active"><span class="sidebar-num">2.1</span> Atomic Structure</a>
+  <a href="#quarks" class="sidebar-link"><span class="sidebar-num">2.2</span> Quarks & Hadrons</a>
+  <a href="#leptons" class="sidebar-link"><span class="sidebar-num">2.3</span> Leptons & Neutrinos</a>
+  <a href="#forces" class="sidebar-link"><span class="sidebar-num">2.4</span> Fundamental Forces</a>
+  <a href="#antimatter" class="sidebar-link"><span class="sidebar-num">2.5</span> Antimatter & Annihilation</a>
+  <a href="#photons" class="sidebar-link"><span class="sidebar-num">2.6</span> Photons & EM Radiation</a>
+  <a href="#photoelectric" class="sidebar-link"><span class="sidebar-num">2.7</span> Photoelectric Effect</a>
+  <a href="#energy-levels" class="sidebar-link"><span class="sidebar-num">2.8</span> Energy Levels & Spectra</a>
+  <a href="#wave-particle" class="sidebar-link"><span class="sidebar-num">2.9</span> Wave-Particle Duality</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 02</div>
+    <div class="topic-num-badge">Topic 02 · AQA Physics</div>
+    <h1 class="topic-title">Particles & Radiation</h1>
+    <p class="topic-intro">The Standard Model of particle physics — quarks, leptons, the four fundamental forces, antimatter, photons and the quantum nature of light. One of the most conceptually rich topics at A Level.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>9</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.2</div>
+      <div class="meta-item"><span>~5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#atomic">2.1 — Atomic Structure</a></li>
+      <li><a href="#quarks">2.2 — Quarks & Hadrons</a></li>
+      <li><a href="#leptons">2.3 — Leptons & Neutrinos</a></li>
+      <li><a href="#forces">2.4 — The Four Fundamental Forces</a></li>
+      <li><a href="#antimatter">2.5 — Antimatter & Annihilation</a></li>
+      <li><a href="#photons">2.6 — Photons & Electromagnetic Radiation</a></li>
+      <li><a href="#photoelectric">2.7 — The Photoelectric Effect</a></li>
+      <li><a href="#energy-levels">2.8 — Energy Levels & Atomic Spectra</a></li>
+      <li><a href="#wave-particle">2.9 — Wave-Particle Duality</a></li>
+    </ul>
+  </div>
+
+  <!-- 2.1 ATOMIC STRUCTURE -->
+  <div class="lesson-section" id="atomic">
+    <h2 class="section-title">2.1 Atomic Structure</h2>
+    <p>The atom consists of a tiny, dense nucleus (containing protons and neutrons) surrounded by electrons in shells. The nucleus is approximately $10^{-15}$ m across — about 10,000 times smaller than the atom ($\sim 10^{-10}$ m).</p>
+
+    <table>
+      <tr><th>Particle</th><th>Symbol</th><th>Charge / e</th><th>Rest mass / kg</th><th>Rest mass / u</th></tr>
+      <tr><td>Proton</td><td>p</td><td>+1</td><td>$1.673 \times 10^{-27}$</td><td>1.007</td></tr>
+      <tr><td>Neutron</td><td>n</td><td>0</td><td>$1.675 \times 10^{-27}$</td><td>1.009</td></tr>
+      <tr><td>Electron</td><td>e⁻</td><td>−1</td><td>$9.109 \times 10^{-31}$</td><td>0.000549</td></tr>
+    </table>
+
+    <p>An atom is described by its <strong>atomic number</strong> $Z$ (protons) and <strong>mass number</strong> $A$ (protons + neutrons). Isotopes are atoms of the same element with different numbers of neutrons — same $Z$, different $A$.</p>
+
+    <div class="formula-box">
+      $${}^{A}_{Z}\text{X} \qquad \text{where } A = \text{mass number}, \; Z = \text{atomic number}$$
+      $$\text{Number of neutrons} = A - Z$$
+    </div>
+
+    <h3 class="subsection">The Specific Charge</h3>
+    <p>The <strong>specific charge</strong> of a particle is its charge-to-mass ratio, measured in C kg⁻¹.</p>
+    <div class="formula-box">
+      $$\text{Specific charge} = \frac{Q}{m} \quad \text{(C kg}^{-1}\text{)}$$
+    </div>
+    <div class="example">
+      <div class="example-label">Worked Example 2.1a</div>
+      <div class="example-q">Calculate the specific charge of (a) a proton, (b) an alpha particle ${}^4_2\text{He}^{2+}$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) Proton: $Q = 1.60 \times 10^{-19}$ C, $m = 1.673 \times 10^{-27}$ kg. Specific charge $= \dfrac{1.60 \times 10^{-19}}{1.673 \times 10^{-27}} = 9.57 \times 10^7$ C kg⁻¹.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) Alpha particle: $Q = 2 \times 1.60 \times 10^{-19} = 3.20 \times 10^{-19}$ C. Mass $= 4 \times 1.661 \times 10^{-27} = 6.64 \times 10^{-27}$ kg (using $1\,\text{u} = 1.661 \times 10^{-27}$ kg). Specific charge $= \dfrac{3.20 \times 10^{-19}}{6.64 \times 10^{-27}} = 4.82 \times 10^7$ C kg⁻¹.<div class="step-comment">The proton has a higher specific charge than the alpha — important in mass spectrometry and particle accelerators.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.2 QUARKS -->
+  <div class="lesson-section" id="quarks">
+    <h2 class="section-title">2.2 Quarks & Hadrons</h2>
+    <p>Protons and neutrons are not fundamental — they are made of <strong>quarks</strong>. At AQA A Level you need to know three quark flavours:</p>
+
+    <table>
+      <tr><th>Quark</th><th>Symbol</th><th>Charge</th><th>Baryon number</th><th>Strangeness</th></tr>
+      <tr><td>Up</td><td>u</td><td>$+\frac{2}{3}e$</td><td>$+\frac{1}{3}$</td><td>0</td></tr>
+      <tr><td>Down</td><td>d</td><td>$-\frac{1}{3}e$</td><td>$+\frac{1}{3}$</td><td>0</td></tr>
+      <tr><td>Strange</td><td>s</td><td>$-\frac{1}{3}e$</td><td>$+\frac{1}{3}$</td><td>$-1$</td></tr>
+    </table>
+
+    <p>Antiquarks have opposite charge, baryon number ($-\frac{1}{3}$) and strangeness.</p>
+
+    <h3 class="subsection">Hadrons — particles made of quarks</h3>
+    <p><strong>Baryons</strong> are made of three quarks (qqq). <strong>Mesons</strong> are made of a quark–antiquark pair ($q\bar{q}$).</p>
+
+    <table>
+      <tr><th>Particle</th><th>Type</th><th>Quarks</th><th>Charge</th><th>Baryon No.</th><th>Strangeness</th></tr>
+      <tr><td>Proton (p)</td><td>Baryon</td><td>uud</td><td>+1</td><td>+1</td><td>0</td></tr>
+      <tr><td>Neutron (n)</td><td>Baryon</td><td>udd</td><td>0</td><td>+1</td><td>0</td></tr>
+      <tr><td>π⁺ (pion)</td><td>Meson</td><td>u$\bar{\text{d}}$</td><td>+1</td><td>0</td><td>0</td></tr>
+      <tr><td>π⁻ (pion)</td><td>Meson</td><td>$\bar{\text{u}}$d</td><td>−1</td><td>0</td><td>0</td></tr>
+      <tr><td>π⁰ (pion)</td><td>Meson</td><td>u$\bar{\text{u}}$ or d$\bar{\text{d}}$</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>K⁺ (kaon)</td><td>Meson</td><td>u$\bar{\text{s}}$</td><td>+1</td><td>0</td><td>+1</td></tr>
+      <tr><td>K⁻ (kaon)</td><td>Meson</td><td>$\bar{\text{u}}$s</td><td>−1</td><td>0</td><td>−1</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Conservation laws in particle interactions</strong>
+      In all interactions, the following quantities are conserved: charge $Q$, baryon number $B$, lepton number $L$ (separately for each lepton family). Strangeness is conserved in strong interactions but NOT in weak interactions (strangeness can change by ±1 in weak decays).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.2a — Beta minus decay</div>
+      <div class="example-q">In beta-minus decay, a neutron decays: $\text{n} \rightarrow \text{p} + \text{e}^- + \bar{\nu}_e$. Show this is consistent in terms of quark composition.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Neutron: udd. Proton: uud. One d quark changes to a u quark, emitting a W⁻ boson (weak interaction).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">The W⁻ then decays: W⁻ → e⁻ + $\bar{\nu}_e$. Check charge: $-1 = -1 + 0$ ✓. Check lepton number: $0 = 1 + (-1)$ ✓. Check baryon number: $1 = 1 + 0 + 0$ ✓.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">The underlying quark change is d → u + W⁻. This is a weak interaction (mediated by the W⁻ boson).<div class="step-comment">Beta-plus decay is the reverse: u → d + W⁺, then W⁺ → e⁺ + νₑ.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.3 LEPTONS -->
+  <div class="lesson-section" id="leptons">
+    <h2 class="section-title">2.3 Leptons & Neutrinos</h2>
+    <p><strong>Leptons</strong> are fundamental particles — they are not made of quarks. There are three generations, each with a charged lepton and its associated neutrino.</p>
+
+    <table>
+      <tr><th>Lepton</th><th>Symbol</th><th>Charge</th><th>Lepton number $L_e$</th><th>Lepton number $L_\mu$</th></tr>
+      <tr><td>Electron</td><td>e⁻</td><td>−1</td><td>+1</td><td>0</td></tr>
+      <tr><td>Electron neutrino</td><td>νₑ</td><td>0</td><td>+1</td><td>0</td></tr>
+      <tr><td>Muon</td><td>μ⁻</td><td>−1</td><td>0</td><td>+1</td></tr>
+      <tr><td>Muon neutrino</td><td>ν_μ</td><td>0</td><td>0</td><td>+1</td></tr>
+    </table>
+
+    <p>Antileptons (positron e⁺, antineutrinos $\bar{\nu}_e$, $\bar{\nu}_\mu$) have lepton number −1.</p>
+
+    <div class="key-point">
+      <strong>Neutrino properties</strong>
+      Neutrinos have zero charge and almost zero mass. They interact only via the weak force, meaning they pass through matter almost undetected — billions pass through your body every second. They were originally postulated by Pauli to explain the continuous energy spectrum of electrons in beta decay (if only two particles were produced, they would each have a fixed energy — but they don't).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.3a — Is this decay allowed?</div>
+      <div class="example-q">Check whether the decay $\mu^- \rightarrow e^- + \nu_\mu + \bar{\nu}_e$ is allowed by conservation laws.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Charge: Left $= -1$. Right $= -1 + 0 + 0 = -1$ ✓</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Muon lepton number $L_\mu$: Left $= +1$. Right $= 0 + 1 + 0 = +1$ ✓</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Electron lepton number $L_e$: Left $= 0$. Right $= +1 + 0 + (-1) = 0$ ✓</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Baryon number $B$: Left $= 0$. Right $= 0$ ✓. All conservation laws satisfied — the decay is allowed.<div class="step-comment">This is the actual decay mode of the muon, with a mean lifetime of ~2.2 μs.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.4 FORCES -->
+  <div class="lesson-section" id="forces">
+    <h2 class="section-title">2.4 The Four Fundamental Forces</h2>
+    <p>All interactions in nature are governed by four fundamental forces, each with its own exchange particle (gauge boson).</p>
+
+    <table>
+      <tr><th>Force</th><th>Acts on</th><th>Range</th><th>Exchange particle</th><th>Relative strength</th></tr>
+      <tr><td>Strong nuclear</td><td>Quarks, hadrons</td><td>~$10^{-15}$ m</td><td>Gluons (pions at nuclear scale)</td><td>1</td></tr>
+      <tr><td>Electromagnetic</td><td>Charged particles</td><td>Infinite</td><td>Photon (γ)</td><td>$10^{-2}$</td></tr>
+      <tr><td>Weak nuclear</td><td>Quarks, leptons</td><td>~$10^{-18}$ m</td><td>W⁺, W⁻, Z⁰ bosons</td><td>$10^{-6}$</td></tr>
+      <tr><td>Gravity</td><td>All particles with mass</td><td>Infinite</td><td>Graviton (undetected)</td><td>$10^{-38}$</td></tr>
+    </table>
+
+    <h3 class="subsection">The Strong Nuclear Force</h3>
+    <p>The strong force holds the nucleus together against the electromagnetic repulsion between protons. It acts between nucleons (protons and neutrons) and has a very short range. Key features:</p>
+    <div class="key-point">
+      <strong>Strong force characteristics</strong>
+      Attractive from ~0.5 fm to ~3 fm (femtometres). Repulsive below ~0.5 fm (preventing nucleons from merging). Approximately equal between p-p, p-n, and n-n pairs (charge independent). Does not act on electrons (leptons). At the quark level, it is mediated by gluons; at the nucleon level, by virtual pion exchange.
+    </div>
+
+    <h3 class="subsection">Feynman Diagrams</h3>
+    <p>Feynman diagrams are a pictorial way of representing particle interactions. Time runs left to right. Straight lines are fermions (quarks/leptons); wavy or dashed lines are bosons (exchange particles).</p>
+    <p>Key interactions to know: beta-minus decay (d → u + W⁻, then W⁻ → e⁻ + $\bar{\nu}_e$), beta-plus decay (u → d + W⁺, then W⁺ → e⁺ + νₑ), and electron capture (p + e⁻ → n + νₑ via W⁺).</p>
+  </div>
+
+  <!-- 2.5 ANTIMATTER -->
+  <div class="lesson-section" id="antimatter">
+    <h2 class="section-title">2.5 Antimatter & Annihilation</h2>
+    <p>Every particle has an <strong>antiparticle</strong> with the same mass but opposite charge (and opposite quantum numbers such as baryon and lepton number). When a particle meets its antiparticle, they <strong>annihilate</strong>, producing two photons.</p>
+
+    <div class="formula-box">
+      $$\text{Annihilation: } \text{e}^- + \text{e}^+ \rightarrow 2\gamma \qquad E_\gamma = m_e c^2 + E_{k,\text{particle}}$$
+      $$\text{Pair production: } \gamma \rightarrow \text{e}^- + \text{e}^+ \qquad E_\gamma \geq 2m_e c^2$$
+      $$\text{Minimum photon energy for pair production: } E_{\min} = 2m_e c^2 = 2 \times 0.511 \text{ MeV} = 1.02 \text{ MeV}$$
+    </div>
+
+    <div class="key-point">
+      <strong>Why two photons in annihilation?</strong>
+      Momentum must be conserved. If an electron and positron annihilate at rest, the total momentum is zero. A single photon always carries momentum ($p = E/c \neq 0$), so one photon is impossible. Two photons travelling in opposite directions carry equal and opposite momenta — total momentum zero ✓. Each photon has energy $E = m_e c^2 = 0.511$ MeV (if the particles are at rest).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.5a — Annihilation photon energy</div>
+      <div class="example-q">An electron and positron, each with kinetic energy 0.20 MeV, annihilate to produce two photons. Find the energy and frequency of each photon.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Total energy available $= 2(m_e c^2 + E_k) = 2(0.511 + 0.20) = 2(0.711) = 1.422$ MeV. Split equally between two photons: each photon has $E = 0.711$ MeV $= 0.711 \times 10^6 \times 1.60 \times 10^{-19} = 1.138 \times 10^{-13}$ J.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Frequency: $f = E/h = \dfrac{1.138 \times 10^{-13}}{6.63 \times 10^{-34}} = 1.72 \times 10^{20}$ Hz. This is a gamma ray.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.6 PHOTONS -->
+  <div class="lesson-section" id="photons">
+    <h2 class="section-title">2.6 Photons & Electromagnetic Radiation</h2>
+    <p>Light (and all electromagnetic radiation) is quantised — it comes in discrete packets called <strong>photons</strong>. The energy of a photon is proportional to its frequency.</p>
+
+    <div class="formula-box">
+      $$E = hf = \frac{hc}{\lambda}$$
+      $$h = 6.63 \times 10^{-34} \text{ J s} \quad c = 3.00 \times 10^8 \text{ m s}^{-1}$$
+    </div>
+
+    <p>The <strong>electronvolt (eV)</strong> is the energy gained by an electron accelerated through a potential difference of 1 V:</p>
+    <div class="formula-box">
+      $$1 \text{ eV} = 1.60 \times 10^{-19} \text{ J}$$
+      $$1 \text{ MeV} = 1.60 \times 10^{-13} \text{ J} \qquad 1 \text{ GeV} = 1.60 \times 10^{-10} \text{ J}$$
+    </div>
+  </div>
+
+  <!-- 2.7 PHOTOELECTRIC EFFECT -->
+  <div class="lesson-section" id="photoelectric">
+    <h2 class="section-title">2.7 The Photoelectric Effect</h2>
+    <p>When light of sufficiently high frequency shines on a metal surface, electrons are emitted. This cannot be explained by the wave model of light — it requires photons.</p>
+
+    <div class="key-point">
+      <strong>The three key observations</strong>
+      (1) Emission is instantaneous — no delay, even at low intensity. (2) Below the threshold frequency $f_0$, no electrons are emitted regardless of intensity. (3) Above $f_0$, the maximum kinetic energy of emitted electrons depends on frequency, not intensity. Increasing intensity increases the number of electrons but not their energy. These facts are inexplicable with waves but follow naturally if light consists of photons, each transferring its energy to a single electron.
+    </div>
+
+    <div class="formula-box">
+      $$hf = \phi + E_{k,\max}$$
+      $$\phi = hf_0 \quad \text{(work function — minimum energy to free an electron)}$$
+      $$E_{k,\max} = hf - \phi = h(f - f_0) \quad \text{(Einstein's photoelectric equation)}$$
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.7a</div>
+      <div class="example-q">Light of wavelength 250 nm shines on a sodium surface (work function $\phi = 2.28$ eV). Find (a) the energy of each photon in eV, (b) the maximum kinetic energy of emitted electrons, (c) the threshold wavelength for sodium.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $E = hc/\lambda = (6.63 \times 10^{-34} \times 3.00 \times 10^8)/(250 \times 10^{-9}) = 7.956 \times 10^{-19}$ J $= 7.956 \times 10^{-19} / 1.60 \times 10^{-19} = 4.97$ eV.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $E_{k,\max} = 4.97 - 2.28 = 2.69$ eV $= 2.69 \times 1.60 \times 10^{-19} = 4.30 \times 10^{-19}$ J.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) At threshold: $hf_0 = \phi$. $\lambda_0 = hc/\phi = (6.63 \times 10^{-34} \times 3.00 \times 10^8)/(2.28 \times 1.60 \times 10^{-19}) = 1.99 \times 10^{-19}/3.648 \times 10^{-19} = 545$ nm (visible green light).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.8 ENERGY LEVELS -->
+  <div class="lesson-section" id="energy-levels">
+    <h2 class="section-title">2.8 Energy Levels & Atomic Spectra</h2>
+    <p>Electrons in atoms can only occupy discrete energy levels. When an electron transitions between levels, it absorbs or emits a photon with energy exactly equal to the energy difference.</p>
+
+    <div class="formula-box">
+      $$\Delta E = hf = \frac{hc}{\lambda} = E_\text{upper} - E_\text{lower}$$
+    </div>
+
+    <p><strong>Emission spectra</strong> are produced when excited atoms emit photons as electrons drop to lower levels — seen as bright coloured lines against a dark background. <strong>Absorption spectra</strong> occur when white light passes through a cool gas — the same wavelengths are absorbed, leaving dark lines. Each element has a unique spectrum, acting as a fingerprint.</p>
+
+    <div class="key-point">
+      <strong>Ground state and excitation</strong>
+      The ground state is the lowest energy level an electron can occupy. Excitation means an electron absorbs energy and jumps to a higher level. Ionisation occurs when an electron gains enough energy to escape the atom entirely (energy $\geq 0$ eV on the standard scale where the ionisation level is 0 eV). For hydrogen, the ground state energy is $-13.6$ eV.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.8a — Hydrogen spectrum</div>
+      <div class="example-q">In hydrogen, the energies of the levels are $E_n = -13.6/n^2$ eV. Find the wavelength of the photon emitted when an electron falls from $n = 3$ to $n = 2$.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$E_3 = -13.6/9 = -1.511$ eV. $E_2 = -13.6/4 = -3.400$ eV.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\Delta E = E_3 - E_2 = -1.511 - (-3.400) = 1.889$ eV $= 1.889 \times 1.60 \times 10^{-19} = 3.022 \times 10^{-19}$ J.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\lambda = hc/\Delta E = (6.63 \times 10^{-34} \times 3.00 \times 10^8)/(3.022 \times 10^{-19}) = 658$ nm (red — the H-alpha line).<div class="step-comment">This is the most prominent line in the Balmer series and gives hydrogen nebulae their characteristic red colour.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.9 WAVE-PARTICLE DUALITY -->
+  <div class="lesson-section" id="wave-particle">
+    <h2 class="section-title">2.9 Wave-Particle Duality</h2>
+    <p>Light behaves as a wave (diffraction, interference) and as a particle (photoelectric effect, photon momentum). De Broglie proposed that <strong>matter also has wave properties</strong> — every moving particle has an associated wavelength.</p>
+
+    <div class="formula-box">
+      $$\lambda = \frac{h}{p} = \frac{h}{mv} \qquad \text{de Broglie wavelength}$$
+    </div>
+
+    <p>Electron diffraction provides direct evidence for the wave nature of matter. When electrons are directed at a crystal or graphite, they diffract — producing a diffraction pattern just as X-rays do. The spacing of the rings matches the prediction from de Broglie's formula.</p>
+
+    <div class="key-point">
+      <strong>Increasing accelerating voltage reduces wavelength</strong>
+      Electrons accelerated through voltage $V$ gain kinetic energy $eV = \frac{1}{2}mv^2$, so $v = \sqrt{2eV/m}$ and $\lambda = h/mv = h/\sqrt{2meV}$. Higher voltage → faster electrons → shorter wavelength → diffraction rings become smaller (closer together) because $\lambda$ is smaller relative to the atomic spacing.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 2.9a — de Broglie wavelength of an electron</div>
+      <div class="example-q">An electron is accelerated through 5000 V. Find its de Broglie wavelength.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Kinetic energy: $E_k = eV = 1.60 \times 10^{-19} \times 5000 = 8.00 \times 10^{-16}$ J.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Momentum: $p = \sqrt{2m_e E_k} = \sqrt{2 \times 9.11 \times 10^{-31} \times 8.00 \times 10^{-16}} = \sqrt{1.458 \times 10^{-45}} = 1.207 \times 10^{-23}$ kg m s⁻¹.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\lambda = h/p = (6.63 \times 10^{-34})/(1.207 \times 10^{-23}) = 5.49 \times 10^{-11}$ m $= 0.055$ nm. This is comparable to atomic spacings in crystals — which is why electron diffraction works.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">State the quark composition of (a) a proton, (b) a neutron, (c) a π⁺ meson, (d) a K⁻ meson. For each, verify the charge using quark charges.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Proton: uud. Charge $= +\frac{2}{3}+\frac{2}{3}-\frac{1}{3} = +1$ ✓. (b) Neutron: udd. Charge $= +\frac{2}{3}-\frac{1}{3}-\frac{1}{3} = 0$ ✓. (c) π⁺: u$\bar{\text{d}}$. Charge $= +\frac{2}{3}+\frac{1}{3} = +1$ ✓. (d) K⁻: $\bar{\text{u}}$s. Charge $= -\frac{2}{3}-\frac{1}{3} = -1$ ✓.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Light of frequency $6.5 \times 10^{14}$ Hz is shone onto a metal surface with work function 1.8 eV. (a) Calculate the energy of each photon in eV. (b) Calculate the maximum kinetic energy of emitted electrons in joules. (c) Calculate the stopping potential.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $E = hf = 6.63\times10^{-34}\times6.5\times10^{14} = 4.31\times10^{-19}$ J $= 4.31\times10^{-19}/1.60\times10^{-19} = 2.69$ eV. (b) $E_{k,\max} = 2.69 - 1.8 = 0.89$ eV $= 0.89\times1.60\times10^{-19} = 1.42\times10^{-19}$ J. (c) Stopping potential: $eV_s = E_{k,\max}$. $V_s = 1.42\times10^{-19}/1.60\times10^{-19} = 0.89$ V.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">An electron is accelerated from rest through a potential difference of 2500 V. Find (a) its kinetic energy in joules, (b) its momentum, (c) its de Broglie wavelength.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $E_k = eV = 1.60\times10^{-19}\times2500 = 4.00\times10^{-16}$ J. (b) $p = \sqrt{2m_eE_k} = \sqrt{2\times9.11\times10^{-31}\times4.00\times10^{-16}} = \sqrt{7.288\times10^{-46}} = 8.537\times10^{-23}$ kg m s⁻¹. (c) $\lambda = h/p = 6.63\times10^{-34}/8.537\times10^{-23} = 7.77\times10^{-12}$ m $= 0.0077$ nm.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">Determine whether the following interactions are possible. For each one that is not, state which conservation law is violated. (a) p + p → p + p + π⁰ (b) p → n + e⁺ + νₑ (c) n → p + μ⁻ + $\bar{\nu}_\mu$ (d) K⁺ → π⁺ + π⁰</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Check charge: 2 = 2+0 ✓. Baryon no: 2 = 2+0 ✓. Strangeness: 0=0 ✓. Lepton: 0=0 ✓. ALLOWED. (b) Charge: +1 = 0+1+0 ✓. Baryon: 1=1+0+0 ✓. Lepton $L_e$: 0 = 0+(-1)+(+1) = 0 ✓. ALLOWED (this is beta-plus decay). (c) Charge: 0=1+(-1)+0 ✓. Baryon: 1=1+0+0 ✓. Lepton $L_\mu$: 0 = 0+1+(-1) = 0 ✓. Lepton $L_e$: 0 = 0+0+0 ✓. But the muon is too heavy — mass-energy not conserved since muon (105.7 MeV) > neutron-proton mass difference (~1.3 MeV). NOT ALLOWED (energy conservation). (d) Charge: +1 = +1+0 ✓. Baryon: 0=0+0 ✓. Strangeness: K⁺ has S=+1, π⁺ and π⁰ have S=0. So ΔS = -1. This is a weak decay (strangeness not conserved) — ALLOWED via weak interaction.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">A photon of wavelength 1.20 × 10⁻¹² m undergoes pair production, creating an electron-positron pair. (a) Calculate the energy of the photon in MeV. (b) The rest energy of an electron is 0.511 MeV. Show that pair production is energetically possible. (c) Calculate the total kinetic energy of the electron-positron pair produced.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $E = hc/\lambda = (6.63\times10^{-34}\times3.00\times10^8)/(1.20\times10^{-12}) = 1.658\times10^{-13}$ J $= 1.658\times10^{-13}/1.60\times10^{-13}$ MeV $= 1.036$ MeV. (b) Minimum energy for pair production $= 2m_ec^2 = 2\times0.511 = 1.022$ MeV. Since $1.036 > 1.022$ MeV, pair production is possible ✓. (c) Total KE $= 1.036 - 1.022 = 0.014$ MeV $= 14$ keV shared between the pair.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A student investigates the photoelectric effect using different metals. She finds that the maximum kinetic energy of photoelectrons varies linearly with the frequency of light used. (a) Sketch a graph of $E_{k,\max}$ against $f$, labelling the gradient, x-intercept and y-intercept in terms of physical quantities. (b) Explain why the graph does not extend below the x-axis. (c) She uses two metals: sodium ($\phi = 2.28$ eV) and gold ($\phi = 5.10$ eV). For light of frequency $1.50 \times 10^{15}$ Hz, calculate $E_{k,\max}$ for each metal and explain why only one produces photoelectrons. (d) Explain why increasing the intensity of light below the threshold frequency never produces photoelectrons, even after a long time.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Straight line, positive gradient = $h$ (Planck's constant). x-intercept at $f = f_0 = \phi/h$ (threshold frequency). y-intercept at $-\phi$ (negative work function — but this region is unphysical since $f < f_0$ gives no emission). The physical graph starts at $(f_0, 0)$ and rises with gradient $h$. (b) Below the threshold frequency, photon energy $hf < \phi$, so no electron has enough energy to escape the surface. $E_{k,\max}$ cannot be negative (kinetic energy is always ≥ 0), so the graph simply does not exist below $f_0$. (c) Photon energy: $E = hf = 6.63\times10^{-34}\times1.50\times10^{15} = 9.945\times10^{-19}$ J $= 6.22$ eV. Sodium: $E_{k,\max} = 6.22 - 2.28 = 3.94$ eV ✓ — photoelectrons emitted. Gold: $E_{k,\max} = 6.22 - 5.10 = 1.12$ eV ✓ — photoelectrons also emitted! Both metals produce photoelectrons for this frequency. For gold to show no emission, frequency must satisfy $hf < 5.10$ eV, i.e. $f < 5.10\times1.60\times10^{-19}/6.63\times10^{-34} = 1.23\times10^{15}$ Hz. (d) In the photon model, each photon interacts with one electron and transfers all its energy to that one electron. Below the threshold, each photon has insufficient energy to liberate the electron regardless of how many photons arrive (intensity). Unlike the wave model, photons do not accumulate energy in an electron over time — it's a one-photon, one-electron interaction. Increasing intensity only increases the number of photons per second, not the energy of each photon.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="measurements-errors.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Measurements & Errors</div></a>
+    <a href="waves.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Waves</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waves — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(245,158,11,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  /* Wave diagram SVG */
+  .wave-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+  .wave-diagram svg{max-width:100%;height:auto}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 03</div>
+  <a href="#progressive" class="sidebar-link active"><span class="sidebar-num">3.1</span> Progressive Waves</a>
+  <a href="#transverse-longitudinal" class="sidebar-link"><span class="sidebar-num">3.2</span> Transverse & Longitudinal</a>
+  <a href="#superposition" class="sidebar-link"><span class="sidebar-num">3.3</span> Superposition</a>
+  <a href="#interference" class="sidebar-link"><span class="sidebar-num">3.4</span> Interference</a>
+  <a href="#diffraction" class="sidebar-link"><span class="sidebar-num">3.5</span> Diffraction</a>
+  <a href="#refraction" class="sidebar-link"><span class="sidebar-num">3.6</span> Refraction</a>
+  <a href="#stationary" class="sidebar-link"><span class="sidebar-num">3.7</span> Stationary Waves</a>
+  <a href="#optics" class="sidebar-link"><span class="sidebar-num">3.8</span> Optics & Polarisation</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Topic 03</div>
+    <div class="topic-num-badge">Topic 03 · AQA Physics</div>
+    <h1 class="topic-title">Waves</h1>
+    <p class="topic-intro">Progressive and stationary waves, superposition, interference and diffraction — the foundations of optics, acoustics, and quantum mechanics. Precise diagram-drawing skills are tested heavily here.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>8</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Section 3.3</div>
+      <div class="meta-item"><span>~4 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#progressive">3.1 — Progressive Waves</a></li>
+      <li><a href="#transverse-longitudinal">3.2 — Transverse & Longitudinal Waves</a></li>
+      <li><a href="#superposition">3.3 — Superposition</a></li>
+      <li><a href="#interference">3.4 — Interference & Young's Double Slit</a></li>
+      <li><a href="#diffraction">3.5 — Diffraction & Gratings</a></li>
+      <li><a href="#refraction">3.6 — Refraction & Snell's Law</a></li>
+      <li><a href="#stationary">3.7 — Stationary Waves</a></li>
+      <li><a href="#optics">3.8 — Optics & Polarisation</a></li>
+    </ul>
+  </div>
+
+  <!-- 3.1 PROGRESSIVE WAVES -->
+  <div class="lesson-section" id="progressive">
+    <h2 class="section-title">3.1 Progressive Waves</h2>
+
+    <p>A <strong>progressive wave</strong> transfers energy from one place to another through oscillations of the medium (or field), without transferring matter. The key quantities:</p>
+
+    <div class="formula-box">
+      $$v = f\lambda \qquad \text{(wave equation)}$$
+      $$T = \frac{1}{f} \qquad \text{(period and frequency)}$$
+      $$\phi = \frac{2\pi x}{\lambda} = \frac{2\pi t}{T} \qquad \text{(phase difference)}$$
+    </div>
+
+    <table>
+      <tr><th>Quantity</th><th>Symbol</th><th>Unit</th><th>Definition</th></tr>
+      <tr><td>Amplitude</td><td>$A$</td><td>m</td><td>Maximum displacement from equilibrium</td></tr>
+      <tr><td>Wavelength</td><td>$\lambda$</td><td>m</td><td>Distance between two adjacent points in phase</td></tr>
+      <tr><td>Frequency</td><td>$f$</td><td>Hz (s⁻¹)</td><td>Number of complete oscillations per second</td></tr>
+      <tr><td>Period</td><td>$T$</td><td>s</td><td>Time for one complete oscillation</td></tr>
+      <tr><td>Wave speed</td><td>$v$</td><td>m s⁻¹</td><td>Distance travelled per unit time</td></tr>
+      <tr><td>Phase difference</td><td>$\phi$</td><td>rad or degrees</td><td>Fraction of cycle between two points</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Phase difference</strong>
+      Two points separated by distance $x$ have phase difference $\phi = 2\pi x/\lambda$ radians. Points exactly one wavelength apart are in phase ($\phi = 2\pi$). Points half a wavelength apart are in antiphase ($\phi = \pi$). Phase difference can also be expressed as a fraction of a cycle: $\phi/2\pi$ cycles, or in degrees ($\phi \times 180°/\pi$).
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 3.1a</div>
+      <div class="example-q">A water wave has wavelength 3.2 m and travels at 4.8 m s⁻¹. Find (a) the frequency, (b) the period, (c) the phase difference between two points 0.8 m apart.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $f = v/\lambda = 4.8/3.2 = 1.5$ Hz</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $T = 1/f = 1/1.5 = 0.667$ s</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $\phi = 2\pi x/\lambda = 2\pi \times 0.8/3.2 = 2\pi/4 = \pi/2$ rad $= 90°$<div class="step-comment">The two points are a quarter wavelength apart — they are 90° out of phase.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.2 TRANSVERSE & LONGITUDINAL -->
+  <div class="lesson-section" id="transverse-longitudinal">
+    <h2 class="section-title">3.2 Transverse & Longitudinal Waves</h2>
+
+    <table>
+      <tr><th></th><th>Transverse</th><th>Longitudinal</th></tr>
+      <tr><td><strong>Oscillation direction</strong></td><td>Perpendicular to wave travel</td><td>Parallel to wave travel</td></tr>
+      <tr><td><strong>Features</strong></td><td>Crests and troughs</td><td>Compressions and rarefactions</td></tr>
+      <tr><td><strong>Can be polarised?</strong></td><td>Yes</td><td>No</td></tr>
+      <tr><td><strong>Examples</strong></td><td>EM waves, water waves, waves on a string</td><td>Sound waves, seismic P-waves</td></tr>
+    </table>
+
+    <p>All electromagnetic waves are transverse and travel at $c = 3.00\times10^8$ m s⁻¹ in a vacuum. The EM spectrum (from longest to shortest wavelength): radio → microwave → infrared → visible → UV → X-ray → gamma.</p>
+
+    <div class="key-point">
+      <strong>Intensity and amplitude</strong>
+      The intensity of a wave is the power per unit area: $I = P/A$ (W m⁻²). For a point source radiating equally in all directions: $I = P/(4\pi r^2)$, giving the inverse square law $I \propto 1/r^2$. Intensity is proportional to the square of the amplitude: $I \propto A^2$. Doubling the amplitude quadruples the intensity.
+    </div>
+  </div>
+
+  <!-- 3.3 SUPERPOSITION -->
+  <div class="lesson-section" id="superposition">
+    <h2 class="section-title">3.3 Superposition</h2>
+
+    <p>The <strong>principle of superposition</strong>: when two or more waves meet at a point, the resultant displacement is the vector sum of the individual displacements at that point.</p>
+
+    <p><strong>Constructive interference</strong> occurs when waves arrive in phase — displacements add, giving maximum amplitude. <strong>Destructive interference</strong> occurs when waves arrive in antiphase — displacements cancel, giving zero (or minimum) amplitude.</p>
+
+    <div class="key-point">
+      <strong>Coherence — essential for stable interference</strong>
+      For a sustained interference pattern, two sources must be <strong>coherent</strong>: same frequency (and therefore same wavelength), and a constant phase difference between them. A laser is coherent; a light bulb is not (it emits photons with random phases). Two separate light bulbs cannot produce an observable interference pattern — the phase difference changes randomly billions of times per second.
+    </div>
+  </div>
+
+  <!-- 3.4 INTERFERENCE -->
+  <div class="lesson-section" id="interference">
+    <h2 class="section-title">3.4 Interference & Young's Double Slit</h2>
+
+    <p>Young's double slit experiment (1801) provided the first convincing evidence that light is a wave. Two coherent sources (the two slits, illuminated by the same laser or monochromatic source) produce an interference pattern of bright and dark fringes on a screen.</p>
+
+    <div class="formula-box">
+      $$\lambda = \frac{ax}{D}$$
+      <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--muted)">$a$ = slit separation (m) &nbsp;·&nbsp; $x$ = fringe spacing (m) &nbsp;·&nbsp; $D$ = slit-to-screen distance (m)</p>
+    </div>
+
+    <p>Bright fringes (maxima) occur where path difference $= n\lambda$ (whole number of wavelengths — constructive). Dark fringes (minima) occur where path difference $= (n+\frac{1}{2})\lambda$ (destructive).</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 3.4a — Young's double slit</div>
+      <div class="example-q">Monochromatic light of wavelength 590 nm passes through two slits separated by 0.50 mm. An interference pattern forms on a screen 2.4 m away. (a) Calculate the fringe spacing. (b) How does the fringe spacing change if the slit separation is doubled? (c) What happens if white light is used instead?</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $x = \lambda D/a = (590\times10^{-9} \times 2.4)/(0.50\times10^{-3}) = 1.416\times10^{-6}/5\times10^{-4} = 2.83\times10^{-3}$ m $= 2.83$ mm</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $x \propto 1/a$. Doubling $a$ halves the fringe spacing: $x = 1.41$ mm. Fringes become closer together.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) White light contains all visible wavelengths (400–700 nm). Each wavelength produces its own fringe pattern with different spacing. The central fringe is white (all wavelengths constructively interfere at zero path difference). On either side, the fringes spread into spectra — violet closest to centre, red furthest. Patterns from different wavelengths overlap, giving coloured fringes that wash out at large order numbers.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.5 DIFFRACTION -->
+  <div class="lesson-section" id="diffraction">
+    <h2 class="section-title">3.5 Diffraction & Diffraction Gratings</h2>
+
+    <p><strong>Diffraction</strong> is the spreading of waves as they pass through a gap or around an obstacle. The effect is greatest when the gap width is approximately equal to the wavelength. A very narrow slit produces a wide central maximum; a wide slit produces a narrower, brighter central maximum.</p>
+
+    <h3 class="subsection">Diffraction grating</h3>
+    <p>A diffraction grating has many equally spaced slits, producing sharp, bright maxima at angles given by:</p>
+
+    <div class="formula-box">
+      $$d\sin\theta = n\lambda$$
+      <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--muted)">$d$ = grating spacing (m) &nbsp;·&nbsp; $\theta$ = angle to normal &nbsp;·&nbsp; $n$ = order number (integer)</p>
+    </div>
+
+    <p>If a grating has $N$ lines per mm, then $d = 1/(N\times10^3)$ m. The maximum order is found when $\sin\theta \leq 1$, so $n_{\max} = \lfloor d/\lambda \rfloor$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 3.5a</div>
+      <div class="example-q">A diffraction grating has 600 lines per mm. It is illuminated with light of wavelength 450 nm. Find (a) the grating spacing, (b) the angle of the first-order maximum, (c) the highest order visible, (d) why diffraction gratings give sharper maxima than double slits.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $d = 1/(600\times10^3) = 1.667\times10^{-6}$ m $= 1667$ nm</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $\sin\theta_1 = \lambda/d = 450/1667 = 0.2699$. $\theta_1 = \arcsin(0.2699) = 15.6°$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $n_{\max}$: $\sin\theta \leq 1 \Rightarrow n \leq d/\lambda = 1667/450 = 3.70$. Maximum order $= 3$. Check: $\sin\theta_3 = 3\times450/1667 = 0.810$, $\theta_3 = 54.1°$ ✓</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">(d) With more slits, destructive interference occurs more precisely between the principal maxima. The many slits mean that any slight deviation from the exact Bragg condition results in destructive interference from many pairs of slits — producing very sharp, narrow bright fringes and broad dark regions between them.<div class="step-comment">This sharpness makes diffraction gratings ideal for spectroscopy — separating closely spaced wavelengths in atomic spectra.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.6 REFRACTION -->
+  <div class="lesson-section" id="refraction">
+    <h2 class="section-title">3.6 Refraction & Snell's Law</h2>
+
+    <p>When a wave passes from one medium to another, its speed changes. If the boundary is not parallel to the wavefronts, the direction also changes. The frequency remains the same; the wavelength changes.</p>
+
+    <div class="formula-box">
+      $$n_1\sin\theta_1 = n_2\sin\theta_2 \qquad \text{(Snell's law)}$$
+      $$n = \frac{c}{v} = \frac{\lambda_{\text{vacuum}}}{\lambda_{\text{medium}}} \qquad \text{(refractive index)}$$
+    </div>
+
+    <h3 class="subsection">Total Internal Reflection</h3>
+    <p>When light travels from a denser to a less dense medium (e.g. glass to air), it bends away from the normal. At the <strong>critical angle</strong> $\theta_c$, the refracted ray travels along the boundary ($\theta_r = 90°$). Above $\theta_c$, no refraction occurs — all light is reflected. This is <strong>total internal reflection (TIR)</strong>.</p>
+
+    <div class="formula-box">
+      $$\sin\theta_c = \frac{n_2}{n_1} = \frac{1}{n} \quad \text{(for } n_2 = 1 \text{ air/vacuum)}$$
+    </div>
+
+    <p>TIR is exploited in <strong>optical fibres</strong> — light is transmitted along a glass core by repeated TIR. The core has higher refractive index than the cladding. Applications: broadband internet, medical endoscopes.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 3.6a</div>
+      <div class="example-q">A glass block has refractive index 1.52. (a) Find the critical angle. (b) Light strikes the glass-air interface at 35°. Describe what happens. (c) Find the speed of light in the glass.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) $\sin\theta_c = 1/n = 1/1.52 = 0.658$. $\theta_c = 41.1°$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $35° < \theta_c = 41.1°$. The angle of incidence is less than the critical angle, so the light refracts out of the glass into air. By Snell's law: $\sin\theta_r = 1.52\sin35° = 0.872$, so $\theta_r = 60.7°$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) $v = c/n = 3.00\times10^8/1.52 = 1.97\times10^8$ m s⁻¹</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.7 STATIONARY WAVES -->
+  <div class="lesson-section" id="stationary">
+    <h2 class="section-title">3.7 Stationary Waves</h2>
+
+    <p>A <strong>stationary (standing) wave</strong> forms when two identical progressive waves travel in opposite directions and superpose. Unlike a progressive wave, a stationary wave does not transfer energy — it stores it.</p>
+
+    <div class="key-point">
+      <strong>Nodes and antinodes</strong>
+      <strong>Nodes</strong> are fixed points of zero displacement — destructive interference always occurs here. <strong>Antinodes</strong> are points of maximum displacement — constructive interference. Adjacent nodes (or antinodes) are separated by $\lambda/2$. The distance from a node to the next antinode is $\lambda/4$.
+    </div>
+
+    <div class="key-point">
+      <strong>Key difference from progressive waves</strong>
+      In a progressive wave, all points have the same amplitude but different phases. In a stationary wave, points between two nodes all oscillate in phase but with different amplitudes (zero at nodes, maximum at antinodes). Points on either side of a node are in antiphase with each other.
+    </div>
+
+    <h3 class="subsection">Harmonics on a string</h3>
+    <p>A string of length $L$ fixed at both ends supports stationary waves with nodes at each end. The allowed wavelengths are:</p>
+
+    <div class="formula-box">
+      $$\lambda_n = \frac{2L}{n} \qquad f_n = \frac{nv}{2L} \qquad n = 1, 2, 3, \ldots$$
+      <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--muted)">$n=1$: fundamental (1st harmonic) &nbsp;·&nbsp; $n=2$: 2nd harmonic &nbsp;·&nbsp; $n=3$: 3rd harmonic</p>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 3.7a — Guitar string</div>
+      <div class="example-q">A guitar string of length 65 cm vibrates at its fundamental frequency of 330 Hz. (a) Find the wave speed on the string. (b) Find the frequency of the 3rd harmonic. (c) Sketch the standing wave pattern for the 3rd harmonic, labelling nodes and antinodes.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">(a) At the fundamental ($n=1$): $\lambda_1 = 2L = 2\times0.65 = 1.30$ m. $v = f\lambda = 330\times1.30 = 429$ m s⁻¹</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">(b) $f_3 = 3f_1 = 3\times330 = 990$ Hz. (Harmonics are integer multiples of the fundamental.)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">(c) 3rd harmonic: 3 loops (antinodes), 4 nodes (including both ends). Pattern has nodes at 0, L/3, 2L/3, L and antinodes at L/6, L/2, 5L/6.<div class="step-comment">Each loop is half a wavelength: $\lambda_3 = 2L/3 = 0.433$ m. Check: $f_3 = v/\lambda_3 = 429/0.433 = 990$ Hz ✓</div></div></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Stationary waves in pipes</h3>
+    <p>Open pipes have antinodes at both ends; closed pipes have a node at the closed end and antinode at the open end.</p>
+    <table>
+      <tr><th>Pipe type</th><th>Fundamental wavelength</th><th>Harmonics present</th></tr>
+      <tr><td>Open at both ends</td><td>$\lambda_1 = 2L$</td><td>All harmonics: $f_n = nf_1$</td></tr>
+      <tr><td>Closed at one end</td><td>$\lambda_1 = 4L$</td><td>Odd harmonics only: $f_n = nf_1$ ($n = 1,3,5...$)</td></tr>
+    </table>
+  </div>
+
+  <!-- 3.8 OPTICS & POLARISATION -->
+  <div class="lesson-section" id="optics">
+    <h2 class="section-title">3.8 Optics & Polarisation</h2>
+
+    <h3 class="subsection">Polarisation</h3>
+    <p><strong>Polarisation</strong> is the restriction of a transverse wave's oscillations to a single plane. Unpolarised light has oscillations in all planes perpendicular to the direction of travel. A <strong>polarising filter</strong> (Polaroid) transmits only the component of the wave oscillating in one specific plane.</p>
+
+    <p>When polarised light passes through a second filter (the analyser) at angle $\theta$ to the first, the transmitted intensity follows <strong>Malus's Law</strong> (not required for AQA but useful context). Two filters at 90° to each other transmit no light — the polariser and analyser are said to be <em>crossed</em>.</p>
+
+    <div class="key-point">
+      <strong>Polarisation proves transverse nature</strong>
+      Only transverse waves can be polarised — because oscillations are perpendicular to propagation, they can be blocked by a filter aligned in one direction. Longitudinal waves (like sound) cannot be polarised — their oscillations are parallel to propagation, so there is no preferred transverse direction to filter. This is one experimental proof that light is transverse.
+    </div>
+
+    <p>Applications of polarisation: LCD screens (liquid crystal displays use crossed polarisers with a rotatable liquid crystal between them), sunglasses (reduce glare from horizontally polarised reflected light), stress analysis in engineering (stressed materials rotate polarised light, revealing strain patterns).</p>
+
+    <h3 class="subsection">Electromagnetic spectrum — wavelength and applications</h3>
+    <table>
+      <tr><th>Type</th><th>Wavelength range</th><th>Application</th></tr>
+      <tr><td>Radio</td><td>$> 10^{-1}$ m</td><td>Broadcasting, communications</td></tr>
+      <tr><td>Microwave</td><td>$10^{-3}$ to $10^{-1}$ m</td><td>Cooking, satellite comms, radar</td></tr>
+      <tr><td>Infrared</td><td>$7\times10^{-7}$ to $10^{-3}$ m</td><td>Thermal imaging, remote controls</td></tr>
+      <tr><td>Visible</td><td>$4\times10^{-7}$ to $7\times10^{-7}$ m</td><td>Vision, photography</td></tr>
+      <tr><td>Ultraviolet</td><td>$10^{-8}$ to $4\times10^{-7}$ m</td><td>Sterilisation, fluorescence</td></tr>
+      <tr><td>X-ray</td><td>$10^{-13}$ to $10^{-8}$ m</td><td>Medical imaging, crystallography</td></tr>
+      <tr><td>Gamma</td><td>$< 10^{-11}$ m</td><td>Cancer treatment, sterilisation</td></tr>
+    </table>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Foundation</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A sound wave in air has frequency 680 Hz and wavelength 0.50 m. (a) Find the speed of sound. (b) Find the period. (c) Find the phase difference between two points 0.375 m apart. Give your answer in radians and degrees.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $v = f\lambda = 680\times0.50 = 340$ m s⁻¹. (b) $T = 1/f = 1/680 = 1.47\times10^{-3}$ s. (c) $\phi = 2\pi x/\lambda = 2\pi\times0.375/0.50 = 2\pi\times0.75 = 1.5\pi = 4.71$ rad $= 270°$. (The points are ¾ of a wavelength apart.)</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">In a Young's double slit experiment using a laser of wavelength 632 nm, the slit separation is 0.40 mm and the screen is 1.8 m away. (a) Calculate the fringe spacing. (b) The experiment is repeated with the screen moved to 2.7 m. Find the new fringe spacing. (c) Describe and explain what would be observed if the laser were replaced with a white light source.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $x = \lambda D/a = (632\times10^{-9}\times1.8)/(0.40\times10^{-3}) = 2.84\times10^{-3}$ m $= 2.84$ mm. (b) $x = (632\times10^{-9}\times2.7)/(0.40\times10^{-3}) = 4.26$ mm. (c) A central white fringe forms where all wavelengths have zero path difference. On either side, coloured fringes appear — each wavelength forms its own fringe pattern at a different spacing ($x\propto\lambda$), so violet fringes are closest to centre and red furthest. The fringes become smeared out and less distinct at higher orders as patterns from different wavelengths overlap.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">A standing wave is set up on a string of length 1.2 m fixed at both ends. The string vibrates in its third harmonic at 450 Hz. (a) Sketch the standing wave pattern. (b) Find the wavelength. (c) Find the wave speed on the string. (d) Find the fundamental frequency.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) 3 loops (antinodes) with 4 nodes including both endpoints. (b) $\lambda_3 = 2L/n = 2\times1.2/3 = 0.8$ m. (c) $v = f\lambda = 450\times0.8 = 360$ m s⁻¹. (d) $f_1 = f_3/3 = 450/3 = 150$ Hz.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Challenging</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A diffraction grating with 500 lines mm⁻¹ is used to analyse light from a sodium lamp, which emits two close wavelengths: 589.0 nm and 589.6 nm (the sodium doublet). (a) Find the angular separation of these two lines in the first order. (b) Find the angular separation in the second order. (c) Explain why astronomers use higher orders to study stellar spectra.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$d = 1/(500\times10^3) = 2.00\times10^{-6}$ m. (a) First order: $\sin\theta_1 = \lambda/d$. For 589.0 nm: $\sin\theta = 589.0/2000 = 0.2945$, $\theta = 17.13°$. For 589.6 nm: $\sin\theta = 589.6/2000 = 0.2948$, $\theta = 17.15°$. Angular separation $= 0.02°$. (b) Second order: $\sin\theta = 2\lambda/d$. For 589.0: $\theta = 35.97°$. For 589.6: $\sin\theta = 2\times589.6/2000 = 0.5896$, $\theta = 36.14°$. Separation $= 0.17°$ — about 8 times larger. (c) Higher orders give greater angular dispersion (separation increases with $n$), allowing closely spaced spectral lines to be resolved. This is essential for measuring the compositions and velocities (via Doppler shifts) of distant stars.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">An optical fibre consists of a glass core (refractive index 1.55) surrounded by cladding (refractive index 1.45). (a) Calculate the critical angle at the core-cladding boundary. (b) A ray enters the end of the fibre at angle $\alpha$ to the axis. Find the maximum value of $\alpha$ for total internal reflection to occur throughout the fibre (this defines the acceptance angle and numerical aperture). (c) Explain why the cladding is necessary — why not use an air-clad fibre?</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) $\sin\theta_c = n_{\rm clad}/n_{\rm core} = 1.45/1.55 = 0.9355$. $\theta_c = 69.4°$. (b) At the end face, refraction: $n_{\rm air}\sin\alpha = n_{\rm core}\sin\beta$ where $\beta = 90° - \theta_c$ (complement of critical angle, since TIR just occurs when the ray hits the side at $\theta_c$). $\sin\alpha = n_{\rm core}\sin(90°-\theta_c) = n_{\rm core}\cos\theta_c = 1.55\times\cos69.4° = 1.55\times0.3535 = 0.548$. $\alpha = 33.2°$. This is the acceptance half-angle (NA $= \sin\alpha = 0.548$). (c) An air-clad fibre would have $\theta_c = \arcsin(1/1.55) = 40.2°$ — a wider acceptance angle, which sounds better. However, when fibres touch or cross, light leaks out at contact points (no cladding to maintain the critical angle condition). The cladding maintains TIR even when fibres are bundled, bent or touching, and protects the surface from contamination which would change the refractive index.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <!-- Section C -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — Exam-style</div>
+      <div class="difficulty-badge diff-c">Exam-style</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A student sets up a microwave standing wave experiment. Two microwave sources (wavelength 2.8 cm) face each other 60 cm apart, producing a standing wave pattern between them. A probe detector is moved along the line between the sources. (a) Calculate the distance between adjacent nodes. (b) Explain how the student can verify that a standing wave has formed, rather than just detecting the intensity from one source. (c) The student claims that increasing the power of one source will not change the positions of the nodes. Evaluate this claim. (d) Explain the difference in the motion of the probe at a node versus an antinode as time progresses.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(a) Adjacent nodes are separated by $\lambda/2 = 2.8/2 = 1.4$ cm. (b) If a standing wave has formed: the probe should detect alternating regions of zero signal (nodes) and maximum signal (antinodes) as it is moved. A single source would give a smoothly varying signal decreasing with distance. The student should find equally spaced minima (nodes) at 1.4 cm intervals — this regular pattern confirms a standing wave. (c) The claim is mostly correct regarding node positions. Nodes occur where the two waves always cancel, which depends on the path difference (a geometric property of the setup), not on amplitude. However, if one source has much greater power, the amplitudes of the two waves become unequal, and the destructive interference at the nodes will be incomplete — the nodes will no longer be true zeros but will be minima. The node positions (minima) will stay the same, but the minima will not reach zero. (d) At a node: the probe detects no signal at any time — the displacement is always zero (permanent destructive interference). At an antinode: the probe detects a signal that oscillates in time at the wave frequency — the displacement varies sinusoidally between the maximum positive and negative values.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="particles-radiation.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Particles & Radiation</div></a>
+    <a href="mechanics-materials.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Mechanics & Materials</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
