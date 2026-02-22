@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proof by Induction — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .induction-box{background:var(--surface2);border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0}
+  .induction-step{display:flex;gap:1rem;margin-bottom:1rem;font-size:0.9rem}
+  .induction-step:last-child{margin-bottom:0}
+  .induction-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;padding-top:0.15rem;min-width:80px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-body{font-size:0.9rem;line-height:1.8}
+  .example-body .step-label{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;display:block;margin:1rem 0 0.3rem}
+  .example-body .step-label:first-child{margin-top:0}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.9rem;line-height:1.8}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 08</div>
+  <a href="#structure" class="sidebar-link active"><span class="sidebar-num">8.1</span> The Structure of Induction</a>
+  <a href="#summation" class="sidebar-link"><span class="sidebar-num">8.2</span> Summation Formulae</a>
+  <a href="#divisibility" class="sidebar-link"><span class="sidebar-num">8.3</span> Divisibility</a>
+  <a href="#inequalities" class="sidebar-link"><span class="sidebar-num">8.4</span> Inequalities</a>
+  <a href="#matrices" class="sidebar-link"><span class="sidebar-num">8.5</span> Matrix Powers</a>
+  <a href="#recurrence" class="sidebar-link"><span class="sidebar-num">8.6</span> Recurrence Relations</a>
+  <a href="#strong" class="sidebar-link"><span class="sidebar-num">8.7</span> Strong Induction</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 08</div>
+    <div class="topic-num-badge">Topic 08 · Core Pure</div>
+    <h1 class="topic-title">Proof by Induction</h1>
+    <p class="topic-intro">The most elegant proof technique in mathematics. Show it works for $n=1$, assume it works for $n=k$, prove it for $n=k+1$ — and you've proved it for every natural number.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>7</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Core Pure 1, Chapter 8</div>
+      <div class="meta-item"><span>~3 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#structure">8.1 — The Structure of Induction</a></li>
+      <li><a href="#summation">8.2 — Summation Formulae</a></li>
+      <li><a href="#divisibility">8.3 — Divisibility</a></li>
+      <li><a href="#inequalities">8.4 — Inequalities</a></li>
+      <li><a href="#matrices">8.5 — Matrix Powers</a></li>
+      <li><a href="#recurrence">8.6 — Recurrence Relations</a></li>
+      <li><a href="#strong">8.7 — Strong Induction</a></li>
+    </ul>
+  </div>
+
+  <!-- 8.1 STRUCTURE -->
+  <div class="lesson-section" id="structure">
+    <h2 class="section-title">8.1 The Structure of Induction</h2>
+
+    <p>Mathematical induction proves that a statement $P(n)$ holds for all integers $n \geq n_0$ (usually $n_0 = 1$). The logic is like an infinite chain of dominoes: if the first falls, and each falling domino topples the next, they all fall.</p>
+
+    <div class="induction-box">
+      <div class="induction-step">
+        <div class="induction-label">Base case</div>
+        <div>Verify $P(n_0)$ is true directly.</div>
+      </div>
+      <div class="induction-step">
+        <div class="induction-label">Assumption</div>
+        <div>Assume $P(k)$ is true for some arbitrary integer $k \geq n_0$.</div>
+      </div>
+      <div class="induction-step">
+        <div class="induction-label">Inductive step</div>
+        <div>Using the assumption, prove $P(k+1)$ is true.</div>
+      </div>
+      <div class="induction-step">
+        <div class="induction-label">Conclusion</div>
+        <div>By the principle of mathematical induction, $P(n)$ is true for all $n \geq n_0$.</div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ The most common mistake</strong>
+      Students often assume what they're trying to prove — writing "$P(k+1)$ is true, therefore..." You must work <em>from</em> the assumption $P(k)$ to <em>derive</em> $P(k+1)$. The logical flow must be clear and one-directional.
+    </div>
+
+    <div class="key-point">
+      <strong>What the conclusion must say</strong>
+      Always end with a full conclusion statement: "Since $P(1)$ is true and $P(k)$ true implies $P(k+1)$ true, by the principle of mathematical induction $P(n)$ is true for all positive integers $n$." Examiners deduct marks for missing conclusions.
+    </div>
+  </div>
+
+  <!-- 8.2 SUMMATION -->
+  <div class="lesson-section" id="summation">
+    <h2 class="section-title">8.2 Summation Formulae</h2>
+    <p>The most common induction proofs at A Level involve proving a closed-form formula for a sum.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.2a</div>
+      <div class="example-q">Prove by induction that $\displaystyle\sum_{r=1}^{n} r = \dfrac{1}{2}n(n+1)$ for all $n \in \mathbb{Z}^+$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        When $n=1$: LHS $= 1$. RHS $= \frac{1}{2}(1)(2) = 1$. ✓
+
+        <span class="step-label">Inductive assumption</span>
+        Assume the result holds for $n = k$, i.e. $\displaystyle\sum_{r=1}^{k} r = \frac{1}{2}k(k+1)$.
+
+        <span class="step-label">Inductive step</span>
+        We need to show the result holds for $n = k+1$, i.e. that $\displaystyle\sum_{r=1}^{k+1} r = \frac{1}{2}(k+1)(k+2)$.
+
+        $$\sum_{r=1}^{k+1} r = \sum_{r=1}^{k} r + (k+1) = \frac{1}{2}k(k+1) + (k+1)$$
+        $$= (k+1)\left(\frac{k}{2} + 1\right) = (k+1)\cdot\frac{k+2}{2} = \frac{1}{2}(k+1)(k+2) \checkmark$$
+
+        <span class="step-label">Conclusion</span>
+        Since the result holds for $n=1$, and whenever it holds for $n=k$ it holds for $n=k+1$, by the principle of mathematical induction the result holds for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.2b</div>
+      <div class="example-q">Prove by induction that $\displaystyle\sum_{r=1}^{n} r^3 = \dfrac{1}{4}n^2(n+1)^2$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: LHS $= 1$. RHS $= \frac{1}{4}(1)(4) = 1$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $\displaystyle\sum_{r=1}^{k} r^3 = \frac{1}{4}k^2(k+1)^2$.
+
+        <span class="step-label">Inductive step</span>
+        $$\sum_{r=1}^{k+1} r^3 = \frac{1}{4}k^2(k+1)^2 + (k+1)^3 = (k+1)^2\left[\frac{k^2}{4} + (k+1)\right]$$
+        $$= (k+1)^2 \cdot \frac{k^2 + 4k + 4}{4} = \frac{(k+1)^2(k+2)^2}{4} = \frac{1}{4}(k+1)^2(k+2)^2 \checkmark$$
+
+        <span class="step-label">Conclusion</span>
+        Result holds for all $n \in \mathbb{Z}^+$ by induction. $\blacksquare$
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.3 DIVISIBILITY -->
+  <div class="lesson-section" id="divisibility">
+    <h2 class="section-title">8.3 Divisibility</h2>
+    <p>To prove that $f(n)$ is divisible by $d$ for all $n$, write $f(k) = dm$ for some integer $m$ (the inductive assumption), then show $f(k+1)$ can also be written as $d \times \text{integer}$.</p>
+
+    <div class="key-point">
+      <strong>Key Technique</strong>
+      Express $f(k+1)$ in terms of $f(k)$. A common trick: write $f(k+1) = a \cdot f(k) + \text{something divisible by } d$. Since $f(k)$ is divisible by $d$ by assumption, and the extra part is too, so is $f(k+1)$.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.3a</div>
+      <div class="example-q">Prove by induction that $f(n) = 4^n + 6n - 1$ is divisible by $9$ for all $n \in \mathbb{Z}^+$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: $f(1) = 4 + 6 - 1 = 9$. Divisible by $9$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $f(k) = 4^k + 6k - 1 = 9m$ for some integer $m$.
+
+        <span class="step-label">Inductive step</span>
+        $$f(k+1) = 4^{k+1} + 6(k+1) - 1 = 4 \cdot 4^k + 6k + 5$$
+        Express in terms of $f(k) = 4^k + 6k - 1$:
+        $$f(k+1) = 4(4^k + 6k - 1) - 24k + 4 + 6k + 5 = 4f(k) - 18k + 9$$
+        $$= 4f(k) + 9(1 - 2k)$$
+        Since $f(k) = 9m$: $f(k+1) = 4(9m) + 9(1-2k) = 9(4m + 1 - 2k)$, which is divisible by $9$. ✓
+
+        <span class="step-label">Conclusion</span>
+        By induction, $9 \mid f(n)$ for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.3b</div>
+      <div class="example-q">Prove that $3^{2n} - 1$ is divisible by $8$ for all $n \in \mathbb{Z}^+$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: $9-1=8$. Divisible by $8$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $3^{2k} - 1 = 8m$ for some integer $m$, i.e. $3^{2k} = 8m+1$.
+
+        <span class="step-label">Inductive step</span>
+        $$3^{2(k+1)} - 1 = 9 \cdot 3^{2k} - 1 = 9(8m+1) - 1 = 72m + 8 = 8(9m+1)$$
+        This is divisible by $8$. ✓
+
+        <span class="step-label">Conclusion</span>
+        By induction, $8 \mid (3^{2n}-1)$ for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.4 INEQUALITIES -->
+  <div class="lesson-section" id="inequalities">
+    <h2 class="section-title">8.4 Inequalities</h2>
+    <p>Induction can prove that $f(n) > g(n)$ for all $n \geq n_0$. The inductive step must rigorously preserve the inequality — avoid hand-waving.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.4a</div>
+      <div class="example-q">Prove by induction that $2^n > n^2$ for all integers $n \geq 5$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=5$: $2^5 = 32 > 25 = 5^2$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $2^k > k^2$ for some integer $k \geq 5$.
+
+        <span class="step-label">Inductive step</span>
+        We need to show $2^{k+1} > (k+1)^2$.
+        $$2^{k+1} = 2 \cdot 2^k > 2k^2 \quad \text{(by assumption)}$$
+        It suffices to show $2k^2 \geq (k+1)^2 = k^2 + 2k + 1$, i.e. $k^2 - 2k - 1 \geq 0$.
+
+        For $k \geq 5$: $k^2 - 2k - 1 = (k-1)^2 - 2 \geq (5-1)^2 - 2 = 14 > 0$. ✓
+
+        Therefore $2^{k+1} > 2k^2 \geq (k+1)^2$.
+
+        <span class="step-label">Conclusion</span>
+        By induction, $2^n > n^2$ for all integers $n \geq 5$. $\blacksquare$
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.5 MATRIX POWERS -->
+  <div class="lesson-section" id="matrices">
+    <h2 class="section-title">8.5 Matrix Powers</h2>
+    <p>Induction is a clean way to prove a formula for $\mathbf{A}^n$ — particularly when the result can't be obtained easily by diagonalisation, or when you need to verify a conjectured form.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.5a</div>
+      <div class="example-q">Prove by induction that $\mathbf{A}^n = \begin{pmatrix}1 & 2n \\ 0 & 1\end{pmatrix}$ where $\mathbf{A} = \begin{pmatrix}1 & 2 \\ 0 & 1\end{pmatrix}$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: $\mathbf{A}^1 = \begin{pmatrix}1&2\\0&1\end{pmatrix} = \begin{pmatrix}1&2(1)\\0&1\end{pmatrix}$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $\mathbf{A}^k = \begin{pmatrix}1&2k\\0&1\end{pmatrix}$ for some $k \geq 1$.
+
+        <span class="step-label">Inductive step</span>
+        $$\mathbf{A}^{k+1} = \mathbf{A}^k \cdot \mathbf{A} = \begin{pmatrix}1&2k\\0&1\end{pmatrix}\begin{pmatrix}1&2\\0&1\end{pmatrix} = \begin{pmatrix}1\cdot1+2k\cdot0 & 1\cdot2+2k\cdot1 \\ 0 & 1\end{pmatrix} = \begin{pmatrix}1 & 2(k+1) \\ 0 & 1\end{pmatrix}$$
+        This is exactly the required form with $n = k+1$. ✓
+
+        <span class="step-label">Conclusion</span>
+        By induction, the result holds for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.5b</div>
+      <div class="example-q">Prove that $\begin{pmatrix}3&1\\0&2\end{pmatrix}^n = \begin{pmatrix}3^n & 3^n-2^n \\ 0 & 2^n\end{pmatrix}$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: $\begin{pmatrix}3&1\\0&2\end{pmatrix} = \begin{pmatrix}3&3-2\\0&2\end{pmatrix}$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $\mathbf{A}^k = \begin{pmatrix}3^k&3^k-2^k\\0&2^k\end{pmatrix}$.
+
+        <span class="step-label">Inductive step</span>
+        $$\mathbf{A}^{k+1} = \begin{pmatrix}3^k&3^k-2^k\\0&2^k\end{pmatrix}\begin{pmatrix}3&1\\0&2\end{pmatrix} = \begin{pmatrix}3\cdot3^k & 3^k + 2(3^k-2^k)\\0&2\cdot2^k\end{pmatrix}$$
+        $$= \begin{pmatrix}3^{k+1} & 3\cdot3^k - 2^{k+1}\\0&2^{k+1}\end{pmatrix} = \begin{pmatrix}3^{k+1} & 3^{k+1}-2^{k+1}\\0&2^{k+1}\end{pmatrix}$$ ✓
+
+        <span class="step-label">Conclusion</span>
+        By induction, the result holds for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.6 RECURRENCE -->
+  <div class="lesson-section" id="recurrence">
+    <h2 class="section-title">8.6 Recurrence Relations</h2>
+    <p>A recurrence relation defines a sequence by expressing each term in terms of earlier ones. Induction can verify a conjectured closed form.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.6a</div>
+      <div class="example-q">A sequence is defined by $u_1 = 3$ and $u_{n+1} = 2u_n + 1$. Prove by induction that $u_n = 2^{n+1} - 1$.</div>
+      <div class="example-body">
+        <span class="step-label">Base case</span>
+        $n=1$: $u_1 = 2^2 - 1 = 3$. ✓
+
+        <span class="step-label">Assumption</span>
+        Assume $u_k = 2^{k+1} - 1$ for some $k \geq 1$.
+
+        <span class="step-label">Inductive step</span>
+        $$u_{k+1} = 2u_k + 1 = 2(2^{k+1}-1) + 1 = 2^{k+2} - 2 + 1 = 2^{k+2} - 1 = 2^{(k+1)+1} - 1$$ ✓
+
+        <span class="step-label">Conclusion</span>
+        By induction, $u_n = 2^{n+1}-1$ for all $n \in \mathbb{Z}^+$. $\blacksquare$
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.7 STRONG INDUCTION -->
+  <div class="lesson-section" id="strong">
+    <h2 class="section-title">8.7 Strong Induction</h2>
+    <p>In <strong>strong induction</strong> (also called complete induction), the inductive step assumes $P(1), P(2), \ldots, P(k)$ all hold — not just $P(k)$ — to prove $P(k+1)$. This is useful when $P(k+1)$ depends on more than just $P(k)$.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 8.7a — Fibonacci</div>
+      <div class="example-q">The Fibonacci sequence is defined by $F_1 = F_2 = 1$, $F_{n+2} = F_{n+1} + F_n$. Prove that $F_n < 2^n$ for all $n \geq 1$.</div>
+      <div class="example-body">
+        <span class="step-label">Base cases</span>
+        $n=1$: $F_1 = 1 < 2 = 2^1$. ✓ &nbsp; $n=2$: $F_2 = 1 < 4 = 2^2$. ✓
+
+        <span class="step-label">Strong assumption</span>
+        Assume $F_j < 2^j$ for all $j \leq k$ (where $k \geq 2$).
+
+        <span class="step-label">Inductive step</span>
+        $$F_{k+1} = F_k + F_{k-1} < 2^k + 2^{k-1} = 2^{k-1}(2+1) = 3 \cdot 2^{k-1} < 4 \cdot 2^{k-1} = 2^{k+1}$$
+
+        <span class="step-label">Conclusion</span>
+        By strong induction, $F_n < 2^n$ for all $n \geq 1$. $\blacksquare$
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>When to use strong induction</strong>
+      You need it when the recurrence for the $(k+1)$th term uses two or more earlier terms — like the Fibonacci sequence. The two base cases are needed because the inductive step uses both $F_k$ and $F_{k-1}$.
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">Prove by induction that $\displaystyle\sum_{r=1}^{n} r^2 = \dfrac{n(n+1)(2n+1)}{6}$ for all $n \in \mathbb{Z}^+$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base: $n=1$: LHS$=1$, RHS$=\frac{1\cdot2\cdot3}{6}=1$ ✓. Assume $\sum_{r=1}^k r^2=\frac{k(k+1)(2k+1)}{6}$. Then $\sum_{r=1}^{k+1}r^2=\frac{k(k+1)(2k+1)}{6}+(k+1)^2=(k+1)\left[\frac{k(2k+1)}{6}+(k+1)\right]=(k+1)\cdot\frac{2k^2+7k+6}{6}=(k+1)\cdot\frac{(2k+3)(k+2)}{6}=\frac{(k+1)(k+2)(2k+3)}{6}$ ✓. Conclusion: result holds for all $n\in\mathbb{Z}^+$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">Prove by induction that $5^n + 3$ is divisible by $4$ for all $n \in \mathbb{Z}^+$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base: $n=1$: $5+3=8=4\times2$ ✓. Assume $5^k+3=4m$. Then $5^{k+1}+3=5\cdot5^k+3=5(4m-3)+3=20m-15+3=20m-12=4(5m-3)$. Divisible by 4 ✓. Conclusion by induction.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Prove by induction that $\begin{pmatrix}2&1\\0&1\end{pmatrix}^n = \begin{pmatrix}2^n & 2^n-1 \\ 0 & 1\end{pmatrix}$ for all $n \in \mathbb{Z}^+$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base $n=1$: $\begin{pmatrix}2&1\\0&1\end{pmatrix}=\begin{pmatrix}2^1&2^1-1\\0&1\end{pmatrix}$ ✓. Assume $\mathbf{A}^k=\begin{pmatrix}2^k&2^k-1\\0&1\end{pmatrix}$. Then $\mathbf{A}^{k+1}=\begin{pmatrix}2^k&2^k-1\\0&1\end{pmatrix}\begin{pmatrix}2&1\\0&1\end{pmatrix}=\begin{pmatrix}2^{k+1}&2^k+(2^k-1)\\0&1\end{pmatrix}=\begin{pmatrix}2^{k+1}&2^{k+1}-1\\0&1\end{pmatrix}$ ✓. By induction, holds for all $n\in\mathbb{Z}^+$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">A sequence satisfies $u_1 = 5$, $u_{n+1} = 3u_n - 4$. Prove by induction that $u_n = 3^n + 2$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base: $n=1$: $3^1+2=5=u_1$ ✓. Assume $u_k=3^k+2$. Then $u_{k+1}=3(3^k+2)-4=3^{k+1}+6-4=3^{k+1}+2$ ✓. By induction, $u_n=3^n+2$ for all $n\in\mathbb{Z}^+$.</div>
+      </div>
+      <div class="q-marks">[5 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Prove by induction that $n^3 + 2n$ is divisible by $3$ for all $n \in \mathbb{Z}^+$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base: $n=1$: $1+2=3$ ✓. Assume $k^3+2k=3m$. Then $(k+1)^3+2(k+1)=k^3+3k^2+3k+1+2k+2=(k^3+2k)+3k^2+3k+3=3m+3(k^2+k+1)=3(m+k^2+k+1)$. Divisible by 3 ✓.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">Prove by induction that $n! > 2^n$ for all $n \geq 4$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base: $n=4$: $4!=24>16=2^4$ ✓. Assume $k!>2^k$ for some $k\geq4$. Then $(k+1)!=(k+1)\cdot k!>(k+1)\cdot2^k\geq5\cdot2^k>2\cdot2^k=2^{k+1}$ (since $k+1\geq5>2$) ✓. By induction, $n!>2^n$ for all $n\geq4$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">Prove by induction that $\displaystyle\sum_{r=1}^{n} r \cdot 2^r = 2 + (n-1)\cdot 2^{n+1}$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base $n=1$: LHS$=1\cdot2=2$, RHS$=2+(0)\cdot4=2$ ✓. Assume $\sum_{r=1}^k r\cdot2^r=2+(k-1)\cdot2^{k+1}$. Add $(k+1)\cdot2^{k+1}$: sum$=2+(k-1)2^{k+1}+(k+1)2^{k+1}=2+2^{k+1}(k-1+k+1)=2+2k\cdot2^{k+1}=2+k\cdot2^{k+2}=2+((k+1)-1)\cdot2^{(k+1)+1}$ ✓. By induction, result holds for all $n\in\mathbb{Z}^+$.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q8</div>
+        <div class="q-text">Prove by induction that for all $n \geq 1$: $\displaystyle\sum_{r=0}^{n} \binom{n}{r} = 2^n$. (You may use the identity $\binom{n}{r} + \binom{n}{r-1} = \binom{n+1}{r}$ without proof.)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base $n=1$: $\binom{1}{0}+\binom{1}{1}=1+1=2=2^1$ ✓. Assume $\sum_{r=0}^k\binom{k}{r}=2^k$. Then $\sum_{r=0}^{k+1}\binom{k+1}{r}=\binom{k+1}{0}+\sum_{r=1}^k\binom{k+1}{r}+\binom{k+1}{k+1}=1+\sum_{r=1}^k\left[\binom{k}{r}+\binom{k}{r-1}\right]+1$. Rearranging: $=1+\sum_{r=1}^k\binom{k}{r}+\sum_{r=1}^k\binom{k}{r-1}+1=\binom{k}{0}+\sum_{r=1}^k\binom{k}{r}+\sum_{r=0}^{k-1}\binom{k}{r}+\binom{k}{k}=2\sum_{r=0}^k\binom{k}{r}=2\cdot2^k=2^{k+1}$ ✓. By induction, result holds for all $n\geq1$.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q9</div>
+        <div class="q-text">Prove by induction that every integer $n \geq 2$ can be written as a product of primes. (This is the existence part of the Fundamental Theorem of Arithmetic. Use strong induction.)</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Base $n=2$: $2$ is itself prime, hence a product of primes ✓. Strong assumption: Assume every integer $j$ with $2\leq j\leq k$ can be written as a product of primes. Consider $n=k+1$. Either $k+1$ is prime (done — it is itself a product), or $k+1$ is composite, so $k+1=ab$ where $2\leq a,b\leq k$. By the strong inductive hypothesis, both $a$ and $b$ are products of primes, so $k+1=ab$ is also a product of primes ✓. By strong induction, every integer $n\geq2$ is a product of primes. $\blacksquare$</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q10</div>
+        <div class="q-text">Let $u_n$ be defined by $u_1=1$, $u_2=3$, $u_{n+2}=3u_{n+1}-2u_n$. (i) Compute $u_3$, $u_4$, $u_5$ and conjecture a closed form. (ii) Prove your conjecture by strong induction on $n$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $u_3=3\cdot3-2\cdot1=7$, $u_4=3\cdot7-2\cdot3=15$, $u_5=3\cdot15-2\cdot7=31$. Pattern: $1,3,7,15,31,\ldots=2^1-1,2^2-1,2^3-1,\ldots$ Conjecture: $u_n=2^n-1$. (ii) Base: $u_1=1=2^1-1$ ✓, $u_2=3=2^2-1$ ✓. Assume $u_j=2^j-1$ for all $j\leq k$ (strong, $k\geq2$). Then $u_{k+1}=3u_k-2u_{k-1}=3(2^k-1)-2(2^{k-1}-1)=3\cdot2^k-3-2^k+2=2\cdot2^k-1=2^{k+1}-1$ ✓. By strong induction, $u_n=2^n-1$ for all $n\geq1$. $\blacksquare$</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="differential-equations.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Differential Equations</div></a>
+    <a href="../index.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Section</span> Further Statistics</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
