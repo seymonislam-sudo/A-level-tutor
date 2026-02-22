@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi-squared Tests — A Level Further Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#a78bfa;--accent-dim:rgba(167,139,250,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#a78bfa;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#a78bfa;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(167,139,250,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);animation:fadeUp 0.6s ease both}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem;animation:fadeUp 0.6s ease both}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(167,139,250,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .chi-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:0.88rem}
+  .chi-table th{background:var(--surface2);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;padding:0.6rem 0.8rem;border:1px solid var(--border);text-align:center}
+  .chi-table td{padding:0.55rem 0.8rem;border:1px solid var(--border);color:var(--text);text-align:center}
+  .chi-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .chi-table td.label{text-align:left;color:var(--muted);font-size:0.85rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(167,139,250,0.12);color:var(--accent);border:1px solid rgba(167,139,250,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(167,139,250,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  .toc-list li a:hover::before{background:var(--accent)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Further Maths</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 10</div>
+  <a href="#chidist" class="sidebar-link active"><span class="sidebar-num">10.1</span> The Chi-squared Distribution</a>
+  <a href="#goodness" class="sidebar-link"><span class="sidebar-num">10.2</span> Goodness of Fit Tests</a>
+  <a href="#dof" class="sidebar-link"><span class="sidebar-num">10.3</span> Degrees of Freedom</a>
+  <a href="#estimating" class="sidebar-link"><span class="sidebar-num">10.4</span> Estimating Parameters</a>
+  <a href="#contingency" class="sidebar-link"><span class="sidebar-num">10.5</span> Contingency Tables</a>
+  <a href="#yates" class="sidebar-link"><span class="sidebar-num">10.6</span> Yates' Correction</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Grade A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Grade B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Hard / STEP</a>
+</aside>
+<main class="main">
+
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Further Maths</a> / Topic 10</div>
+    <div class="topic-num-badge">Topic 10 · Further Statistics</div>
+    <h1 class="topic-title">Chi-squared Tests</h1>
+    <p class="topic-intro">A powerful family of hypothesis tests for categorical data — testing whether observed frequencies match a theoretical model, or whether two categorical variables are independent.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>Edexcel</span> Further Statistics 1, Chapter 4</div>
+      <div class="meta-item"><span>~3.5 hrs</span> estimated study time</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// In this topic</div>
+    <ul class="toc-list">
+      <li><a href="#chidist">10.1 — The Chi-squared Distribution</a></li>
+      <li><a href="#goodness">10.2 — Goodness of Fit Tests</a></li>
+      <li><a href="#dof">10.3 — Degrees of Freedom</a></li>
+      <li><a href="#estimating">10.4 — Estimating Parameters</a></li>
+      <li><a href="#contingency">10.5 — Contingency Tables</a></li>
+      <li><a href="#yates">10.6 — Yates' Correction</a></li>
+    </ul>
+  </div>
+
+  <!-- 10.1 CHI-SQUARED DISTRIBUTION -->
+  <div class="lesson-section" id="chidist">
+    <h2 class="section-title">10.1 The Chi-squared Distribution</h2>
+    <p>If $Z_1, Z_2, \ldots, Z_\nu$ are independent standard normal random variables, then $X = Z_1^2 + Z_2^2 + \cdots + Z_\nu^2$ follows a <strong>chi-squared distribution</strong> with $\nu$ degrees of freedom, written $X \sim \chi^2(\nu)$.</p>
+
+    <div class="formula-box">
+      $$X \sim \chi^2(\nu) \implies E(X) = \nu, \quad \text{Var}(X) = 2\nu$$
+    </div>
+
+    <p>The chi-squared distribution is right-skewed, defined only for $x \geq 0$, and becomes more symmetric as $\nu$ increases. Critical values are read from tables — in an exam, you'll be given the $\chi^2$ tables.</p>
+
+    <div class="key-point">
+      <strong>Reading the table</strong>
+      The table gives $\chi^2_{\nu,\alpha}$ — the value exceeded with probability $\alpha$. For a test at the 5% level with $\nu$ degrees of freedom, compare your test statistic to $\chi^2_{\nu, 0.05}$. If your statistic exceeds this critical value, reject $H_0$.
+    </div>
+
+    <p>Common critical values to know:</p>
+    <table class="chi-table">
+      <tr><th>$\nu$</th><th>10% ($\alpha=0.10$)</th><th>5% ($\alpha=0.05$)</th><th>1% ($\alpha=0.01$)</th></tr>
+      <tr><td>1</td><td>2.706</td><td>3.841</td><td>6.635</td></tr>
+      <tr><td>2</td><td>4.605</td><td>5.991</td><td>9.210</td></tr>
+      <tr><td>3</td><td>6.251</td><td>7.815</td><td>11.345</td></tr>
+      <tr><td>4</td><td>7.779</td><td>9.488</td><td>13.277</td></tr>
+      <tr><td>5</td><td>9.236</td><td>11.070</td><td>15.086</td></tr>
+      <tr><td>6</td><td>10.645</td><td>12.592</td><td>16.812</td></tr>
+      <tr><td>7</td><td>12.017</td><td>14.067</td><td>18.475</td></tr>
+    </table>
+  </div>
+
+  <!-- 10.2 GOODNESS OF FIT -->
+  <div class="lesson-section" id="goodness">
+    <h2 class="section-title">10.2 Goodness of Fit Tests</h2>
+    <p>A <strong>goodness of fit test</strong> tests whether observed data are consistent with a specified theoretical distribution. The test statistic measures how far observed frequencies deviate from expected frequencies.</p>
+
+    <div class="formula-box">
+      $$X^2 = \sum_{\text{all cells}} \frac{(O - E)^2}{E}$$
+      <p style="margin-top:0.8rem;margin-bottom:0;font-size:0.85rem;color:var(--muted);">where $O$ = observed frequency, $E$ = expected frequency. Under $H_0$, $X^2 \sim \chi^2(\nu)$ approximately.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Full test procedure</strong>
+      (1) State $H_0$ (data follows the proposed distribution) and $H_1$ (it does not). (2) Calculate expected frequencies under $H_0$. (3) Combine any cells with $E < 5$. (4) Calculate $X^2 = \sum(O-E)^2/E$. (5) Find degrees of freedom $\nu$. (6) Compare $X^2$ to critical value from tables. (7) State conclusion in context.
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ The E &lt; 5 rule</strong>
+      Any cell with expected frequency less than 5 must be merged with an adjacent cell before computing $X^2$. This ensures the chi-squared approximation is valid. After merging, recalculate expected frequencies and adjust degrees of freedom accordingly.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 10.2a</div>
+      <div class="example-q">A die is rolled 120 times. The observed frequencies for faces 1–6 are: 18, 22, 17, 25, 19, 19. Test at the 5% level whether the die is fair.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$H_0$: The die is fair (each face equally likely). $H_1$: The die is not fair.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Expected frequency for each face: $E = 120/6 = 20$. All $E \geq 5$, so no merging needed.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">
+          $$X^2 = \frac{(18-20)^2}{20} + \frac{(22-20)^2}{20} + \frac{(17-20)^2}{20} + \frac{(25-20)^2}{20} + \frac{(19-20)^2}{20} + \frac{(19-20)^2}{20}$$
+          $$= \frac{4+4+9+25+1+1}{20} = \frac{44}{20} = 2.2$$
+        </div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Degrees of freedom: $\nu = 6 - 1 = 5$. Critical value at 5%: $\chi^2_{5, 0.05} = 11.070$.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$2.2 < 11.070$, so we do not reject $H_0$. There is insufficient evidence at the 5% level to conclude the die is unfair.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10.3 DEGREES OF FREEDOM -->
+  <div class="lesson-section" id="dof">
+    <h2 class="section-title">10.3 Degrees of Freedom</h2>
+    <p>The degrees of freedom for a goodness of fit test is:</p>
+
+    <div class="formula-box">
+      $$\nu = (\text{number of cells after merging}) - 1 - (\text{number of parameters estimated from data})$$
+    </div>
+
+    <p>The "minus 1" accounts for the constraint that all frequencies must sum to $n$ (the total). Each parameter estimated from the data (e.g. estimating $\lambda$ for Poisson, or $\mu$ and $\sigma$ for Normal) costs one additional degree of freedom.</p>
+
+    <table class="chi-table">
+      <tr><th>Distribution tested</th><th>Parameters estimated</th><th>$\nu$</th></tr>
+      <tr><td class="label">Discrete uniform / specified proportions</td><td>0</td><td>$k - 1$</td></tr>
+      <tr><td class="label">Poisson (estimating $\lambda$ from data)</td><td>1 ($\lambda$)</td><td>$k - 2$</td></tr>
+      <tr><td class="label">Binomial (estimating $p$ from data)</td><td>1 ($p$)</td><td>$k - 2$</td></tr>
+      <tr><td class="label">Normal (estimating $\mu$ and $\sigma$)</td><td>2</td><td>$k - 3$</td></tr>
+    </table>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem">$k$ = number of cells <em>after</em> merging. If a parameter is given (not estimated), do not subtract it.</p>
+  </div>
+
+  <!-- 10.4 ESTIMATING PARAMETERS -->
+  <div class="lesson-section" id="estimating">
+    <h2 class="section-title">10.4 Estimating Parameters from Data</h2>
+    <p>When the distribution parameters are not specified in $H_0$, estimate them from the observed data using standard estimators, then use these to calculate expected frequencies.</p>
+
+    <div class="example">
+      <div class="example-label">Worked Example 10.4a</div>
+      <div class="example-q">The table shows the number of accidents per week at a factory over 50 weeks. Test at 5% whether a Poisson distribution is a good fit.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div>
+          <div class="step-content">
+            <table class="chi-table" style="margin:0.5rem 0">
+              <tr><th>Accidents ($x$)</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4+</th></tr>
+              <tr><td class="label">Frequency ($O$)</td><td>18</td><td>16</td><td>10</td><td>4</td><td>2</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Estimate $\lambda$: $\hat{\lambda} = \bar{x} = \dfrac{0(18)+1(16)+2(10)+3(4)+4(2)}{50} = \dfrac{0+16+20+12+8}{50} = \dfrac{56}{50} = 1.12$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Calculate expected frequencies using $\text{Po}(1.12)$:
+          <br>$E_0 = 50e^{-1.12} = 50(0.3263) = 16.31$
+          <br>$E_1 = 50 \cdot 1.12 \cdot e^{-1.12} = 18.27$
+          <br>$E_2 = 50 \cdot \frac{1.12^2}{2}e^{-1.12} = 10.23$
+          <br>$E_3 = 50 \cdot \frac{1.12^3}{6}e^{-1.12} = 3.82$
+          <br>$E_{4+} = 50 - (16.31+18.27+10.23+3.82) = 1.37$
+        </div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">Merge cells: $E_{4+} = 1.37 < 5$, so merge "3" and "4+" into "3+": $O = 6$, $E = 5.19$. Now 4 cells.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">$X^2 = \dfrac{(18-16.31)^2}{16.31} + \dfrac{(16-18.27)^2}{18.27} + \dfrac{(10-10.23)^2}{10.23} + \dfrac{(6-5.19)^2}{5.19}$
+          $\approx 0.175 + 0.282 + 0.005 + 0.126 = 0.588$</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-content">$\nu = 4 - 1 - 1 = 2$. Critical value: $\chi^2_{2,0.05} = 5.991$. Since $0.588 < 5.991$, do not reject $H_0$. A Poisson distribution is a good fit.<div class="step-comment">The $-1$ is for the cell constraint; the extra $-1$ is because we estimated $\lambda$ from the data.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10.5 CONTINGENCY TABLES -->
+  <div class="lesson-section" id="contingency">
+    <h2 class="section-title">10.5 Contingency Tables</h2>
+    <p>A <strong>contingency table</strong> records the joint frequencies of two categorical variables. A chi-squared test on a contingency table tests whether the two variables are <strong>independent</strong>.</p>
+
+    <div class="formula-box">
+      $$H_0: \text{the two variables are independent} \qquad H_1: \text{they are not independent}$$
+      $$E_{ij} = \frac{R_i \times C_j}{N} \qquad \nu = (r-1)(c-1)$$
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted)">where $R_i$ = row $i$ total, $C_j$ = column $j$ total, $N$ = grand total, $r$ = number of rows, $c$ = number of columns.</p>
+
+    <div class="key-point">
+      <strong>No parameters to estimate</strong>
+      Unlike goodness of fit tests, the expected frequencies in a contingency table are calculated from the observed row and column totals — no distribution parameters need to be estimated. So there is no extra $-1$ in the degrees of freedom formula.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 10.5a</div>
+      <div class="example-q">The following table shows the hair colour and eye colour of 200 people. Test at 5% whether hair and eye colour are independent.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div>
+          <div class="step-content">
+            <table class="chi-table">
+              <tr><th></th><th>Brown eyes</th><th>Blue eyes</th><th>Green eyes</th><th>Total</th></tr>
+              <tr><td class="label">Dark hair</td><td>38</td><td>14</td><td>8</td><td>60</td></tr>
+              <tr><td class="label">Fair hair</td><td>22</td><td>40</td><td>18</td><td>80</td></tr>
+              <tr><td class="label">Red hair</td><td>10</td><td>12</td><td>18</td><td>40</td></tr>
+              <tr><td class="label"><strong>Total</strong></td><td><strong>70</strong></td><td><strong>66</strong></td><td><strong>44</strong></td><td><strong>200</strong></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Calculate expected frequencies $E_{ij} = R_i C_j / N$:
+          <table class="chi-table" style="margin:0.5rem 0">
+            <tr><th></th><th>Brown</th><th>Blue</th><th>Green</th></tr>
+            <tr><td class="label">Dark</td><td>$60\times70/200=21.0$</td><td>$60\times66/200=19.8$</td><td>$60\times44/200=13.2$</td></tr>
+            <tr><td class="label">Fair</td><td>$80\times70/200=28.0$</td><td>$80\times66/200=26.4$</td><td>$80\times44/200=17.6$</td></tr>
+            <tr><td class="label">Red</td><td>$40\times70/200=14.0$</td><td>$40\times66/200=13.2$</td><td>$40\times44/200=8.8$</td></tr>
+          </table>
+          All expected frequencies $\geq 5$. ✓
+        </div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$X^2 = \dfrac{(38-21)^2}{21}+\dfrac{(14-19.8)^2}{19.8}+\dfrac{(8-13.2)^2}{13.2}+\dfrac{(22-28)^2}{28}+\dfrac{(40-26.4)^2}{26.4}+\dfrac{(18-17.6)^2}{17.6}+\dfrac{(10-14)^2}{14}+\dfrac{(12-13.2)^2}{13.2}+\dfrac{(18-8.8)^2}{8.8}$
+          $\approx 13.76+1.70+2.05+1.29+7.01+0.01+1.14+0.11+9.62 = 36.69$</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\nu = (3-1)(3-1) = 4$. Critical value: $\chi^2_{4, 0.05} = 9.488$.
+          Since $36.69 > 9.488$, reject $H_0$. There is strong evidence at the 5% level that hair colour and eye colour are not independent.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10.6 YATES' CORRECTION -->
+  <div class="lesson-section" id="yates">
+    <h2 class="section-title">10.6 Yates' Correction</h2>
+    <p>For a <strong>2×2 contingency table</strong> ($\nu = 1$), the chi-squared approximation can be poor. <strong>Yates' continuity correction</strong> improves accuracy by subtracting $\frac{1}{2}$ from each $|O - E|$ before squaring:</p>
+
+    <div class="formula-box">
+      $$X^2_{\text{Yates}} = \sum \frac{\left(|O - E| - \tfrac{1}{2}\right)^2}{E}$$
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠ Only for 2×2 tables</strong>
+      Yates' correction only applies to 2×2 contingency tables (giving $\nu = 1$). Do not apply it to larger tables or goodness of fit tests. The correction always reduces the test statistic, making it harder to reject $H_0$ — it makes the test more conservative.
+    </div>
+
+    <div class="example">
+      <div class="example-label">Worked Example 10.6a</div>
+      <div class="example-q">100 patients are given either Drug A or a placebo. Results: Drug A — 30 improved, 20 did not. Placebo — 25 improved, 25 did not. Test at 5% using Yates' correction.</div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div>
+          <div class="step-content">
+            <table class="chi-table">
+              <tr><th></th><th>Improved</th><th>Not improved</th><th>Total</th></tr>
+              <tr><td class="label">Drug A</td><td>30</td><td>20</td><td>50</td></tr>
+              <tr><td class="label">Placebo</td><td>25</td><td>25</td><td>50</td></tr>
+              <tr><td class="label"><strong>Total</strong></td><td><strong>55</strong></td><td><strong>45</strong></td><td><strong>100</strong></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Expected frequencies: $E_{11}=50\times55/100=27.5$, $E_{12}=22.5$, $E_{21}=27.5$, $E_{22}=22.5$.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">Apply Yates' correction:
+          $$X^2 = \frac{(|30-27.5|-0.5)^2}{27.5}+\frac{(|20-22.5|-0.5)^2}{22.5}+\frac{(|25-27.5|-0.5)^2}{27.5}+\frac{(|25-22.5|-0.5)^2}{22.5}$$
+          $$= \frac{4}{27.5}+\frac{4}{22.5}+\frac{4}{27.5}+\frac{4}{22.5} = 0.1455+0.1778+0.1455+0.1778 = 0.647$$
+        </div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">$\nu = 1$. Critical value $\chi^2_{1,0.05} = 3.841$. Since $0.647 < 3.841$, do not reject $H_0$. Insufficient evidence that drug outcome and treatment are associated.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="practice-a" style="margin-top:3rem">
+    <h2 class="section-title" style="margin-bottom:1.5rem">Practice Questions</h2>
+  </div>
+
+  <div class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section A — Foundation</div>
+      <div class="difficulty-badge diff-a">Grade A</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q1</div>
+        <div class="q-text">A spinner with 5 equal sectors (labelled 1–5) is spun 200 times. Observed frequencies are 36, 45, 38, 42, 39. Test at the 5% significance level whether the spinner is fair.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$H_0$: spinner is fair; $H_1$: not fair. $E=40$ for each sector. $X^2=\frac{16+25+4+4+1}{40}=\frac{50}{40}=1.25$. $\nu=4$. Critical value $=9.488$. Since $1.25 < 9.488$, do not reject $H_0$. Insufficient evidence that the spinner is unfair.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q2</div>
+        <div class="q-text">In a survey of 150 students, the following data on preferred subject and gender was collected. Test at 5% for independence.
+          <table class="chi-table" style="margin-top:0.8rem">
+            <tr><th></th><th>Maths</th><th>Science</th><th>Arts</th></tr>
+            <tr><td class="label">Male</td><td>30</td><td>25</td><td>20</td></tr>
+            <tr><td class="label">Female</td><td>20</td><td>25</td><td>30</td></tr>
+          </table>
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Row totals: 75, 75. Col totals: 50, 50, 50. $N=150$. Expected: each cell $=75\times50/150=25$. $X^2=\frac{(30-25)^2}{25}+\frac{(25-25)^2}{25}+\frac{(20-25)^2}{25}+\frac{(20-25)^2}{25}+\frac{(25-25)^2}{25}+\frac{(30-25)^2}{25}=1+0+1+1+0+1=4$. $\nu=(2-1)(3-1)=2$. Critical value $=5.991$. Since $4<5.991$, do not reject $H_0$. No significant evidence of association.</div>
+      </div>
+      <div class="q-marks">[7 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q3</div>
+        <div class="q-text">Explain why Yates' correction is applied and state when it should be used. A 2×2 table gives observed values 12, 8, 7, 13. The expected values are 9.5, 10.5, 9.5, 10.5. Apply Yates' correction and test at 5%.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">Yates' correction is applied for 2×2 tables ($\nu=1$) to improve the chi-squared approximation, which can be inaccurate for small expected frequencies in a single degree of freedom. $X^2=\frac{(|12-9.5|-0.5)^2}{9.5}+\frac{(|8-10.5|-0.5)^2}{10.5}+\frac{(|7-9.5|-0.5)^2}{9.5}+\frac{(|13-10.5|-0.5)^2}{10.5}=\frac{4}{9.5}+\frac{4}{10.5}+\frac{4}{9.5}+\frac{4}{10.5}=0.421+0.381+0.421+0.381=1.604$. Critical value $\chi^2_{1,0.05}=3.841$. Since $1.604 < 3.841$, do not reject $H_0$.</div>
+      </div>
+      <div class="q-marks">[6 marks]</div>
+    </div>
+  </div>
+
+  <!-- Grade B -->
+  <div id="practice-b" class="practice-section" style="margin-bottom:1.5rem">
+    <div class="practice-header">
+      <div class="practice-title">Section B — Challenging</div>
+      <div class="difficulty-badge diff-b">Grade B</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q4</div>
+        <div class="q-text">The number of emails received per hour by an employee over 80 hours is recorded below. Test at 5% whether a Poisson distribution is a good fit, estimating $\lambda$ from the data.
+          <table class="chi-table" style="margin-top:0.8rem">
+            <tr><th>Emails</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5+</th></tr>
+            <tr><td class="label">Frequency</td><td>10</td><td>22</td><td>24</td><td>16</td><td>6</td><td>2</td></tr>
+          </table>
+        </div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$\hat{\lambda}=\frac{0(10)+1(22)+2(24)+3(16)+4(6)+5(2)}{80}=\frac{0+22+48+48+24+10}{80}=\frac{152}{80}=1.9$. Expected frequencies with Po(1.9): $E_0=80e^{-1.9}=11.94$, $E_1=80(1.9)e^{-1.9}=22.69$, $E_2=80\cdot\frac{1.9^2}{2}e^{-1.9}=21.55$, $E_3=80\cdot\frac{1.9^3}{6}e^{-1.9}=13.65$, $E_4=80\cdot\frac{1.9^4}{24}e^{-1.9}=6.48$. $E_{5+}=80-75.31=4.69<5$, so merge 4 and 5+: $O=8$, $E=11.17$. 5 cells. $X^2=\frac{(10-11.94)^2}{11.94}+\frac{(22-22.69)^2}{22.69}+\frac{(24-21.55)^2}{21.55}+\frac{(16-13.65)^2}{13.65}+\frac{(8-11.17)^2}{11.17}=0.315+0.021+0.278+0.404+0.900=1.918$. $\nu=5-1-1=3$. Critical value $\chi^2_{3,0.05}=7.815$. Since $1.918 < 7.815$, do not reject $H_0$. Poisson is a good fit.</div>
+      </div>
+      <div class="q-marks">[10 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q5</div>
+        <div class="q-text">Explain why the chi-squared test statistic $X^2 = \sum(O-E)^2/E$ is always non-negative, and explain in words why a very large value of $X^2$ provides evidence against $H_0$. Also explain why we only ever carry out a one-tailed test in the upper tail.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">$X^2\geq0$ because each term $(O-E)^2/E$ is a squared quantity divided by a positive number. A large $X^2$ means the observed frequencies deviate substantially from the expected frequencies under $H_0$, suggesting the model is a poor fit. We only test in the upper tail because $X^2=0$ would mean perfect agreement ($O=E$ for all cells), which is actually too good to be real data and wouldn't lead us to reject the model. We're only looking for evidence of poor fit (too large), not suspiciously perfect fit (though a very small $X^2$ can indicate data fabrication).</div>
+      </div>
+      <div class="q-marks">[4 marks]</div>
+    </div>
+  </div>
+
+  <!-- STEP -->
+  <div id="practice-c" class="practice-section">
+    <div class="practice-header">
+      <div class="practice-title">Section C — STEP-style</div>
+      <div class="difficulty-badge diff-c">Hard</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q6</div>
+        <div class="q-text">A researcher claims that birth month is uniformly distributed across the 12 months. A sample of 360 people shows the following frequencies (months grouped into quarters): Q1: 102, Q2: 84, Q3: 96, Q4: 78. (i) Test at 5% whether births are uniformly distributed across quarters. (ii) The researcher then splits into all 12 months. Explain why having more cells generally increases the power of the test to detect non-uniformity, but also why there is a risk of having too many cells.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $H_0$: uniform across quarters. $E=90$ for each. $X^2=\frac{(102-90)^2}{90}+\frac{(84-90)^2}{90}+\frac{(96-90)^2}{90}+\frac{(78-90)^2}{90}=\frac{144+36+36+144}{90}=\frac{360}{90}=4$. $\nu=3$. Critical value $=7.815$. Since $4<7.815$, do not reject $H_0$. No significant evidence of non-uniformity across quarters. (ii) More cells (months) give the test more opportunities to detect deviations from uniformity in specific months, increasing power. However, more cells means smaller expected frequencies per cell — if $E<5$, cells must be merged (reducing information), and the chi-squared approximation becomes unreliable. There is also a risk of overfitting: with 12 cells and only 360 observations, random variation looks more like a pattern.</div>
+      </div>
+      <div class="q-marks">[9 marks]</div>
+    </div>
+
+    <div class="question-item">
+      <div>
+        <div class="q-num">Q7</div>
+        <div class="q-text">In an $r \times c$ contingency table with grand total $N$, expected frequency $E_{ij} = R_i C_j / N$. (i) Show that $\sum_j E_{ij} = R_i$ (row totals are preserved). (ii) Show that when $H_0$ (independence) is true and $N$ is large, the test statistic $X^2 = \sum_{i,j}(O_{ij}-E_{ij})^2/E_{ij}$ has approximately a $\chi^2((r-1)(c-1))$ distribution by explaining why the degrees of freedom equals $(r-1)(c-1)$.</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide answer':'▼ Show answer'">▼ Show answer</button>
+        <div class="reveal-content">(i) $\sum_j E_{ij}=\sum_j\frac{R_iC_j}{N}=\frac{R_i}{N}\sum_jC_j=\frac{R_i}{N}\cdot N=R_i$ ✓. Similarly $\sum_i E_{ij}=C_j$. (ii) There are $rc$ cells. The row totals impose $r$ constraints ($\sum_j O_{ij}=R_i$ for each $i$) and column totals impose $c$ constraints ($\sum_i O_{ij}=C_j$ for each $j$), but these share 1 constraint (grand total $N$), so the total number of independent constraints is $r+c-1$. Degrees of freedom $=rc-(r+c-1)=rc-r-c+1=(r-1)(c-1)$. Roughly speaking, once we know any $(r-1)(c-1)$ entries of the table (plus all marginal totals), the remaining entries are determined — so there are only $(r-1)(c-1)$ free cells.</div>
+      </div>
+      <div class="q-marks">[8 marks]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="discrete-distributions.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Discrete Distributions</div></a>
+    <a href="continuous-distributions.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Continuous Distributions</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
