@@ -1,1 +1,552 @@
- 
+ <!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Representation — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .bit-grid{display:flex;gap:2px;margin:1rem 0;font-family:'DM Mono',monospace}
+  .bit{width:40px;height:40px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;background:var(--surface2)}
+  .bit.on{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.4);color:var(--accent)}
+  .bit-label{font-size:0.65rem;color:var(--muted);text-align:center;margin-top:0.3rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 03</div>
+  <a href="#binary" class="sidebar-link active"><span class="sidebar-num">1</span>Binary &amp; Hexadecimal</a>
+  <a href="#twos-complement" class="sidebar-link"><span class="sidebar-num">2</span>Two's Complement</a>
+  <a href="#floating-point" class="sidebar-link"><span class="sidebar-num">3</span>Floating Point</a>
+  <a href="#characters" class="sidebar-link"><span class="sidebar-num">4</span>Characters &amp; Strings</a>
+  <a href="#images" class="sidebar-link"><span class="sidebar-num">5</span>Images &amp; Sound</a>
+  <a href="#compression" class="sidebar-link"><span class="sidebar-num">6</span>Compression</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 03</div>
+    <div class="topic-num-badge">TOPIC 03</div>
+    <h1 class="topic-title">Data Representation</h1>
+    <p class="topic-intro">How computers store and manipulate numbers, text, images and sound — all as binary. Heavy on calculation; one of the most reliably examined topics in AQA Paper 2.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>Calculation</span> heavy</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#binary">Binary &amp; Hexadecimal</a></li>
+      <li><a href="#twos-complement">Two's Complement</a></li>
+      <li><a href="#floating-point">Floating Point Numbers</a></li>
+      <li><a href="#characters">Characters &amp; Strings</a></li>
+      <li><a href="#images">Images &amp; Sound</a></li>
+      <li><a href="#compression">Compression</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="binary">
+    <h2 class="section-title">Binary &amp; Hexadecimal</h2>
+
+```
+<h3 class="subsection">Number Bases</h3>
+<table>
+  <tr><th>Base</th><th>Name</th><th>Digits used</th><th>Use in computing</th></tr>
+  <tr><td>2</td><td>Binary</td><td>0, 1</td><td>Internal storage — all data is ultimately binary</td></tr>
+  <tr><td>10</td><td>Denary (decimal)</td><td>0–9</td><td>Human-readable numbers</td></tr>
+  <tr><td>16</td><td>Hexadecimal</td><td>0–9, A–F</td><td>Compact representation of binary; memory addresses, colours</td></tr>
+</table>
+
+<h3 class="subsection">Binary to Denary</h3>
+<p>Each bit position represents a power of 2. The rightmost bit is 2⁰ = 1, increasing leftward.</p>
+<div class="code-block">
+```
+
+128  64  32  16   8   4   2   1
+1   0   1   1   0   1   0   1   =  128+32+16+4+1  =  181
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Convert 10110110 from binary to denary.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Write out the place values: 128, 64, 32, 16, 8, 4, 2, 1</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Identify which bits are 1: positions 128, 32, 16, 4, 2<div class="step-comment">1  0  1  1  0  1  1  0</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Add the values: 128 + 32 + 16 + 4 + 2 = <strong>182</strong></div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Denary to Binary</h3>
+<p>Repeatedly divide by 2, recording the remainders. Read remainders bottom to top.</p>
+<div class="code-block">
+```
+
+Convert 45 to binary:
+45 ÷ 2 = 22 remainder 1
+22 ÷ 2 = 11 remainder 0
+11 ÷ 2 =  5 remainder 1
+5 ÷ 2 =  2 remainder 1
+2 ÷ 2 =  1 remainder 0
+1 ÷ 2 =  0 remainder 1
+
+Read upwards: 101101  →  45 in binary
+</div>
+
+```
+<h3 class="subsection">Hexadecimal</h3>
+<p>Each hex digit represents exactly 4 binary bits (a nibble). This makes hex a compact shorthand for binary.</p>
+<table>
+  <tr><th>Hex</th><th>Denary</th><th>Binary</th></tr>
+  <tr><td>0–9</td><td>0–9</td><td>0000–1001</td></tr>
+  <tr><td>A</td><td>10</td><td>1010</td></tr>
+  <tr><td>B</td><td>11</td><td>1011</td></tr>
+  <tr><td>C</td><td>12</td><td>1100</td></tr>
+  <tr><td>D</td><td>13</td><td>1101</td></tr>
+  <tr><td>E</td><td>14</td><td>1110</td></tr>
+  <tr><td>F</td><td>15</td><td>1111</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Convert 0xB7 (hexadecimal) to denary and to binary.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Split into nibbles: B = 11, 7 = 7</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">To denary: (11 × 16) + (7 × 1) = 176 + 7 = <strong>183</strong></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">To binary: B = 1011, 7 = 0111 → <strong>10110111</strong></div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Binary Arithmetic</h3>
+<p>Binary addition follows the same rules as denary, but with only 0 and 1:</p>
+<div class="code-block">
+```
+
+0 + 0 = 0
+0 + 1 = 1
+1 + 0 = 1
+1 + 1 = 0  (carry 1)
+1 + 1 + 1 = 1  (carry 1)
+
+Example:  10110101
++ 00111001
+–––––
+11101110   (check: 181 + 57 = 238 ✓)
+</div>
+
+```
+<div class="warning-box">
+  <strong>Overflow</strong>
+  If the result of a binary addition requires more bits than are available, an overflow error occurs. For an 8-bit system, the maximum value is 255 (11111111). Adding 1 would overflow back to 0.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="twos-complement">
+    <h2 class="section-title">Two's Complement</h2>
+    <p>Two's complement is the standard way computers represent <strong>negative integers</strong>. The most significant bit (leftmost) acts as a sign bit with a negative place value.</p>
+
+```
+<h3 class="subsection">8-bit Two's Complement Place Values</h3>
+<div class="code-block">
+```
+
+-128   64   32   16    8    4    2    1
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Interpret 11010110 as a two's complement signed integer.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">The MSB is 1 — this is a negative number.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Apply place values: -128 + 64 + 0 + 16 + 0 + 4 + 2 + 0</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">= -128 + 86 = <strong>-42</strong></div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Converting a Negative Number to Two's Complement</h3>
+<p>To represent -n in two's complement:</p>
+<div class="code-block">
+```
+
+Method: Invert all bits, then add 1
+
+Example: Represent -42 in 8-bit two’s complement
+Step 1: Write 42 in binary:    00101010
+Step 2: Invert all bits:       11010101
+Step 3: Add 1:                 11010110   →  -42 ✓
+</div>
+
+```
+<div class="key-point">
+  <strong>Range of 8-bit Two's Complement</strong>
+  Minimum: -128 (10000000) &nbsp;|&nbsp; Maximum: +127 (01111111)<br>
+  For n bits: range is -2^(n-1) to 2^(n-1) - 1
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="floating-point">
+    <h2 class="section-title">Floating Point Numbers</h2>
+    <p>Integers can't represent very large numbers or fractions efficiently. <strong>Floating point</strong> solves this using a mantissa and exponent — similar to scientific notation.</p>
+
+```
+<div class="key-point">
+  <strong>Floating Point Format</strong>
+  Value = Mantissa × 2^Exponent<br>
+  The mantissa holds the significant digits; the exponent controls the magnitude. Both are stored in two's complement binary.
+</div>
+
+<h3 class="subsection">Normalisation</h3>
+<p>A floating point number is <strong>normalised</strong> when the mantissa begins with the bits 01 (positive) or 10 (negative) — ensuring maximum precision for a given number of bits.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">A floating point number uses 8 bits for the mantissa and 4 bits for the exponent (both two's complement). The bit pattern is: mantissa = 01101000, exponent = 0011. Find the denary value.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Exponent: 0011 = +3 (positive, standard binary)</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Mantissa: 0.1101000 (binary point after first bit for normalised form) = 0.5 + 0.25 + 0.0625 = 0.8125</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Value = 0.8125 × 2³ = 0.8125 × 8 = <strong>6.5</strong></div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Precision vs Range Trade-off</h3>
+<table>
+  <tr><th>More bits for mantissa</th><th>More bits for exponent</th></tr>
+  <tr><td>Greater precision (more significant digits)</td><td>Greater range (larger/smaller numbers)</td></tr>
+  <tr><td>Smaller range</td><td>Less precision</td></tr>
+</table>
+
+<div class="warning-box">
+  <strong>Rounding Errors</strong>
+  Not all decimal fractions can be represented exactly in binary floating point. For example, 0.1 in decimal has no exact binary representation — this causes rounding errors that accumulate in calculations. This is why financial software avoids floating point for currency.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="characters">
+    <h2 class="section-title">Characters &amp; Strings</h2>
+
+```
+<h3 class="subsection">ASCII</h3>
+<p><strong>ASCII</strong> (American Standard Code for Information Interchange) uses 7 bits to represent 128 characters — uppercase and lowercase letters, digits, punctuation, and control characters.</p>
+<table>
+  <tr><th>Character</th><th>ASCII code (denary)</th><th>Binary</th></tr>
+  <tr><td>'A'</td><td>65</td><td>1000001</td></tr>
+  <tr><td>'Z'</td><td>90</td><td>1011010</td></tr>
+  <tr><td>'a'</td><td>97</td><td>1100001</td></tr>
+  <tr><td>'0'</td><td>48</td><td>0110000</td></tr>
+  <tr><td>Space</td><td>32</td><td>0100000</td></tr>
+</table>
+<div class="key-point">
+  <strong>Useful Pattern</strong>
+  'A' = 65, 'a' = 97. The difference is exactly 32 — the same as adding a 1 in bit position 5. This means you can toggle case by flipping bit 5.
+</div>
+
+<h3 class="subsection">Unicode</h3>
+<p>ASCII only covers English. <strong>Unicode</strong> is an international standard that assigns a unique code point to every character in every language, plus symbols and emoji.</p>
+<table>
+  <tr><th>Standard</th><th>Bits</th><th>Characters</th><th>Coverage</th></tr>
+  <tr><td>ASCII</td><td>7</td><td>128</td><td>English only</td></tr>
+  <tr><td>Extended ASCII</td><td>8</td><td>256</td><td>Western European languages</td></tr>
+  <tr><td>UTF-8</td><td>8–32 (variable)</td><td>1,114,112</td><td>All languages, emoji, symbols</td></tr>
+  <tr><td>UTF-16</td><td>16 or 32</td><td>1,114,112</td><td>All languages</td></tr>
+  <tr><td>UTF-32</td><td>32</td><td>1,114,112</td><td>All languages (fixed width)</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="images">
+    <h2 class="section-title">Images &amp; Sound</h2>
+
+```
+<h3 class="subsection">Bitmap Images</h3>
+<p>A <strong>bitmap</strong> stores an image as a grid of pixels. Each pixel's colour is stored as a binary value.</p>
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Resolution</td><td>Number of pixels (width × height). Higher resolution = more detail.</td></tr>
+  <tr><td>Colour depth</td><td>Number of bits per pixel. 1-bit = black/white only; 24-bit = 16.7 million colours.</td></tr>
+  <tr><td>File size</td><td>Width × Height × Colour depth (in bits) ÷ 8 = bytes</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Calculate the uncompressed file size of a 1920 × 1080 pixel image with 24-bit colour depth.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Total pixels: 1920 × 1080 = 2,073,600 pixels</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Bits per pixel: 24</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Total bits: 2,073,600 × 24 = 49,766,400 bits</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">Total bytes: 49,766,400 ÷ 8 = 6,220,800 bytes ≈ <strong>5.93 MB</strong></div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Sound Sampling</h3>
+<p>Sound is an analogue wave. Computers digitise it by <strong>sampling</strong> — measuring the amplitude at regular intervals.</p>
+<table>
+  <tr><th>Term</th><th>Definition</th><th>Effect of increasing</th></tr>
+  <tr><td>Sample rate</td><td>Number of samples per second (Hz)</td><td>Better frequency reproduction, larger file</td></tr>
+  <tr><td>Bit depth</td><td>Number of bits per sample</td><td>More amplitude levels, less noise, larger file</td></tr>
+  <tr><td>File size (sound)</td><td>Sample rate × Bit depth × Duration × Channels</td><td>—</td></tr>
+</table>
+<div class="key-point">
+  <strong>Nyquist's Theorem</strong>
+  To accurately reproduce a sound, the sample rate must be at least twice the highest frequency present. Human hearing reaches ~20,000 Hz, which is why CD audio uses 44,100 Hz.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 6 -->
+
+  <div class="lesson-section" id="compression">
+    <h2 class="section-title">Compression</h2>
+    <p>Compression reduces file size for storage and transmission. There are two types:</p>
+
+```
+<table>
+  <tr><th>Type</th><th>Description</th><th>Examples</th><th>Data loss?</th></tr>
+  <tr><td>Lossless</td><td>Original data perfectly reconstructed after decompression</td><td>PNG, ZIP, FLAC, GIF</td><td>No</td></tr>
+  <tr><td>Lossy</td><td>Some data permanently discarded — smaller files but quality reduced</td><td>JPEG, MP3, AAC, MP4</td><td>Yes</td></tr>
+</table>
+
+<h3 class="subsection">Run-Length Encoding (RLE)</h3>
+<p>RLE is a simple lossless compression technique that replaces consecutive repeated values with a count and value pair.</p>
+<div class="code-block">
+```
+
+Original:  AAAABBBBBCCDDDDDD  (17 characters)
+RLE:       4A5B2C6D           (8 characters)
+
+Works well for: simple images, fax data, repetitive data
+Works poorly for: photos, audio, already-compressed files
+</div>
+
+```
+<h3 class="subsection">Dictionary Coding (LZW)</h3>
+<p>Dictionary-based compression (used in ZIP, PNG) builds a dictionary of repeated patterns during compression and replaces them with shorter codes. More powerful than RLE for most real data.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">A black-and-white bitmap image (1 bit per pixel) has the following row of pixels: 000000001111111100000000. Apply RLE compression and calculate the compression ratio.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Original: 24 bits (24 pixels × 1 bit each)</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">RLE: (8, 0)(8, 1)(8, 0) — three pairs, each needing ~4 bits for count + 1 bit for value = 15 bits</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-comment">Compression ratio ≈ 24/15 = 1.6:1 — meaningful saving for simple images</div></div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>When not to use lossy compression</strong>
+  Medical images, legal documents, and lossless audio masters must use lossless compression — any data loss could have serious consequences. Lossy compression is only appropriate when some quality reduction is acceptable.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Convert the following binary numbers to denary: (a) 00110101  (b) 11001010  (c) 01111111</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Convert the hexadecimal value 0x3F to (a) denary and (b) binary.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">A pixel is stored using 8-bit colour depth. How many different colours can be represented?</div></div>
+      <div class="q-marks">[1]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">State the difference between lossless and lossy compression. Give one example of each.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">What is the ASCII code for the character 'B'? Show your working from the fact that 'A' = 65.</div></div>
+      <div class="q-marks">[1]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Represent -85 as an 8-bit two's complement binary number. Show all steps clearly.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Calculate the uncompressed file size of a 640 × 480 pixel image stored with 8-bit colour depth. Give your answer in kilobytes.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Add the following 8-bit binary numbers: 01101011 + 00110101. Show your working and state whether overflow occurs.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Apply RLE compression to the following string: WWWWWBBBWWWWWWWWBB. State the original length and compressed length in characters and calculate the compression ratio.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">Explain why increasing the sample rate of a digital audio recording improves quality but also increases file size. Use Nyquist's theorem in your answer.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">A floating point system uses 10 bits for the mantissa and 6 bits for the exponent, both in two's complement. (a) What is the largest positive number that can be represented? (b) What is the smallest positive normalised number? (c) Explain how increasing the mantissa bits improves precision but affects range.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A streaming service stores songs at 320 kbps (kilobits per second) using lossy MP3 compression, but the original studio recording is 24-bit depth at 96,000 Hz, stereo. Calculate the uncompressed file size of a 4-minute song. Then calculate the MP3 file size at 320 kbps. Hence determine the compression ratio. Discuss why lossy compression is acceptable for this use case.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain why UTF-8 has become the dominant character encoding on the internet despite UTF-32 being simpler to process. Your answer should discuss variable-length encoding, backward compatibility with ASCII, storage efficiency, and the trade-offs involved.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="problem-solving.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Problem Solving</div></a>
+    <a href="data-structures.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Data Structures</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
