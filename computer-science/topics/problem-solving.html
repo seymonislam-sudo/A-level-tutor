@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problem Solving & Theory of Computation — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .num{color:#fcd34d}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .fsm-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.5rem 0;text-align:center;font-family:'DM Mono',monospace;font-size:0.85rem}
+  .fsm-states{display:flex;justify-content:center;gap:3rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem}
+  .fsm-state{width:60px;height:60px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:0.9rem;position:relative}
+  .fsm-state.accept{border-width:4px}
+  .fsm-state.start::before{content:'→';position:absolute;left:-30px;color:var(--muted)}
+  .fsm-arrow{color:var(--muted);font-size:1.5rem}
+  .fsm-label{font-size:0.75rem;color:var(--muted);margin-top:0.4rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 02</div>
+  <a href="#abstraction" class="sidebar-link active"><span class="sidebar-num">1</span>Abstraction &amp; Decomposition</a>
+  <a href="#algorithms" class="sidebar-link"><span class="sidebar-num">2</span>Algorithms &amp; Flowcharts</a>
+  <a href="#fsm" class="sidebar-link"><span class="sidebar-num">3</span>Finite State Machines</a>
+  <a href="#turing" class="sidebar-link"><span class="sidebar-num">4</span>Turing Machines</a>
+  <a href="#complexity" class="sidebar-link"><span class="sidebar-num">5</span>Complexity &amp; Decidability</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 02</div>
+    <div class="topic-num-badge">TOPIC 02</div>
+    <h1 class="topic-title">Problem Solving &amp; Theory of Computation</h1>
+    <p class="topic-intro">Abstraction, decomposition, finite state machines, Turing machines and computational complexity — the theoretical foundations of computer science.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 1</div>
+      <div class="meta-item"><span>High</span> exam weighting</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#abstraction">Abstraction &amp; Decomposition</a></li>
+      <li><a href="#algorithms">Algorithms &amp; Flowcharts</a></li>
+      <li><a href="#fsm">Finite State Machines</a></li>
+      <li><a href="#turing">Turing Machines</a></li>
+      <li><a href="#complexity">Complexity &amp; Decidability</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="abstraction">
+    <h2 class="section-title">Abstraction &amp; Decomposition</h2>
+    <p><strong>Computational thinking</strong> is the process of formulating problems so they can be solved by a computer. It has four key components:</p>
+
+```
+<table>
+  <tr><th>Component</th><th>Definition</th><th>Example</th></tr>
+  <tr><td>Abstraction</td><td>Removing unnecessary detail, keeping only what matters</td><td>A map shows roads but not every blade of grass</td></tr>
+  <tr><td>Decomposition</td><td>Breaking a complex problem into smaller, manageable sub-problems</td><td>A school system split into: students, lessons, timetable, staff</td></tr>
+  <tr><td>Pattern recognition</td><td>Identifying similarities and common features in problems</td><td>Sorting algorithms all compare and swap elements</td></tr>
+  <tr><td>Algorithmic thinking</td><td>Designing step-by-step solutions that can be followed precisely</td><td>A recipe, navigation directions</td></tr>
+</table>
+
+<h3 class="subsection">Levels of Abstraction</h3>
+<p>Abstraction exists at multiple levels in computing. Understanding which details to hide at each level is a key skill:</p>
+<div class="key-point">
+  <strong>Examples of Abstraction Levels</strong>
+  High-level language → Assembly language → Machine code → Logic gates → Transistors. Each level hides the complexity below it. A Python programmer doesn't need to know about transistors; a hardware engineer doesn't need to know Python.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">A developer is building a sat-nav app. Identify two abstractions they would use and explain what detail each one removes.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Map abstraction — roads shown as lines, removing physical width, surface texture, buildings alongside the road, etc.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Route abstraction — directions given as turns only, hiding the complexity of GPS coordinates, triangulation, signal processing.</div></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="algorithms">
+    <h2 class="section-title">Algorithms &amp; Flowcharts</h2>
+    <p>An <strong>algorithm</strong> is a finite, precise, step-by-step set of instructions to solve a problem. Algorithms can be expressed as pseudocode, flowcharts, or program code.</p>
+
+```
+<h3 class="subsection">Flowchart Symbols</h3>
+<table>
+  <tr><th>Symbol</th><th>Shape</th><th>Meaning</th></tr>
+  <tr><td>Terminal</td><td>Rounded rectangle (oval)</td><td>Start or End</td></tr>
+  <tr><td>Process</td><td>Rectangle</td><td>An instruction or calculation</td></tr>
+  <tr><td>Decision</td><td>Diamond</td><td>A yes/no question (branch point)</td></tr>
+  <tr><td>Input/Output</td><td>Parallelogram</td><td>Data input or output</td></tr>
+  <tr><td>Subroutine</td><td>Rectangle with double vertical lines</td><td>Call to a subroutine</td></tr>
+</table>
+
+<h3 class="subsection">Properties of a Good Algorithm</h3>
+<div class="key-point">
+  <strong>Three Essential Properties</strong>
+  1. <strong>Correctness</strong> — produces the right output for all valid inputs.<br>
+  2. <strong>Efficiency</strong> — uses minimal time and memory resources.<br>
+  3. <strong>Clarity</strong> — easy to understand and maintain.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example — Pseudocode</div>
+  <div class="example-q">Write pseudocode for an algorithm that finds the largest number in a list of n numbers.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+largest ← list[0]
+<span class="kw">FOR</span> i ← 1 <span class="kw">TO</span> LENGTH(list) - 1
+<span class="kw">IF</span> list[i] > largest <span class="kw">THEN</span>
+largest ← list[i]
+<span class="kw">ENDIF</span>
+<span class="kw">ENDFOR</span>
+OUTPUT largest
+</div>
+<p style="margin-top:1rem;font-size:0.9rem;">We initialise <code>largest</code> to the first element, then iterate through the rest, updating <code>largest</code> whenever we find a bigger value.</p>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="fsm">
+    <h2 class="section-title">Finite State Machines</h2>
+    <p>A <strong>Finite State Machine (FSM)</strong> is a model of computation consisting of a finite number of states, transitions between those states, and inputs that trigger transitions.</p>
+
+```
+<h3 class="subsection">Key Terminology</h3>
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>State</td><td>A condition the system can be in at a given moment</td></tr>
+  <tr><td>Transition</td><td>A change from one state to another, triggered by an input</td></tr>
+  <tr><td>Start state</td><td>The state the machine begins in (shown with an arrow)</td></tr>
+  <tr><td>Accept state</td><td>A state that means the input has been accepted (shown with double circle)</td></tr>
+  <tr><td>Alphabet</td><td>The set of valid input symbols</td></tr>
+</table>
+
+<h3 class="subsection">State Transition Diagrams</h3>
+<p>FSMs are drawn as state transition diagrams. States are circles, transitions are arrows labelled with the input that triggers them.</p>
+
+<div class="fsm-diagram">
+  <div style="color:var(--muted);font-size:0.8rem;margin-bottom:1rem;">Example: FSM that accepts strings ending in "ab"</div>
+  <div class="fsm-states">
+    <div>
+      <div class="fsm-state start">S0</div>
+      <div class="fsm-label">Start</div>
+    </div>
+    <div style="color:var(--muted);">—a→</div>
+    <div>
+      <div class="fsm-state">S1</div>
+      <div class="fsm-label">Seen 'a'</div>
+    </div>
+    <div style="color:var(--muted);">—b→</div>
+    <div>
+      <div class="fsm-state accept">S2</div>
+      <div class="fsm-label">Accept</div>
+    </div>
+  </div>
+  <div style="color:var(--muted);font-size:0.78rem;">S0 →(a)→ S1 →(b)→ S2 (accept) | S1 →(a)→ S1 | S2 →(a)→ S1 | S0,S2 →(b)→ S0</div>
+</div>
+
+<div class="key-point">
+  <strong>FSM with Output (Mealy Machine)</strong>
+  Some FSMs produce output on each transition — called a Mealy machine. Others produce output based on state — called a Moore machine. AQA may ask you to complete or interpret either type.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">A vending machine charges 30p for a drink. It accepts 10p and 20p coins only. Draw a state transition table showing all states and transitions. The machine dispenses when exactly 30p is inserted.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <table>
+      <tr><th>Current State</th><th>Input</th><th>Next State</th><th>Output</th></tr>
+      <tr><td>S0 (0p)</td><td>10p</td><td>S1 (10p)</td><td>—</td></tr>
+      <tr><td>S0 (0p)</td><td>20p</td><td>S2 (20p)</td><td>—</td></tr>
+      <tr><td>S1 (10p)</td><td>10p</td><td>S2 (20p)</td><td>—</td></tr>
+      <tr><td>S1 (10p)</td><td>20p</td><td>S0 (0p)</td><td>Dispense</td></tr>
+      <tr><td>S2 (20p)</td><td>10p</td><td>S0 (0p)</td><td>Dispense</td></tr>
+      <tr><td>S2 (20p)</td><td>20p</td><td>S0 (0p)</td><td>Dispense + 10p change</td></tr>
+    </table>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="turing">
+    <h2 class="section-title">Turing Machines</h2>
+    <p>A <strong>Turing machine</strong> is a theoretical model of computation proposed by Alan Turing in 1936. It provides a formal definition of what it means for a problem to be computable.</p>
+
+```
+<h3 class="subsection">Components of a Turing Machine</h3>
+<table>
+  <tr><th>Component</th><th>Description</th></tr>
+  <tr><td>Infinite tape</td><td>Divided into cells, each holding one symbol. Extends infinitely in both directions.</td></tr>
+  <tr><td>Read/write head</td><td>Reads the symbol on the current cell, can write a new symbol, moves left or right</td></tr>
+  <tr><td>State register</td><td>Holds the current state of the machine</td></tr>
+  <tr><td>Transition function</td><td>A table of rules: given (current state, symbol read) → (write symbol, move direction, new state)</td></tr>
+  <tr><td>Halt state</td><td>A special state that stops the machine — either accept or reject</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>The Universal Turing Machine</strong>
+  A Universal Turing Machine (UTM) can simulate any other Turing machine. This is the theoretical basis for the modern stored-program computer — any computation can be encoded as data and processed by a general-purpose machine.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example — Transition Table</div>
+  <div class="example-q">A Turing machine is designed to add 1 to a binary number on the tape. The head starts at the rightmost digit. Complete the transition table.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <table>
+      <tr><th>State</th><th>Read</th><th>Write</th><th>Move</th><th>New State</th></tr>
+      <tr><td>q0 (adding)</td><td>1</td><td>0</td><td>Left</td><td>q0 (carry)</td></tr>
+      <tr><td>q0 (adding)</td><td>0</td><td>1</td><td>Left</td><td>q1 (done)</td></tr>
+      <tr><td>q0 (adding)</td><td>B (blank)</td><td>1</td><td>Left</td><td>q1 (done)</td></tr>
+      <tr><td>q1 (done)</td><td>any</td><td>unchanged</td><td>—</td><td>HALT</td></tr>
+    </table>
+    <p style="margin-top:1rem;font-size:0.9rem;">The machine moves left, flipping 1s to 0s (carrying) until it finds a 0 or blank, which it writes as 1 and halts.</p>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="complexity">
+    <h2 class="section-title">Complexity &amp; Decidability</h2>
+
+```
+<h3 class="subsection">The Halting Problem</h3>
+<p>Alan Turing proved in 1936 that it is <strong>impossible</strong> to write a general algorithm that determines, for any arbitrary program and input, whether that program will eventually halt or run forever. This is known as the <strong>Halting Problem</strong>.</p>
+
+<div class="key-point">
+  <strong>Why it matters</strong>
+  The Halting Problem shows that there exist problems that are <strong>undecidable</strong> — no algorithm can ever solve them for all inputs. This is a fundamental limit of computation itself, not just of current technology.
+</div>
+
+<h3 class="subsection">Decidable vs Undecidable Problems</h3>
+<table>
+  <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+  <tr><td>Decidable</td><td>An algorithm exists that always gives a yes/no answer in finite time</td><td>Is a number prime? Is a string a palindrome?</td></tr>
+  <tr><td>Undecidable</td><td>No algorithm can solve it for all possible inputs</td><td>The Halting Problem, some tiling problems</td></tr>
+</table>
+
+<h3 class="subsection">Tractable vs Intractable Problems</h3>
+<p>Even among decidable problems, some are <strong>tractable</strong> (solvable in reasonable time) and some are <strong>intractable</strong> (theoretically solvable but impractical for large inputs).</p>
+<table>
+  <tr><th>Type</th><th>Time Complexity</th><th>Example</th></tr>
+  <tr><td>Tractable</td><td>Polynomial time — O(n), O(n²), O(n³)</td><td>Sorting, searching, shortest path</td></tr>
+  <tr><td>Intractable</td><td>Exponential time — O(2ⁿ), O(n!)</td><td>Travelling Salesman Problem (exact), factoring large numbers</td></tr>
+</table>
+
+<div class="warning-box">
+  <strong>Exam Trap</strong>
+  Students often confuse undecidable (no algorithm exists) with intractable (algorithm exists but is too slow). Make sure you use the correct term. The Halting Problem is undecidable — not just intractable.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Explain why the Travelling Salesman Problem (finding the shortest route visiting n cities exactly once) is considered intractable.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">The number of possible routes for n cities is (n-1)! — a factorial growth rate.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">For 20 cities: 19! ≈ 1.2 × 10¹⁷ routes. Even checking one million routes per second would take millions of years.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">An exact algorithm exists but is impractical for large inputs — so the problem is intractable, not undecidable. Heuristic approaches give good (not guaranteed optimal) solutions in reasonable time.</div></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Define abstraction and give one example of abstraction used in everyday computing.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">State the four components of computational thinking and give a brief definition of each.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Name the five standard flowchart symbols and state what each one represents.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">An FSM has three states: S0 (start), S1, and S2 (accept). On input 'a' from S0, the machine moves to S1. On input 'b' from S1, it moves to S2. What string would be accepted by this machine?</div></div>
+      <div class="q-marks">[1]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">State what is meant by a "halt state" in a Turing machine.</div></div>
+      <div class="q-marks">[1]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Draw a state transition diagram for an FSM that accepts any binary string that contains an even number of 1s (including zero 1s). Label all states and transitions clearly.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A problem has an algorithm with time complexity O(2ⁿ). For n=10, it takes 0.001 seconds. Estimate how long it would take for n=30. Explain why this problem is considered intractable.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Write pseudocode for an algorithm to determine whether a given string is a palindrome. State the time complexity of your algorithm in Big O notation.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Explain the difference between a decidable and an undecidable problem. Give one example of each.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Describe Turing's proof that the Halting Problem is undecidable. Your answer should explain the proof by contradiction technique used, and why the result means no general-purpose algorithm can ever be written to solve it.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Design a complete FSM for a simple traffic light controller with three states (Red, Amber, Green). The machine receives a timer signal as input. Produce both the state transition diagram and a full state transition table. Extend your design to include a pedestrian crossing request — describe how additional states would be needed and how the FSM would change.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">A student claims: "If a problem is intractable, we should simply wait for faster computers." Evaluate this claim, discussing time complexity classes, the nature of exponential growth, and the role of heuristic algorithms as a practical alternative.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="fundamentals-of-programming.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Fundamentals of Programming</div></a>
+    <a href="data-representation.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Data Representation</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
