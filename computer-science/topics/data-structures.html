@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Representation — A Level Computer Science</title>
+<title>Data Structures — A Level Computer Science</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
@@ -48,6 +48,11 @@
   .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
   .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
   .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .num{color:#fcd34d}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .code-block .fn{color:#c4b5fd}
   .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
   .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
   .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
@@ -87,10 +92,13 @@
   th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
   td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
   tr:last-child td{border-bottom:none}
-  .bit-grid{display:flex;gap:2px;margin:1rem 0;font-family:'DM Mono',monospace}
-  .bit{width:40px;height:40px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;background:var(--surface2)}
-  .bit.on{background:rgba(52,211,153,0.15);border-color:rgba(52,211,153,0.4);color:var(--accent)}
-  .bit-label{font-size:0.65rem;color:var(--muted);text-align:center;margin-top:0.3rem}
+  .ds-visual{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem}
+  .ds-row{display:flex;align-items:center;gap:0;margin-bottom:0.5rem;flex-wrap:wrap;gap:2px}
+  .ds-cell{min-width:50px;padding:0.5rem 0.75rem;border:1px solid var(--border);background:var(--surface);text-align:center;font-size:0.85rem}
+  .ds-cell.head{border-color:rgba(52,211,153,0.4);background:rgba(52,211,153,0.08);color:var(--accent)}
+  .ds-cell.highlight{border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);color:#fcd34d}
+  .ds-label{font-size:0.7rem;color:var(--muted);margin-right:0.75rem;min-width:60px}
+  .ds-arrow{color:var(--accent);margin:0 0.5rem}
   @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
 </style>
 </head>
@@ -103,13 +111,13 @@
 </nav>
 <div class="layout">
 <aside class="sidebar">
-  <div class="sidebar-title">Topic 03</div>
-  <a href="#binary" class="sidebar-link active"><span class="sidebar-num">1</span>Binary &amp; Hexadecimal</a>
-  <a href="#twos-complement" class="sidebar-link"><span class="sidebar-num">2</span>Two's Complement</a>
-  <a href="#floating-point" class="sidebar-link"><span class="sidebar-num">3</span>Floating Point</a>
-  <a href="#characters" class="sidebar-link"><span class="sidebar-num">4</span>Characters &amp; Strings</a>
-  <a href="#images" class="sidebar-link"><span class="sidebar-num">5</span>Images &amp; Sound</a>
-  <a href="#compression" class="sidebar-link"><span class="sidebar-num">6</span>Compression</a>
+  <div class="sidebar-title">Topic 04</div>
+  <a href="#arrays" class="sidebar-link active"><span class="sidebar-num">1</span>Arrays &amp; Lists</a>
+  <a href="#stacks" class="sidebar-link"><span class="sidebar-num">2</span>Stacks</a>
+  <a href="#queues" class="sidebar-link"><span class="sidebar-num">3</span>Queues</a>
+  <a href="#linked-lists" class="sidebar-link"><span class="sidebar-num">4</span>Linked Lists</a>
+  <a href="#trees" class="sidebar-link"><span class="sidebar-num">5</span>Trees &amp; Graphs</a>
+  <a href="#hash-tables" class="sidebar-link"><span class="sidebar-num">6</span>Hash Tables</a>
   <div class="sidebar-divider"></div>
   <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
   <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
@@ -117,124 +125,78 @@
 </aside>
 <main class="main">
   <div class="topic-header">
-    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 03</div>
-    <div class="topic-num-badge">TOPIC 03</div>
-    <h1 class="topic-title">Data Representation</h1>
-    <p class="topic-intro">How computers store and manipulate numbers, text, images and sound — all as binary. Heavy on calculation; one of the most reliably examined topics in AQA Paper 2.</p>
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 04</div>
+    <div class="topic-num-badge">TOPIC 04</div>
+    <h1 class="topic-title">Data Structures</h1>
+    <p class="topic-intro">Arrays, stacks, queues, linked lists, trees, graphs and hash tables — how data is organised, accessed and manipulated. A major Paper 1 topic with both theory and implementation questions.</p>
     <div class="topic-meta-row">
       <div class="meta-item"><span>6</span> subtopics</div>
-      <div class="meta-item"><span>AQA</span> Paper 2</div>
-      <div class="meta-item"><span>Calculation</span> heavy</div>
+      <div class="meta-item"><span>AQA</span> Paper 1</div>
+      <div class="meta-item"><span>Implementation</span> &amp; theory</div>
     </div>
   </div>
 
   <div class="toc">
     <div class="toc-title">// Contents</div>
     <ul class="toc-list">
-      <li><a href="#binary">Binary &amp; Hexadecimal</a></li>
-      <li><a href="#twos-complement">Two's Complement</a></li>
-      <li><a href="#floating-point">Floating Point Numbers</a></li>
-      <li><a href="#characters">Characters &amp; Strings</a></li>
-      <li><a href="#images">Images &amp; Sound</a></li>
-      <li><a href="#compression">Compression</a></li>
+      <li><a href="#arrays">Arrays &amp; Lists</a></li>
+      <li><a href="#stacks">Stacks</a></li>
+      <li><a href="#queues">Queues</a></li>
+      <li><a href="#linked-lists">Linked Lists</a></li>
+      <li><a href="#trees">Trees &amp; Graphs</a></li>
+      <li><a href="#hash-tables">Hash Tables</a></li>
     </ul>
   </div>
 
   <!-- SECTION 1 -->
 
-  <div class="lesson-section" id="binary">
-    <h2 class="section-title">Binary &amp; Hexadecimal</h2>
+  <div class="lesson-section" id="arrays">
+    <h2 class="section-title">Arrays &amp; Lists</h2>
+    <p>An <strong>array</strong> is a static data structure that stores a fixed number of elements of the same data type in contiguous memory locations. Elements are accessed by index.</p>
 
 ```
-<h3 class="subsection">Number Bases</h3>
-<table>
-  <tr><th>Base</th><th>Name</th><th>Digits used</th><th>Use in computing</th></tr>
-  <tr><td>2</td><td>Binary</td><td>0, 1</td><td>Internal storage — all data is ultimately binary</td></tr>
-  <tr><td>10</td><td>Denary (decimal)</td><td>0–9</td><td>Human-readable numbers</td></tr>
-  <tr><td>16</td><td>Hexadecimal</td><td>0–9, A–F</td><td>Compact representation of binary; memory addresses, colours</td></tr>
-</table>
-
-<h3 class="subsection">Binary to Denary</h3>
-<p>Each bit position represents a power of 2. The rightmost bit is 2⁰ = 1, increasing leftward.</p>
-<div class="code-block">
-```
-
-128  64  32  16   8   4   2   1
-1   0   1   1   0   1   0   1   =  128+32+16+4+1  =  181
-</div>
-
-```
-<div class="example">
-  <div class="example-label">Worked Example</div>
-  <div class="example-q">Convert 10110110 from binary to denary.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">Write out the place values: 128, 64, 32, 16, 8, 4, 2, 1</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">Identify which bits are 1: positions 128, 32, 16, 4, 2<div class="step-comment">1  0  1  1  0  1  1  0</div></div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-content">Add the values: 128 + 32 + 16 + 4 + 2 = <strong>182</strong></div></div>
+<div class="ds-visual">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:0.75rem;">1D Array: scores[6]</div>
+  <div class="ds-row">
+    <span class="ds-label">Index:</span>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">0</div>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">1</div>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">2</div>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">3</div>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">4</div>
+    <div class="ds-cell" style="color:var(--muted);font-size:0.75rem;">5</div>
   </div>
-</div>
-
-<h3 class="subsection">Denary to Binary</h3>
-<p>Repeatedly divide by 2, recording the remainders. Read remainders bottom to top.</p>
-<div class="code-block">
-```
-
-Convert 45 to binary:
-45 ÷ 2 = 22 remainder 1
-22 ÷ 2 = 11 remainder 0
-11 ÷ 2 =  5 remainder 1
-5 ÷ 2 =  2 remainder 1
-2 ÷ 2 =  1 remainder 0
-1 ÷ 2 =  0 remainder 1
-
-Read upwards: 101101  →  45 in binary
-</div>
-
-```
-<h3 class="subsection">Hexadecimal</h3>
-<p>Each hex digit represents exactly 4 binary bits (a nibble). This makes hex a compact shorthand for binary.</p>
-<table>
-  <tr><th>Hex</th><th>Denary</th><th>Binary</th></tr>
-  <tr><td>0–9</td><td>0–9</td><td>0000–1001</td></tr>
-  <tr><td>A</td><td>10</td><td>1010</td></tr>
-  <tr><td>B</td><td>11</td><td>1011</td></tr>
-  <tr><td>C</td><td>12</td><td>1100</td></tr>
-  <tr><td>D</td><td>13</td><td>1101</td></tr>
-  <tr><td>E</td><td>14</td><td>1110</td></tr>
-  <tr><td>F</td><td>15</td><td>1111</td></tr>
-</table>
-
-<div class="example">
-  <div class="example-label">Worked Example</div>
-  <div class="example-q">Convert 0xB7 (hexadecimal) to denary and to binary.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">Split into nibbles: B = 11, 7 = 7</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">To denary: (11 × 16) + (7 × 1) = 176 + 7 = <strong>183</strong></div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-content">To binary: B = 1011, 7 = 0111 → <strong>10110111</strong></div></div>
+  <div class="ds-row">
+    <span class="ds-label">Value:</span>
+    <div class="ds-cell">72</div>
+    <div class="ds-cell">85</div>
+    <div class="ds-cell head">91</div>
+    <div class="ds-cell">68</div>
+    <div class="ds-cell">77</div>
+    <div class="ds-cell">94</div>
   </div>
+  <div style="color:var(--muted);font-size:0.75rem;margin-top:0.5rem;">scores[2] = 91 &nbsp;(highlighted)</div>
 </div>
 
-<h3 class="subsection">Binary Arithmetic</h3>
-<p>Binary addition follows the same rules as denary, but with only 0 and 1:</p>
+<h3 class="subsection">2D Arrays</h3>
+<p>A 2D array stores data in rows and columns — like a grid or table. Accessed with two indices: <code>grid[row][col]</code>.</p>
 <div class="code-block">
 ```
 
-0 + 0 = 0
-0 + 1 = 1
-1 + 0 = 1
-1 + 1 = 0  (carry 1)
-1 + 1 + 1 = 1  (carry 1)
+<span class="cm"># Declare and access a 2D array</span>
+grid = [[<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>],[<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>],[<span class="num">7</span>,<span class="num">8</span>,<span class="num">9</span>]]
+<span class="fn">print</span>(grid[<span class="num">1</span>][<span class="num">2</span>])   <span class="cm"># Row 1, Col 2 → 6</span>
 
-Example:  10110101
-+ 00111001
-–––––
-11101110   (check: 181 + 57 = 238 ✓)
+<span class="cm"># Traverse with nested loops</span>
+<span class="kw">for</span> row <span class="kw">in</span> grid:
+<span class="kw">for</span> item <span class="kw">in</span> row:
+<span class="fn">print</span>(item, end=<span class="str">” “</span>)
 </div>
 
 ```
-<div class="warning-box">
-  <strong>Overflow</strong>
-  If the result of a binary addition requires more bits than are available, an overflow error occurs. For an 8-bit system, the maximum value is 255 (11111111). Adding 1 would overflow back to 0.
+<div class="key-point">
+  <strong>Static vs Dynamic</strong>
+  Arrays are <strong>static</strong> — size is fixed at declaration. Python lists are <strong>dynamic</strong> — they can grow and shrink. AQA may ask you to distinguish between them and explain the memory implications.
 </div>
 ```
 
@@ -242,47 +204,53 @@ Example:  10110101
 
   <!-- SECTION 2 -->
 
-  <div class="lesson-section" id="twos-complement">
-    <h2 class="section-title">Two's Complement</h2>
-    <p>Two's complement is the standard way computers represent <strong>negative integers</strong>. The most significant bit (leftmost) acts as a sign bit with a negative place value.</p>
+  <div class="lesson-section" id="stacks">
+    <h2 class="section-title">Stacks</h2>
+    <p>A <strong>stack</strong> is a Last In First Out (LIFO) data structure. Think of a stack of plates — you can only add or remove from the top.</p>
 
 ```
-<h3 class="subsection">8-bit Two's Complement Place Values</h3>
-<div class="code-block">
-```
-
--128   64   32   16    8    4    2    1
-</div>
-
-```
-<div class="example">
-  <div class="example-label">Worked Example</div>
-  <div class="example-q">Interpret 11010110 as a two's complement signed integer.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">The MSB is 1 — this is a negative number.</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">Apply place values: -128 + 64 + 0 + 16 + 0 + 4 + 2 + 0</div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-content">= -128 + 86 = <strong>-42</strong></div></div>
+<div class="ds-visual">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:0.75rem;">Stack (top = index 3)</div>
+  <div style="display:flex;flex-direction:column;gap:2px;width:fit-content;">
+    <div class="ds-cell head" style="width:120px;">← TOP: "D"</div>
+    <div class="ds-cell" style="width:120px;">"C"</div>
+    <div class="ds-cell" style="width:120px;">"B"</div>
+    <div class="ds-cell" style="width:120px;">"A"</div>
   </div>
 </div>
 
-<h3 class="subsection">Converting a Negative Number to Two's Complement</h3>
-<p>To represent -n in two's complement:</p>
+<table>
+  <tr><th>Operation</th><th>Description</th><th>AQA Pseudocode</th></tr>
+  <tr><td>Push</td><td>Add an item to the top</td><td>push(stack, item)</td></tr>
+  <tr><td>Pop</td><td>Remove and return the top item</td><td>pop(stack)</td></tr>
+  <tr><td>Peek/Top</td><td>View the top item without removing it</td><td>peek(stack)</td></tr>
+  <tr><td>isEmpty</td><td>Check if the stack is empty</td><td>isEmpty(stack)</td></tr>
+  <tr><td>isFull</td><td>Check if the stack is full (static)</td><td>isFull(stack)</td></tr>
+</table>
+
 <div class="code-block">
 ```
 
-Method: Invert all bits, then add 1
+<span class="cm"># Stack implementation using a list</span>
+stack = []
 
-Example: Represent -42 in 8-bit two’s complement
-Step 1: Write 42 in binary:    00101010
-Step 2: Invert all bits:       11010101
-Step 3: Add 1:                 11010110   →  -42 ✓
+stack.<span class="fn">append</span>(<span class="str">“A”</span>)    <span class="cm"># Push</span>
+stack.<span class="fn">append</span>(<span class="str">“B”</span>)
+stack.<span class="fn">append</span>(<span class="str">“C”</span>)
+
+top = stack.<span class="fn">pop</span>()   <span class="cm"># Pop → “C”</span>
+peek = stack[<span class="num">-1</span>]    <span class="cm"># Peek → “B”</span>
 </div>
 
 ```
 <div class="key-point">
-  <strong>Range of 8-bit Two's Complement</strong>
-  Minimum: -128 (10000000) &nbsp;|&nbsp; Maximum: +127 (01111111)<br>
-  For n bits: range is -2^(n-1) to 2^(n-1) - 1
+  <strong>Real-world uses of stacks</strong>
+  Undo/redo in text editors, browser back button history, function call stack (tracking return addresses), expression evaluation, depth-first search.
+</div>
+
+<div class="warning-box">
+  <strong>Stack Overflow / Underflow</strong>
+  Pushing to a full stack causes <strong>overflow</strong>. Popping from an empty stack causes <strong>underflow</strong>. Both must be checked in exam implementations.
 </div>
 ```
 
@@ -290,40 +258,43 @@ Step 3: Add 1:                 11010110   →  -42 ✓
 
   <!-- SECTION 3 -->
 
-  <div class="lesson-section" id="floating-point">
-    <h2 class="section-title">Floating Point Numbers</h2>
-    <p>Integers can't represent very large numbers or fractions efficiently. <strong>Floating point</strong> solves this using a mantissa and exponent — similar to scientific notation.</p>
+  <div class="lesson-section" id="queues">
+    <h2 class="section-title">Queues</h2>
+    <p>A <strong>queue</strong> is a First In First Out (FIFO) data structure. Like a queue at a shop — items join at the rear and leave from the front.</p>
 
 ```
-<div class="key-point">
-  <strong>Floating Point Format</strong>
-  Value = Mantissa × 2^Exponent<br>
-  The mantissa holds the significant digits; the exponent controls the magnitude. Both are stored in two's complement binary.
-</div>
-
-<h3 class="subsection">Normalisation</h3>
-<p>A floating point number is <strong>normalised</strong> when the mantissa begins with the bits 01 (positive) or 10 (negative) — ensuring maximum precision for a given number of bits.</p>
-
-<div class="example">
-  <div class="example-label">Worked Example</div>
-  <div class="example-q">A floating point number uses 8 bits for the mantissa and 4 bits for the exponent (both two's complement). The bit pattern is: mantissa = 01101000, exponent = 0011. Find the denary value.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">Exponent: 0011 = +3 (positive, standard binary)</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">Mantissa: 0.1101000 (binary point after first bit for normalised form) = 0.5 + 0.25 + 0.0625 = 0.8125</div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-content">Value = 0.8125 × 2³ = 0.8125 × 8 = <strong>6.5</strong></div></div>
+<div class="ds-visual">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:0.75rem;">Queue: front=0, rear=3</div>
+  <div class="ds-row">
+    <span class="ds-label">Front →</span>
+    <div class="ds-cell head">10</div>
+    <div class="ds-cell">20</div>
+    <div class="ds-cell">30</div>
+    <div class="ds-cell head">40</div>
+    <span class="ds-label" style="margin-left:0.5rem;">← Rear</span>
   </div>
 </div>
 
-<h3 class="subsection">Precision vs Range Trade-off</h3>
 <table>
-  <tr><th>More bits for mantissa</th><th>More bits for exponent</th></tr>
-  <tr><td>Greater precision (more significant digits)</td><td>Greater range (larger/smaller numbers)</td></tr>
-  <tr><td>Smaller range</td><td>Less precision</td></tr>
+  <tr><th>Operation</th><th>Description</th></tr>
+  <tr><td>Enqueue</td><td>Add an item to the rear</td></tr>
+  <tr><td>Dequeue</td><td>Remove an item from the front</td></tr>
+  <tr><td>isEmpty / isFull</td><td>Check queue status</td></tr>
 </table>
 
-<div class="warning-box">
-  <strong>Rounding Errors</strong>
-  Not all decimal fractions can be represented exactly in binary floating point. For example, 0.1 in decimal has no exact binary representation — this causes rounding errors that accumulate in calculations. This is why financial software avoids floating point for currency.
+<h3 class="subsection">Circular Queue</h3>
+<p>A <strong>circular queue</strong> treats the array as a ring — when the rear pointer reaches the end it wraps back to index 0. This avoids wasting space left by dequeued items.</p>
+<div class="code-block">
+```
+
+<span class="cm"># Circular queue: rear wraps around</span>
+rear = (rear + <span class="num">1</span>) % MAX_SIZE   <span class="cm"># Modulo keeps within bounds</span>
+</div>
+
+```
+<div class="key-point">
+  <strong>Real-world uses of queues</strong>
+  Print spoolers, CPU process scheduling, keyboard input buffer, breadth-first search, network packet routing.
 </div>
 ```
 
@@ -331,123 +302,150 @@ Step 3: Add 1:                 11010110   →  -42 ✓
 
   <!-- SECTION 4 -->
 
-  <div class="lesson-section" id="characters">
-    <h2 class="section-title">Characters &amp; Strings</h2>
+  <div class="lesson-section" id="linked-lists">
+    <h2 class="section-title">Linked Lists</h2>
+    <p>A <strong>linked list</strong> is a dynamic data structure where each element (node) stores a data value and a pointer to the next node. Nodes do not need to be in contiguous memory.</p>
 
 ```
-<h3 class="subsection">ASCII</h3>
-<p><strong>ASCII</strong> (American Standard Code for Information Interchange) uses 7 bits to represent 128 characters — uppercase and lowercase letters, digits, punctuation, and control characters.</p>
-<table>
-  <tr><th>Character</th><th>ASCII code (denary)</th><th>Binary</th></tr>
-  <tr><td>'A'</td><td>65</td><td>1000001</td></tr>
-  <tr><td>'Z'</td><td>90</td><td>1011010</td></tr>
-  <tr><td>'a'</td><td>97</td><td>1100001</td></tr>
-  <tr><td>'0'</td><td>48</td><td>0110000</td></tr>
-  <tr><td>Space</td><td>32</td><td>0100000</td></tr>
-</table>
-<div class="key-point">
-  <strong>Useful Pattern</strong>
-  'A' = 65, 'a' = 97. The difference is exactly 32 — the same as adding a 1 in bit position 5. This means you can toggle case by flipping bit 5.
+<div class="ds-visual">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:0.75rem;">Singly Linked List</div>
+  <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+    <div style="border:1px solid var(--accent);border-radius:6px;padding:0.5rem 0.75rem;background:rgba(52,211,153,0.08);">Head → <span style="color:var(--accent);">5</span></div>
+    <span style="color:var(--muted);">→</span>
+    <div style="border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;background:var(--surface);">12 →</div>
+    <span style="color:var(--muted);">→</span>
+    <div style="border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;background:var(--surface);">7 →</div>
+    <span style="color:var(--muted);">→</span>
+    <div style="border:1px solid var(--border);border-radius:6px;padding:0.5rem 0.75rem;background:var(--surface);">21 → NULL</div>
+  </div>
 </div>
 
-<h3 class="subsection">Unicode</h3>
-<p>ASCII only covers English. <strong>Unicode</strong> is an international standard that assigns a unique code point to every character in every language, plus symbols and emoji.</p>
 <table>
-  <tr><th>Standard</th><th>Bits</th><th>Characters</th><th>Coverage</th></tr>
-  <tr><td>ASCII</td><td>7</td><td>128</td><td>English only</td></tr>
-  <tr><td>Extended ASCII</td><td>8</td><td>256</td><td>Western European languages</td></tr>
-  <tr><td>UTF-8</td><td>8–32 (variable)</td><td>1,114,112</td><td>All languages, emoji, symbols</td></tr>
-  <tr><td>UTF-16</td><td>16 or 32</td><td>1,114,112</td><td>All languages</td></tr>
-  <tr><td>UTF-32</td><td>32</td><td>1,114,112</td><td>All languages (fixed width)</td></tr>
+  <tr><th>Operation</th><th>Linked List</th><th>Array</th></tr>
+  <tr><td>Access by index</td><td>O(n) — must traverse from head</td><td>O(1) — direct access</td></tr>
+  <tr><td>Insert at head</td><td>O(1)</td><td>O(n) — shift elements</td></tr>
+  <tr><td>Insert at position</td><td>O(n) to find, O(1) to insert</td><td>O(n) — shift elements</td></tr>
+  <tr><td>Delete</td><td>O(n) to find, O(1) to delete</td><td>O(n) — shift elements</td></tr>
+  <tr><td>Memory</td><td>Extra space for pointers</td><td>Contiguous, no overhead</td></tr>
 </table>
+
+<div class="example">
+  <div class="example-label">Worked Example — Inserting into a Linked List</div>
+  <div class="example-q">Describe the steps to insert value 9 between nodes containing 7 and 21 in the list above.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Create a new node containing value 9.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Set new node's pointer to point to node 21 (the node after the insertion point).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Update node 7's pointer to point to the new node instead of node 21.</div></div>
+    <div class="step-comment" style="margin-left:2.5rem;">Result: Head → 5 → 12 → 7 → 9 → 21 → NULL</div>
+  </div>
+</div>
 ```
 
   </div>
 
   <!-- SECTION 5 -->
 
-  <div class="lesson-section" id="images">
-    <h2 class="section-title">Images &amp; Sound</h2>
+  <div class="lesson-section" id="trees">
+    <h2 class="section-title">Trees &amp; Graphs</h2>
 
 ```
-<h3 class="subsection">Bitmap Images</h3>
-<p>A <strong>bitmap</strong> stores an image as a grid of pixels. Each pixel's colour is stored as a binary value.</p>
+<h3 class="subsection">Trees</h3>
+<p>A <strong>tree</strong> is a hierarchical data structure with a root node, branches, and leaves. Each node has at most one parent (except the root, which has none).</p>
 <table>
   <tr><th>Term</th><th>Definition</th></tr>
-  <tr><td>Resolution</td><td>Number of pixels (width × height). Higher resolution = more detail.</td></tr>
-  <tr><td>Colour depth</td><td>Number of bits per pixel. 1-bit = black/white only; 24-bit = 16.7 million colours.</td></tr>
-  <tr><td>File size</td><td>Width × Height × Colour depth (in bits) ÷ 8 = bytes</td></tr>
+  <tr><td>Root</td><td>The top node — has no parent</td></tr>
+  <tr><td>Node</td><td>An element in the tree containing data and pointers to children</td></tr>
+  <tr><td>Leaf</td><td>A node with no children</td></tr>
+  <tr><td>Edge</td><td>A connection between two nodes</td></tr>
+  <tr><td>Subtree</td><td>A node and all its descendants</td></tr>
+  <tr><td>Height</td><td>Number of edges on the longest path from root to a leaf</td></tr>
 </table>
 
-<div class="example">
-  <div class="example-label">Worked Example</div>
-  <div class="example-q">Calculate the uncompressed file size of a 1920 × 1080 pixel image with 24-bit colour depth.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">Total pixels: 1920 × 1080 = 2,073,600 pixels</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">Bits per pixel: 24</div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-content">Total bits: 2,073,600 × 24 = 49,766,400 bits</div></div>
-    <div class="step"><div class="step-num">4</div><div class="step-content">Total bytes: 49,766,400 ÷ 8 = 6,220,800 bytes ≈ <strong>5.93 MB</strong></div></div>
-  </div>
+<h3 class="subsection">Binary Search Tree (BST)</h3>
+<p>A <strong>BST</strong> is an ordered binary tree where for every node: all values in the left subtree are less, and all values in the right subtree are greater.</p>
+<div class="code-block">
+     8          Insert order: 8, 3, 10, 1, 6, 14, 4, 7
+    / \
+   3   10        Left subtree of 8: all &lt; 8
+  / \    \       Right subtree of 8: all > 8
+ 1   6   14
+    / \
+   4   7
 </div>
 
-<h3 class="subsection">Sound Sampling</h3>
-<p>Sound is an analogue wave. Computers digitise it by <strong>sampling</strong> — measuring the amplitude at regular intervals.</p>
-<table>
-  <tr><th>Term</th><th>Definition</th><th>Effect of increasing</th></tr>
-  <tr><td>Sample rate</td><td>Number of samples per second (Hz)</td><td>Better frequency reproduction, larger file</td></tr>
-  <tr><td>Bit depth</td><td>Number of bits per sample</td><td>More amplitude levels, less noise, larger file</td></tr>
-  <tr><td>File size (sound)</td><td>Sample rate × Bit depth × Duration × Channels</td><td>—</td></tr>
-</table>
 <div class="key-point">
-  <strong>Nyquist's Theorem</strong>
-  To accurately reproduce a sound, the sample rate must be at least twice the highest frequency present. Human hearing reaches ~20,000 Hz, which is why CD audio uses 44,100 Hz.
+  <strong>BST Search</strong>
+  To find a value: start at root, go left if smaller, right if larger. Average O(log n) — much faster than linear search for large datasets. Worst case O(n) if the tree is unbalanced.
 </div>
+
+<h3 class="subsection">Graphs</h3>
+<p>A <strong>graph</strong> consists of vertices (nodes) connected by edges. Unlike trees, graphs can have cycles and multiple connections between nodes.</p>
+<table>
+  <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+  <tr><td>Undirected</td><td>Edges have no direction — connection goes both ways</td><td>Friendship network</td></tr>
+  <tr><td>Directed (digraph)</td><td>Edges have a direction (arrows)</td><td>Web page links, one-way roads</td></tr>
+  <tr><td>Weighted</td><td>Edges have a numerical value (weight/cost)</td><td>Road distances, network latency</td></tr>
+</table>
+
+<h3 class="subsection">Graph Representations</h3>
+<table>
+  <tr><th>Method</th><th>Description</th><th>Good when</th></tr>
+  <tr><td>Adjacency matrix</td><td>2D array — cell [i][j] = 1 (or weight) if edge exists</td><td>Dense graphs, quick edge lookup</td></tr>
+  <tr><td>Adjacency list</td><td>Each node stores a list of its neighbours</td><td>Sparse graphs, memory efficient</td></tr>
+</table>
 ```
 
   </div>
 
   <!-- SECTION 6 -->
 
-  <div class="lesson-section" id="compression">
-    <h2 class="section-title">Compression</h2>
-    <p>Compression reduces file size for storage and transmission. There are two types:</p>
+  <div class="lesson-section" id="hash-tables">
+    <h2 class="section-title">Hash Tables</h2>
+    <p>A <strong>hash table</strong> stores key-value pairs. A <strong>hash function</strong> converts a key into an index (the hash), determining where the value is stored. This gives O(1) average lookup time.</p>
 
 ```
-<table>
-  <tr><th>Type</th><th>Description</th><th>Examples</th><th>Data loss?</th></tr>
-  <tr><td>Lossless</td><td>Original data perfectly reconstructed after decompression</td><td>PNG, ZIP, FLAC, GIF</td><td>No</td></tr>
-  <tr><td>Lossy</td><td>Some data permanently discarded — smaller files but quality reduced</td><td>JPEG, MP3, AAC, MP4</td><td>Yes</td></tr>
-</table>
-
-<h3 class="subsection">Run-Length Encoding (RLE)</h3>
-<p>RLE is a simple lossless compression technique that replaces consecutive repeated values with a count and value pair.</p>
 <div class="code-block">
 ```
 
-Original:  AAAABBBBBCCDDDDDD  (17 characters)
-RLE:       4A5B2C6D           (8 characters)
+Hash function example:  index = key MOD table_size
 
-Works well for: simple images, fax data, repetitive data
-Works poorly for: photos, audio, already-compressed files
+Key = 73,  table size = 10:  73 MOD 10 = 3  → store at index 3
+Key = 45,  table size = 10:  45 MOD 10 = 5  → store at index 5
+Key = 83,  table size = 10:  83 MOD 10 = 3  → COLLISION with 73!
 </div>
 
 ```
-<h3 class="subsection">Dictionary Coding (LZW)</h3>
-<p>Dictionary-based compression (used in ZIP, PNG) builds a dictionary of repeated patterns during compression and replaces them with shorter codes. More powerful than RLE for most real data.</p>
+<h3 class="subsection">Collision Handling</h3>
+<table>
+  <tr><th>Method</th><th>Description</th></tr>
+  <tr><td>Linear probing</td><td>If slot is taken, try the next slot (index+1), then index+2, etc.</td></tr>
+  <tr><td>Chaining</td><td>Each slot holds a linked list — colliding entries are chained together</td></tr>
+</table>
 
 <div class="example">
   <div class="example-label">Worked Example</div>
-  <div class="example-q">A black-and-white bitmap image (1 bit per pixel) has the following row of pixels: 000000001111111100000000. Apply RLE compression and calculate the compression ratio.</div>
-  <div class="example-steps">
-    <div class="step"><div class="step-num">1</div><div class="step-content">Original: 24 bits (24 pixels × 1 bit each)</div></div>
-    <div class="step"><div class="step-num">2</div><div class="step-content">RLE: (8, 0)(8, 1)(8, 0) — three pairs, each needing ~4 bits for count + 1 bit for value = 15 bits</div></div>
-    <div class="step"><div class="step-num">3</div><div class="step-comment">Compression ratio ≈ 24/15 = 1.6:1 — meaningful saving for simple images</div></div>
-  </div>
+  <div class="example-q">Insert the following keys into a hash table of size 7 using the hash function key MOD 7 and linear probing for collisions: 14, 17, 31, 5, 21</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+14 MOD 7 = 0  → place at index 0
+17 MOD 7 = 3  → place at index 3
+31 MOD 7 = 3  → COLLISION → try index 4 → place at 4
+5 MOD 7 = 5  → place at index 5
+21 MOD 7 = 0  → COLLISION → try 1 → place at index 1
+
+Index:  0   1   2   3   4   5   6
+Value: [14] [21] [ ] [17] [31] [5] [ ]
+</div>
+</div>
 </div>
 
-<div class="warning-box">
-  <strong>When not to use lossy compression</strong>
-  Medical images, legal documents, and lossless audio masters must use lossless compression — any data loss could have serious consequences. Lossy compression is only appropriate when some quality reduction is acceptable.
+```
+<div class="key-point">
+  <strong>Why hash tables are powerful</strong>
+  Average O(1) insertion, deletion and lookup — regardless of table size. Used in database indexing, caches, symbol tables in compilers, and implementing sets and dictionaries in Python.
 </div>
 ```
 
@@ -461,24 +459,24 @@ Works poorly for: photos, audio, already-compressed files
       <span class="difficulty-badge diff-a">Level A — Accessible</span>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q1</div><div class="q-text">Convert the following binary numbers to denary: (a) 00110101  (b) 11001010  (c) 01111111</div></div>
-      <div class="q-marks">[3]</div>
-    </div>
-    <div class="question-item">
-      <div><div class="q-num">Q2</div><div class="q-text">Convert the hexadecimal value 0x3F to (a) denary and (b) binary.</div></div>
+      <div><div class="q-num">Q1</div><div class="q-text">State what LIFO and FIFO stand for and give one data structure that uses each principle.</div></div>
       <div class="q-marks">[2]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q3</div><div class="q-text">A pixel is stored using 8-bit colour depth. How many different colours can be represented?</div></div>
-      <div class="q-marks">[1]</div>
+      <div><div class="q-num">Q2</div><div class="q-text">A stack currently contains [3, 7, 2, 9] with 9 at the top. Show the state of the stack after: (a) Pop  (b) Push(5)  (c) Pop  (d) Pop</div></div>
+      <div class="q-marks">[4]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q4</div><div class="q-text">State the difference between lossless and lossy compression. Give one example of each.</div></div>
+      <div><div class="q-num">Q3</div><div class="q-text">State two differences between an array and a linked list.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Draw a binary search tree by inserting the following values in order: 15, 8, 22, 4, 11, 19, 26</div></div>
       <div class="q-marks">[3]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q5</div><div class="q-text">What is the ASCII code for the character 'B'? Show your working from the fact that 'A' = 65.</div></div>
-      <div class="q-marks">[1]</div>
+      <div><div class="q-num">Q5</div><div class="q-text">What is a hash collision? Give one method used to resolve it.</div></div>
+      <div class="q-marks">[2]</div>
     </div>
   </div>
 
@@ -490,24 +488,20 @@ Works poorly for: photos, audio, already-compressed files
       <span class="difficulty-badge diff-b">Level B — Moderate</span>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q1</div><div class="q-text">Represent -85 as an 8-bit two's complement binary number. Show all steps clearly.</div></div>
+      <div><div class="q-num">Q1</div><div class="q-text">Implement a stack class in Python with push, pop, peek and isEmpty methods. Include appropriate checks for overflow and underflow, assuming a maximum size of 10.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Explain why a circular queue is more memory-efficient than a standard linear queue. Illustrate with a diagram showing a queue of size 5 after: enqueue(A), enqueue(B), enqueue(C), dequeue(), dequeue(), enqueue(D), enqueue(E), enqueue(F).</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">For a binary search tree containing 1000 nodes that is perfectly balanced, how many comparisons are needed in the worst case to find a value? Explain your answer using Big O notation.</div></div>
       <div class="q-marks">[3]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q2</div><div class="q-text">Calculate the uncompressed file size of a 640 × 480 pixel image stored with 8-bit colour depth. Give your answer in kilobytes.</div></div>
-      <div class="q-marks">[3]</div>
-    </div>
-    <div class="question-item">
-      <div><div class="q-num">Q3</div><div class="q-text">Add the following 8-bit binary numbers: 01101011 + 00110101. Show your working and state whether overflow occurs.</div></div>
-      <div class="q-marks">[3]</div>
-    </div>
-    <div class="question-item">
-      <div><div class="q-num">Q4</div><div class="q-text">Apply RLE compression to the following string: WWWWWBBBWWWWWWWWBB. State the original length and compressed length in characters and calculate the compression ratio.</div></div>
-      <div class="q-marks">[4]</div>
-    </div>
-    <div class="question-item">
-      <div><div class="q-num">Q5</div><div class="q-text">Explain why increasing the sample rate of a digital audio recording improves quality but also increases file size. Use Nyquist's theorem in your answer.</div></div>
-      <div class="q-marks">[4]</div>
+      <div><div class="q-num">Q4</div><div class="q-text">Represent the following graph as both an adjacency matrix and an adjacency list. Vertices: A, B, C, D. Edges: A–B (weight 4), A–C (weight 2), B–D (weight 3), C–D (weight 1).</div></div>
+      <div class="q-marks">[5]</div>
     </div>
   </div>
 
@@ -519,22 +513,22 @@ Works poorly for: photos, audio, already-compressed files
       <span class="difficulty-badge diff-c">Level C — Challenging</span>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q1</div><div class="q-text">A floating point system uses 10 bits for the mantissa and 6 bits for the exponent, both in two's complement. (a) What is the largest positive number that can be represented? (b) What is the smallest positive normalised number? (c) Explain how increasing the mantissa bits improves precision but affects range.</div></div>
-      <div class="q-marks">[8]</div>
+      <div><div class="q-num">Q1</div><div class="q-text">Implement a complete binary search tree class in Python with methods for: insert, search, and in-order traversal. Demonstrate that in-order traversal of a BST produces a sorted sequence. Analyse the time complexity of each operation for both balanced and unbalanced trees.</div></div>
+      <div class="q-marks">[12]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q2</div><div class="q-text">A streaming service stores songs at 320 kbps (kilobits per second) using lossy MP3 compression, but the original studio recording is 24-bit depth at 96,000 Hz, stereo. Calculate the uncompressed file size of a 4-minute song. Then calculate the MP3 file size at 320 kbps. Hence determine the compression ratio. Discuss why lossy compression is acceptable for this use case.</div></div>
+      <div><div class="q-num">Q2</div><div class="q-text">A hash table uses chaining to resolve collisions. The table has 8 slots and the hash function is key MOD 8. Insert the keys: 6, 14, 22, 31, 7, 15, 30, 23. Draw the resulting table showing all chains. Calculate the average number of comparisons needed to find a key, assuming uniform distribution. Discuss how a poor hash function could degrade performance to O(n).</div></div>
       <div class="q-marks">[10]</div>
     </div>
     <div class="question-item">
-      <div><div class="q-num">Q3</div><div class="q-text">Explain why UTF-8 has become the dominant character encoding on the internet despite UTF-32 being simpler to process. Your answer should discuss variable-length encoding, backward compatibility with ASCII, storage efficiency, and the trade-offs involved.</div></div>
-      <div class="q-marks">[6]</div>
+      <div><div class="q-num">Q3</div><div class="q-text">Compare linked lists and arrays across the following dimensions: memory allocation, insertion/deletion efficiency, traversal speed, and cache performance. For each of the following scenarios, justify which structure you would choose: (a) a music playlist where songs are frequently added and removed from the middle, (b) a leaderboard requiring fast access by rank position, (c) an undo history in a text editor.</div></div>
+      <div class="q-marks">[9]</div>
     </div>
   </div>
 
   <div class="lesson-nav">
-    <a href="problem-solving.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Problem Solving</div></a>
-    <a href="data-structures.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Data Structures</div> →</a>
+    <a href="data-representation.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Data Representation</div></a>
+    <a href="algorithms.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Algorithms</div> →</a>
   </div>
 
 </main>
