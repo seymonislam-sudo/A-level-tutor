@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamentals of Programming — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .num{color:#fcd34d}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .code-block .fn{color:#c4b5fd}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 01</div>
+  <a href="#variables" class="sidebar-link active"><span class="sidebar-num">1</span>Variables &amp; Data Types</a>
+  <a href="#sequence" class="sidebar-link"><span class="sidebar-num">2</span>Sequence, Selection, Iteration</a>
+  <a href="#subroutines" class="sidebar-link"><span class="sidebar-num">3</span>Subroutines</a>
+  <a href="#scope" class="sidebar-link"><span class="sidebar-num">4</span>Scope &amp; Parameters</a>
+  <a href="#oop" class="sidebar-link"><span class="sidebar-num">5</span>Object-Oriented Programming</a>
+  <a href="#files" class="sidebar-link"><span class="sidebar-num">6</span>File Handling</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 01</div>
+    <div class="topic-num-badge">TOPIC 01</div>
+    <h1 class="topic-title">Fundamentals of Programming</h1>
+    <p class="topic-intro">Variables, control flow, subroutines, and object-oriented design — the essential building blocks of every AQA CS Paper 1 question.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 1</div>
+      <div class="meta-item"><span>Pseudocode</span> &amp; Python</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#variables">Variables &amp; Data Types</a></li>
+      <li><a href="#sequence">Sequence, Selection &amp; Iteration</a></li>
+      <li><a href="#subroutines">Subroutines</a></li>
+      <li><a href="#scope">Scope &amp; Parameters</a></li>
+      <li><a href="#oop">Object-Oriented Programming</a></li>
+      <li><a href="#files">File Handling</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="variables">
+    <h2 class="section-title">Variables &amp; Data Types</h2>
+    <p>A <strong>variable</strong> is a named memory location that stores a value which can change during program execution. A <strong>constant</strong> is similar but its value cannot change once set.</p>
+
+```
+<h3 class="subsection">Primitive Data Types</h3>
+<p>AQA requires you to know the following primitive types:</p>
+<table>
+  <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+  <tr><td><code>INTEGER</code></td><td>Whole numbers</td><td>42, -7, 0</td></tr>
+  <tr><td><code>REAL</code></td><td>Numbers with decimal part</td><td>3.14, -0.5</td></tr>
+  <tr><td><code>BOOLEAN</code></td><td>True or False only</td><td>TRUE, FALSE</td></tr>
+  <tr><td><code>CHARACTER</code></td><td>Single character</td><td>'A', '3', '!'</td></tr>
+  <tr><td><code>STRING</code></td><td>Sequence of characters</td><td>"Hello", "AQA"</td></tr>
+</table>
+
+<h3 class="subsection">Casting (Type Conversion)</h3>
+<p>You can convert between types using casting functions. AQA pseudocode uses:</p>
+<div class="code-block">
+```
+
+<span class="kw">int</span>(<span class="str">“42”</span>)        <span class="cm"># String to integer → 42</span>
+<span class="kw">str</span>(<span class="num">42</span>)         <span class="cm"># Integer to string → “42”</span>
+<span class="kw">float</span>(<span class="str">“3.14”</span>)   <span class="cm"># String to real → 3.14</span>
+<span class="kw">bool</span>(<span class="num">0</span>)         <span class="cm"># Integer to boolean → False</span>
+</div>
+
+```
+<div class="key-point">
+  <strong>Key Point</strong>
+  String concatenation uses the + operator: <code>"Hello" + " " + "World"</code> gives <code>"Hello World"</code>. You cannot concatenate a string with an integer directly — you must cast first.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Write a program that asks the user for their age and outputs whether they are old enough to vote.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Get input — user input is always a string, so cast to integer.<div class="step-comment">age = int(input("Enter your age: "))</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Compare using a selection statement.<div class="step-comment">if age >= 18:</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Output appropriate message in each branch.</div></div>
+  </div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+age = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">“Enter your age: “</span>))
+<span class="kw">if</span> age >= <span class="num">18</span>:
+<span class="fn">print</span>(<span class="str">“You are old enough to vote.”</span>)
+<span class="kw">else</span>:
+<span class="fn">print</span>(<span class="str">“You are not old enough to vote.”</span>)
+</div>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="sequence">
+    <h2 class="section-title">Sequence, Selection &amp; Iteration</h2>
+
+```
+<h3 class="subsection">Sequence</h3>
+<p>Statements execute one after another in order. The simplest form of program flow.</p>
+
+<h3 class="subsection">Selection</h3>
+<p>Selection uses conditions to choose which code to execute. AQA uses <code>IF...THEN...ELSE...ENDIF</code> in pseudocode.</p>
+<div class="code-block">
+```
+
+<span class="cm"># Simple IF</span>
+<span class="kw">if</span> score >= <span class="num">70</span>:
+grade = <span class="str">“A”</span>
+<span class="kw">elif</span> score >= <span class="num">60</span>:
+grade = <span class="str">“B”</span>
+<span class="kw">elif</span> score >= <span class="num">50</span>:
+grade = <span class="str">“C”</span>
+<span class="kw">else</span>:
+grade = <span class="str">“U”</span>
+</div>
+
+```
+<h3 class="subsection">Iteration</h3>
+<p>Iteration repeats a block of code. AQA distinguishes two types:</p>
+<div class="key-point">
+  <strong>Count-controlled</strong>
+  Use a FOR loop when you know exactly how many times to repeat. <code>FOR i ← 1 TO 10</code> in pseudocode.
+</div>
+<div class="key-point">
+  <strong>Condition-controlled</strong>
+  Use WHILE or REPEAT...UNTIL when the number of iterations depends on a condition. WHILE checks before each iteration; REPEAT...UNTIL checks after (always runs at least once).
+</div>
+<div class="code-block">
+```
+
+<span class="cm"># Count-controlled</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):     <span class="cm"># 1 to 10 inclusive</span>
+<span class="fn">print</span>(i)
+
+<span class="cm"># Condition-controlled (WHILE)</span>
+total = <span class="num">0</span>
+<span class="kw">while</span> total < <span class="num">100</span>:
+total += <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">“Enter a number: “</span>))
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Write a program that keeps asking the user for a password until they enter the correct one ("letmein"). Count and output the number of attempts.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Use a REPEAT...UNTIL style loop — we need it to run at least once. In Python, use a while True with a break.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Increment a counter each attempt.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Break when the correct password is entered.</div></div>
+  </div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+attempts = <span class="num">0</span>
+<span class="kw">while True</span>:
+password = <span class="fn">input</span>(<span class="str">“Enter password: “</span>)
+attempts += <span class="num">1</span>
+<span class="kw">if</span> password == <span class="str">“letmein”</span>:
+<span class="kw">break</span>
+<span class="fn">print</span>(<span class="str">“Access granted after”</span>, attempts, <span class="str">“attempt(s).”</span>)
+</div>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="subroutines">
+    <h2 class="section-title">Subroutines</h2>
+    <p>A <strong>subroutine</strong> is a named block of code that performs a specific task. AQA distinguishes between:</p>
+    <table>
+      <tr><th>Type</th><th>Description</th><th>Returns a value?</th></tr>
+      <tr><td>Procedure</td><td>Performs a task, no return value</td><td>No</td></tr>
+      <tr><td>Function</td><td>Performs a task and returns a value</td><td>Yes</td></tr>
+    </table>
+
+```
+<div class="code-block">
+```
+
+<span class="cm"># Procedure — no return value</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+<span class="fn">print</span>(<span class="str">“Hello, “</span> + name)
+
+<span class="cm"># Function — returns a value</span>
+<span class="kw">def</span> <span class="fn">square</span>(n):
+<span class="kw">return</span> n * n
+
+result = <span class="fn">square</span>(<span class="num">5</span>)   <span class="cm"># result = 25</span>
+</div>
+
+```
+<div class="key-point">
+  <strong>Why use subroutines?</strong>
+  Subroutines make code modular, reusable, and easier to test. Each subroutine should perform one clearly defined task. This is a key principle of structured programming.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Write a function that takes two integers and returns the larger of the two.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">larger</span>(a, b):
+<span class="kw">if</span> a > b:
+<span class="kw">return</span> a
+<span class="kw">else</span>:
+<span class="kw">return</span> b
+
+<span class="fn">print</span>(<span class="fn">larger</span>(<span class="num">7</span>, <span class="num">12</span>))   <span class="cm"># Outputs: 12</span>
+</div>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="scope">
+    <h2 class="section-title">Scope &amp; Parameters</h2>
+
+```
+<h3 class="subsection">Local vs Global Variables</h3>
+<p><strong>Local variables</strong> are declared inside a subroutine and can only be used within it. <strong>Global variables</strong> are declared outside all subroutines and can be accessed anywhere.</p>
+
+<div class="warning-box">
+  <strong>Common Mistake</strong>
+  In Python, you can read a global variable inside a function, but to assign to it you must declare <code>global x</code> first. AQA exam questions often test this distinction.
+</div>
+
+<div class="code-block">
+```
+
+total = <span class="num">0</span>   <span class="cm"># Global variable</span>
+
+<span class="kw">def</span> <span class="fn">add_to_total</span>(amount):
+<span class="kw">global</span> total         <span class="cm"># Declare intent to modify global</span>
+total += amount
+
+<span class="kw">def</span> <span class="fn">calculate</span>():
+result = <span class="num">42</span>          <span class="cm"># Local variable — only exists here</span>
+<span class="kw">return</span> result
+</div>
+
+```
+<h3 class="subsection">Passing Parameters</h3>
+<p>Parameters are values passed into a subroutine. AQA requires you to understand two methods:</p>
+<table>
+  <tr><th>Method</th><th>Description</th><th>Effect on original</th></tr>
+  <tr><td>By value</td><td>A copy of the value is passed</td><td>Original unchanged</td></tr>
+  <tr><td>By reference</td><td>The memory address is passed</td><td>Original can be changed</td></tr>
+</table>
+<div class="key-point">
+  <strong>AQA Exam Note</strong>
+  Python passes immutable types (integers, strings) by value and mutable types (lists) by reference. You may be asked to trace through code and identify whether a variable changes after a subroutine call.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="oop">
+    <h2 class="section-title">Object-Oriented Programming</h2>
+    <p>OOP organises code around <strong>objects</strong> — instances of <strong>classes</strong>. Each object has <strong>attributes</strong> (data) and <strong>methods</strong> (behaviours).</p>
+
+```
+<h3 class="subsection">Key OOP Concepts</h3>
+<table>
+  <tr><th>Concept</th><th>Definition</th></tr>
+  <tr><td>Class</td><td>A blueprint/template for creating objects</td></tr>
+  <tr><td>Object</td><td>An instance of a class</td></tr>
+  <tr><td>Attribute</td><td>A variable belonging to an object</td></tr>
+  <tr><td>Method</td><td>A function belonging to a class</td></tr>
+  <tr><td>Constructor</td><td>Special method called when an object is created (<code>__init__</code>)</td></tr>
+  <tr><td>Encapsulation</td><td>Hiding internal data; access via public methods only</td></tr>
+  <tr><td>Inheritance</td><td>A subclass inherits attributes and methods from a parent class</td></tr>
+  <tr><td>Polymorphism</td><td>Different classes can share the same method name with different behaviour</td></tr>
+</table>
+
+<div class="code-block">
+```
+
+<span class="kw">class</span> <span class="fn">Animal</span>:
+<span class="kw">def</span> <span class="fn">**init**</span>(self, name, sound):
+self.name = name        <span class="cm"># Attribute</span>
+self.sound = sound
+
+```
+<span class="kw">def</span> <span class="fn">speak</span>(self):             <span class="cm"># Method</span>
+    <span class="fn">print</span>(self.name + <span class="str">" says "</span> + self.sound)
+```
+
+<span class="kw">class</span> <span class="fn">Dog</span>(<span class="fn">Animal</span>):            <span class="cm"># Inheritance</span>
+<span class="kw">def</span> <span class="fn">**init**</span>(self, name):
+<span class="kw">super</span>().**init**(name, <span class="str">“Woof”</span>)
+
+```
+<span class="kw">def</span> <span class="fn">fetch</span>(self):
+    <span class="fn">print</span>(self.name + <span class="str">" fetches the ball!"</span>)
+```
+
+rex = <span class="fn">Dog</span>(<span class="str">“Rex”</span>)
+rex.<span class="fn">speak</span>()    <span class="cm"># Rex says Woof</span>
+rex.<span class="fn">fetch</span>()    <span class="cm"># Rex fetches the ball!</span>
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Design a class called <code>BankAccount</code> with attributes for account number and balance. Include methods to deposit, withdraw (with a check for sufficient funds), and display the balance.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<span class="kw">class</span> <span class="fn">BankAccount</span>:
+<span class="kw">def</span> <span class="fn">**init**</span>(self, account_number, balance=<span class="num">0</span>):
+self.account_number = account_number
+self.__balance = balance    <span class="cm"># Private (encapsulation)</span>
+
+```
+<span class="kw">def</span> <span class="fn">deposit</span>(self, amount):
+    self.__balance += amount
+
+<span class="kw">def</span> <span class="fn">withdraw</span>(self, amount):
+    <span class="kw">if</span> amount <= self.__balance:
+        self.__balance -= amount
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Insufficient funds."</span>)
+
+<span class="kw">def</span> <span class="fn">get_balance</span>(self):
+    <span class="kw">return</span> self.__balance
+```
+
+acc = <span class="fn">BankAccount</span>(<span class="str">“12345678”</span>, <span class="num">100</span>)
+acc.<span class="fn">deposit</span>(<span class="num">50</span>)
+acc.<span class="fn">withdraw</span>(<span class="num">30</span>)
+<span class="fn">print</span>(acc.<span class="fn">get_balance</span>())   <span class="cm"># 120</span>
+</div>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 6 -->
+
+  <div class="lesson-section" id="files">
+    <h2 class="section-title">File Handling</h2>
+    <p>Programs often need to read from and write to files. AQA requires you to understand opening, reading, writing, and closing files.</p>
+
+```
+<table>
+  <tr><th>Operation</th><th>AQA Pseudocode</th><th>Python</th></tr>
+  <tr><td>Open for reading</td><td>OPENFILE "data.txt" FOR READ</td><td><code>open("data.txt", "r")</code></td></tr>
+  <tr><td>Open for writing</td><td>OPENFILE "data.txt" FOR WRITE</td><td><code>open("data.txt", "w")</code></td></tr>
+  <tr><td>Open for appending</td><td>OPENFILE "data.txt" FOR APPEND</td><td><code>open("data.txt", "a")</code></td></tr>
+  <tr><td>Read a line</td><td>READFILE "data.txt", data</td><td><code>file.readline()</code></td></tr>
+  <tr><td>Write a line</td><td>WRITEFILE "data.txt", data</td><td><code>file.write(data)</code></td></tr>
+  <tr><td>Close file</td><td>CLOSEFILE "data.txt"</td><td><code>file.close()</code></td></tr>
+  <tr><td>End of file check</td><td>EOF("data.txt")</td><td><code>line == ""</code> or loop ends</td></tr>
+</table>
+
+<div class="code-block">
+```
+
+<span class="cm"># Writing to a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">“scores.txt”</span>, <span class="str">“w”</span>) <span class="kw">as</span> f:
+f.<span class="fn">write</span>(<span class="str">“Alice,95\n”</span>)
+f.<span class="fn">write</span>(<span class="str">“Bob,87\n”</span>)
+
+<span class="cm"># Reading from a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">“scores.txt”</span>, <span class="str">“r”</span>) <span class="kw">as</span> f:
+<span class="kw">for</span> line <span class="kw">in</span> f:
+<span class="fn">print</span>(line.<span class="fn">strip</span>())
+</div>
+
+```
+<div class="key-point">
+  <strong>Using with</strong>
+  The <code>with</code> statement automatically closes the file when the block ends, even if an error occurs. This is best practice and often tested in AQA exam questions.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State the difference between a variable and a constant. Give one example of each in a school management program.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write a Python program that inputs two integers and outputs their sum, difference, and product.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">A program uses <code>age = input("Enter age: ")</code>. Explain why <code>if age > 18</code> would cause an error, and write the corrected line.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Write a FOR loop that outputs the squares of all integers from 1 to 10.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">State two advantages of using subroutines in a large program.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Explain the difference between passing a parameter by value and by reference. Write a code example showing both, and trace the value of a variable through each to illustrate the difference.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write a Python function <code>is_prime(n)</code> that returns <code>True</code> if <code>n</code> is prime and <code>False</code> otherwise. Use it in a program that outputs all prime numbers between 1 and 50.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">A global variable <code>count = 0</code> is used in a program. Write two subroutines: one that increments <code>count</code> and one that resets it to 0. Explain what would happen if you forgot to use the <code>global</code> keyword.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Write a program that reads all lines from a file called <code>names.txt</code> and outputs them in reverse order (last line first).</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Design and implement a class hierarchy for a library system. Your base class <code>LibraryItem</code> should have attributes for title, author, and availability. Create subclasses <code>Book</code> and <code>DVD</code> with appropriate additional attributes. Include methods to borrow and return items, and demonstrate polymorphism with a <code>display_info()</code> method that outputs different information for each subclass.</div></div>
+      <div class="q-marks">[12]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write a program that maintains a high score table stored in a CSV file. It should: read existing scores on startup, allow the user to enter a name and score, insert the new score in the correct position to maintain descending order, keep only the top 5 scores, and write the updated table back to the file. Use appropriate subroutines for each task.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain what is meant by encapsulation in OOP and why it is considered good practice. A student writes a class where all attributes are public. Describe two specific problems this could cause, and rewrite a short example class to demonstrate proper encapsulation using private attributes and getter/setter methods.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="../index.html" class="lesson-nav-btn">← <div><span class="btn-label">Back to</span> CS Index</div></a>
+    <a href="problem-solving.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Problem Solving &amp; Theory of Computation</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
