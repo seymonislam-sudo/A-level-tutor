@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regular Languages & Automata — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .fsm-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem}
+  .fsm-row{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem}
+  .fsm-state{width:52px;height:52px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--text);background:var(--surface);flex-shrink:0;position:relative}
+  .fsm-state.start-state{border-color:rgba(52,211,153,0.5)}
+  .fsm-state.accept-state{border-width:4px;border-color:var(--accent);color:var(--accent)}
+  .fsm-arrow{color:var(--muted);font-size:0.9rem;display:flex;flex-direction:column;align-items:center;gap:0.1rem}
+  .fsm-arrow span{font-size:0.7rem;color:var(--accent)}
+  .regex-box{background:var(--surface2);border:1px solid rgba(52,211,153,0.3);border-radius:8px;padding:0.75rem 1.25rem;margin:0.5rem 0;font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent);display:inline-block}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 06</div>
+  <a href="#sets" class="sidebar-link active"><span class="sidebar-num">1</span>Sets &amp; Set Operations</a>
+  <a href="#regex" class="sidebar-link"><span class="sidebar-num">2</span>Regular Expressions</a>
+  <a href="#fsm" class="sidebar-link"><span class="sidebar-num">3</span>Finite Automata</a>
+  <a href="#languages" class="sidebar-link"><span class="sidebar-num">4</span>Formal Languages</a>
+  <a href="#bnf" class="sidebar-link"><span class="sidebar-num">5</span>BNF &amp; Syntax Diagrams</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 06</div>
+    <div class="topic-num-badge">TOPIC 06</div>
+    <h1 class="topic-title">Regular Languages &amp; Automata</h1>
+    <p class="topic-intro">Sets, regular expressions, finite automata, formal language theory and BNF — the mathematical foundations of how programming languages and compilers work.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 1</div>
+      <div class="meta-item"><span>Theory</span> heavy</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#sets">Sets &amp; Set Operations</a></li>
+      <li><a href="#regex">Regular Expressions</a></li>
+      <li><a href="#fsm">Finite Automata (DFA &amp; NFA)</a></li>
+      <li><a href="#languages">Formal Languages &amp; the Chomsky Hierarchy</a></li>
+      <li><a href="#bnf">BNF &amp; Syntax Diagrams</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1: SETS -->
+
+  <div class="lesson-section" id="sets">
+    <h2 class="section-title">Sets &amp; Set Operations</h2>
+    <p>A <strong>set</strong> is an unordered collection of distinct elements. Sets are fundamental to formal language theory.</p>
+
+```
+<table>
+  <tr><th>Notation</th><th>Meaning</th><th>Example</th></tr>
+  <tr><td>{a, b, c}</td><td>Set with elements a, b, c</td><td>{1, 2, 3}</td></tr>
+  <tr><td>∅ or {}</td><td>Empty set</td><td>Set of even primes greater than 2</td></tr>
+  <tr><td>x ∈ A</td><td>x is a member of set A</td><td>3 ∈ {1, 2, 3}</td></tr>
+  <tr><td>x ∉ A</td><td>x is not a member of A</td><td>5 ∉ {1, 2, 3}</td></tr>
+  <tr><td>A ⊆ B</td><td>A is a subset of B</td><td>{1,2} ⊆ {1,2,3}</td></tr>
+  <tr><td>|A|</td><td>Cardinality — number of elements in A</td><td>|{a,b,c}| = 3</td></tr>
+</table>
+
+<h3 class="subsection">Set Operations</h3>
+<table>
+  <tr><th>Operation</th><th>Symbol</th><th>Definition</th><th>Example (A={1,2,3}, B={2,3,4})</th></tr>
+  <tr><td>Union</td><td>A ∪ B</td><td>All elements in A or B (or both)</td><td>{1, 2, 3, 4}</td></tr>
+  <tr><td>Intersection</td><td>A ∩ B</td><td>Elements in both A and B</td><td>{2, 3}</td></tr>
+  <tr><td>Difference</td><td>A \ B</td><td>Elements in A but not in B</td><td>{1}</td></tr>
+  <tr><td>Complement</td><td>A'</td><td>All elements not in A (relative to a universal set)</td><td>Depends on universal set</td></tr>
+  <tr><td>Cartesian product</td><td>A × B</td><td>All ordered pairs (a, b) where a∈A, b∈B</td><td>{(1,2),(1,3),(1,4),(2,2),...}</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Countable vs Uncountable Sets</strong>
+  A set is <strong>countably infinite</strong> if its elements can be put into a one-to-one correspondence with the natural numbers (e.g. all integers, all even numbers). The set of real numbers is <strong>uncountably infinite</strong> — it cannot be listed. This distinction matters in computability theory.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2: REGEX -->
+
+  <div class="lesson-section" id="regex">
+    <h2 class="section-title">Regular Expressions</h2>
+    <p>A <strong>regular expression (regex)</strong> is a pattern that describes a set of strings — a regular language. Used in compilers, search tools, form validation, and text processing.</p>
+
+```
+<h3 class="subsection">Core Regex Syntax</h3>
+<table>
+  <tr><th>Symbol</th><th>Meaning</th><th>Example</th><th>Matches</th></tr>
+  <tr><td>a</td><td>Literal character a</td><td>cat</td><td>"cat"</td></tr>
+  <tr><td>|</td><td>Alternation (OR)</td><td>cat|dog</td><td>"cat" or "dog"</td></tr>
+  <tr><td>*</td><td>Kleene star — zero or more</td><td>ab*</td><td>"a", "ab", "abb", "abbb"…</td></tr>
+  <tr><td>+</td><td>One or more</td><td>ab+</td><td>"ab", "abb", "abbb"… (not "a")</td></tr>
+  <tr><td>?</td><td>Zero or one (optional)</td><td>colou?r</td><td>"color" or "colour"</td></tr>
+  <tr><td>( )</td><td>Grouping</td><td>(ab)+</td><td>"ab", "abab", "ababab"…</td></tr>
+  <tr><td>[ ]</td><td>Character class</td><td>[aeiou]</td><td>Any single vowel</td></tr>
+  <tr><td>.</td><td>Any single character</td><td>a.b</td><td>"aab", "axb", "a3b"…</td></tr>
+  <tr><td>^</td><td>Start of string</td><td>^Hello</td><td>Strings starting with "Hello"</td></tr>
+  <tr><td>$</td><td>End of string</td><td>end$</td><td>Strings ending with "end"</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Examples</div>
+  <div class="example-q">Write regular expressions for the following:</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">
+      Any string of one or more digits:<br>
+      <div class="regex-box">[0-9]+</div>
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">
+      A valid UK postcode pattern (simplified): one or two letters, one digit, optional space, one digit, two letters:<br>
+      <div class="regex-box">[A-Z]{1,2}[0-9][0-9]? ?[0-9][A-Z]{2}</div>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">
+      Binary strings that start and end with 1:<br>
+      <div class="regex-box">1[01]*1|1</div>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">
+      Email address (simplified):<br>
+      <div class="regex-box">[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Regex and FSMs are equivalent</strong>
+  Every regular expression describes exactly the same class of languages as finite automata. For every regex there is an FSM that accepts the same strings, and vice versa. This equivalence is a fundamental result of formal language theory.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3: FSM -->
+
+  <div class="lesson-section" id="fsm">
+    <h2 class="section-title">Finite Automata (DFA &amp; NFA)</h2>
+
+```
+<h3 class="subsection">Deterministic Finite Automaton (DFA)</h3>
+<p>In a <strong>DFA</strong>, from each state there is exactly one transition for each input symbol. Given a state and an input, the next state is uniquely determined.</p>
+
+<div class="fsm-box">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:1rem;">DFA accepting strings over {a,b} that contain "ab" as a substring</div>
+  <div class="fsm-row">
+    <div>
+      <div class="fsm-state start-state">q0</div>
+      <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.3rem;">start</div>
+    </div>
+    <div class="fsm-arrow">→<span>a</span></div>
+    <div>
+      <div class="fsm-state">q1</div>
+      <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.3rem;">seen 'a'</div>
+    </div>
+    <div class="fsm-arrow">→<span>b</span></div>
+    <div>
+      <div class="fsm-state accept-state">q2</div>
+      <div style="font-size:0.7rem;color:var(--accent);text-align:center;margin-top:0.3rem;">accept</div>
+    </div>
+  </div>
+  <div style="color:var(--muted);font-size:0.78rem;margin-top:0.5rem;">
+    q0 →(b)→ q0 &nbsp;|&nbsp; q0 →(a)→ q1 &nbsp;|&nbsp; q1 →(a)→ q1 &nbsp;|&nbsp; q1 →(b)→ q2 &nbsp;|&nbsp; q2 →(a,b)→ q2
+  </div>
+</div>
+
+<h3 class="subsection">Non-deterministic Finite Automaton (NFA)</h3>
+<p>In an <strong>NFA</strong>, a state may have zero, one, or multiple transitions for the same input symbol. There may also be ε-transitions (transitions that consume no input). An NFA accepts a string if <em>any</em> possible path leads to an accept state.</p>
+
+<table>
+  <tr><th></th><th>DFA</th><th>NFA</th></tr>
+  <tr><td>Transitions per symbol</td><td>Exactly one per state</td><td>Zero, one, or many per state</td></tr>
+  <tr><td>ε-transitions</td><td>Not allowed</td><td>Allowed</td></tr>
+  <tr><td>Acceptance</td><td>One deterministic path</td><td>Accept if any path leads to accept state</td></tr>
+  <tr><td>Expressive power</td><td>Equal to NFA</td><td>Equal to DFA</td></tr>
+  <tr><td>Implementation</td><td>Simpler — direct simulation</td><td>Requires subset construction to implement</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>DFA = NFA in power</strong>
+  Every NFA can be converted to an equivalent DFA (though the DFA may have exponentially more states). Both recognise exactly the class of regular languages. NFAs are often easier to design; DFAs are easier to implement.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example — Tracing a DFA</div>
+  <div class="example-q">Using the DFA above (accepts strings containing "ab"), determine whether these strings are accepted: (a) "bba"  (b) "bab"  (c) "aabb"</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="example-steps">
+      <div class="step"><div class="step-num">a</div><div class="step-content">"bba": q0→(b)→q0→(b)→q0→(a)→q1. Ends in q1 — <strong>not accepted</strong> (no 'ab' found)</div></div>
+      <div class="step"><div class="step-num">b</div><div class="step-content">"bab": q0→(b)→q0→(a)→q1→(b)→q2. Ends in q2 — <strong>accepted</strong></div></div>
+      <div class="step"><div class="step-num">c</div><div class="step-content">"aabb": q0→(a)→q1→(a)→q1→(b)→q2→(b)→q2. Ends in q2 — <strong>accepted</strong></div></div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4: FORMAL LANGUAGES -->
+
+  <div class="lesson-section" id="languages">
+    <h2 class="section-title">Formal Languages &amp; the Chomsky Hierarchy</h2>
+    <p>A <strong>formal language</strong> is a set of strings over some alphabet. Noam Chomsky classified formal languages into a hierarchy of four types, each more powerful than the last.</p>
+
+```
+<table>
+  <tr><th>Type</th><th>Name</th><th>Recognised by</th><th>Example</th></tr>
+  <tr><td>Type 3</td><td>Regular</td><td>Finite automaton (DFA/NFA)</td><td>Strings matching a regex; simple patterns</td></tr>
+  <tr><td>Type 2</td><td>Context-free</td><td>Pushdown automaton</td><td>Most programming language syntax; balanced brackets</td></tr>
+  <tr><td>Type 1</td><td>Context-sensitive</td><td>Linear bounded automaton</td><td>Some natural language constructs</td></tr>
+  <tr><td>Type 0</td><td>Recursively enumerable</td><td>Turing machine</td><td>Any computable language</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Why this matters</strong>
+  Regular expressions (Type 3) are used for tokenising source code. Context-free grammars (Type 2) describe the syntax of programming languages — this is why compilers use parsers based on pushdown automata. Understanding the hierarchy tells you which tool to use for which problem.
+</div>
+
+<h3 class="subsection">Closure Properties of Regular Languages</h3>
+<p>Regular languages are <strong>closed</strong> under the following operations — the result is always another regular language:</p>
+<div class="code-block">
+```
+
+Union:          L1 ∪ L2
+Intersection:   L1 ∩ L2
+Complement:     L’
+Concatenation:  L1 · L2
+Kleene star:    L*
+</div>
+
+  </div>
+
+  <!-- SECTION 5: BNF -->
+
+  <div class="lesson-section" id="bnf">
+    <h2 class="section-title">BNF &amp; Syntax Diagrams</h2>
+    <p><strong>Backus-Naur Form (BNF)</strong> is a notation for describing the grammar of a context-free language. It is used to formally define the syntax of programming languages.</p>
+
+```
+<h3 class="subsection">BNF Notation</h3>
+<table>
+  <tr><th>Symbol</th><th>Meaning</th></tr>
+  <tr><td>&lt;name&gt;</td><td>Non-terminal — a category that can be expanded further</td></tr>
+  <tr><td>"text" or 'text'</td><td>Terminal — a literal string that appears as-is</td></tr>
+  <tr><td>::=</td><td>Is defined as</td></tr>
+  <tr><td>|</td><td>Alternation — or</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">BNF Grammar — Unsigned Integers</div>
+  <div class="example-q">Write a BNF grammar for unsigned integers (one or more digits).</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<digit>    ::= “0” | “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
+<integer> ::= <digit> | <digit> <integer>
+</div>
+<p style="margin-top:1rem;font-size:0.9rem;">The second rule is recursive — an integer is either a single digit, or a digit followed by another integer. This captures “1”, “42”, “1337” etc.</p>
+</div>
+</div>
+
+```
+<div class="example">
+  <div class="example-label">BNF Grammar — Simple Expressions</div>
+  <div class="example-q">Write a BNF grammar for simple arithmetic expressions involving +, *, integers and parentheses.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<expr>   ::= <term> | <expr> “+” <term>
+<term>   ::= <factor> | <term> “*” <factor>
+<factor> ::= <integer> | “(” <expr> “)”
+<integer> ::= <digit> | <digit> <integer>
+<digit>   ::= “0”|“1”|“2”|“3”|“4”|“5”|“6”|“7”|“8”|“9”
+</div>
+<p style="margin-top:1rem;font-size:0.9rem;">The separation of expr/term/factor encodes operator precedence — multiplication binds tighter than addition because * is handled at the term level, which is a sub-rule of expr.</p>
+</div>
+</div>
+
+```
+<h3 class="subsection">Syntax Diagrams (Railroad Diagrams)</h3>
+<p>A <strong>syntax diagram</strong> is a visual equivalent of BNF. Boxes contain non-terminals (expandable), ovals/rounded boxes contain terminals (literals). Follow the arrows to determine valid strings.</p>
+<div class="key-point">
+  <strong>Reading a syntax diagram</strong>
+  Start at the left arrow. At each junction, choose one path. Any path that reaches the right end represents a valid string in the language. Loops represent repetition (equivalent to Kleene star or + in BNF).
+</div>
+
+<div class="warning-box">
+  <strong>Extended BNF (EBNF)</strong>
+  AQA may use EBNF, which adds { } for zero-or-more repetition and [ ] for optional elements, making grammars more concise. For example: &lt;integer&gt; ::= &lt;digit&gt; { &lt;digit&gt; } means one digit followed by zero or more digits.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Given A = {1, 2, 3, 4} and B = {3, 4, 5, 6}, find: (a) A ∪ B &nbsp; (b) A ∩ B &nbsp; (c) A \ B &nbsp; (d) |A × B|</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">State what each of the following regex symbols means: * &nbsp; + &nbsp; ? &nbsp; | &nbsp; [ ]</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Write a regular expression that matches any string consisting of one or more lowercase letters followed by exactly two digits.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">State two differences between a DFA and an NFA.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">In BNF, what is the difference between a terminal and a non-terminal? Give one example of each.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Draw a DFA that accepts all binary strings that contain an even number of 0s. Label all states clearly, mark the start and accept states, and show transitions for both 0 and 1 from every state.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Describe the language accepted by the regular expression: <code>(a|b)*aba(a|b)*</code>. List three strings accepted and two strings rejected, with justification.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Write a BNF grammar for a variable name in a programming language: must start with a letter, followed by any number of letters or digits, and may optionally end with an underscore.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Name the four levels of the Chomsky hierarchy in order from most to least restrictive. For each level, state the type of automaton that recognises it.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Design an NFA that accepts strings over {0,1} where the third character from the end is a 1 (e.g. "100", "1010", "00100"). Explain why an NFA is more convenient than a DFA for this language. Then describe (without drawing) how the subset construction algorithm would convert your NFA to an equivalent DFA.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write a complete BNF grammar for simple if-statements in a pseudocode language, supporting: if &lt;condition&gt; then &lt;statement&gt;, optional else clause, and nested if-statements. Show two derivations using your grammar: one for a simple if-then and one for a nested if-then-else. Explain how the grammar handles the dangling else ambiguity problem.</div></div>
+      <div class="q-marks">[12]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">The language L = {aⁿbⁿ | n ≥ 1} (strings of n a's followed by n b's: "ab", "aabb", "aaabbb"…) cannot be described by a regular expression or recognised by a finite automaton. Explain why, using the pumping lemma for regular languages or an intuitive argument about memory limitations of FSMs. State which level of the Chomsky hierarchy this language belongs to and what type of automaton can recognise it.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="algorithms.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Algorithms</div></a>
+    <a href="hardware-software.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Hardware &amp; Software</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
