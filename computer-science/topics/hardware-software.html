@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware & Software — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 07</div>
+  <a href="#hardware" class="sidebar-link active"><span class="sidebar-num">1</span>Hardware Components</a>
+  <a href="#software" class="sidebar-link"><span class="sidebar-num">2</span>Software &amp; OS</a>
+  <a href="#os-functions" class="sidebar-link"><span class="sidebar-num">3</span>OS Functions</a>
+  <a href="#programming-langs" class="sidebar-link"><span class="sidebar-num">4</span>Programming Languages</a>
+  <a href="#translation" class="sidebar-link"><span class="sidebar-num">5</span>Translators &amp; Compilation</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 07</div>
+    <div class="topic-num-badge">TOPIC 07</div>
+    <h1 class="topic-title">Hardware &amp; Software</h1>
+    <p class="topic-intro">The physical components of a computer system, operating system functions, types of software, and how programs are translated from high-level code to machine instructions.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>Systems</span> knowledge</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#hardware">Hardware Components</a></li>
+      <li><a href="#software">Software &amp; Operating Systems</a></li>
+      <li><a href="#os-functions">OS Functions in Detail</a></li>
+      <li><a href="#programming-langs">Programming Languages</a></li>
+      <li><a href="#translation">Translators &amp; Compilation</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="hardware">
+    <h2 class="section-title">Hardware Components</h2>
+    <p><strong>Hardware</strong> refers to the physical components of a computer system. Every computing device — from a phone to a supercomputer — is built on the same fundamental components.</p>
+
+```
+<h3 class="subsection">Internal Components</h3>
+<table>
+  <tr><th>Component</th><th>Function</th></tr>
+  <tr><td>CPU (Central Processing Unit)</td><td>Executes program instructions — the "brain" of the computer</td></tr>
+  <tr><td>RAM (Random Access Memory)</td><td>Volatile temporary storage — holds running programs and data</td></tr>
+  <tr><td>ROM (Read-Only Memory)</td><td>Non-volatile permanent storage — holds firmware/BIOS</td></tr>
+  <tr><td>Cache</td><td>Very fast memory between CPU and RAM — stores frequently used data</td></tr>
+  <tr><td>Motherboard</td><td>Main circuit board — connects all components via buses</td></tr>
+  <tr><td>GPU</td><td>Graphics Processing Unit — handles visual output, parallel processing</td></tr>
+  <tr><td>PSU</td><td>Power Supply Unit — converts mains power to voltages the components need</td></tr>
+</table>
+
+<h3 class="subsection">Storage Devices</h3>
+<table>
+  <tr><th>Type</th><th>Volatile?</th><th>Speed</th><th>Capacity</th><th>Use</th></tr>
+  <tr><td>RAM</td><td>Yes</td><td>Very fast</td><td>GB</td><td>Running programs</td></tr>
+  <tr><td>Cache</td><td>Yes</td><td>Fastest</td><td>KB–MB</td><td>CPU working data</td></tr>
+  <tr><td>SSD (Solid State Drive)</td><td>No</td><td>Fast</td><td>GB–TB</td><td>OS, applications, files</td></tr>
+  <tr><td>HDD (Hard Disk Drive)</td><td>No</td><td>Slower</td><td>TB</td><td>Mass storage</td></tr>
+  <tr><td>Optical (CD/DVD/Blu-ray)</td><td>No</td><td>Slow</td><td>GB</td><td>Distribution, archiving</td></tr>
+  <tr><td>Flash/USB</td><td>No</td><td>Moderate</td><td>GB</td><td>Portable storage</td></tr>
+</table>
+
+<h3 class="subsection">Input &amp; Output Devices</h3>
+<table>
+  <tr><th>Input devices</th><th>Output devices</th></tr>
+  <tr><td>Keyboard, mouse, touchscreen, microphone, webcam, barcode scanner, sensor</td><td>Monitor, printer, speaker, actuator, projector</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Volatile vs Non-volatile</strong>
+  Volatile memory loses its contents when power is removed (RAM, cache). Non-volatile memory retains data without power (SSD, HDD, ROM, flash). This is why you must save work — moving it from volatile RAM to non-volatile storage.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="software">
+    <h2 class="section-title">Software &amp; Operating Systems</h2>
+    <p><strong>Software</strong> is the set of programs and data that run on hardware. It is divided into two broad categories:</p>
+
+```
+<table>
+  <tr><th>Category</th><th>Definition</th><th>Examples</th></tr>
+  <tr><td>System software</td><td>Manages hardware and provides a platform for application software</td><td>Operating system, device drivers, utilities, compilers</td></tr>
+  <tr><td>Application software</td><td>Performs tasks for the end user</td><td>Word processors, games, browsers, databases</td></tr>
+</table>
+
+<h3 class="subsection">Types of Operating System</h3>
+<table>
+  <tr><th>Type</th><th>Description</th><th>Example use</th></tr>
+  <tr><td>Multi-tasking</td><td>Runs multiple programs apparently simultaneously using time-slicing</td><td>Desktop OS (Windows, macOS, Linux)</td></tr>
+  <tr><td>Multi-user</td><td>Supports multiple users concurrently</td><td>Server OS, mainframes</td></tr>
+  <tr><td>Real-time (RTOS)</td><td>Guarantees response within a strict time limit</td><td>Aircraft control, pacemakers, industrial automation</td></tr>
+  <tr><td>Distributed</td><td>Manages resources across a network of computers</td><td>Cloud computing platforms</td></tr>
+  <tr><td>Embedded</td><td>Dedicated, minimal OS built into a device</td><td>Smart TV, washing machine, router</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Why RTOS matters</strong>
+  In a real-time system, a late response can be as bad as no response. A pacemaker that reacts 100ms too slowly could be fatal. RTOS schedulers guarantee maximum response times — something general-purpose OSes cannot do.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="os-functions">
+    <h2 class="section-title">OS Functions in Detail</h2>
+    <p>The operating system acts as an intermediary between user applications and hardware. Its core responsibilities are:</p>
+
+```
+<h3 class="subsection">Process Management</h3>
+<p>The OS manages processes — programs in execution. It uses <strong>scheduling algorithms</strong> to decide which process gets CPU time and for how long.</p>
+<table>
+  <tr><th>Scheduler</th><th>Description</th><th>Advantage</th></tr>
+  <tr><td>Round Robin</td><td>Each process gets a fixed time slice in rotation</td><td>Fair — no process starves</td></tr>
+  <tr><td>First Come First Served</td><td>Processes run in order of arrival</td><td>Simple</td></tr>
+  <tr><td>Shortest Job First</td><td>Shortest estimated process runs next</td><td>Minimises average wait time</td></tr>
+  <tr><td>Priority Scheduling</td><td>Higher-priority processes run first</td><td>Important tasks get fast response</td></tr>
+</table>
+
+<h3 class="subsection">Memory Management</h3>
+<p>The OS manages how RAM is allocated between processes. Key techniques include:</p>
+<table>
+  <tr><th>Technique</th><th>Description</th></tr>
+  <tr><td>Paging</td><td>Memory divided into fixed-size pages; processes don't need contiguous memory</td></tr>
+  <tr><td>Segmentation</td><td>Memory divided into variable-size segments based on logical program sections</td></tr>
+  <tr><td>Virtual memory</td><td>Disk space used as an extension of RAM — slower but allows larger programs to run</td></tr>
+</table>
+
+<div class="warning-box">
+  <strong>Thrashing</strong>
+  If a system relies too heavily on virtual memory, it spends more time swapping pages in and out of disk than actually executing programs — this is called thrashing. The solution is to add more RAM or reduce the number of running processes.
+</div>
+
+<h3 class="subsection">File Management</h3>
+<p>The OS provides a file system — a structured way to store, name, organise and retrieve files. It manages directories, permissions, metadata and handles reading/writing to storage devices.</p>
+
+<h3 class="subsection">Device Management</h3>
+<p><strong>Device drivers</strong> are software that allow the OS to communicate with specific hardware devices. The OS provides a standard interface so applications don't need to know hardware-specific details.</p>
+
+<h3 class="subsection">Security &amp; User Management</h3>
+<p>The OS enforces access control — authentication (who you are) and authorisation (what you're allowed to do). It isolates processes so one program can't read another's memory.</p>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="programming-langs">
+    <h2 class="section-title">Programming Languages</h2>
+
+```
+<table>
+  <tr><th>Level</th><th>Example</th><th>Characteristics</th></tr>
+  <tr><td>Machine code</td><td>01001010 11000011</td><td>Binary; directly executed by CPU; hardware-specific; very fast</td></tr>
+  <tr><td>Assembly language</td><td>MOV AX, 5 / ADD AX, BX</td><td>Mnemonics for machine code; one-to-one with instructions; still hardware-specific</td></tr>
+  <tr><td>High-level language</td><td>Python, Java, C++</td><td>Human-readable; portable; must be translated; abstracts hardware</td></tr>
+</table>
+
+<h3 class="subsection">Imperative vs Declarative</h3>
+<table>
+  <tr><th>Paradigm</th><th>Description</th><th>Examples</th></tr>
+  <tr><td>Imperative (procedural)</td><td>Describes how to do something — step-by-step instructions</td><td>Python, C, Pascal</td></tr>
+  <tr><td>Object-oriented</td><td>Organises code around objects with state and behaviour</td><td>Java, Python, C++</td></tr>
+  <tr><td>Declarative (functional)</td><td>Describes what the result should be, not how to compute it</td><td>Haskell, SQL, Prolog</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Why use assembly language?</strong>
+  Assembly is used for device drivers, embedded systems, and performance-critical code where the programmer needs direct hardware control. It is faster than high-level code but much harder to write and maintain.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="translation">
+    <h2 class="section-title">Translators &amp; Compilation</h2>
+    <p>High-level code must be translated into machine code before it can run. There are three types of translator:</p>
+
+```
+<table>
+  <tr><th>Translator</th><th>How it works</th><th>Output</th><th>Examples</th></tr>
+  <tr><td>Compiler</td><td>Translates entire source code to machine code in one go</td><td>Standalone executable file</td><td>C, C++, Go</td></tr>
+  <tr><td>Interpreter</td><td>Translates and executes one line at a time — no output file</td><td>None (executes directly)</td><td>Python (default), Ruby</td></tr>
+  <tr><td>Assembler</td><td>Converts assembly language mnemonics to machine code</td><td>Object code</td><td>NASM, MASM</td></tr>
+</table>
+
+<h3 class="subsection">Compiler vs Interpreter</h3>
+<table>
+  <tr><th></th><th>Compiler</th><th>Interpreter</th></tr>
+  <tr><td>Speed of execution</td><td>Faster — already translated</td><td>Slower — translates on the fly</td></tr>
+  <tr><td>Development speed</td><td>Slower — must recompile after changes</td><td>Faster — run immediately</td></tr>
+  <tr><td>Error reporting</td><td>All errors reported after full compilation</td><td>Stops at first error — easier to debug</td></tr>
+  <tr><td>Source code distribution</td><td>Not needed — distribute executable</td><td>Source code required</td></tr>
+  <tr><td>Portability</td><td>Compiled for specific platform</td><td>Interpreter handles portability</td></tr>
+</table>
+
+<h3 class="subsection">Stages of Compilation</h3>
+<p>A compiler works through several stages to convert source code into machine code:</p>
+<div class="code-block">
+```
+
+1. Lexical analysis    — tokenise source code; remove whitespace/comments
+1. Syntax analysis     — check grammar using parse tree (context-free grammar)
+1. Semantic analysis   — check meaning (type checking, scope, declarations)
+1. Code generation     — produce intermediate or target machine code
+1. Code optimisation   — improve efficiency (remove redundant code, etc.)
+   
+    </div>
+   
+    <div class="example">
+      <div class="example-label">Worked Example — Lexical Analysis</div>
+      <div class="example-q">Show how the lexer would tokenise the statement: <code>total = price * quantity</code></div>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">"total" → IDENTIFIER (token type: variable name)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">"=" → ASSIGNMENT_OPERATOR</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">"price" → IDENTIFIER</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">"*" → ARITHMETIC_OPERATOR (multiply)</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">"quantity" → IDENTIFIER</div></div>
+      </div>
+    </div>
+   
+    <div class="key-point">
+      <strong>JIT Compilation</strong>
+      Just-In-Time (JIT) compilation is a hybrid approach — code is compiled at runtime, just before it is needed. Java's JVM and Python's PyPy use JIT. It combines the portability of interpretation with much of the speed of compilation.
+    </div>
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State the difference between volatile and non-volatile memory. Give one example of each.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">State two functions of an operating system.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain why a real-time operating system (RTOS) is required for an aircraft autopilot system.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">State two advantages of using a high-level language instead of assembly language.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">Identify the five stages of compilation in the correct order.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Compare the Round Robin and Shortest Job First CPU scheduling algorithms. For each, give one advantage and one disadvantage. Illustrate with a worked example using processes P1(6ms), P2(2ms), P3(4ms), P4(1ms) arriving at time 0, with a time quantum of 2ms for Round Robin.</div></div>
+      <div class="q-marks">[7]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Explain the difference between a compiler and an interpreter. A developer is building a mobile app in Java. The app is compiled to bytecode, which is then interpreted by the Android Runtime (ART) with JIT compilation. Explain each stage of this process.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain what virtual memory is and describe the process of paging. Under what circumstances would a system begin thrashing, and how could this be resolved?</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">A hospital is replacing its patient monitoring system. The current system uses a general-purpose OS; the proposed replacement uses an RTOS. Compare the two approaches in detail, covering: scheduling guarantees, interrupt handling, memory management, typical hardware constraints, and reliability. Justify your recommendation for the hospital context.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Describe in detail what happens during semantic analysis in a compiler. Explain with examples how type checking, scope checking, and use-before-declaration errors are detected at this stage. How does a symbol table support semantic analysis?</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Evaluate the claim that "interpreted languages are always slower than compiled languages." Your answer should discuss: the compilation process and its overhead, JIT compilation, modern interpreter optimisations, use-case differences (development vs production), and give examples of specific scenarios where an interpreted language might be the better choice.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="regular-languages.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Regular Languages</div></a>
+    <a href="computer-organisation.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Computer Organisation &amp; Architecture</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
