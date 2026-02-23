@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorithms — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .num{color:#fcd34d}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .code-block .fn{color:#c4b5fd}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .trace-table{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:1.5rem 0}
+  .trace-table table{margin:0}
+  .trace-table th{background:rgba(52,211,153,0.08)}
+  .trace-table td.changed{color:var(--accent);font-weight:600}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 05</div>
+  <a href="#searching" class="sidebar-link active"><span class="sidebar-num">1</span>Searching Algorithms</a>
+  <a href="#sorting" class="sidebar-link"><span class="sidebar-num">2</span>Sorting Algorithms</a>
+  <a href="#graph-algos" class="sidebar-link"><span class="sidebar-num">3</span>Graph Algorithms</a>
+  <a href="#complexity" class="sidebar-link"><span class="sidebar-num">4</span>Time Complexity</a>
+  <a href="#recursion" class="sidebar-link"><span class="sidebar-num">5</span>Recursion</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 05</div>
+    <div class="topic-num-badge">TOPIC 05</div>
+    <h1 class="topic-title">Algorithms</h1>
+    <p class="topic-intro">Searching, sorting, graph traversal, time complexity and recursion — the core algorithms every AQA CS student must be able to trace, implement and analyse.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Papers 1 &amp; 2</div>
+      <div class="meta-item"><span>Trace</span> &amp; implement</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#searching">Searching Algorithms</a></li>
+      <li><a href="#sorting">Sorting Algorithms</a></li>
+      <li><a href="#graph-algos">Graph Algorithms</a></li>
+      <li><a href="#complexity">Time Complexity &amp; Big O</a></li>
+      <li><a href="#recursion">Recursion</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1: SEARCHING -->
+
+  <div class="lesson-section" id="searching">
+    <h2 class="section-title">Searching Algorithms</h2>
+
+```
+<h3 class="subsection">Linear Search</h3>
+<p>Check each element one by one from the start until the target is found or the list is exhausted. Works on <strong>unsorted</strong> data.</p>
+<div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">linear_search</span>(lst, target):
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(lst)):
+<span class="kw">if</span> lst[i] == target:
+<span class="kw">return</span> i          <span class="cm"># Return index if found</span>
+<span class="kw">return</span> <span class="num">-1</span>              <span class="cm"># Return -1 if not found</span>
+</div>
+<table>
+<tr><th>Case</th><th>Comparisons</th><th>Big O</th></tr>
+<tr><td>Best</td><td>1 (target is first element)</td><td>O(1)</td></tr>
+<tr><td>Average</td><td>n/2</td><td>O(n)</td></tr>
+<tr><td>Worst</td><td>n (not found or last element)</td><td>O(n)</td></tr>
+</table>
+
+```
+<h3 class="subsection">Binary Search</h3>
+<p>Repeatedly halve the search space. Requires a <strong>sorted</strong> list. Far more efficient than linear search for large datasets.</p>
+<div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(lst, target):
+low, high = <span class="num">0</span>, <span class="fn">len</span>(lst) - <span class="num">1</span>
+<span class="kw">while</span> low <= high:
+mid = (low + high) // <span class="num">2</span>
+<span class="kw">if</span> lst[mid] == target:
+<span class="kw">return</span> mid
+<span class="kw">elif</span> lst[mid] < target:
+low = mid + <span class="num">1</span>       <span class="cm"># Target in right half</span>
+<span class="kw">else</span>:
+high = mid - <span class="num">1</span>      <span class="cm"># Target in left half</span>
+<span class="kw">return</span> <span class="num">-1</span>
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example — Binary Search Trace</div>
+  <div class="example-q">Search for 41 in: [5, 12, 18, 23, 29, 41, 55, 67, 72, 88]</div>
+  <div class="trace-table">
+    <table>
+      <tr><th>Pass</th><th>Low</th><th>High</th><th>Mid</th><th>lst[mid]</th><th>Action</th></tr>
+      <tr><td>1</td><td>0</td><td>9</td><td>4</td><td>29</td><td>29 &lt; 41 → low = 5</td></tr>
+      <tr><td>2</td><td>5</td><td>9</td><td>7</td><td>67</td><td>67 &gt; 41 → high = 6</td></tr>
+      <tr><td>3</td><td>5</td><td>6</td><td>5</td><td class="changed">41</td><td>Found! Return 5</td></tr>
+    </table>
+  </div>
+</div>
+
+<table>
+  <tr><th>Case</th><th>Big O</th></tr>
+  <tr><td>Best</td><td>O(1)</td></tr>
+  <tr><td>Average / Worst</td><td>O(log n)</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 2: SORTING -->
+
+  <div class="lesson-section" id="sorting">
+    <h2 class="section-title">Sorting Algorithms</h2>
+
+```
+<h3 class="subsection">Bubble Sort</h3>
+<p>Repeatedly compare adjacent pairs and swap if in the wrong order. Each pass "bubbles" the largest unsorted element to the end.</p>
+<div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">bubble_sort</span>(lst):
+n = <span class="fn">len</span>(lst)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+<span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span> - i):
+<span class="kw">if</span> lst[j] > lst[j+<span class="num">1</span>]:
+lst[j], lst[j+<span class="num">1</span>] = lst[j+<span class="num">1</span>], lst[j]
+<span class="kw">return</span> lst
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Trace — Bubble Sort</div>
+  <div class="example-q">Sort [64, 34, 25, 12, 22] using bubble sort. Show each pass.</div>
+  <div class="trace-table">
+    <table>
+      <tr><th>Pass</th><th>Array after pass</th><th>Swaps</th></tr>
+      <tr><td>1</td><td>[34, 25, 12, 22, <span style="color:var(--accent)">64</span>]</td><td>3</td></tr>
+      <tr><td>2</td><td>[25, 12, 22, <span style="color:var(--accent)">34</span>, 64]</td><td>2</td></tr>
+      <tr><td>3</td><td>[12, 22, <span style="color:var(--accent)">25</span>, 34, 64]</td><td>2</td></tr>
+      <tr><td>4</td><td>[12, <span style="color:var(--accent)">22</span>, 25, 34, 64]</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<h3 class="subsection">Merge Sort</h3>
+<p>A divide-and-conquer algorithm. Recursively split the list in half, sort each half, then merge the sorted halves back together.</p>
+<div class="code-block">
+```
+
+<span class="cm"># Merge sort — O(n log n)</span>
+<span class="kw">def</span> <span class="fn">merge_sort</span>(lst):
+<span class="kw">if</span> <span class="fn">len</span>(lst) <= <span class="num">1</span>:
+<span class="kw">return</span> lst
+mid = <span class="fn">len</span>(lst) // <span class="num">2</span>
+left  = <span class="fn">merge_sort</span>(lst[:mid])
+right = <span class="fn">merge_sort</span>(lst[mid:])
+<span class="kw">return</span> <span class="fn">merge</span>(left, right)
+
+<span class="kw">def</span> <span class="fn">merge</span>(left, right):
+result = []
+i = j = <span class="num">0</span>
+<span class="kw">while</span> i < <span class="fn">len</span>(left) <span class="kw">and</span> j < <span class="fn">len</span>(right):
+<span class="kw">if</span> left[i] <= right[j]:
+result.<span class="fn">append</span>(left[i]); i += <span class="num">1</span>
+<span class="kw">else</span>:
+result.<span class="fn">append</span>(right[j]); j += <span class="num">1</span>
+<span class="kw">return</span> result + left[i:] + right[j:]
+</div>
+
+```
+<h3 class="subsection">Quick Sort</h3>
+<p>Choose a <strong>pivot</strong>, partition the list so all elements less than the pivot are to its left and all greater are to its right, then recursively sort each partition.</p>
+<div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">quick_sort</span>(lst):
+<span class="kw">if</span> <span class="fn">len</span>(lst) <= <span class="num">1</span>:
+<span class="kw">return</span> lst
+pivot = lst[<span class="fn">len</span>(lst) // <span class="num">2</span>]
+left   = [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x < pivot]
+middle = [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x == pivot]
+right  = [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x > pivot]
+<span class="kw">return</span> <span class="fn">quick_sort</span>(left) + middle + <span class="fn">quick_sort</span>(right)
+</div>
+
+```
+<h3 class="subsection">Sorting Algorithm Comparison</h3>
+<table>
+  <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable?</th></tr>
+  <tr><td>Bubble Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+  <tr><td>Insertion Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+  <tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+  <tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>No</td></tr>
+</table>
+<div class="warning-box">
+  <strong>Quick Sort Worst Case</strong>
+  Quick sort degrades to O(n²) when the pivot is always the smallest or largest element — this happens with already-sorted data if you always pick the first element as pivot. Good pivot selection (median of three) avoids this in practice.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3: GRAPH ALGORITHMS -->
+
+  <div class="lesson-section" id="graph-algos">
+    <h2 class="section-title">Graph Algorithms</h2>
+
+```
+<h3 class="subsection">Depth-First Search (DFS)</h3>
+<p>Explore as far as possible along each branch before backtracking. Uses a <strong>stack</strong> (or recursion).</p>
+<div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">dfs</span>(graph, start, visited=<span class="kw">None</span>):
+<span class="kw">if</span> visited <span class="kw">is None</span>:
+visited = <span class="fn">set</span>()
+visited.<span class="fn">add</span>(start)
+<span class="fn">print</span>(start)
+<span class="kw">for</span> neighbour <span class="kw">in</span> graph[start]:
+<span class="kw">if</span> neighbour <span class="kw">not in</span> visited:
+<span class="fn">dfs</span>(graph, neighbour, visited)
+</div>
+
+```
+<h3 class="subsection">Breadth-First Search (BFS)</h3>
+<p>Explore all neighbours at the current depth before moving deeper. Uses a <strong>queue</strong>. Finds the shortest path in an unweighted graph.</p>
+<div class="code-block">
+```
+
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">bfs</span>(graph, start):
+visited = {start}
+queue = <span class="fn">deque</span>([start])
+<span class="kw">while</span> queue:
+node = queue.<span class="fn">popleft</span>()
+<span class="fn">print</span>(node)
+<span class="kw">for</span> neighbour <span class="kw">in</span> graph[node]:
+<span class="kw">if</span> neighbour <span class="kw">not in</span> visited:
+visited.<span class="fn">add</span>(neighbour)
+queue.<span class="fn">append</span>(neighbour)
+</div>
+
+```
+<table>
+  <tr><th></th><th>DFS</th><th>BFS</th></tr>
+  <tr><td>Data structure</td><td>Stack (or recursion)</td><td>Queue</td></tr>
+  <tr><td>Finds shortest path?</td><td>No (unweighted)</td><td>Yes (unweighted)</td></tr>
+  <tr><td>Memory use</td><td>O(depth)</td><td>O(width)</td></tr>
+  <tr><td>Best for</td><td>Detecting cycles, topological sort, mazes</td><td>Shortest path, level-order traversal</td></tr>
+</table>
+
+<h3 class="subsection">Dijkstra's Algorithm</h3>
+<p>Finds the shortest path between a source node and all other nodes in a <strong>weighted</strong> graph (non-negative weights only).</p>
+<div class="key-point">
+  <strong>Dijkstra's Steps</strong>
+  1. Set distance to source = 0, all others = infinity.<br>
+  2. Visit the unvisited node with the smallest distance.<br>
+  3. Update distances to its neighbours: if current distance + edge weight &lt; recorded distance, update it.<br>
+  4. Mark the node as visited. Repeat until all nodes are visited.
+</div>
+
+<div class="example">
+  <div class="example-label">Worked Example — Dijkstra's</div>
+  <div class="example-q">Find the shortest path from A to all nodes. Edges: A–B(4), A–C(2), C–B(1), B–D(5), C–D(8)</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="trace-table">
+      <table>
+        <tr><th>Step</th><th>Visit</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td>Init</td><td>—</td><td class="changed">0</td><td>∞</td><td>∞</td><td>∞</td></tr>
+        <tr><td>1</td><td>A</td><td>0</td><td class="changed">4</td><td class="changed">2</td><td>∞</td></tr>
+        <tr><td>2</td><td>C</td><td>0</td><td class="changed">3</td><td>2</td><td class="changed">10</td></tr>
+        <tr><td>3</td><td>B</td><td>0</td><td>3</td><td>2</td><td class="changed">8</td></tr>
+        <tr><td>4</td><td>D</td><td>0</td><td>3</td><td>2</td><td>8</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:1rem;font-size:0.9rem;">Shortest paths from A: to B = 3 (via C), to C = 2, to D = 8 (via C then B).</p>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4: COMPLEXITY -->
+
+  <div class="lesson-section" id="complexity">
+    <h2 class="section-title">Time Complexity &amp; Big O</h2>
+    <p><strong>Big O notation</strong> describes how an algorithm's runtime grows as the input size n increases. It expresses the <em>worst case</em> unless stated otherwise.</p>
+
+```
+<table>
+  <tr><th>Notation</th><th>Name</th><th>Example</th><th>n=1000 (approx ops)</th></tr>
+  <tr><td>O(1)</td><td>Constant</td><td>Array access, hash lookup</td><td>1</td></tr>
+  <tr><td>O(log n)</td><td>Logarithmic</td><td>Binary search, BST search</td><td>10</td></tr>
+  <tr><td>O(n)</td><td>Linear</td><td>Linear search, single loop</td><td>1,000</td></tr>
+  <tr><td>O(n log n)</td><td>Linearithmic</td><td>Merge sort, quick sort (avg)</td><td>10,000</td></tr>
+  <tr><td>O(n²)</td><td>Quadratic</td><td>Bubble sort, nested loops</td><td>1,000,000</td></tr>
+  <tr><td>O(2ⁿ)</td><td>Exponential</td><td>Brute-force subset problems</td><td>10^301</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Reading Big O</strong>
+  Drop constants and lower-order terms: O(3n² + 2n + 1) → O(n²). We only care about the dominant term as n grows large. Two nested loops over n elements = O(n²). Three nested = O(n³).
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5: RECURSION -->
+
+  <div class="lesson-section" id="recursion">
+    <h2 class="section-title">Recursion</h2>
+    <p>A <strong>recursive</strong> function is one that calls itself. Every recursive solution must have a <strong>base case</strong> (stopping condition) and a <strong>recursive case</strong> that moves toward it.</p>
+
+```
+<div class="warning-box">
+  <strong>Without a base case</strong>
+  A recursive function without a base case will call itself forever, eventually causing a stack overflow when the call stack runs out of memory.
+</div>
+
+<div class="example">
+  <div class="example-label">Classic Example — Factorial</div>
+  <div class="example-q">Write a recursive function to calculate n! (n factorial).</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Base case: 0! = 1 (and 1! = 1)</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Recursive case: n! = n × (n-1)!</div></div>
+  </div>
+  <div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">factorial</span>(n):
+<span class="kw">if</span> n == <span class="num">0</span>:               <span class="cm"># Base case</span>
+<span class="kw">return</span> <span class="num">1</span>
+<span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>)  <span class="cm"># Recursive case</span>
+
+<span class="cm"># Call stack for factorial(4):</span>
+<span class="cm"># factorial(4) → 4 × factorial(3)</span>
+<span class="cm"># factorial(3) → 3 × factorial(2)</span>
+<span class="cm"># factorial(2) → 2 × factorial(1)</span>
+<span class="cm"># factorial(1) → 1 × factorial(0)</span>
+<span class="cm"># factorial(0) → 1  ← base case</span>
+<span class="cm"># Unwinds: 1→1→2→6→24</span>
+</div>
+</div>
+
+```
+<h3 class="subsection">Recursive vs Iterative</h3>
+<table>
+  <tr><th></th><th>Recursive</th><th>Iterative</th></tr>
+  <tr><td>Code clarity</td><td>Often cleaner for naturally recursive problems (trees, fractals)</td><td>More explicit</td></tr>
+  <tr><td>Memory</td><td>Uses call stack — risk of stack overflow for deep recursion</td><td>Uses loop variables only</td></tr>
+  <tr><td>Speed</td><td>Function call overhead</td><td>Generally faster</td></tr>
+  <tr><td>Debugging</td><td>Harder to trace</td><td>Easier to trace</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Example — Fibonacci</div>
+  <div class="example-q">Write a recursive function to return the nth Fibonacci number. Identify the inefficiency and suggest an improvement.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<span class="kw">def</span> <span class="fn">fib</span>(n):
+<span class="kw">if</span> n <= <span class="num">1</span>:             <span class="cm"># Base cases: fib(0)=0, fib(1)=1</span>
+<span class="kw">return</span> n
+<span class="kw">return</span> <span class="fn">fib</span>(n-<span class="num">1</span>) + <span class="fn">fib</span>(n-<span class="num">2</span>)
+
+<span class="cm"># Inefficiency: fib(n-2) is recalculated many times</span>
+<span class="cm"># fib(5) calls fib(3) twice, fib(2) three times, etc.</span>
+<span class="cm"># Time complexity: O(2^n) — exponential!</span>
+
+<span class="cm"># Improvement: memoisation (cache results)</span>
+<span class="kw">from</span> functools <span class="kw">import</span> lru_cache
+
+@<span class="fn">lru_cache</span>(maxsize=<span class="kw">None</span>)
+<span class="kw">def</span> <span class="fn">fib_fast</span>(n):
+<span class="kw">if</span> n <= <span class="num">1</span>:
+<span class="kw">return</span> n
+<span class="kw">return</span> <span class="fn">fib_fast</span>(n-<span class="num">1</span>) + <span class="fn">fib_fast</span>(n-<span class="num">2</span>)
+<span class="cm"># Now O(n) — each value computed only once</span>
+</div>
+</div>
+</div>
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Trace a binary search for the value 55 in the list: [3, 9, 15, 27, 38, 55, 72, 84, 91, 99]. Show the values of low, high, and mid at each step.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Perform one full pass of bubble sort on [8, 3, 6, 1, 9, 4]. Show each comparison and swap.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">State the two requirements for a valid recursive function.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">What is the time complexity of binary search? Explain why in terms of how the search space changes each pass.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">State one advantage of merge sort over bubble sort and one disadvantage.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Trace merge sort on the list [38, 27, 43, 3, 9, 82, 10]. Show the splitting and merging steps clearly.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Apply Dijkstra's algorithm to find the shortest path from S to all other nodes in a graph with edges: S–A(1), S–B(4), A–B(2), A–C(5), B–C(1). Show a complete table of distances at each step.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Write a recursive Python function to calculate the sum of all integers from 1 to n. State the base case and recursive case. Trace the call stack for n=4.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">An algorithm processes n items with the following structure: one loop of n iterations, inside which a binary search is performed. What is the overall time complexity? Justify your answer.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Implement both DFS and BFS for a graph represented as an adjacency list. Apply both to the graph: {A: [B,C], B: [D,E], C: [F], D: [], E: [F], F: []}. State the order each visits nodes starting from A. Explain why BFS guarantees shortest path in unweighted graphs but DFS does not.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Quick sort has worst-case O(n²) but is often faster in practice than merge sort (O(n log n)). Explain why this is the case, discussing cache performance, in-place sorting, constant factors, and the conditions under which each algorithm is preferred.</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Write a recursive function to perform an in-order traversal of a binary search tree, returning the values in sorted order. Prove that this always produces a sorted sequence. Then extend your solution to find the kth smallest element in the BST efficiently.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="data-structures.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Data Structures</div></a>
+    <a href="regular-languages.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Regular Languages &amp; Automata</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
