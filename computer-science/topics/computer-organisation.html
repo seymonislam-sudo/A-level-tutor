@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Organisation & Architecture — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .arch-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.82rem}
+  .arch-row{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+  .arch-box{border:1px solid var(--accent);border-radius:8px;padding:0.6rem 1.2rem;background:rgba(52,211,153,0.08);color:var(--accent);text-align:center;min-width:100px}
+  .arch-box.muted{border-color:var(--border);background:var(--surface);color:var(--muted)}
+  .arch-arrow{color:var(--muted);font-size:1rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 08</div>
+  <a href="#von-neumann" class="sidebar-link active"><span class="sidebar-num">1</span>Von Neumann Architecture</a>
+  <a href="#fetch-execute" class="sidebar-link"><span class="sidebar-num">2</span>Fetch-Execute Cycle</a>
+  <a href="#cpu-performance" class="sidebar-link"><span class="sidebar-num">3</span>CPU Performance</a>
+  <a href="#instruction-set" class="sidebar-link"><span class="sidebar-num">4</span>Instruction Sets</a>
+  <a href="#cisc-risc" class="sidebar-link"><span class="sidebar-num">5</span>CISC vs RISC</a>
+  <a href="#io" class="sidebar-link"><span class="sidebar-num">6</span>I/O &amp; Buses</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 08</div>
+    <div class="topic-num-badge">TOPIC 08</div>
+    <h1 class="topic-title">Computer Organisation &amp; Architecture</h1>
+    <p class="topic-intro">Von Neumann architecture, the fetch-execute cycle, CPU performance factors, instruction sets, CISC vs RISC, and how buses connect components. A core Paper 2 topic with both theory and application questions.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>Architecture</span> &amp; performance</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#von-neumann">Von Neumann Architecture</a></li>
+      <li><a href="#fetch-execute">The Fetch-Execute Cycle</a></li>
+      <li><a href="#cpu-performance">CPU Performance Factors</a></li>
+      <li><a href="#instruction-set">Instruction Sets &amp; Addressing Modes</a></li>
+      <li><a href="#cisc-risc">CISC vs RISC</a></li>
+      <li><a href="#io">I/O &amp; Buses</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="von-neumann">
+    <h2 class="section-title">Von Neumann Architecture</h2>
+    <p>The <strong>Von Neumann architecture</strong> (proposed by John von Neumann in 1945) is the foundation of virtually every modern computer. Its key principle is the <strong>stored program concept</strong> — both instructions and data are stored together in the same memory, encoded as binary.</p>
+
+```
+<div class="arch-diagram">
+  <div style="color:var(--muted);font-size:0.75rem;margin-bottom:1.25rem;text-align:center;">Von Neumann Architecture</div>
+  <div class="arch-row">
+    <div class="arch-box">Control Unit (CU)</div>
+    <div class="arch-arrow">⟷</div>
+    <div class="arch-box">ALU</div>
+    <div class="arch-arrow">⟷</div>
+    <div class="arch-box">Registers</div>
+  </div>
+  <div style="text-align:center;color:var(--muted);margin:0.5rem 0;">↑↓ via system buses</div>
+  <div class="arch-row">
+    <div class="arch-box muted">Main Memory (RAM)</div>
+    <div class="arch-arrow">⟷</div>
+    <div class="arch-box muted">I/O Devices</div>
+  </div>
+</div>
+
+<h3 class="subsection">Key Components</h3>
+<table>
+  <tr><th>Component</th><th>Function</th></tr>
+  <tr><td>Control Unit (CU)</td><td>Directs operations of the CPU — fetches, decodes and executes instructions; coordinates all other components</td></tr>
+  <tr><td>Arithmetic Logic Unit (ALU)</td><td>Performs arithmetic operations (+, -, ×, ÷) and logical operations (AND, OR, NOT, XOR, comparisons)</td></tr>
+  <tr><td>Registers</td><td>Small, ultra-fast storage locations inside the CPU for immediate use during processing</td></tr>
+  <tr><td>Main Memory (RAM)</td><td>Stores currently running programs and their data</td></tr>
+  <tr><td>Buses</td><td>Electrical pathways connecting components — carry data, addresses and control signals</td></tr>
+</table>
+
+<h3 class="subsection">CPU Registers</h3>
+<table>
+  <tr><th>Register</th><th>Full Name</th><th>Purpose</th></tr>
+  <tr><td>PC</td><td>Program Counter</td><td>Holds the memory address of the next instruction to fetch</td></tr>
+  <tr><td>MAR</td><td>Memory Address Register</td><td>Holds the address in memory currently being read from or written to</td></tr>
+  <tr><td>MDR</td><td>Memory Data Register</td><td>Holds the data that has just been fetched from or is about to be written to memory</td></tr>
+  <tr><td>CIR</td><td>Current Instruction Register</td><td>Holds the instruction currently being decoded and executed</td></tr>
+  <tr><td>ACC</td><td>Accumulator</td><td>Holds the result of the most recent ALU operation</td></tr>
+  <tr><td>SP</td><td>Stack Pointer</td><td>Points to the top of the call stack in memory</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>The Stored Program Concept</strong>
+  Before Von Neumann, computers were physically rewired to change programs. The stored program concept means a computer can run any program loaded into memory — it doesn't need to be rebuilt. This is why the same CPU can run a game, a spreadsheet, and a compiler.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="fetch-execute">
+    <h2 class="section-title">The Fetch-Execute Cycle</h2>
+    <p>The CPU continuously repeats the <strong>fetch-execute cycle</strong> (also called the fetch-decode-execute cycle) to process instructions.</p>
+
+```
+<div class="code-block">
+```
+
+FETCH:
+MAR ← PC                    (copy address of next instruction to MAR)
+MDR ← Memory[MAR]           (fetch instruction from memory into MDR)
+CIR ← MDR                   (copy instruction to CIR)
+PC  ← PC + 1                (increment PC to point to next instruction)
+
+DECODE:
+CU decodes the instruction in CIR
+Identifies opcode (what to do) and operand (what to do it to)
+
+EXECUTE:
+CU sends control signals to relevant components
+ALU performs any arithmetic/logic
+Result stored in ACC or written back to memory
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example — Tracing the Cycle</div>
+  <div class="example-q">Trace the fetch-execute cycle for the instruction at address 200: <code>LOAD 500</code> (load the value stored at address 500 into the accumulator). Assume PC = 200.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Fetch:</strong> MAR ← 200; MDR ← contents of address 200 (= "LOAD 500"); CIR ← "LOAD 500"; PC ← 201</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Decode:</strong> CU identifies opcode = LOAD, operand = 500</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Execute:</strong> MAR ← 500; MDR ← contents of address 500; ACC ← MDR</div></div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>Common Exam Mistake</strong>
+  Students often forget that after fetching, PC is incremented before execute. Also remember: the MAR is used twice in a LOAD instruction — once to fetch the instruction itself, and again to fetch the data from the operand address.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="cpu-performance">
+    <h2 class="section-title">CPU Performance Factors</h2>
+
+```
+<table>
+  <tr><th>Factor</th><th>Description</th><th>Effect of increasing</th></tr>
+  <tr><td>Clock speed</td><td>Number of fetch-execute cycles per second (Hz)</td><td>More instructions executed per second; more heat generated</td></tr>
+  <tr><td>Number of cores</td><td>Independent processing units on the same chip</td><td>True parallel execution of multiple threads; scales with parallelisable tasks</td></tr>
+  <tr><td>Cache size</td><td>Fast on-chip memory storing recently used data/instructions</td><td>Fewer slow RAM accesses; reduced bottleneck</td></tr>
+  <tr><td>Word size</td><td>Amount of data the CPU processes in one operation (32-bit vs 64-bit)</td><td>Larger word = more data per instruction = faster for large datasets</td></tr>
+</table>
+
+<h3 class="subsection">Cache Memory Hierarchy</h3>
+<p>Cache is organised in levels — L1 is fastest and smallest, L3 is slowest and largest:</p>
+<div class="code-block">
+```
+
+L1 cache: ~32KB per core  — fastest (~1ns access)   — checked first
+L2 cache: ~256KB per core — fast   (~5ns access)
+L3 cache: ~8MB shared     — slower (~20ns access)
+RAM:      GB range         — slow   (~100ns access)  — checked last
+</div>
+
+```
+<div class="key-point">
+  <strong>Pipelining</strong>
+  Modern CPUs use <strong>pipelining</strong> — while one instruction is being executed, the next is being decoded, and the one after is being fetched. This overlaps stages so the CPU can process multiple instructions simultaneously, dramatically increasing throughput.
+</div>
+
+<h3 class="subsection">Multicore vs Clock Speed</h3>
+<p>Simply increasing clock speed generates excessive heat and power consumption — this is why CPU manufacturers moved to multicore designs. A dual-core CPU at 2GHz can outperform a single-core at 3GHz for parallelisable workloads, while using less power.</p>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="instruction-set">
+    <h2 class="section-title">Instruction Sets &amp; Addressing Modes</h2>
+    <p>An <strong>instruction set architecture (ISA)</strong> defines the set of instructions a CPU can execute, the registers available, and the data formats supported. It is the interface between hardware and software.</p>
+
+```
+<h3 class="subsection">Instruction Format</h3>
+<p>A machine code instruction consists of two parts:</p>
+<div class="code-block">
+```
+
+| OPCODE  | OPERAND  |
+| 4 bits  | 12 bits  |
+
+OPCODE  — specifies the operation (e.g. LOAD, ADD, STORE, JUMP)
+OPERAND — specifies the data or address to operate on
+</div>
+
+```
+<h3 class="subsection">Addressing Modes</h3>
+<table>
+  <tr><th>Mode</th><th>Description</th><th>Example</th></tr>
+  <tr><td>Immediate</td><td>The operand IS the data value itself</td><td>ADD #5 → add 5 to ACC</td></tr>
+  <tr><td>Direct</td><td>The operand is the memory address where data is stored</td><td>LOAD 200 → load value at address 200</td></tr>
+  <tr><td>Indirect</td><td>The operand holds an address that points to another address containing the data</td><td>LOAD @200 → address 200 holds another address</td></tr>
+  <tr><td>Indexed</td><td>The operand is added to an index register to calculate the actual address</td><td>LOAD 200,IX → address = 200 + IX</td></tr>
+</table>
+
+<h3 class="subsection">Common Assembly Instructions (AQA)</h3>
+<table>
+  <tr><th>Instruction</th><th>Operation</th></tr>
+  <tr><td>LDR Rd, &lt;memory&gt;</td><td>Load value from memory address into register Rd</td></tr>
+  <tr><td>STR Rd, &lt;memory&gt;</td><td>Store value in register Rd to memory address</td></tr>
+  <tr><td>ADD Rd, Rn, &lt;operand&gt;</td><td>Rd = Rn + operand</td></tr>
+  <tr><td>SUB Rd, Rn, &lt;operand&gt;</td><td>Rd = Rn - operand</td></tr>
+  <tr><td>MOV Rd, &lt;operand&gt;</td><td>Copy operand value into Rd</td></tr>
+  <tr><td>CMP Rn, &lt;operand&gt;</td><td>Compare Rn with operand (sets flags)</td></tr>
+  <tr><td>B &lt;label&gt;</td><td>Unconditional branch (jump) to label</td></tr>
+  <tr><td>BEQ &lt;label&gt;</td><td>Branch if equal (zero flag set)</td></tr>
+  <tr><td>BGT &lt;label&gt;</td><td>Branch if greater than</td></tr>
+  <tr><td>AND / ORR / EOR / MVN</td><td>Bitwise AND / OR / XOR / NOT</td></tr>
+  <tr><td>LSL / LSR Rd, Rn, n</td><td>Logical shift left/right by n bits</td></tr>
+  <tr><td>HALT</td><td>Stop execution</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Example — Assembly Program</div>
+  <div class="example-q">Write AQA assembly code to calculate the sum of two numbers stored at addresses 100 and 101, and store the result at address 102.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+    LDR R0, 100      ; Load value at address 100 into R0
+    LDR R1, 101      ; Load value at address 101 into R1
+    ADD R2, R0, R1   ; R2 = R0 + R1
+    STR R2, 102      ; Store result at address 102
+    HALT             ; Stop
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="cisc-risc">
+    <h2 class="section-title">CISC vs RISC</h2>
+    <p>There are two major philosophies for instruction set design:</p>
+
+```
+<table>
+  <tr><th></th><th>CISC (Complex Instruction Set Computer)</th><th>RISC (Reduced Instruction Set Computer)</th></tr>
+  <tr><td>Instructions</td><td>Many complex instructions; each can do a lot</td><td>Small set of simple instructions</td></tr>
+  <tr><td>Cycles per instruction</td><td>Variable — some take many cycles</td><td>Usually 1 cycle per instruction</td></tr>
+  <tr><td>Code size</td><td>Fewer instructions needed for a task</td><td>More instructions needed</td></tr>
+  <tr><td>Hardware complexity</td><td>Complex decoder; harder to pipeline</td><td>Simple decoder; easy to pipeline</td></tr>
+  <tr><td>Registers</td><td>Fewer registers</td><td>Many registers</td></tr>
+  <tr><td>Memory access</td><td>Instructions can access memory directly</td><td>Only LOAD/STORE access memory (load-store architecture)</td></tr>
+  <tr><td>Examples</td><td>x86 (Intel/AMD desktop CPUs)</td><td>ARM (phones, tablets, Apple M-series)</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Why ARM dominates mobile</strong>
+  RISC's simplicity means fewer transistors, lower power consumption, and less heat. This makes ARM-based chips ideal for battery-powered devices. Apple's M-series chips prove RISC can match CISC performance while using a fraction of the power.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 6 -->
+
+  <div class="lesson-section" id="io">
+    <h2 class="section-title">I/O &amp; Buses</h2>
+
+```
+<h3 class="subsection">The Three Buses</h3>
+<table>
+  <tr><th>Bus</th><th>Direction</th><th>Carries</th><th>Width effect</th></tr>
+  <tr><td>Address bus</td><td>Unidirectional (CPU → memory/devices)</td><td>Memory addresses</td><td>More bits = larger addressable memory (32-bit = 4GB max)</td></tr>
+  <tr><td>Data bus</td><td>Bidirectional</td><td>Data being transferred</td><td>More bits = more data per transfer (word size)</td></tr>
+  <tr><td>Control bus</td><td>Bidirectional</td><td>Control signals (read/write, clock, interrupts)</td><td>More lines = more control signals possible</td></tr>
+</table>
+
+<h3 class="subsection">Interrupts</h3>
+<p>An <strong>interrupt</strong> is a signal sent to the CPU by hardware or software requesting immediate attention. After each fetch-execute cycle, the CPU checks an interrupt register.</p>
+<div class="code-block">
+```
+
+If interrupt pending AND priority > current task:
+
+1. Save current state to stack (registers, PC)
+1. Load ISR address into PC (from interrupt vector table)
+1. Execute ISR (Interrupt Service Routine)
+1. Restore saved state from stack
+1. Continue previous task
+   </div>
+
+```
+<table>
+  <tr><th>Interrupt type</th><th>Example</th></tr>
+  <tr><td>Hardware interrupt</td><td>Keyboard keypress, mouse click, disk read complete</td></tr>
+  <tr><td>Software interrupt</td><td>Program requesting OS service (system call)</td></tr>
+  <tr><td>Exception/fault</td><td>Division by zero, illegal memory access, overflow</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Why interrupts matter</strong>
+  Without interrupts, the CPU would have to constantly poll every device to check if it needs attention — wasting millions of cycles. Interrupts allow the CPU to do useful work and only respond to devices when they actually need it.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State the purpose of each of the following registers: PC, MAR, MDR, CIR, ACC.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Describe the three stages of the fetch-execute cycle.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">State two ways to increase CPU performance other than increasing clock speed.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">What is the difference between immediate and direct addressing modes? Give one example of each.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">State one advantage of RISC over CISC architecture.</div></div>
+      <div class="q-marks">[1]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Trace the complete fetch-execute cycle for the instruction <code>ADD R1, R0, #10</code> (add 10 to the value in R0 and store in R1), starting with PC = 150. Show the contents of all relevant registers at each stage.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write AQA assembly code for a loop that counts from 1 to 10, storing the current count in R0. Use a compare and branch instruction to control the loop.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain what an interrupt is and describe the steps the CPU takes when an interrupt is received. Why is saving the current state to the stack an essential step?</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">A 32-bit address bus can address a maximum of 4GB of memory. Explain why, and calculate the maximum memory addressable by a 64-bit address bus.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Explain how pipelining increases CPU throughput. Describe what happens when a conditional branch instruction is encountered in a pipeline, and how branch prediction is used to mitigate the performance penalty. What is the cost of a misprediction?</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write a complete AQA assembly program that finds the larger of two numbers stored at memory addresses 200 and 201, and stores the result at address 202. Include comments explaining each instruction. Trace your program with example values 45 (at 200) and 67 (at 201).</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Compare Von Neumann and Harvard architectures. The Harvard architecture uses separate memory and buses for instructions and data. Explain the performance advantages this gives, why modern CPUs use a "modified Harvard architecture" internally despite appearing Von Neumann externally, and how cache design reflects this distinction.</div></div>
+      <div class="q-marks">[9]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="hardware-software.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Hardware &amp; Software</div></a>
+    <a href="communication-networking.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Communication &amp; Networking</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
