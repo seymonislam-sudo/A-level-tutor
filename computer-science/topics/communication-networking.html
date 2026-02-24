@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication & Networking — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .step-comment{font-size:0.8rem;color:var(--muted);font-style:italic;margin-top:0.3rem}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .osi-layer{display:flex;align-items:stretch;margin-bottom:3px;border-radius:6px;overflow:hidden}
+  .osi-num{background:rgba(52,211,153,0.15);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.8rem;padding:0.6rem 0.9rem;display:flex;align-items:center;min-width:36px;justify-content:center;border-right:1px solid rgba(52,211,153,0.2)}
+  .osi-name{background:var(--surface2);padding:0.6rem 1rem;font-weight:500;font-size:0.88rem;min-width:140px;border-right:1px solid var(--border)}
+  .osi-detail{background:var(--surface);padding:0.6rem 1rem;font-size:0.85rem;color:var(--muted);flex:1}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 09</div>
+  <a href="#networks" class="sidebar-link active"><span class="sidebar-num">1</span>Network Types &amp; Topologies</a>
+  <a href="#protocols" class="sidebar-link"><span class="sidebar-num">2</span>Protocols &amp; the OSI Model</a>
+  <a href="#tcp-ip" class="sidebar-link"><span class="sidebar-num">3</span>TCP/IP &amp; the Internet</a>
+  <a href="#security" class="sidebar-link"><span class="sidebar-num">4</span>Network Security</a>
+  <a href="#web" class="sidebar-link"><span class="sidebar-num">5</span>The Web &amp; HTTP</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 09</div>
+    <div class="topic-num-badge">TOPIC 09</div>
+    <h1 class="topic-title">Communication &amp; Networking</h1>
+    <p class="topic-intro">Network types, topologies, the OSI model, TCP/IP, IP addressing, network security threats and the protocols that power the web. One of the highest-yield Paper 2 topics.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>High</span> exam frequency</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#networks">Network Types &amp; Topologies</a></li>
+      <li><a href="#protocols">Protocols &amp; the OSI Model</a></li>
+      <li><a href="#tcp-ip">TCP/IP &amp; the Internet</a></li>
+      <li><a href="#security">Network Security</a></li>
+      <li><a href="#web">The Web &amp; HTTP</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="networks">
+    <h2 class="section-title">Network Types &amp; Topologies</h2>
+
+```
+<h3 class="subsection">Types of Network</h3>
+<table>
+  <tr><th>Type</th><th>Scale</th><th>Description</th><th>Example</th></tr>
+  <tr><td>PAN</td><td>~1m</td><td>Personal Area Network — devices around one person</td><td>Bluetooth headphones, smartwatch</td></tr>
+  <tr><td>LAN</td><td>Building</td><td>Local Area Network — single site, privately owned</td><td>School network, home Wi-Fi</td></tr>
+  <tr><td>WAN</td><td>Global</td><td>Wide Area Network — multiple sites, often leased infrastructure</td><td>The Internet, corporate VPN</td></tr>
+</table>
+
+<h3 class="subsection">Network Topologies</h3>
+<table>
+  <tr><th>Topology</th><th>Structure</th><th>Advantages</th><th>Disadvantages</th></tr>
+  <tr><td>Bus</td><td>All devices on one cable; terminators at each end</td><td>Cheap; easy to add devices</td><td>Collision-prone; one break kills the network; not scalable</td></tr>
+  <tr><td>Star</td><td>All devices connect to a central switch/hub</td><td>Fast; one cable failure only affects one device; easy to manage</td><td>Central switch is a single point of failure; more cable needed</td></tr>
+  <tr><td>Ring</td><td>Each device connects to next in a loop</td><td>No collisions (token-based); equal access</td><td>One failure breaks the ring; adding devices is disruptive</td></tr>
+  <tr><td>Mesh</td><td>Every device connects to many/all others</td><td>Highly resilient; multiple paths</td><td>Very expensive; complex to manage</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Star is dominant in practice</strong>
+  Almost all modern LANs use star topology with Ethernet switches. The switch learns which MAC addresses are on which ports and sends frames only to the correct destination — reducing collisions and improving efficiency vs a hub.
+</div>
+
+<h3 class="subsection">Wired vs Wireless</h3>
+<table>
+  <tr><th></th><th>Wired (Ethernet)</th><th>Wireless (Wi-Fi)</th></tr>
+  <tr><td>Speed</td><td>Up to 100Gbps</td><td>Up to ~10Gbps (Wi-Fi 6)</td></tr>
+  <tr><td>Security</td><td>More secure — physical access needed</td><td>Less secure — signals travel through air</td></tr>
+  <tr><td>Reliability</td><td>Very reliable</td><td>Subject to interference</td></tr>
+  <tr><td>Flexibility</td><td>Requires cable runs</td><td>Devices can move freely</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="protocols">
+    <h2 class="section-title">Protocols &amp; the OSI Model</h2>
+    <p>A <strong>protocol</strong> is an agreed set of rules for communication between devices. The <strong>OSI model</strong> (Open Systems Interconnection) divides networking into 7 layers, each with a specific role.</p>
+
+```
+<div style="margin:1.5rem 0;">
+  <div class="osi-layer"><div class="osi-num">7</div><div class="osi-name">Application</div><div class="osi-detail">User-facing protocols: HTTP, HTTPS, FTP, SMTP, DNS</div></div>
+  <div class="osi-layer"><div class="osi-num">6</div><div class="osi-name">Presentation</div><div class="osi-detail">Data formatting, encryption, compression (SSL/TLS)</div></div>
+  <div class="osi-layer"><div class="osi-num">5</div><div class="osi-name">Session</div><div class="osi-detail">Manages connections between applications; authentication</div></div>
+  <div class="osi-layer"><div class="osi-num">4</div><div class="osi-name">Transport</div><div class="osi-detail">End-to-end delivery, error checking, flow control: TCP, UDP</div></div>
+  <div class="osi-layer"><div class="osi-num">3</div><div class="osi-name">Network</div><div class="osi-detail">Logical addressing and routing: IP, ICMP, routers</div></div>
+  <div class="osi-layer"><div class="osi-num">2</div><div class="osi-name">Data Link</div><div class="osi-detail">Physical addressing (MAC), framing, error detection: Ethernet, switches</div></div>
+  <div class="osi-layer"><div class="osi-num">1</div><div class="osi-name">Physical</div><div class="osi-detail">Bits over medium: cables, Wi-Fi signals, voltage levels</div></div>
+</div>
+
+<div class="key-point">
+  <strong>Mnemonic for OSI layers (7→1)</strong>
+  <em>"All People Seem To Need Data Processing"</em> — Application, Presentation, Session, Transport, Network, Data Link, Physical.
+</div>
+
+<h3 class="subsection">Why Layer?</h3>
+<p>Layering means each layer only needs to communicate with the layers directly above and below it. This allows different vendors to implement different layers independently — a Wi-Fi card (Physical/Data Link) works with any TCP/IP stack (Network/Transport), which works with any browser (Application).</p>
+
+<h3 class="subsection">TCP vs UDP</h3>
+<table>
+  <tr><th></th><th>TCP (Transmission Control Protocol)</th><th>UDP (User Datagram Protocol)</th></tr>
+  <tr><td>Connection</td><td>Connection-oriented (3-way handshake)</td><td>Connectionless</td></tr>
+  <tr><td>Reliability</td><td>Guaranteed delivery; retransmits lost packets</td><td>No guarantee; packets may be lost</td></tr>
+  <tr><td>Order</td><td>Packets reassembled in correct order</td><td>No ordering guarantee</td></tr>
+  <tr><td>Speed</td><td>Slower due to overhead</td><td>Faster — minimal overhead</td></tr>
+  <tr><td>Use cases</td><td>Web browsing, email, file transfer</td><td>Video streaming, gaming, DNS, VoIP</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="tcp-ip">
+    <h2 class="section-title">TCP/IP &amp; the Internet</h2>
+
+```
+<h3 class="subsection">IP Addresses</h3>
+<p>Every device on a network has an <strong>IP address</strong> — a unique identifier for routing packets to the right destination.</p>
+<table>
+  <tr><th></th><th>IPv4</th><th>IPv6</th></tr>
+  <tr><td>Format</td><td>4 octets: 192.168.1.1</td><td>8 groups of 4 hex digits: 2001:0db8:85a3::8a2e:0370:7334</td></tr>
+  <tr><td>Address space</td><td>~4.3 billion (2³²)</td><td>~340 undecillion (2¹²⁸)</td></tr>
+  <tr><td>Status</td><td>Exhausted — NAT required</td><td>Gradually replacing IPv4</td></tr>
+</table>
+
+<h3 class="subsection">Subnetting &amp; CIDR</h3>
+<p>A <strong>subnet mask</strong> divides an IP address into a network portion and a host portion. Written as /prefix (CIDR notation) or dotted decimal.</p>
+<div class="code-block">
+```
+
+IP address:   192.168.1.45
+Subnet mask:  255.255.255.0  (/24)
+
+Network:      192.168.1.0   (first 24 bits)
+Host range:   192.168.1.1 – 192.168.1.254
+Broadcast:    192.168.1.255
+Usable hosts: 254  (2^8 - 2)
+</div>
+
+```
+<h3 class="subsection">Key Internet Protocols</h3>
+<table>
+  <tr><th>Protocol</th><th>Layer</th><th>Purpose</th></tr>
+  <tr><td>DNS</td><td>Application</td><td>Resolves domain names to IP addresses (e.g. google.com → 142.250.x.x)</td></tr>
+  <tr><td>DHCP</td><td>Application</td><td>Automatically assigns IP addresses, subnet mask, gateway to new devices</td></tr>
+  <tr><td>HTTP/HTTPS</td><td>Application</td><td>Transfer of web pages; HTTPS adds TLS encryption</td></tr>
+  <tr><td>SMTP</td><td>Application</td><td>Sending email</td></tr>
+  <tr><td>IMAP/POP3</td><td>Application</td><td>Receiving email (IMAP keeps on server; POP3 downloads)</td></tr>
+  <tr><td>FTP</td><td>Application</td><td>File transfer between hosts</td></tr>
+  <tr><td>SSH</td><td>Application</td><td>Secure remote terminal access</td></tr>
+</table>
+
+<div class="example">
+  <div class="example-label">Worked Example — DNS Resolution</div>
+  <div class="example-q">Describe what happens when you type "www.example.com" into a browser and press Enter, up to the point where a TCP connection is established.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Browser checks its local DNS cache — if cached and not expired, use that IP and skip to step 5.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Query sent to the configured DNS resolver (usually your router or ISP's DNS server).</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">Resolver performs recursive lookup: root nameserver → .com TLD nameserver → example.com authoritative nameserver.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">IP address returned and cached by the resolver (respecting TTL).</div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content">Browser initiates TCP 3-way handshake with the web server at that IP on port 443 (HTTPS): SYN → SYN-ACK → ACK.</div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content">TLS handshake establishes encrypted session. HTTP request is sent.</div></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="security">
+    <h2 class="section-title">Network Security</h2>
+
+```
+<h3 class="subsection">Common Threats</h3>
+<table>
+  <tr><th>Threat</th><th>Description</th></tr>
+  <tr><td>Malware</td><td>Malicious software: viruses (self-replicating), worms (spread without host), trojans (disguised), ransomware (encrypts files), spyware</td></tr>
+  <tr><td>Phishing</td><td>Fraudulent emails/websites trick users into revealing credentials or downloading malware</td></tr>
+  <tr><td>DoS/DDoS</td><td>Flood a server with requests to make it unavailable; DDoS uses many compromised machines (botnet)</td></tr>
+  <tr><td>Man-in-the-Middle</td><td>Attacker intercepts and potentially alters communications between two parties</td></tr>
+  <tr><td>SQL Injection</td><td>Malicious SQL inserted into input fields to manipulate databases</td></tr>
+  <tr><td>Brute Force</td><td>Systematically trying all possible passwords until correct one is found</td></tr>
+</table>
+
+<h3 class="subsection">Countermeasures</h3>
+<table>
+  <tr><th>Countermeasure</th><th>What it does</th></tr>
+  <tr><td>Firewall</td><td>Filters incoming/outgoing traffic based on rules; blocks unauthorised access</td></tr>
+  <tr><td>Encryption (TLS/SSL)</td><td>Scrambles data in transit so interceptors cannot read it</td></tr>
+  <tr><td>Hashing &amp; salting passwords</td><td>Stores a one-way hash so plaintext password is never stored; salt prevents rainbow table attacks</td></tr>
+  <tr><td>Two-factor authentication</td><td>Requires second proof of identity beyond password</td></tr>
+  <tr><td>Access control lists</td><td>Restrict which users/devices can access which resources</td></tr>
+  <tr><td>Intrusion Detection System (IDS)</td><td>Monitors network for suspicious patterns; alerts administrators</td></tr>
+  <tr><td>VPN</td><td>Encrypts all traffic between a device and a private network over a public connection</td></tr>
+</table>
+
+<div class="warning-box">
+  <strong>SQL Injection Example</strong>
+  Input: <code>' OR '1'='1</code> in a login form could produce: <code>SELECT * FROM users WHERE username='' OR '1'='1'</code> — which always returns true, bypassing authentication. Prevention: use parameterised queries / prepared statements.
+</div>
+
+<h3 class="subsection">Symmetric vs Asymmetric Encryption</h3>
+<table>
+  <tr><th></th><th>Symmetric</th><th>Asymmetric (Public Key)</th></tr>
+  <tr><td>Keys</td><td>One shared secret key</td><td>Public key (encrypt) + private key (decrypt)</td></tr>
+  <tr><td>Speed</td><td>Fast</td><td>Slow</td></tr>
+  <tr><td>Key distribution</td><td>Problem — how to share the key securely?</td><td>Public key can be shared openly</td></tr>
+  <tr><td>Use</td><td>Bulk data encryption (AES)</td><td>Key exchange, digital signatures (RSA)</td></tr>
+  <tr><td>In TLS</td><td>Used for session data once keys are exchanged</td><td>Used for initial key exchange</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="web">
+    <h2 class="section-title">The Web &amp; HTTP</h2>
+
+```
+<h3 class="subsection">Client-Server Model</h3>
+<p>The web uses a <strong>client-server</strong> model. Clients (browsers) make requests; servers respond with resources. Communication uses HTTP (or HTTPS for encrypted connections).</p>
+
+<div class="code-block">
+```
+
+HTTP Request:
+GET /index.html HTTP/1.1
+Host: www.example.com
+Accept: text/html
+
+HTTP Response:
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1234
+
+<html>…</html>
+</div>
+
+```
+<h3 class="subsection">HTTP Status Codes</h3>
+<table>
+  <tr><th>Code</th><th>Meaning</th></tr>
+  <tr><td>200</td><td>OK — request successful</td></tr>
+  <tr><td>301/302</td><td>Redirect — resource has moved</td></tr>
+  <tr><td>403</td><td>Forbidden — no permission</td></tr>
+  <tr><td>404</td><td>Not Found — resource doesn't exist</td></tr>
+  <tr><td>500</td><td>Internal Server Error — server-side problem</td></tr>
+</table>
+
+<h3 class="subsection">How a Web Page Loads</h3>
+<p>When a browser receives an HTML response, it parses it and makes additional requests for each linked resource — CSS files, JavaScript, images. This is why a single page load can involve dozens of HTTP requests.</p>
+
+<div class="key-point">
+  <strong>Cookies &amp; Sessions</strong>
+  HTTP is stateless — each request is independent. <strong>Cookies</strong> are small files stored on the client that the browser sends with every request to the same server, allowing the server to identify returning users and maintain session state (e.g. staying logged in, shopping basket contents).
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State two differences between a LAN and a WAN.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Give one advantage and one disadvantage of a star network topology compared to a bus topology.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">State the purpose of DNS. Describe what would happen if DNS stopped working.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">State two differences between TCP and UDP. Give one application that uses each.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">What is a firewall and how does it protect a network?</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Describe the seven layers of the OSI model. For each layer, state its role and give one protocol or technology that operates at that layer.</div></div>
+      <div class="q-marks">[7]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A network uses the IP address range 192.168.10.0/24. (a) How many usable host addresses are available? (b) What is the broadcast address? (c) The network admin wants to split this into two equal subnets. What subnet mask would be used, and what are the two network addresses?</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Explain how TLS uses both asymmetric and symmetric encryption during a secure HTTPS connection. Why is symmetric encryption used for the actual data transfer rather than asymmetric?</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">Explain what a SQL injection attack is. Show an example of a vulnerable SQL query and explain how parameterised queries prevent this attack.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">A company is designing a network for a new office with 200 employees across three departments. Recommend a network topology and justify your choice. Describe the hardware required (switches, router, firewall, access points) and explain the role of each device. Discuss the security measures that should be implemented and why.</div></div>
+      <div class="q-marks">[12]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Explain in detail how public key cryptography works for digital signatures. How does this allow a recipient to verify both the authenticity and integrity of a message? Describe the role of a Certificate Authority (CA) in HTTPS and explain what prevents a man-in-the-middle attack from using a fake certificate.</div></div>
+      <div class="q-marks">[10]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">IPv4 address exhaustion led to the development of IPv6. Explain three other solutions used to extend the life of IPv4 (NAT, CIDR, private addressing). For each, explain how it works, what problem it solves, and what limitations it introduces. Evaluate whether these solutions are adequate long-term.</div></div>
+      <div class="q-marks">[9]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="computer-organisation.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Computer Organisation</div></a>
+    <a href="databases.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Databases &amp; SQL</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
