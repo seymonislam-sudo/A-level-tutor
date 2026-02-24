@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethical, Legal & Cultural Issues — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .law-box{background:rgba(147,197,253,0.06);border:1px solid rgba(147,197,253,0.25);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .law-box strong{color:#93c5fd;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .debate-side{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+  .debate-side h4{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+  .debate-side.for h4{color:#34d399}
+  .debate-side.against h4{color:#f43f5e}
+  .debate-side ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+  .debate-side ul li{font-size:0.88rem;color:var(--muted);padding-left:1rem;position:relative}
+  .debate-side ul li::before{content:'•';position:absolute;left:0;color:var(--muted)}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .complete-banner{background:linear-gradient(135deg,rgba(52,211,153,0.1),rgba(16,185,129,0.05));border:1px solid rgba(52,211,153,0.3);border-radius:16px;padding:2rem;margin-top:3rem;text-align:center}
+  .complete-banner h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem}
+  .complete-banner p{color:var(--muted);font-size:0.9rem;max-width:480px;margin:0 auto}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}.debate-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 11</div>
+  <a href="#ethics" class="sidebar-link active"><span class="sidebar-num">1</span>Ethics &amp; Computing</a>
+  <a href="#legislation" class="sidebar-link"><span class="sidebar-num">2</span>UK Legislation</a>
+  <a href="#privacy" class="sidebar-link"><span class="sidebar-num">3</span>Privacy &amp; Surveillance</a>
+  <a href="#ai" class="sidebar-link"><span class="sidebar-num">4</span>AI &amp; Automation</a>
+  <a href="#environment" class="sidebar-link"><span class="sidebar-num">5</span>Environmental Impact</a>
+  <a href="#open-source" class="sidebar-link"><span class="sidebar-num">6</span>Open Source &amp; IP</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 11</div>
+    <div class="topic-num-badge">TOPIC 11</div>
+    <h1 class="topic-title">Ethical, Legal &amp; Cultural Issues</h1>
+    <p class="topic-intro">The social impact of computing — ethics, UK data protection law, privacy, AI and automation, environmental costs, and intellectual property. AQA extended writing questions draw heavily from this topic.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>6</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Papers 1 &amp; 2</div>
+      <div class="meta-item"><span>Extended</span> writing</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#ethics">Ethics &amp; Computing Professionals</a></li>
+      <li><a href="#legislation">UK Legislation</a></li>
+      <li><a href="#privacy">Privacy, Surveillance &amp; Personal Data</a></li>
+      <li><a href="#ai">AI, Automation &amp; the Future of Work</a></li>
+      <li><a href="#environment">Environmental Impact</a></li>
+      <li><a href="#open-source">Open Source, Licensing &amp; Intellectual Property</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="ethics">
+    <h2 class="section-title">Ethics &amp; Computing Professionals</h2>
+    <p><strong>Ethics</strong> is concerned with what is morally right and wrong. Computing raises unique ethical challenges because software and systems can affect millions of people, often in ways their creators didn't anticipate.</p>
+
+```
+<h3 class="subsection">Ethical Frameworks</h3>
+<table>
+  <tr><th>Framework</th><th>Core idea</th><th>Applied to computing</th></tr>
+  <tr><td>Utilitarianism</td><td>The right action maximises overall happiness/benefit</td><td>Collect user data to improve services for all users — justifiable if benefit outweighs harm</td></tr>
+  <tr><td>Deontology (Kantian)</td><td>Some actions are right or wrong regardless of consequences — follow universal rules</td><td>Never deceive users, even if deception would produce better outcomes</td></tr>
+  <tr><td>Virtue ethics</td><td>Focus on character — what would a person of good character do?</td><td>A developer with integrity refuses to build a surveillance tool even if legal</td></tr>
+</table>
+
+<h3 class="subsection">Professional Codes of Conduct</h3>
+<p>Organisations like the BCS (British Computer Society) publish codes of conduct for computing professionals. Key principles include:</p>
+<div class="key-point">
+  <strong>BCS Code of Conduct — Key Principles</strong>
+  Public interest: act in the best interests of society, not just your employer.<br>
+  Competence: only work within your areas of expertise; continue professional development.<br>
+  Integrity: be honest and avoid conflicts of interest.<br>
+  Professionalism: uphold the reputation of the computing profession.
+</div>
+
+<h3 class="subsection">Whistleblowing</h3>
+<p>When a computing professional discovers their employer is acting unethically or illegally, they face a dilemma: stay silent, raise internally, or expose publicly. Edward Snowden (NSA surveillance) is a famous example. Whistleblowing is legally protected in the UK in many circumstances but carries significant personal risk.</p>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="legislation">
+    <h2 class="section-title">UK Legislation</h2>
+    <p>AQA requires knowledge of the key UK laws governing computing. These are regularly tested in short-answer and extended questions.</p>
+
+```
+<div class="law-box">
+  <strong>Data Protection Act 2018 / UK GDPR</strong>
+  Governs how personal data must be collected, stored and processed. Key principles: data must be collected lawfully with consent; used only for its stated purpose; kept accurate and up to date; retained no longer than necessary; kept secure; not transferred outside the UK without adequate protection. Individuals have the right to access their data, request deletion ("right to be forgotten"), and object to processing. The ICO (Information Commissioner's Office) enforces the Act; fines can reach £17.5 million or 4% of global turnover.
+</div>
+
+<div class="law-box">
+  <strong>Computer Misuse Act 1990</strong>
+  Three offences: (1) Unauthorised access to a computer system — up to 2 years imprisonment; (2) Unauthorised access with intent to commit further offences — up to 5 years; (3) Unauthorised modification of computer material (including viruses, ransomware) — up to 10 years. Amended to cover denial-of-service attacks and supply of hacking tools.
+</div>
+
+<div class="law-box">
+  <strong>Copyright, Designs and Patents Act 1988</strong>
+  Software is protected by copyright from the moment it is created — no registration required. Copying, distributing or modifying software without a licence is illegal. Applies to code, databases, digital media. Duration: typically life of author + 70 years.
+</div>
+
+<div class="law-box">
+  <strong>Freedom of Information Act 2000</strong>
+  Public authorities (government, NHS, universities) must release information when requested, subject to exemptions (national security, personal data, commercial sensitivity). Promotes transparency and government accountability.
+</div>
+
+<table>
+  <tr><th>Scenario</th><th>Relevant law</th></tr>
+  <tr><td>A hacker accesses a bank's servers without permission</td><td>Computer Misuse Act 1990 (offence 1)</td></tr>
+  <tr><td>A company sells customer email addresses to third parties without consent</td><td>Data Protection Act 2018 / UK GDPR</td></tr>
+  <tr><td>Someone downloads and distributes pirated software</td><td>Copyright, Designs and Patents Act 1988</td></tr>
+  <tr><td>A journalist requests government documents about a policy decision</td><td>Freedom of Information Act 2000</td></tr>
+  <tr><td>An employee installs ransomware on a company network</td><td>Computer Misuse Act 1990 (offence 3)</td></tr>
+</table>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="privacy">
+    <h2 class="section-title">Privacy, Surveillance &amp; Personal Data</h2>
+    <p>Digital technology has fundamentally changed the nature of privacy. Every online interaction generates data — and that data has enormous value.</p>
+
+```
+<h3 class="subsection">How Personal Data is Collected</h3>
+<table>
+  <tr><th>Method</th><th>Examples</th></tr>
+  <tr><td>Cookies &amp; tracking pixels</td><td>Advertisers track browsing across sites to build profiles</td></tr>
+  <tr><td>Social media</td><td>Likes, shares, location check-ins, connections reveal personality and behaviour</td></tr>
+  <tr><td>Smartphone sensors</td><td>GPS, accelerometer, microphone, camera — constant location and activity tracking</td></tr>
+  <tr><td>Smart devices (IoT)</td><td>Smart speakers, TVs, and appliances collect usage patterns</td></tr>
+  <tr><td>CCTV &amp; facial recognition</td><td>Public and private spaces monitor movement and identity</td></tr>
+  <tr><td>Loyalty cards &amp; purchases</td><td>Purchasing history reveals preferences, health conditions, life changes</td></tr>
+</table>
+
+<h3 class="subsection">The Privacy Debate</h3>
+<div class="debate-grid">
+  <div class="debate-side for">
+    <h4>Arguments for surveillance</h4>
+    <ul>
+      <li>Prevents and detects terrorism and serious crime</li>
+      <li>"Nothing to hide, nothing to fear" — law-abiding citizens unaffected</li>
+      <li>Enables personalised services that users value</li>
+      <li>Targeted advertising funds free internet services</li>
+      <li>Contact tracing during pandemics saves lives</li>
+    </ul>
+  </div>
+  <div class="debate-side against">
+    <h4>Arguments against surveillance</h4>
+    <ul>
+      <li>Chilling effect — people self-censor knowing they're watched</li>
+      <li>Data breaches expose millions to identity theft</li>
+      <li>Algorithms can discriminate by race, gender, income</li>
+      <li>Mass data collection creates authoritarian infrastructure</li>
+      <li>Users cannot meaningfully consent when services are essential</li>
+    </ul>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>The Digital Divide</strong>
+  Not everyone has equal access to technology — this gap is the "digital divide." Factors include income, geography (rural broadband), age, disability, and digital literacy. As more services move online (banking, healthcare, government), those without access are increasingly excluded. This is a significant equity and social justice issue.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="ai">
+    <h2 class="section-title">AI, Automation &amp; the Future of Work</h2>
+    <p>Artificial intelligence and automation are transforming industries at unprecedented speed. This raises profound questions about employment, fairness, accountability, and human agency.</p>
+
+```
+<h3 class="subsection">Economic Impact of Automation</h3>
+<div class="debate-grid">
+  <div class="debate-side for">
+    <h4>Optimistic view</h4>
+    <ul>
+      <li>Automation frees humans from dangerous, repetitive work</li>
+      <li>New industries and jobs created (AI development, data science)</li>
+      <li>Increased productivity lowers prices for consumers</li>
+      <li>Historical precedent: Industrial Revolution created more jobs than it destroyed</li>
+    </ul>
+  </div>
+  <div class="debate-side against">
+    <h4>Pessimistic view</h4>
+    <ul>
+      <li>This wave is different — AI can replace cognitive tasks, not just physical</li>
+      <li>Job losses concentrated in communities with fewer alternatives</li>
+      <li>New jobs require skills displaced workers don't have</li>
+      <li>Benefits accrue to capital owners, not workers</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="subsection">Algorithmic Bias &amp; Fairness</h3>
+<p>AI systems trained on historical data can perpetuate and amplify existing biases. Real documented cases include:</p>
+<table>
+  <tr><th>System</th><th>Bias found</th><th>Impact</th></tr>
+  <tr><td>Facial recognition</td><td>Higher error rates for darker skin tones, women</td><td>Wrongful arrests; misidentification</td></tr>
+  <tr><td>Recruiting algorithms</td><td>Penalised CVs containing the word "women's" (e.g. women's chess)</td><td>Discriminatory hiring</td></tr>
+  <tr><td>Criminal risk scoring</td><td>Higher risk scores for Black defendants in US courts</td><td>Longer sentences; reduced parole</td></tr>
+  <tr><td>Credit scoring</td><td>Zip code used as proxy for race</td><td>Unequal loan access</td></tr>
+</table>
+
+<h3 class="subsection">Autonomous Systems &amp; Accountability</h3>
+<p>As AI makes decisions with real consequences — self-driving cars, medical diagnosis, loan approvals — the question of accountability becomes critical. If an autonomous vehicle kills a pedestrian, who is responsible — the manufacturer, the programmer, the user, or the AI itself? Current law struggles with this question.</p>
+
+<div class="key-point">
+  <strong>The Trolley Problem in AI</strong>
+  Self-driving cars must be programmed to make life-or-death decisions. If a crash is unavoidable, should the car protect passengers or minimise total casualties? This is not a technical question — it is an ethical one, and someone must decide. This illustrates why ethics cannot be an afterthought in computing.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="environment">
+    <h2 class="section-title">Environmental Impact</h2>
+    <p>The computing industry has a significant and growing environmental footprint, often overlooked in discussions of technology's benefits.</p>
+
+```
+<table>
+  <tr><th>Source</th><th>Environmental impact</th></tr>
+  <tr><td>Data centres</td><td>Consume ~1–2% of global electricity; large water usage for cooling; often located for cheap power, not renewables</td></tr>
+  <tr><td>Cryptocurrency mining</td><td>Bitcoin alone uses more electricity than some countries; primarily proof-of-work is energy intensive</td></tr>
+  <tr><td>AI training</td><td>Training large language models produces carbon equivalent to multiple transatlantic flights</td></tr>
+  <tr><td>Manufacturing</td><td>Rare earth metals, water and energy in chip fabrication; significant CO₂ emissions</td></tr>
+  <tr><td>E-waste</td><td>50+ million tonnes of electronic waste annually; toxic metals; poor recycling rates globally</td></tr>
+  <tr><td>Streaming video</td><td>Accounts for significant internet traffic; associated data centre and network energy use</td></tr>
+</table>
+
+<h3 class="subsection">Positive Contributions</h3>
+<p>Computing also enables environmental solutions: smart grids optimise energy distribution; sensors monitor deforestation and pollution; AI optimises logistics to cut fuel use; remote working reduces commuting. The net impact depends on how the technology is powered and deployed.</p>
+
+<div class="key-point">
+  <strong>Circular Economy &amp; E-waste</strong>
+  The EU and UK are introducing legislation requiring manufacturers to make devices repairable and components recyclable. Right-to-repair legislation lets consumers fix devices without voiding warranties. Extending device lifetimes by even a year significantly reduces embodied carbon per device-year.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 6 -->
+
+  <div class="lesson-section" id="open-source">
+    <h2 class="section-title">Open Source, Licensing &amp; Intellectual Property</h2>
+
+```
+<h3 class="subsection">Software Licensing Types</h3>
+<table>
+  <tr><th>Licence type</th><th>Description</th><th>Examples</th></tr>
+  <tr><td>Proprietary / Closed source</td><td>Source code kept secret; use governed by EULA; cannot be modified or redistributed</td><td>Microsoft Windows, Adobe Photoshop</td></tr>
+  <tr><td>Open source (permissive)</td><td>Source available; can be used, modified and redistributed freely; can be incorporated into commercial products</td><td>MIT, Apache, BSD licences; Linux kernel</td></tr>
+  <tr><td>Copyleft (GPL)</td><td>Source available; any derivative work must also be open source — "share-alike"</td><td>GNU GPL; Linux (GPL), WordPress</td></tr>
+  <tr><td>Freeware</td><td>Free to use but source not available; may have restrictions on commercial use</td><td>VLC (actually open source), many browser extensions</td></tr>
+  <tr><td>Shareware</td><td>Free trial with limitations; must pay for full version</td><td>WinRAR, many games</td></tr>
+</table>
+
+<div class="debate-grid">
+  <div class="debate-side for">
+    <h4>Open source advantages</h4>
+    <ul>
+      <li>Peer review improves security — many eyes on code</li>
+      <li>Community-driven innovation and bug fixes</li>
+      <li>No vendor lock-in; customisable to specific needs</li>
+      <li>Free to use; lowers costs for individuals and organisations</li>
+      <li>Promotes digital inclusion globally</li>
+    </ul>
+  </div>
+  <div class="debate-side against">
+    <h4>Open source disadvantages</h4>
+    <ul>
+      <li>Reduced commercial incentive to develop new features</li>
+      <li>Support often volunteer-based; no SLA guarantee</li>
+      <li>Source code also available to malicious actors</li>
+      <li>Fragmentation of forks; version compatibility issues</li>
+      <li>Documentation often worse than commercial products</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="subsection">Intellectual Property</h3>
+<table>
+  <tr><th>Type</th><th>What it protects</th><th>Duration</th></tr>
+  <tr><td>Copyright</td><td>Creative works — code, writing, music, art</td><td>Life + 70 years</td></tr>
+  <tr><td>Patent</td><td>Novel inventions and processes</td><td>Up to 20 years</td></tr>
+  <tr><td>Trademark</td><td>Brand names and logos</td><td>Indefinite (renewed)</td></tr>
+  <tr><td>Trade secret</td><td>Confidential business information (e.g. algorithms)</td><td>Indefinite while secret</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Software Patents — Controversial</strong>
+  In the US, software algorithms can be patented. In the UK and EU, "pure" software patents are harder to obtain. Critics argue software patents stifle innovation and allow large companies to sue smaller competitors. Supporters say patents reward investment in R&D.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State three offences defined by the Computer Misuse Act 1990 and give one example of each.</div></div>
+      <div class="q-marks">[6]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A company collects customer data. State three principles of the Data Protection Act 2018 they must follow.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">State two differences between open source and proprietary software.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">What is the "digital divide"? Give two factors that cause it.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">Give two examples of how the computing industry contributes to environmental problems, and one way computing can help address environmental challenges.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">A supermarket uses AI to analyse customer loyalty card data to predict when customers are likely to be pregnant and target them with baby product advertisements, before they have announced their pregnancy. Discuss the ethical issues raised, applying at least two ethical frameworks. What rights do customers have under UK data protection law in this scenario?</div></div>
+      <div class="q-marks">[8]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A software developer discovers their company is building a mass surveillance system for a foreign government with a poor human rights record. The project is legal under UK law. Discuss the ethical dilemma they face, using professional codes of conduct and ethical frameworks in your answer.</div></div>
+      <div class="q-marks">[7]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Compare the GPL (copyleft) and MIT (permissive) open source licences. A startup wants to use an open source library in a commercial product they will not release as open source. Which licence type allows this? Explain why, and why a company might prefer GPL for its own released software.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">"The benefits of AI and automation to society far outweigh their risks." Evaluate this statement, considering: economic impact on employment and wealth distribution; algorithmic bias and fairness; privacy and surveillance; autonomous systems and accountability; and AI's potential to solve major global challenges (climate, health, food security). Your answer should present arguments both for and against and reach a justified conclusion.</div></div>
+      <div class="q-marks">[15]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A government proposes mandatory backdoors in all encrypted messaging applications, allowing security services to read communications with a court order. Evaluate this proposal from technical, legal, ethical, and social perspectives. Consider: the technical feasibility and security implications; the impact on privacy rights; potential for abuse; the effect on trust in digital systems; and international implications for UK citizens and businesses operating globally.</div></div>
+      <div class="q-marks">[12]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="databases.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Databases &amp; SQL</div></a>
+    <a href="../index.html" class="lesson-nav-btn next"><div><span class="btn-label">Back to</span> CS Index</div> →</a>
+  </div>
+
+  <div class="complete-banner">
+    <h3>🎉 Computer Science Complete</h3>
+    <p>All 11 topics covered — Paper 1 and Paper 2. Good luck in the exams, Archie.</p>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
