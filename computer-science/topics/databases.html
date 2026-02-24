@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databases & SQL — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .code-block .num{color:#fcd34d}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .lesson-nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .lesson-nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .lesson-nav-btn.next{flex-direction:row-reverse}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .db-table{border:1px solid rgba(52,211,153,0.3);border-radius:10px;overflow:hidden;margin:1.5rem 0;font-size:0.88rem}
+  .db-table-title{background:rgba(52,211,153,0.1);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.75rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(52,211,153,0.2);letter-spacing:0.06em}
+  .db-table table{margin:0}
+  .db-table th{background:rgba(52,211,153,0.05);font-size:0.7rem}
+  .db-table td{font-family:'DM Mono',monospace;font-size:0.83rem}
+  .pk{color:var(--accent);font-weight:600}
+  .fk{color:#fcd34d}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 10</div>
+  <a href="#relational" class="sidebar-link active"><span class="sidebar-num">1</span>Relational Databases</a>
+  <a href="#normalisation" class="sidebar-link"><span class="sidebar-num">2</span>Normalisation</a>
+  <a href="#sql" class="sidebar-link"><span class="sidebar-num">3</span>SQL Queries</a>
+  <a href="#sql-advanced" class="sidebar-link"><span class="sidebar-num">4</span>Joins &amp; Aggregates</a>
+  <a href="#transactions" class="sidebar-link"><span class="sidebar-num">5</span>Transactions &amp; ACID</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 10</div>
+    <div class="topic-num-badge">TOPIC 10</div>
+    <h1 class="topic-title">Databases &amp; SQL</h1>
+    <p class="topic-intro">Relational database design, normalisation to 3NF, SQL queries from basic SELECT to multi-table JOINs, aggregate functions, and ACID transaction properties.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>SQL</span> writing required</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#relational">Relational Databases</a></li>
+      <li><a href="#normalisation">Normalisation (1NF → 3NF)</a></li>
+      <li><a href="#sql">SQL — SELECT, INSERT, UPDATE, DELETE</a></li>
+      <li><a href="#sql-advanced">JOINs, GROUP BY &amp; Aggregates</a></li>
+      <li><a href="#transactions">Transactions &amp; ACID</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="lesson-section" id="relational">
+    <h2 class="section-title">Relational Databases</h2>
+    <p>A <strong>relational database</strong> organises data into tables (relations). Each table has rows (records/tuples) and columns (attributes/fields). Tables are linked through keys.</p>
+
+```
+<h3 class="subsection">Key Terminology</h3>
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Table / Relation</td><td>A named set of rows and columns representing an entity</td></tr>
+  <tr><td>Row / Tuple / Record</td><td>A single entry in a table — one instance of the entity</td></tr>
+  <tr><td>Column / Attribute / Field</td><td>A category of data stored in a table</td></tr>
+  <tr><td>Primary Key (PK)</td><td>A field (or combination) that uniquely identifies each row — must be unique and not null</td></tr>
+  <tr><td>Foreign Key (FK)</td><td>A field in one table that references the primary key of another — creates a relationship</td></tr>
+  <tr><td>Composite Key</td><td>A primary key made of two or more fields</td></tr>
+  <tr><td>Entity</td><td>A real-world object or concept represented by a table (e.g. Student, Order, Product)</td></tr>
+</table>
+
+<h3 class="subsection">Entity-Relationship Diagrams</h3>
+<p>An <strong>ER diagram</strong> models the entities in a database and the relationships between them. Cardinality describes how many instances of one entity relate to another:</p>
+<table>
+  <tr><th>Relationship</th><th>Example</th><th>Implementation</th></tr>
+  <tr><td>One-to-One (1:1)</td><td>Person ↔ Passport</td><td>FK in either table</td></tr>
+  <tr><td>One-to-Many (1:M)</td><td>Customer → Orders</td><td>FK in the "many" table</td></tr>
+  <tr><td>Many-to-Many (M:M)</td><td>Students ↔ Courses</td><td>Junction/linking table with two FKs</td></tr>
+</table>
+
+<div class="db-table">
+  <div class="db-table-title">STUDENT</div>
+  <table>
+    <tr><th>StudentID (PK)</th><th>Name</th><th>DOB</th></tr>
+    <tr><td class="pk">S001</td><td>Archie</td><td>2007-03-15</td></tr>
+    <tr><td class="pk">S002</td><td>James</td><td>2006-11-22</td></tr>
+  </table>
+</div>
+
+<div class="db-table">
+  <div class="db-table-title">ENROLMENT (junction table for Student ↔ Course)</div>
+  <table>
+    <tr><th>StudentID (PK, FK)</th><th>CourseID (PK, FK)</th><th>Grade</th></tr>
+    <tr><td class="fk">S001</td><td class="fk">CS01</td><td>A</td></tr>
+    <tr><td class="fk">S001</td><td class="fk">MA01</td><td>B</td></tr>
+    <tr><td class="fk">S002</td><td class="fk">CS01</td><td>A*</td></tr>
+  </table>
+</div>
+
+<div class="key-point">
+  <strong>Referential Integrity</strong>
+  A foreign key value must either match an existing primary key in the referenced table, or be NULL. The database enforces this — you cannot add an order for a customer that doesn't exist, and you cannot delete a customer who has orders.
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 2 -->
+
+  <div class="lesson-section" id="normalisation">
+    <h2 class="section-title">Normalisation</h2>
+    <p><strong>Normalisation</strong> is the process of structuring a database to reduce data redundancy and improve integrity. AQA requires knowledge up to Third Normal Form (3NF).</p>
+
+```
+<h3 class="subsection">Problems Normalisation Solves</h3>
+<table>
+  <tr><th>Anomaly</th><th>Description</th></tr>
+  <tr><td>Update anomaly</td><td>Changing one piece of data requires updating it in multiple places — risk of inconsistency</td></tr>
+  <tr><td>Insertion anomaly</td><td>Cannot add data about one entity without having data about another (e.g. can't add a course without enrolling a student)</td></tr>
+  <tr><td>Deletion anomaly</td><td>Deleting one record accidentally removes other needed data</td></tr>
+</table>
+
+<h3 class="subsection">First Normal Form (1NF)</h3>
+<p>A table is in <strong>1NF</strong> if: each cell contains a single atomic value (no lists), all values in a column are the same type, each row is unique, and there are no repeating groups of columns.</p>
+<div class="warning-box">
+  <strong>Violates 1NF</strong>
+  OrderID | Products: "Pen, Ruler, Book" — the Products column contains multiple values. Fix: one row per product.
+</div>
+
+<h3 class="subsection">Second Normal Form (2NF)</h3>
+<p>A table is in <strong>2NF</strong> if it is in 1NF AND every non-key attribute is <em>fully</em> functionally dependent on the whole primary key. Only applies when there is a composite key — partial dependencies must be removed.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example — 1NF → 2NF</div>
+  <div class="example-q">Table: OrderLine(OrderID, ProductID, ProductName, Quantity). The PK is (OrderID, ProductID). ProductName depends only on ProductID — a partial dependency. Fix it.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Identify the partial dependency: ProductName → ProductID only (not the full composite key)</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Split into two tables:
+      <br>OrderLine(<span style="color:var(--accent)">OrderID, ProductID</span>, Quantity) — PK is composite
+      <br>Product(<span style="color:var(--accent)">ProductID</span>, ProductName) — PK is ProductID</div></div>
+  </div>
+</div>
+
+<h3 class="subsection">Third Normal Form (3NF)</h3>
+<p>A table is in <strong>3NF</strong> if it is in 2NF AND there are no transitive dependencies — no non-key attribute depends on another non-key attribute.</p>
+
+<div class="example">
+  <div class="example-label">Worked Example — 2NF → 3NF</div>
+  <div class="example-q">Table: Student(StudentID, CourseID, CourseName, LecturerID, LecturerName). CourseName and LecturerName depend on CourseID, not StudentID. LecturerName depends on LecturerID — a transitive dependency.</div>
+  <div class="example-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-content">Identify transitive dependency: LecturerName depends on LecturerID (not StudentID)</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">Split into:
+      <br>Enrolment(<span style="color:var(--accent)">StudentID, CourseID</span>)
+      <br>Course(<span style="color:var(--accent)">CourseID</span>, CourseName, LecturerID)
+      <br>Lecturer(<span style="color:var(--accent)">LecturerID</span>, LecturerName)</div></div>
+  </div>
+</div>
+
+<div class="key-point">
+  <strong>Summary of Normal Forms</strong>
+  1NF: atomic values, no repeating groups.<br>
+  2NF: 1NF + no partial dependencies (non-key attributes depend on whole PK).<br>
+  3NF: 2NF + no transitive dependencies (non-key attributes only depend on the PK, not each other).
+</div>
+```
+
+  </div>
+
+  <!-- SECTION 3 -->
+
+  <div class="lesson-section" id="sql">
+    <h2 class="section-title">SQL Queries</h2>
+    <p><strong>SQL</strong> (Structured Query Language) is the standard language for querying and manipulating relational databases. AQA requires SELECT, INSERT, UPDATE, DELETE, and table creation.</p>
+
+```
+<h3 class="subsection">SELECT</h3>
+<div class="code-block">
+```
+
+<span class="cm">– Basic SELECT</span>
+<span class="kw">SELECT</span> name, age <span class="kw">FROM</span> Students;
+
+<span class="cm">– SELECT all columns</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> Students;
+
+<span class="cm">– WHERE clause (filtering)</span>
+<span class="kw">SELECT</span> name, grade <span class="kw">FROM</span> Students
+<span class="kw">WHERE</span> grade = <span class="str">‘A’</span>;
+
+<span class="cm">– Multiple conditions</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> Students
+<span class="kw">WHERE</span> age >= <span class="num">16</span> <span class="kw">AND</span> grade <span class="kw">IN</span> (<span class="str">‘A’</span>, <span class="str">‘A*’</span>);
+
+<span class="cm">– LIKE for pattern matching</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> Students
+<span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="str">‘A%’</span>;   <span class="cm">– Names starting with A</span>
+
+<span class="cm">– ORDER BY</span>
+<span class="kw">SELECT</span> name, grade <span class="kw">FROM</span> Students
+<span class="kw">ORDER BY</span> grade <span class="kw">DESC</span>;
+
+<span class="cm">– DISTINCT removes duplicates</span>
+<span class="kw">SELECT DISTINCT</span> subject <span class="kw">FROM</span> Enrolment;
+</div>
+
+```
+<h3 class="subsection">INSERT, UPDATE, DELETE</h3>
+<div class="code-block">
+```
+
+<span class="cm">– INSERT a new row</span>
+<span class="kw">INSERT INTO</span> Students (StudentID, name, age, grade)
+<span class="kw">VALUES</span> (<span class="str">‘S003’</span>, <span class="str">‘Emma’</span>, <span class="num">17</span>, <span class="str">‘B’</span>);
+
+<span class="cm">– UPDATE existing rows</span>
+<span class="kw">UPDATE</span> Students
+<span class="kw">SET</span> grade = <span class="str">‘A’</span>
+<span class="kw">WHERE</span> StudentID = <span class="str">‘S003’</span>;
+
+<span class="cm">– DELETE rows</span>
+<span class="kw">DELETE FROM</span> Students
+<span class="kw">WHERE</span> StudentID = <span class="str">‘S003’</span>;
+</div>
+
+```
+<div class="warning-box">
+  <strong>Always use WHERE with UPDATE and DELETE</strong>
+  Without a WHERE clause, UPDATE changes every row and DELETE removes every row in the table. This is an extremely common and costly mistake. Always double-check your WHERE conditions.
+</div>
+
+<h3 class="subsection">CREATE TABLE</h3>
+<div class="code-block">
+```
+
+<span class="kw">CREATE TABLE</span> Students (
+StudentID   <span class="kw">VARCHAR</span>(<span class="num">10</span>)  <span class="kw">PRIMARY KEY</span>,
+name        <span class="kw">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+age         <span class="kw">INTEGER</span>,
+grade       <span class="kw">CHAR</span>(<span class="num">2</span>),
+CourseID    <span class="kw">VARCHAR</span>(<span class="num">10</span>),
+<span class="kw">FOREIGN KEY</span> (CourseID) <span class="kw">REFERENCES</span> Courses(CourseID)
+);
+</div>
+
+  </div>
+
+  <!-- SECTION 4 -->
+
+  <div class="lesson-section" id="sql-advanced">
+    <h2 class="section-title">JOINs &amp; Aggregates</h2>
+
+```
+<h3 class="subsection">JOINs</h3>
+<p>A <strong>JOIN</strong> combines rows from two tables based on a related column. AQA focuses on INNER JOIN and LEFT JOIN.</p>
+<table>
+  <tr><th>JOIN type</th><th>Returns</th></tr>
+  <tr><td>INNER JOIN</td><td>Only rows where the join condition matches in BOTH tables</td></tr>
+  <tr><td>LEFT JOIN</td><td>All rows from left table + matching rows from right (NULL if no match)</td></tr>
+  <tr><td>RIGHT JOIN</td><td>All rows from right table + matching rows from left</td></tr>
+</table>
+
+<div class="code-block">
+```
+
+<span class="cm">– INNER JOIN: students with their course names</span>
+<span class="kw">SELECT</span> Students.name, Courses.CourseName
+<span class="kw">FROM</span> Students
+<span class="kw">INNER JOIN</span> Courses <span class="kw">ON</span> Students.CourseID = Courses.CourseID;
+
+<span class="cm">– LEFT JOIN: all students, even those not enrolled</span>
+<span class="kw">SELECT</span> Students.name, Courses.CourseName
+<span class="kw">FROM</span> Students
+<span class="kw">LEFT JOIN</span> Courses <span class="kw">ON</span> Students.CourseID = Courses.CourseID;
+
+<span class="cm">– Three-table JOIN</span>
+<span class="kw">SELECT</span> s.name, c.CourseName, e.grade
+<span class="kw">FROM</span> Students s
+<span class="kw">INNER JOIN</span> Enrolment e <span class="kw">ON</span> s.StudentID = e.StudentID
+<span class="kw">INNER JOIN</span> Courses c   <span class="kw">ON</span> e.CourseID  = c.CourseID
+<span class="kw">WHERE</span> e.grade = <span class="str">‘A*’</span>
+<span class="kw">ORDER BY</span> s.name;
+</div>
+
+```
+<h3 class="subsection">Aggregate Functions &amp; GROUP BY</h3>
+<div class="code-block">
+```
+
+<span class="cm">– Aggregate functions</span>
+<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> Students;                  <span class="cm">– count all rows</span>
+<span class="kw">SELECT AVG</span>(age)  <span class="kw">FROM</span> Students;                  <span class="cm">– average age</span>
+<span class="kw">SELECT MAX</span>(age), <span class="kw">MIN</span>(age) <span class="kw">FROM</span> Students;         <span class="cm">– max and min</span>
+<span class="kw">SELECT SUM</span>(marks) <span class="kw">FROM</span> Results;                  <span class="cm">– total marks</span>
+
+<span class="cm">– GROUP BY: count students per grade</span>
+<span class="kw">SELECT</span> grade, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> num_students
+<span class="kw">FROM</span> Students
+<span class="kw">GROUP BY</span> grade
+<span class="kw">ORDER BY</span> grade;
+
+<span class="cm">– HAVING filters groups (like WHERE but for aggregates)</span>
+<span class="kw">SELECT</span> CourseID, <span class="kw">AVG</span>(grade) <span class="kw">AS</span> avg_grade
+<span class="kw">FROM</span> Enrolment
+<span class="kw">GROUP BY</span> CourseID
+<span class="kw">HAVING AVG</span>(grade) > <span class="num">70</span>;
+</div>
+
+```
+<div class="example">
+  <div class="example-label">Worked Example</div>
+  <div class="example-q">Using the Student, Enrolment, and Course tables, write a query to find the name and average grade of every student who is enrolled in more than one course, ordered by average grade descending.</div>
+  <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide Solution':'Show Solution'">Show Solution</button>
+  <div class="reveal-content">
+    <div class="code-block">
+```
+
+<span class="kw">SELECT</span> s.name, <span class="kw">AVG</span>(e.grade) <span class="kw">AS</span> avg_grade, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> num_courses
+<span class="kw">FROM</span> Students s
+<span class="kw">INNER JOIN</span> Enrolment e <span class="kw">ON</span> s.StudentID = e.StudentID
+<span class="kw">GROUP BY</span> s.StudentID, s.name
+<span class="kw">HAVING COUNT</span>(*) > <span class="num">1</span>
+<span class="kw">ORDER BY</span> avg_grade <span class="kw">DESC</span>;
+</div>
+<p style="margin-top:1rem;font-size:0.9rem;">Key points: GROUP BY includes all non-aggregate SELECT columns; HAVING filters after grouping (WHERE filters before); AVG and COUNT are applied per group.</p>
+</div>
+</div>
+
+  </div>
+
+  <!-- SECTION 5 -->
+
+  <div class="lesson-section" id="transactions">
+    <h2 class="section-title">Transactions &amp; ACID</h2>
+    <p>A <strong>transaction</strong> is a sequence of database operations treated as a single unit. Either all operations succeed (commit) or none take effect (rollback). This prevents partial updates corrupting the database.</p>
+
+```
+<div class="code-block">
+```
+
+<span class="cm">– Bank transfer: debit one account, credit another</span>
+<span class="kw">BEGIN TRANSACTION</span>;
+
+<span class="kw">UPDATE</span> Accounts <span class="kw">SET</span> balance = balance - <span class="num">100</span>
+<span class="kw">WHERE</span> AccountID = <span class="str">‘A001’</span>;
+
+<span class="kw">UPDATE</span> Accounts <span class="kw">SET</span> balance = balance + <span class="num">100</span>
+<span class="kw">WHERE</span> AccountID = <span class="str">‘A002’</span>;
+
+<span class="kw">COMMIT</span>;   <span class="cm">– Both succeed: save permanently</span>
+<span class="cm">– ROLLBACK would undo both if an error occurred</span>
+</div>
+
+```
+<h3 class="subsection">ACID Properties</h3>
+<table>
+  <tr><th>Property</th><th>Meaning</th><th>Bank transfer example</th></tr>
+  <tr><td><strong>A</strong>tomicity</td><td>All operations in a transaction succeed, or none do — no partial completion</td><td>Both debit and credit happen, or neither does</td></tr>
+  <tr><td><strong>C</strong>onsistency</td><td>The database moves from one valid state to another — all rules and constraints are maintained</td><td>Total money in system stays the same</td></tr>
+  <tr><td><strong>I</strong>solation</td><td>Concurrent transactions don't interfere — each appears to run alone</td><td>Two transfers don't read each other's intermediate states</td></tr>
+  <tr><td><strong>D</strong>urability</td><td>Once committed, changes survive crashes — persisted to disk</td><td>Completed transfer is not lost if server crashes</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>Record Locking</strong>
+  To maintain Isolation, databases use <strong>record locking</strong> — a lock is placed on records being modified so other transactions must wait. This prevents two users updating the same record simultaneously and causing data corruption. A <strong>deadlock</strong> occurs when two transactions each hold a lock the other needs — detected and resolved by rolling back one transaction.
+</div>
+```
+
+  </div>
+
+  <!-- PRACTICE A -->
+
+  <div class="practice-section" id="practice-a">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-a">Level A — Accessible</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">State the difference between a primary key and a foreign key. Give one example of each from a school database.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Write SQL to select the name and email of all customers from a table called Customers where their city is 'London', ordered by name alphabetically.</div></div>
+      <div class="q-marks">[3]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">State the four ACID properties of a database transaction and briefly define each.</div></div>
+      <div class="q-marks">[4]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q4</div><div class="q-text">What is data redundancy? Give one problem it causes in a database.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q5</div><div class="q-text">Write SQL to update the price of product with ProductID 'P07' to 24.99 in a table called Products.</div></div>
+      <div class="q-marks">[2]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE B -->
+
+  <div class="practice-section" id="practice-b">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-b">Level B — Moderate</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">A database table called Orders has columns: OrderID, CustomerID, CustomerName, CustomerCity, ProductID, ProductName, ProductPrice, Quantity. Normalise this to 3NF. Show each step clearly, stating what dependency you are removing and the resulting tables.</div></div>
+      <div class="q-marks">[9]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">A library database has tables: Book(BookID, Title, AuthorID), Author(AuthorID, Name), Loan(LoanID, BookID, MemberID, LoanDate, ReturnDate), Member(MemberID, Name, Email). Write SQL to find the names of all members who currently have books on loan (ReturnDate is NULL), along with the titles of the books they have borrowed. Order by member name.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q3</div><div class="q-text">Using the library database above, write SQL to find the top 3 most borrowed books, showing the book title and number of times borrowed. Books with no loans should not appear.</div></div>
+      <div class="q-marks">[5]</div>
+    </div>
+  </div>
+
+  <!-- PRACTICE C -->
+
+  <div class="practice-section" id="practice-c">
+    <div class="practice-header">
+      <div class="practice-title">Practice Questions</div>
+      <span class="difficulty-badge diff-c">Level C — Challenging</span>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q1</div><div class="q-text">Design a relational database for a hospital outpatient system. Entities include: Patient, Doctor, Appointment, Department. For each entity, state at least 4 appropriate attributes and identify the primary key. Identify all relationships between entities, stating cardinality. Draw or describe the ER diagram. Write the CREATE TABLE SQL statements including all primary keys, foreign keys, and appropriate data type constraints.</div></div>
+      <div class="q-marks">[15]</div>
+    </div>
+    <div class="question-item">
+      <div><div class="q-num">Q2</div><div class="q-text">Two bank tellers simultaneously process a transfer from Account A to Account B. Without transaction isolation, explain the specific race conditions that could occur (dirty reads, lost updates, phantom reads). For each, describe how database locking prevents it. Explain what a deadlock is, give a concrete example with two transactions, and describe how a DBMS detects and resolves it.</div></div>
+      <div class="q-marks">[12]</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    <a href="communication-networking.html" class="lesson-nav-btn">← <div><span class="btn-label">Previous Topic</span> Communication &amp; Networking</div></a>
+    <a href="ethical-legal.html" class="lesson-nav-btn next"><div><span class="btn-label">Next Topic</span> Ethical, Legal &amp; Cultural Issues</div> →</a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id],div[id^="practice"]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
