@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEA Programming Project Guide — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .warning-box{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .warning-box strong{color:#fcd34d;font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  .marks-bar{display:flex;gap:0;border-radius:10px;overflow:hidden;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.78rem}
+  .marks-seg{padding:0.75rem 1.2rem;display:flex;flex-direction:column;gap:0.2rem}
+  .marks-seg .seg-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;opacity:0.7}
+  .marks-seg .seg-val{font-size:1rem;font-weight:600}
+  .seg-a{background:rgba(52,211,153,0.15);color:#34d399;flex:1}
+  .seg-b{background:rgba(147,197,253,0.12);color:#93c5fd;flex:1}
+  .seg-c{background:rgba(196,181,253,0.12);color:#c4b5fd;flex:1}
+  .seg-d{background:rgba(251,191,36,0.12);color:#fcd34d;flex:1}
+  .seg-e{background:rgba(249,115,22,0.12);color:#fb923c;flex:1}
+  .checklist{display:flex;flex-direction:column;gap:0.6rem;margin:1.5rem 0}
+  .check-item{display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:0.88rem}
+  .check-box{width:18px;height:18px;border:1px solid rgba(52,211,153,0.4);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:0.7rem}
+  .idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1.5rem 0}
+  .idea-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem}
+  .idea-card h4{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+  .idea-card p{font-size:0.83rem;color:var(--muted);margin:0}
+  .phase-block{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.5rem 0}
+  .phase-header{background:rgba(52,211,153,0.08);border-bottom:1px solid var(--border);padding:0.9rem 1.4rem;display:flex;align-items:center;justify-content:space-between}
+  .phase-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)}
+  .phase-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.2rem 0.6rem;border-radius:5px}
+  .phase-body{padding:1.2rem 1.4rem}
+  .phase-body p{margin-bottom:0.6rem;font-size:0.9rem}
+  .nav-bottom{display:flex;justify-content:flex-start;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+  .nav-btn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:color 0.2s;padding:0.8rem 1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+  .nav-btn:hover{color:var(--accent);border-color:rgba(52,211,153,0.4)}
+  .btn-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">NEA Guide</div>
+  <a href="#overview" class="sidebar-link active"><span class="sidebar-num">1</span>Overview &amp; Mark Scheme</a>
+  <a href="#project-choice" class="sidebar-link"><span class="sidebar-num">2</span>Choosing a Project</a>
+  <a href="#analysis" class="sidebar-link"><span class="sidebar-num">3</span>Analysis</a>
+  <a href="#design" class="sidebar-link"><span class="sidebar-num">4</span>Design</a>
+  <a href="#implementation" class="sidebar-link"><span class="sidebar-num">5</span>Implementation</a>
+  <a href="#testing" class="sidebar-link"><span class="sidebar-num">6</span>Testing &amp; Evaluation</a>
+  <div class="sidebar-divider"></div>
+  <a href="#timeline" class="sidebar-link"><span class="sidebar-num">✦</span>Suggested Timeline</a>
+  <a href="#tips" class="sidebar-link"><span class="sidebar-num">✦</span>Examiner Tips</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / NEA</div>
+    <div class="topic-num-badge">COMPONENT 3 — NEA</div>
+    <h1 class="topic-title">Programming Project Guide</h1>
+    <p class="topic-intro">The Non-Examined Assessment is worth 20% of your A Level. This guide walks through every section of the project — what AQA want, how marks are awarded, and how to avoid the most common pitfalls.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>75</span> marks total</div>
+      <div class="meta-item"><span>20%</span> of A Level</div>
+      <div class="meta-item"><span>AQA</span> 7517/C</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#overview">Overview &amp; Mark Scheme</a></li>
+      <li><a href="#project-choice">Choosing a Project</a></li>
+      <li><a href="#analysis">Analysis (12 marks)</a></li>
+      <li><a href="#design">Design (12 marks)</a></li>
+      <li><a href="#implementation">Implementation (30 marks)</a></li>
+      <li><a href="#testing">Testing &amp; Evaluation (21 marks)</a></li>
+      <li><a href="#timeline">Suggested Timeline</a></li>
+      <li><a href="#tips">Examiner Tips</a></li>
+    </ul>
+  </div>
+
+  <!-- OVERVIEW -->
+
+  <div class="lesson-section" id="overview">
+    <h2 class="section-title">Overview &amp; Mark Scheme</h2>
+    <p>The NEA is an independent programming project completed during Year 13. You choose a real problem, develop software to solve it, and produce a written report documenting every stage. AQA assess both the report and the working program.</p>
+
+```
+<div class="marks-bar">
+  <div class="marks-seg seg-a"><span class="seg-label">Analysis</span><span class="seg-val">12 marks</span></div>
+  <div class="marks-seg seg-b"><span class="seg-label">Design</span><span class="seg-val">12 marks</span></div>
+  <div class="marks-seg seg-c"><span class="seg-label">Implementation</span><span class="seg-val">30 marks</span></div>
+  <div class="marks-seg seg-d"><span class="seg-label">Testing</span><span class="seg-val">12 marks</span></div>
+  <div class="marks-seg seg-e"><span class="seg-label">Evaluation</span><span class="seg-val">9 marks</span></div>
+</div>
+
+<table>
+  <tr><th>Section</th><th>Marks</th><th>What's assessed</th></tr>
+  <tr><td>Analysis</td><td>12</td><td>Problem identification, research, requirements, success criteria</td></tr>
+  <tr><td>Design</td><td>12</td><td>Data structures, algorithms, UI design, testing strategy</td></tr>
+  <tr><td>Implementation</td><td>30</td><td>Quality of code, complexity, use of appropriate techniques</td></tr>
+  <tr><td>Testing</td><td>12</td><td>Evidence of systematic testing against the design</td></tr>
+  <tr><td>Evaluation</td><td>9</td><td>Honest assessment of success, limitations, future improvements</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>The most important thing to understand</strong>
+  Implementation carries 40% of the marks — but you cannot score highly in other sections without a working, complex program. A mediocre program with good documentation will score less than a sophisticated program well-documented. Both matter. Start coding early.
+</div>
+```
+
+  </div>
+
+  <!-- PROJECT CHOICE -->
+
+  <div class="lesson-section" id="project-choice">
+    <h2 class="section-title">Choosing a Project</h2>
+    <p>Your project choice largely determines your ceiling. A project that is too simple cannot earn high marks in implementation no matter how well documented. Aim for something genuinely complex — but manageable in your timeframe.</p>
+
+```
+<h3 class="subsection">What makes a good NEA project?</h3>
+<div class="checklist">
+  <div class="check-item"><div class="check-box">✓</div><div>Has a real user with identifiable needs — not just "me" testing my own program</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Requires non-trivial algorithms — sorting, searching, pathfinding, parsing, simulation</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Uses appropriate data structures — linked lists, trees, hash tables, 2D arrays</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Has a clear problem that existing software doesn't already solve for your user</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Is achievable in the time available — don't aim for a commercial-grade product</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Allows you to demonstrate file I/O, data persistence, and a user interface</div></div>
+</div>
+
+<h3 class="subsection">Project idea categories</h3>
+<div class="idea-grid">
+  <div class="idea-card"><h4>Games</h4><p>Puzzle games, strategy games, simulations. Good for algorithms (AI, pathfinding, collision detection) but avoid simple clones with no complexity.</p></div>
+  <div class="idea-card"><h4>Data management</h4><p>Stock systems, library management, patient records. Good for file I/O, searching, sorting and data structures.</p></div>
+  <div class="idea-card"><h4>Tools & utilities</h4><p>Revision quiz app, timetable generator, budget tracker. Clear user need; measurable success criteria.</p></div>
+  <div class="idea-card"><h4>Simulations</h4><p>Physics simulations, ecosystem models, network simulators. Strong algorithmic content; impressive demonstrations.</p></div>
+  <div class="idea-card"><h4>Language tools</h4><p>Simple interpreter, expression parser, code formatter. Demonstrates formal language theory from Topic 06.</p></div>
+  <div class="idea-card"><h4>Data analysis</h4><p>Sports statistics analyser, weather data visualiser. Good for file handling, aggregation and graphical output.</p></div>
+</div>
+
+<div class="warning-box">
+  <strong>Projects to avoid</strong>
+  Website-only projects (limited algorithmic complexity); simple CRUD apps without any interesting logic; projects using low-code tools or frameworks that do the hard work for you; projects so ambitious they won't be finished. Also avoid projects identical to what your teacher has shown you — AQA moderators see these every year.
+</div>
+```
+
+  </div>
+
+  <!-- ANALYSIS -->
+
+  <div class="lesson-section" id="analysis">
+    <h2 class="section-title">Analysis</h2>
+
+```
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-name">Section A — Analysis</div>
+    <div class="phase-marks">12 marks</div>
+  </div>
+  <div class="phase-body">
+    <p>AQA want to see that you understand the problem deeply before writing a single line of code. This section should convince the examiner you know exactly what you're building and why.</p>
+  </div>
+</div>
+
+<h3 class="subsection">What to include</h3>
+<p><strong>Problem identification:</strong> Describe the problem clearly. Who is the end user? What do they currently do? Why is a new solution needed? Be specific — avoid vague statements like "my user wants a program to manage things."</p>
+<p><strong>Stakeholder research:</strong> Interview or survey your user. Show evidence — include questions asked and responses received. This makes your requirements grounded rather than invented.</p>
+<p><strong>Research into existing solutions:</strong> Look at similar software. What do they do well? What don't they do? How is your solution different? Screenshots and analysis of real products score well here.</p>
+<p><strong>Requirements:</strong> Produce a numbered list of specific, measurable requirements. Use "The system shall..." phrasing. Split into functional (what it does) and non-functional (performance, usability, security).</p>
+<p><strong>Success criteria:</strong> For each requirement, state how you will test whether it has been met. These criteria will be referenced back to in your evaluation.</p>
+
+<div class="key-point">
+  <strong>The success criteria link everything together</strong>
+  Your success criteria from analysis should appear in your testing section as the basis for your test plan, and in your evaluation as the measure of whether you succeeded. Examiners look for this thread running through the whole project.
+</div>
+
+<div class="code-block">
+```
+
+Example success criteria:
+SC1  The system shall allow users to add a new book record with title, author, ISBN and genre.
+Test: Add a book with valid data → verify record appears in search results.
+
+SC2  The system shall reject ISBN numbers that do not conform to the 13-digit ISBN-13 format.
+Test: Enter “12345” as ISBN → verify appropriate error message displayed.
+
+SC3  The system shall perform a search across 1000 records in under 1 second.
+Test: Load test dataset, time 10 searches, verify average < 1000ms.
+</div>
+
+  </div>
+
+  <!-- DESIGN -->
+
+  <div class="lesson-section" id="design">
+    <h2 class="section-title">Design</h2>
+
+```
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-name">Section B — Design</div>
+    <div class="phase-marks">12 marks</div>
+  </div>
+  <div class="phase-body">
+    <p>Design is your blueprint — produced before implementation. Examiners check that your design actually reflects what you built. Don't write design retrospectively after coding.</p>
+  </div>
+</div>
+
+<h3 class="subsection">What to include</h3>
+<p><strong>Decomposition:</strong> Break the problem into modules/functions. A structure chart or hierarchy diagram showing how components relate is ideal.</p>
+<p><strong>Data structures:</strong> Specify what data structures you'll use and why. If you're using a dictionary or list, explain why that's more appropriate than an array. If using a database, design your schema here with ER diagrams.</p>
+<p><strong>Algorithms:</strong> Write pseudocode or flowcharts for your key algorithms — especially any sorting, searching or complex logic. Don't pseudocode every function; focus on the non-trivial ones.</p>
+<p><strong>UI design:</strong> Sketches or wireframes of every screen/window. Annotate them to explain design choices. Show navigation between screens.</p>
+<p><strong>File/database design:</strong> If persisting data, design the file format or table structures. For a database: table names, field names, data types, PKs and FKs.</p>
+<p><strong>Testing strategy:</strong> Describe your overall approach — unit testing, integration testing, user acceptance testing. List test categories (normal, boundary, erroneous).</p>
+
+<div class="warning-box">
+  <strong>Design must come before implementation</strong>
+  AQA penalise designs that are clearly written after the code — they look too perfect and exactly match what was built. A good design has some differences from the final product, with explanations of why changes were made.
+</div>
+```
+
+  </div>
+
+  <!-- IMPLEMENTATION -->
+
+  <div class="lesson-section" id="implementation">
+    <h2 class="section-title">Implementation</h2>
+
+```
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-name">Section C — Implementation</div>
+    <div class="phase-marks">30 marks</div>
+  </div>
+  <div class="phase-body">
+    <p>The largest section. Your actual code and a written commentary explaining key sections. The program must be functional — a non-working submission is severely penalised.</p>
+  </div>
+</div>
+
+<h3 class="subsection">Mark bands — implementation</h3>
+<table>
+  <tr><th>Band</th><th>Marks</th><th>Description</th></tr>
+  <tr><td>4 (top)</td><td>25–30</td><td>Complex, well-structured solution. Sophisticated algorithms. Appropriate data structures. Clear, well-commented code. Evidence of iterative development.</td></tr>
+  <tr><td>3</td><td>19–24</td><td>Reasonably complex solution. Some sophisticated elements. Mostly well-structured. Some commentary.</td></tr>
+  <tr><td>2</td><td>13–18</td><td>Working but simple solution. Limited use of data structures. Basic algorithms only.</td></tr>
+  <tr><td>1</td><td>7–12</td><td>Partially working solution. Significant gaps in functionality.</td></tr>
+  <tr><td>0</td><td>0–6</td><td>Little working code. Program does not meet requirements.</td></tr>
+</table>
+
+<h3 class="subsection">What earns top marks</h3>
+<div class="checklist">
+  <div class="check-item"><div class="check-box">✓</div><div>Use of multiple appropriate data structures (not just lists for everything)</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Non-trivial algorithms — your own implementation, not library calls</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Object-oriented programming with appropriate use of inheritance and encapsulation</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>File I/O or database persistence — data survives between sessions</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Robust error handling — program doesn't crash on invalid input</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Clear, consistent code style — meaningful names, appropriate comments</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div>Evidence of iterative development in your commentary (what you changed and why)</div></div>
+</div>
+
+<h3 class="subsection">The written commentary</h3>
+<p>For key sections of your code, include a written explanation in your report. Don't narrate every line — explain the interesting decisions: why did you choose this algorithm? Why this data structure? What was the hardest part to implement and how did you solve it?</p>
+
+<div class="key-point">
+  <strong>Show your code working</strong>
+  Include annotated screenshots of your program running. Show the UI, show data being saved and loaded, show your key features in action. Examiners cannot run your program during moderation — screenshots are their window into what it does.
+</div>
+```
+
+  </div>
+
+  <!-- TESTING -->
+
+  <div class="lesson-section" id="testing">
+    <h2 class="section-title">Testing &amp; Evaluation</h2>
+
+```
+<div class="phase-block">
+  <div class="phase-header">
+    <div class="phase-name">Section D — Testing</div>
+    <div class="phase-marks">12 marks</div>
+  </div>
+  <div class="phase-body">
+    <p>Systematic evidence that your program works correctly. A test table with expected and actual results, plus screenshots. Tests must cover all three categories.</p>
+  </div>
+</div>
+
+<h3 class="subsection">Test categories (all three required)</h3>
+<table>
+  <tr><th>Category</th><th>Description</th><th>Example</th></tr>
+  <tr><td>Normal / valid</td><td>Typical inputs the program should handle correctly</td><td>Add a book with valid ISBN "9781234567897"</td></tr>
+  <tr><td>Boundary</td><td>Values at the edges of acceptable ranges</td><td>Username of exactly 3 characters (minimum allowed); username of exactly 20 (maximum)</td></tr>
+  <tr><td>Erroneous / invalid</td><td>Inputs the program should reject with appropriate error</td><td>ISBN containing letters; negative price; empty required field</td></tr>
+</table>
+
+<div class="code-block">
+```
+
+Test table format:
+Test ID | Description          | Input data        | Expected result        | Actual result  | Pass/Fail | Screenshot
+T01     | Add valid book       | Title=“Harry P..  | Record appears in list | As expected    | Pass      | Fig. 12
+T02     | Boundary: min ISBN   | ISBN=“1234567890128” | Accepted             | As expected    | Pass      | Fig. 13
+T03     | Invalid ISBN (alpha) | ISBN=“ABCDEFGHIJK” | Error: “Invalid ISBN” | As expected    | Pass      | Fig. 14
+</div>
+
+```
+<div class="phase-block" style="margin-top:2rem">
+  <div class="phase-header">
+    <div class="phase-name">Section E — Evaluation</div>
+    <div class="phase-marks">9 marks</div>
+  </div>
+  <div class="phase-body">
+    <p>An honest assessment of your project against your original success criteria. Reference each criterion by number. Acknowledge what doesn't work — pretending everything is perfect scores badly.</p>
+  </div>
+</div>
+
+<h3 class="subsection">What to include in evaluation</h3>
+<p><strong>Success criteria review:</strong> Go through each success criterion. Did you meet it? Provide evidence from your test results. If partially met, explain what works and what doesn't.</p>
+<p><strong>User feedback:</strong> Return to your stakeholder. Show them the finished product. Record their feedback. Did it solve their problem? What would they change?</p>
+<p><strong>Limitations:</strong> Be specific and honest. "The search algorithm is O(n) — for large datasets a binary search or hash table would be more efficient." This shows technical understanding.</p>
+<p><strong>Future improvements:</strong> Prioritised list of what you would add given more time. Be specific — not "I would add more features" but "I would implement a BST for O(log n) search performance."</p>
+<p><strong>Reflection on design decisions:</strong> What would you do differently? What worked better than expected?</p>
+```
+
+  </div>
+
+  <!-- TIMELINE -->
+
+  <div class="lesson-section" id="timeline">
+    <h2 class="section-title">Suggested Timeline</h2>
+    <p>The NEA is typically completed across the autumn and spring terms of Year 13. Most schools allocate September to February — roughly 20 weeks.</p>
+
+```
+<table>
+  <tr><th>Weeks</th><th>Phase</th><th>Target deliverable</th></tr>
+  <tr><td>1–2</td><td>Project selection</td><td>Approved project idea; identified stakeholder</td></tr>
+  <tr><td>3–5</td><td>Analysis</td><td>Completed analysis section with requirements and success criteria</td></tr>
+  <tr><td>6–8</td><td>Design</td><td>Completed design section with UI mockups, data structures and algorithms</td></tr>
+  <tr><td>9–16</td><td>Implementation</td><td>Working program with all core features; iterative development log</td></tr>
+  <tr><td>17–18</td><td>Testing</td><td>Completed test table with screenshots; all three test categories</td></tr>
+  <tr><td>19–20</td><td>Evaluation &amp; polish</td><td>Completed evaluation; report proofread; all sections checked against mark scheme</td></tr>
+</table>
+
+<div class="warning-box">
+  <strong>Don't leave implementation until week 9</strong>
+  Start prototyping early — even during analysis. Understanding the technical challenges shapes your requirements. Many students discover their original plan is too ambitious (or too simple) only when they start coding. Fail fast, adjust early.
+</div>
+```
+
+  </div>
+
+  <!-- TIPS -->
+
+  <div class="lesson-section" id="tips">
+    <h2 class="section-title">Examiner Tips</h2>
+
+```
+<h3 class="subsection">Maximising your marks</h3>
+<div class="checklist">
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Reference the mark scheme throughout.</strong> AQA publish the assessment objectives — know them and explicitly address each one.</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Use technical vocabulary.</strong> Say "binary search tree" not "a type of sorted list." Say "O(n log n) time complexity" not "fast sorting."</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Link sections together.</strong> Your evaluation should reference your success criteria (from analysis) and your test results (from testing). Examiners reward coherence.</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Include evidence of iteration.</strong> Show that you built, tested, improved and rebuilt. A version history or development log demonstrates the process.</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Get real user feedback.</strong> Not from a parent or friend — from someone who would actually use the software. Record their exact words.</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Comment your code meaningfully.</strong> Not <code># add 1 to count</code> but <code># increment pointer to next node in linked list</code>. Explain the why, not the what.</div></div>
+  <div class="check-item"><div class="check-box">✓</div><div><strong>Back up constantly.</strong> Use Git. Losing your work near the deadline has happened to students before. Don't be one of them.</div></div>
+</div>
+
+<h3 class="subsection">Common mistakes to avoid</h3>
+<div class="checklist">
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Writing the design section after the code is written — examiners can tell</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Including all your code in the report — only include and annotate key excerpts</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Test tables with no "actual result" or "pass/fail" column — or no screenshots</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Evaluation that claims everything is perfect — no real project has no limitations</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Choosing a project so simple it can't score above band 2 in implementation</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Submitting a program that crashes or has major bugs — test thoroughly before submission</div></div>
+  <div class="check-item"><div class="check-box" style="border-color:rgba(244,63,94,0.5);color:#f43f5e;">✗</div><div>Using AI tools to write your code — AQA and your school take academic integrity seriously</div></div>
+</div>
+```
+
+  </div>
+
+  <div class="nav-bottom">
+    <a href="../index.html" class="nav-btn">← <div><span class="btn-label">Back to</span> Computer Science</div></a>
+  </div>
+
+</main>
+</div>
+<script>
+  const sections=document.querySelectorAll('.lesson-section[id]');
+  const sidebarLinks=document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+    sidebarLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+  });
+</script>
+</body>
+</html>
