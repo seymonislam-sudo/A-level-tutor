@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turning Points in Physics — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:28px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  .option-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:#c084fc;margin-top:0.8rem}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  ul,ol{padding-left:1.4rem;margin-bottom:1rem;font-size:0.95rem}
+  li{margin-bottom:0.4rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Option D</div>
+  <a href="#electron" class="sidebar-link active"><span class="sidebar-num">D.1</span> Discovery of the Electron</a>
+  <a href="#photoelectric" class="sidebar-link"><span class="sidebar-num">D.2</span> Wave–Particle Duality</a>
+  <a href="#special-rel" class="sidebar-link"><span class="sidebar-num">D.3</span> Special Relativity</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Option D</div>
+    <div class="topic-num-badge">OPTION D</div>
+    <h1 class="topic-title">Turning Points in Physics</h1>
+    <div class="option-badge">⚡ Paper 3 — Section B Option</div>
+    <p class="topic-intro" style="margin-top:1rem">The great revolutions in physics — from Thomson's discovery of the electron to Einstein's special relativity. This option explores the landmark experiments and ideas that overturned our understanding of the universe.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>3</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 3 Section B</div>
+      <div class="meta-item"><span>Option D</span></div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#electron">Discovery of the Electron</a></li>
+      <li><a href="#photoelectric">Wave–Particle Duality</a></li>
+      <li><a href="#special-rel">Special Relativity</a></li>
+    </ul>
+  </div>
+
+  <!-- ELECTRON -->
+  <div class="lesson-section" id="electron">
+    <h2 class="section-title">Discovery of the Electron</h2>
+
+    <h3 class="subsection">Thermionic emission and cathode rays</h3>
+    <p>In 1897 J.J. Thomson showed that cathode rays were streams of negatively charged particles (electrons) by deflecting them with electric and magnetic fields and measuring their charge-to-mass ratio.</p>
+
+    <h3 class="subsection">Millikan's oil drop experiment</h3>
+    <p>Millikan (1909) measured the charge on individual oil droplets by balancing gravitational and electric forces. He showed charge is always a multiple of a fundamental value $e = 1.6 \times 10^{-19}\ \text{C}$.</p>
+
+    <div class="formula-box">
+      $$\text{At terminal velocity: } qE = mg + 6\pi\eta r v$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Electric force upward balances weight and Stokes drag. When field off: $mg = 6\pi\eta r v_0$ determines $r$, hence $m = \frac{4}{3}\pi r^3 \rho$.</p>
+    </div>
+
+    <h3 class="subsection">Thomson's $e/m$ measurement</h3>
+    <p>In Thomson's crossed-field experiment, electric and magnetic fields are balanced so the beam is undeflected: $qE = qvB$, giving $v = E/B$. Then the magnetic field alone deflects the beam in a circle: $qvB = \frac{mv^2}{r}$, so:</p>
+    <div class="formula-box">
+      $$\frac{e}{m} = \frac{E}{B^2 r}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Thomson found $e/m \approx 1.76 \times 10^{11}\ \text{C kg}^{-1}$.</p>
+    </div>
+  </div>
+
+  <!-- WAVE-PARTICLE DUALITY -->
+  <div class="lesson-section" id="photoelectric">
+    <h2 class="section-title">Wave–Particle Duality</h2>
+
+    <h3 class="subsection">The photoelectric effect</h3>
+    <p>When light above a threshold frequency hits a metal surface, electrons are emitted immediately. This could not be explained by wave theory — Einstein (1905) explained it by proposing light consists of photons:</p>
+    <div class="formula-box">
+      $$hf = \phi + E_{k,\max} \qquad E_{k,\max} = h(f - f_0)$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$h$ = Planck's constant, $f$ = frequency, $\phi = hf_0$ = work function, $f_0$ = threshold frequency, $E_{k,\max}$ = maximum KE of emitted electrons.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Why wave theory fails</strong>
+      Wave theory predicts: (1) any frequency should eventually eject electrons if intensity is high enough; (2) a time delay before emission as energy builds up. Both predictions are wrong — photoelectric emission is immediate and only occurs above $f_0$ regardless of intensity.
+    </div>
+
+    <h3 class="subsection">De Broglie wavelength</h3>
+    <p>If light (waves) can behave as particles, de Broglie proposed that particles can also behave as waves:</p>
+    <div class="formula-box">
+      $$\lambda = \frac{h}{p} = \frac{h}{mv}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Confirmed by electron diffraction — electrons passing through a crystal lattice produce a diffraction pattern, proving they have wave properties.</p>
+    </div>
+
+    <h3 class="subsection">Electron microscopes</h3>
+    <p>Electrons accelerated through a voltage $V$ gain kinetic energy $eV = \frac{1}{2}mv^2$. Their de Broglie wavelength is much smaller than visible light, allowing electron microscopes to resolve detail far beyond optical microscopes.</p>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example</div>
+      <p class="example-q">An electron is accelerated through 5000 V. Calculate its de Broglie wavelength. ($m_e = 9.11 \times 10^{-31}$ kg)</p>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">KE gained: $eV = 1.6\times10^{-19} \times 5000 = 8.0\times10^{-16}\ \text{J}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$v = \sqrt{\frac{2eV}{m}} = \sqrt{\frac{2 \times 8.0\times10^{-16}}{9.11\times10^{-31}}} = 4.19\times10^7\ \text{m s}^{-1}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\lambda = \frac{h}{mv} = \frac{6.63\times10^{-34}}{9.11\times10^{-31} \times 4.19\times10^7} = 1.74\times10^{-11}\ \text{m}$ (0.017 nm)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECIAL RELATIVITY -->
+  <div class="lesson-section" id="special-rel">
+    <h2 class="section-title">Special Relativity</h2>
+    <p>Einstein's special relativity (1905) is built on two postulates:</p>
+    <ol>
+      <li>The laws of physics are the same in all inertial (non-accelerating) frames of reference.</li>
+      <li>The speed of light in a vacuum is the same for all observers, regardless of the motion of the source.</li>
+    </ol>
+
+    <h3 class="subsection">Time dilation</h3>
+    <p>A clock moving relative to an observer runs slow — moving clocks tick slower than stationary ones:</p>
+    <div class="formula-box">
+      $$t = \frac{t_0}{\sqrt{1 - v^2/c^2}} = \gamma t_0 \qquad \text{where } \gamma = \frac{1}{\sqrt{1-v^2/c^2}}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$t_0$ = proper time (measured in the rest frame), $t$ = dilated time measured by the moving observer, $\gamma \geq 1$.</p>
+    </div>
+
+    <h3 class="subsection">Length contraction</h3>
+    <p>An object moving relative to an observer appears shorter in the direction of motion:</p>
+    <div class="formula-box">
+      $$l = \frac{l_0}{\gamma} = l_0\sqrt{1-v^2/c^2}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$l_0$ = proper length (rest frame), $l$ = contracted length. Only the dimension parallel to motion contracts.</p>
+    </div>
+
+    <h3 class="subsection">Relativistic mass–energy</h3>
+    <div class="formula-box">
+      $$E = \gamma m_0 c^2 \qquad E_0 = m_0 c^2 \qquad E_k = (\gamma - 1)m_0 c^2$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$m_0$ = rest mass, $E_0$ = rest energy, $E_k$ = relativistic kinetic energy. At low speeds $E_k \approx \frac{1}{2}m_0v^2$.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Evidence for Special Relativity</strong>
+      <ul style="margin-top:0.4rem;margin-bottom:0">
+        <li><strong>Muon decay</strong>: cosmic ray muons (created 10 km up) reach Earth's surface despite their short half-life — only explained by time dilation in their rest frame / length contraction in ours</li>
+        <li><strong>GPS satellites</strong>: clocks on GPS satellites run fast (special relativity) and slow (general relativity); corrections are essential for accuracy</li>
+        <li><strong>Particle accelerators</strong>: particles approaching $c$ require increasing energy but cannot reach $c$ — consistent with $E = \gamma m_0 c^2$</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="lesson-section">
+    <h2 class="section-title">Practice Questions</h2>
+
+    <div class="practice-section" id="practice-a">
+      <div class="practice-header">
+        <div class="practice-title">Level A — Foundation</div>
+        <span class="difficulty-badge diff-a">Foundation</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q1</div><div class="q-text">State the two postulates of special relativity.</div></div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q2</div><div class="q-text">Light of frequency $8.0 \times 10^{14}$ Hz is incident on a metal with work function $3.2 \times 10^{-19}$ J. Calculate the maximum kinetic energy of emitted electrons.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q3</div><div class="q-text">Explain why the photoelectric effect cannot be explained by the wave model of light.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-b" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level B — Challenging</div>
+        <span class="difficulty-badge diff-b">Challenging</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q4</div><div class="q-text">A muon has a rest half-life of $1.56\ \mu\text{s}$ and travels at $0.98c$. Calculate its Lorentz factor $\gamma$ and its dilated half-life as measured in the Earth's frame.</div></div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q5</div><div class="q-text">A spaceship of rest length 200 m travels at $0.80c$ relative to Earth. Calculate its length as measured by an observer on Earth.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q6</div><div class="q-text">In Millikan's experiment, an oil droplet of radius $1.2\ \mu\text{m}$ and density $880\ \text{kg m}^{-3}$ is held stationary in a field of $5.0 \times 10^4\ \text{V m}^{-1}$. Calculate the charge on the droplet.</div></div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-c" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level C — Exam-style</div>
+        <span class="difficulty-badge diff-c">Exam-style</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q7</div><div class="q-text">Describe Thomson's experiment to measure $e/m$ for the electron. In your answer, explain how the crossed fields are used to find the electron speed and how the magnetic field alone is then used to determine $e/m$.</div></div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q8</div><div class="q-text">A proton ($m_0 = 1.67 \times 10^{-27}$ kg) is accelerated to a speed of $0.95c$. Calculate its total energy, rest energy, and kinetic energy. Compare the kinetic energy with the classical value $\frac{1}{2}m_0v^2$ and comment on the difference.</div></div>
+        <div class="q-marks">[7 marks]</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

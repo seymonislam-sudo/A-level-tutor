@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Physics — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:28px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  .option-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:#c084fc;margin-top:0.8rem}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  ul,ol{padding-left:1.4rem;margin-bottom:1rem;font-size:0.95rem}
+  li{margin-bottom:0.4rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Option B</div>
+  <a href="#physics-eye" class="sidebar-link active"><span class="sidebar-num">B.1</span> The Eye</a>
+  <a href="#imaging" class="sidebar-link"><span class="sidebar-num">B.2</span> Imaging Techniques</a>
+  <a href="#xrays" class="sidebar-link"><span class="sidebar-num">B.3</span> X-rays</a>
+  <a href="#ultrasound" class="sidebar-link"><span class="sidebar-num">B.4</span> Ultrasound</a>
+  <a href="#radioactivity" class="sidebar-link"><span class="sidebar-num">B.5</span> Radioactivity in Medicine</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Option B</div>
+    <div class="topic-num-badge">OPTION B</div>
+    <h1 class="topic-title">Medical Physics</h1>
+    <div class="option-badge">⚕ Paper 3 — Section B Option</div>
+    <p class="topic-intro" style="margin-top:1rem">Physics applied to the human body and medical technology — from the optics of the eye to X-ray imaging, ultrasound scanning, and the use of radioactive tracers in diagnosis and treatment.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 3 Section B</div>
+      <div class="meta-item"><span>Option B</span></div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#physics-eye">The Eye</a></li>
+      <li><a href="#imaging">Imaging Techniques</a></li>
+      <li><a href="#xrays">X-rays</a></li>
+      <li><a href="#ultrasound">Ultrasound</a></li>
+      <li><a href="#radioactivity">Radioactivity in Medicine</a></li>
+    </ul>
+  </div>
+
+  <!-- THE EYE -->
+  <div class="lesson-section" id="physics-eye">
+    <h2 class="section-title">The Eye</h2>
+    <p>The eye is an optical instrument. Understanding its structure and optics is central to Medical Physics.</p>
+
+    <h3 class="subsection">Structure and function</h3>
+    <table>
+      <tr><th>Part</th><th>Function</th></tr>
+      <tr><td>Cornea</td><td>Main refracting surface — provides ~70% of total refractive power</td></tr>
+      <tr><td>Lens</td><td>Fine-tunes focus by changing shape (accommodation)</td></tr>
+      <tr><td>Retina</td><td>Contains rods (low light) and cones (colour) — converts light to nerve signals</td></tr>
+      <tr><td>Fovea</td><td>Region of highest cone density — sharpest vision</td></tr>
+      <tr><td>Iris/Pupil</td><td>Controls amount of light entering the eye</td></tr>
+    </table>
+
+    <h3 class="subsection">Near point and far point</h3>
+    <ul>
+      <li><strong>Near point</strong> — closest point the eye can focus on (~25 cm for a normal eye)</li>
+      <li><strong>Far point</strong> — furthest point the eye can focus on (infinity for a normal eye)</li>
+    </ul>
+
+    <h3 class="subsection">Defects of vision</h3>
+    <table>
+      <tr><th>Defect</th><th>Cause</th><th>Correction</th></tr>
+      <tr><td>Myopia (short sight)</td><td>Eye too long — image forms in front of retina</td><td>Diverging (concave) lens</td></tr>
+      <tr><td>Hyperopia (long sight)</td><td>Eye too short — image forms behind retina</td><td>Converging (convex) lens</td></tr>
+      <tr><td>Astigmatism</td><td>Non-spherical cornea — different focal lengths in different planes</td><td>Cylindrical lens</td></tr>
+      <tr><td>Presbyopia</td><td>Loss of accommodation with age — lens becomes rigid</td><td>Reading glasses (converging)</td></tr>
+    </table>
+
+    <div class="formula-box">
+      $$P = \frac{1}{f} \qquad P = P_1 + P_2$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Power $P$ in dioptres (D), focal length $f$ in metres. Lenses in contact: powers add.</p>
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example</div>
+      <p class="example-q">A myopic eye has a far point of 2.0 m. What power of correcting lens is needed?</p>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">The lens must form a virtual image of a distant object (at infinity) at the far point (2.0 m).</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">Using $\frac{1}{f} = \frac{1}{v} - \frac{1}{u}$: object at $u = \infty$, image at $v = -2.0$ m (virtual, same side as object).</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$P = \frac{1}{f} = \frac{1}{-2.0} = -0.50\ \text{D}$ — a diverging lens of power −0.50 D.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGING -->
+  <div class="lesson-section" id="imaging">
+    <h2 class="section-title">Imaging Techniques</h2>
+    <p>Different imaging techniques use different parts of the electromagnetic spectrum or sound waves, each with distinct advantages.</p>
+
+    <table>
+      <tr><th>Technique</th><th>Radiation</th><th>Best for</th><th>Limitation</th></tr>
+      <tr><td>X-ray (planar)</td><td>X-rays</td><td>Bones, dense structures</td><td>2D only, ionising</td></tr>
+      <tr><td>CT scan</td><td>X-rays (rotating)</td><td>3D cross-sections</td><td>High radiation dose</td></tr>
+      <tr><td>MRI</td><td>Radio waves + magnetic field</td><td>Soft tissue</td><td>Slow, expensive</td></tr>
+      <tr><td>Ultrasound</td><td>Sound (>20 kHz)</td><td>Foetal imaging, soft tissue</td><td>Poor through bone/air</td></tr>
+      <tr><td>PET scan</td><td>Gamma rays (from positrons)</td><td>Metabolic activity, cancer</td><td>Very expensive</td></tr>
+    </table>
+  </div>
+
+  <!-- X-RAYS -->
+  <div class="lesson-section" id="xrays">
+    <h2 class="section-title">X-rays</h2>
+
+    <h3 class="subsection">Production</h3>
+    <p>X-rays are produced in an X-ray tube: electrons are accelerated through a high voltage and decelerate rapidly on hitting a metal (tungsten) target, emitting X-ray photons (Bremsstrahlung). Characteristic X-rays are also produced when inner-shell electrons are knocked out and higher-energy electrons fall to fill the gaps.</p>
+
+    <div class="formula-box">
+      $$eV = \frac{1}{2}mv^2 = hf_{\max} = \frac{hc}{\lambda_{\min}}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Maximum photon energy equals the kinetic energy of the electron. $V$ = accelerating voltage.</p>
+    </div>
+
+    <h3 class="subsection">Attenuation</h3>
+    <p>As X-rays pass through matter, their intensity decreases exponentially:</p>
+    <div class="formula-box">
+      $$I = I_0 e^{-\mu x}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$I_0$ = incident intensity, $\mu$ = linear attenuation coefficient (m⁻¹), $x$ = thickness (m). The <strong>half-value thickness</strong> $x_{1/2} = \frac{\ln 2}{\mu}$.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Contrast and Image Quality</strong>
+      Bones have higher $\mu$ than soft tissue — they absorb more X-rays and appear white on the image. Contrast agents (barium, iodine) increase $\mu$ in soft tissues (gut, blood vessels) to make them visible.
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example</div>
+      <p class="example-q">X-rays of intensity $I_0$ pass through 4.0 cm of tissue with $\mu = 12\ \text{m}^{-1}$. Find the transmitted intensity as a fraction of $I_0$.</p>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">Convert: $x = 4.0\ \text{cm} = 0.040\ \text{m}$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$I = I_0 e^{-12 \times 0.040} = I_0 e^{-0.48} = 0.619\, I_0$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">About 62% of the X-rays are transmitted.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ULTRASOUND -->
+  <div class="lesson-section" id="ultrasound">
+    <h2 class="section-title">Ultrasound</h2>
+    <p>Ultrasound uses sound waves with frequency above 20 kHz (typically 1–15 MHz in medical imaging). Pulses are emitted and reflections (echoes) are detected — the time delay gives depth information.</p>
+
+    <div class="formula-box">
+      $$d = \frac{v \cdot t}{2}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$d$ = depth of reflecting surface, $v$ = speed of sound in tissue (~1500 m s⁻¹), $t$ = time for pulse to travel to surface and back.</p>
+    </div>
+
+    <h3 class="subsection">Acoustic impedance</h3>
+    <p>The fraction of ultrasound reflected at a boundary depends on the <strong>acoustic impedance</strong> $Z$ of each medium:</p>
+    <div class="formula-box">
+      $$Z = \rho v \qquad \frac{I_r}{I_i} = \left(\frac{Z_2 - Z_1}{Z_2 + Z_1}\right)^2$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$\rho$ = density, $v$ = speed of sound. Large impedance mismatch → most energy reflected. Gel is used to match impedance between transducer and skin.</p>
+    </div>
+
+    <div class="key-point">
+      <strong>A-scan vs B-scan</strong>
+      <strong>A-scan</strong> (amplitude scan): displays echo amplitude vs time — used in ophthalmology for eye measurements.<br>
+      <strong>B-scan</strong> (brightness scan): many A-scans combined to produce a 2D image — used in obstetrics, abdominal imaging.
+    </div>
+  </div>
+
+  <!-- RADIOACTIVITY IN MEDICINE -->
+  <div class="lesson-section" id="radioactivity">
+    <h2 class="section-title">Radioactivity in Medicine</h2>
+
+    <h3 class="subsection">Diagnosis — Gamma cameras and PET</h3>
+    <p>Radioactive tracers emitting gamma rays are injected and accumulate in specific organs. A <strong>gamma camera</strong> detects the gamma radiation to produce an image of organ function.</p>
+    <p>In a <strong>PET scan</strong>, a positron-emitting tracer (e.g. fluorine-18) is used. Positrons annihilate with electrons producing two gamma photons travelling in opposite directions — detected simultaneously by a ring of detectors.</p>
+
+    <div class="key-point">
+      <strong>Choice of Tracer</strong>
+      An ideal medical tracer should:<br>
+      <ul style="margin-top:0.4rem;margin-bottom:0">
+        <li>Emit gamma rays only (not alpha or beta — they would be absorbed internally and damage tissue)</li>
+        <li>Have a short half-life (reduces patient dose) but long enough to complete the scan</li>
+        <li>Be chemically taken up by the target organ</li>
+        <li>Technetium-99m is the most widely used — $t_{1/2} = 6.0\ \text{hours}$, pure gamma emitter</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">Therapy — Radiotherapy</h3>
+    <p>High-energy radiation (gamma or X-rays) is used to destroy cancer cells. The beam is directed at the tumour from multiple angles so the healthy tissue receives a lower dose while the tumour receives a high cumulative dose.</p>
+
+    <div class="formula-box">
+      $$A = A_0 e^{-\lambda t} = A_0 \left(\frac{1}{2}\right)^{t/t_{1/2}}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Activity $A$ (Bq), decay constant $\lambda = \frac{\ln 2}{t_{1/2}}$, half-life $t_{1/2}$.</p>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="lesson-section">
+    <h2 class="section-title">Practice Questions</h2>
+
+    <div class="practice-section" id="practice-a">
+      <div class="practice-header">
+        <div class="practice-title">Level A — Foundation</div>
+        <span class="difficulty-badge diff-a">Foundation</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q1</div><div class="q-text">State the difference between a near point and a far point. Give typical values for a normal eye.</div></div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q2</div><div class="q-text">A person's far point is 0.50 m. Calculate the power of the correcting lens needed. State whether it is converging or diverging.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q3</div><div class="q-text">State two properties that make technetium-99m suitable for use as a medical tracer.</div></div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-b" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level B — Challenging</div>
+        <span class="difficulty-badge diff-b">Challenging</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q4</div><div class="q-text">X-rays of intensity $5.0 \times 10^3\ \text{W m}^{-2}$ are incident on tissue with linear attenuation coefficient $\mu = 18\ \text{m}^{-1}$. Calculate the half-value thickness and the intensity after passing through 3.0 cm of tissue.</div></div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q5</div><div class="q-text">An ultrasound pulse travels into soft tissue (speed 1540 m s⁻¹) and an echo returns after 65 μs. Calculate the depth of the reflecting surface.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q6</div><div class="q-text">Tissue A has acoustic impedance $1.5 \times 10^6\ \text{kg m}^{-2}\text{s}^{-1}$ and tissue B has $1.8 \times 10^6\ \text{kg m}^{-2}\text{s}^{-1}$. Calculate the fraction of ultrasound intensity reflected at the boundary.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-c" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level C — Exam-style</div>
+        <span class="difficulty-badge diff-c">Exam-style</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q7</div><div class="q-text">Compare X-ray imaging and MRI scanning. In your answer discuss: the type of radiation used, the structures best imaged, the hazards to the patient, and one advantage of each technique.</div></div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q8</div><div class="q-text">Explain how a PET scanner works, from injection of the tracer to formation of the image. Include an explanation of why two detectors must fire simultaneously.</div></div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

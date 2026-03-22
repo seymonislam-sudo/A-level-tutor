@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Physics — A Level Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#f59e0b;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#f59e0b;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:28px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  .option-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:20px;padding:0.3rem 0.8rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:#c084fc;margin-top:0.8rem}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .formula-box{background:var(--accent-dim);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem 2rem;margin:1.5rem 0;position:relative}
+  .formula-box::before{content:'KEY FORMULA';position:absolute;top:-0.6rem;left:1rem;background:var(--accent);color:var(--bg);font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.1em;padding:0.15rem 0.6rem;border-radius:4px}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(245,158,11,0.12);color:var(--accent);border:1px solid rgba(245,158,11,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:16px;height:1px;background:var(--border);flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
+  th{padding:0.6rem 1rem;border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;background:var(--surface2);text-align:left}
+  td{padding:0.55rem 1rem;border:1px solid var(--border)}
+  tr:nth-child(even){background:rgba(255,255,255,0.02)}
+  ul,ol{padding-left:1.4rem;margin-bottom:1rem;font-size:0.95rem}
+  li{margin-bottom:0.4rem}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Option C</div>
+  <a href="#rotation" class="sidebar-link active"><span class="sidebar-num">C.1</span> Rotational Dynamics</a>
+  <a href="#thermodynamics" class="sidebar-link"><span class="sidebar-num">C.2</span> Thermodynamics</a>
+  <a href="#engines" class="sidebar-link"><span class="sidebar-num">C.3</span> Heat Engines</a>
+  <a href="#fluids" class="sidebar-link"><span class="sidebar-num">C.4</span> Fluid Flow</a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-title">Practice</div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">A</span> Foundation</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">B</span> Challenging</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">C</span> Exam-style</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Option C</div>
+    <div class="topic-num-badge">OPTION C</div>
+    <h1 class="topic-title">Engineering Physics</h1>
+    <div class="option-badge">⚙ Paper 3 — Section B Option</div>
+    <p class="topic-intro" style="margin-top:1rem">The physics of machines, heat engines, and fluid flow. Rotational dynamics extends your mechanics knowledge to spinning objects; thermodynamics underpins every heat engine from steam turbines to car engines.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>4</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 3 Section B</div>
+      <div class="meta-item"><span>Option C</span></div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#rotation">Rotational Dynamics</a></li>
+      <li><a href="#thermodynamics">Thermodynamics</a></li>
+      <li><a href="#engines">Heat Engines &amp; Cycles</a></li>
+      <li><a href="#fluids">Fluid Flow</a></li>
+    </ul>
+  </div>
+
+  <!-- ROTATIONAL DYNAMICS -->
+  <div class="lesson-section" id="rotation">
+    <h2 class="section-title">Rotational Dynamics</h2>
+    <p>Rotational dynamics is the rotational analogue of linear mechanics. Every linear quantity has a rotational equivalent.</p>
+
+    <table>
+      <tr><th>Linear</th><th>Symbol</th><th>Rotational equivalent</th><th>Symbol</th></tr>
+      <tr><td>Displacement</td><td>$s$</td><td>Angle</td><td>$\theta$</td></tr>
+      <tr><td>Velocity</td><td>$v$</td><td>Angular velocity</td><td>$\omega$</td></tr>
+      <tr><td>Acceleration</td><td>$a$</td><td>Angular acceleration</td><td>$\alpha$</td></tr>
+      <tr><td>Mass</td><td>$m$</td><td>Moment of inertia</td><td>$I$</td></tr>
+      <tr><td>Force</td><td>$F$</td><td>Torque</td><td>$\tau$</td></tr>
+      <tr><td>Newton's 2nd law: $F=ma$</td><td></td><td>$\tau = I\alpha$</td><td></td></tr>
+      <tr><td>KE $= \frac{1}{2}mv^2$</td><td></td><td>Rotational KE $= \frac{1}{2}I\omega^2$</td><td></td></tr>
+      <tr><td>Momentum $p = mv$</td><td></td><td>Angular momentum $L = I\omega$</td><td></td></tr>
+    </table>
+
+    <h3 class="subsection">Moment of Inertia</h3>
+    <p>The moment of inertia $I$ depends on both the mass and its distribution relative to the axis of rotation:</p>
+    <div class="formula-box">
+      $$I = \sum m_i r_i^2$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Common cases: solid disc $I = \frac{1}{2}MR^2$, solid sphere $I = \frac{2}{5}MR^2$, thin ring $I = MR^2$, thin rod about centre $I = \frac{1}{12}ML^2$.</p>
+    </div>
+
+    <h3 class="subsection">Conservation of Angular Momentum</h3>
+    <p>In the absence of external torques, angular momentum is conserved: $I_1\omega_1 = I_2\omega_2$. This explains why a spinning figure skater speeds up when pulling their arms in.</p>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example</div>
+      <p class="example-q">A solid disc of mass 2.0 kg and radius 0.30 m rotates at 12 rad s⁻¹. A torque of 1.8 N m is applied. Find the angular acceleration and the new angular velocity after 4.0 s.</p>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$I = \frac{1}{2}MR^2 = \frac{1}{2}(2.0)(0.30)^2 = 0.090\ \text{kg m}^2$</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$\alpha = \frac{\tau}{I} = \frac{1.8}{0.090} = 20\ \text{rad s}^{-2}$</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">$\omega = \omega_0 + \alpha t = 12 + (20)(4.0) = 92\ \text{rad s}^{-1}$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THERMODYNAMICS -->
+  <div class="lesson-section" id="thermodynamics">
+    <h2 class="section-title">Thermodynamics</h2>
+
+    <h3 class="subsection">First Law of Thermodynamics</h3>
+    <div class="formula-box">
+      $$\Delta U = Q + W$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$\Delta U$ = increase in internal energy, $Q$ = heat supplied <em>to</em> system, $W$ = work done <em>on</em> system. (AQA sign convention: $W$ done on gas is positive.)</p>
+    </div>
+
+    <h3 class="subsection">Thermodynamic processes</h3>
+    <table>
+      <tr><th>Process</th><th>Condition</th><th>Key result</th></tr>
+      <tr><td>Isothermal</td><td>Constant temperature ($\Delta U = 0$)</td><td>$Q = -W$ (heat out = work done by gas)</td></tr>
+      <tr><td>Adiabatic</td><td>No heat exchange ($Q = 0$)</td><td>$\Delta U = W$ (work done on gas increases internal energy)</td></tr>
+      <tr><td>Isovolumetric (isochoric)</td><td>Constant volume ($W = 0$)</td><td>$\Delta U = Q$</td></tr>
+      <tr><td>Isobaric</td><td>Constant pressure</td><td>$W = p\Delta V$</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Work done by/on a gas</strong>
+      Work done <em>by</em> a gas expanding: $W = p\Delta V$ (for constant pressure).<br>
+      On a $p$–$V$ diagram, the work done is the area under the curve.
+    </div>
+  </div>
+
+  <!-- HEAT ENGINES -->
+  <div class="lesson-section" id="engines">
+    <h2 class="section-title">Heat Engines &amp; Cycles</h2>
+    <p>A heat engine takes in heat $Q_H$ from a hot reservoir, does useful work $W$, and rejects waste heat $Q_C$ to a cold reservoir.</p>
+
+    <div class="formula-box">
+      $$\eta = \frac{W}{Q_H} = 1 - \frac{Q_C}{Q_H} \qquad \eta_{\text{Carnot}} = 1 - \frac{T_C}{T_H}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Efficiency $\eta$ (as a fraction). Carnot efficiency is the maximum theoretical efficiency for temperatures $T_C$ and $T_H$ in Kelvin.</p>
+    </div>
+
+    <h3 class="subsection">The Carnot Cycle</h3>
+    <p>The most efficient possible cycle between two temperatures. It consists of four reversible processes on a $p$–$V$ diagram:</p>
+    <ol>
+      <li><strong>Isothermal expansion</strong> at $T_H$ — absorbs heat $Q_H$</li>
+      <li><strong>Adiabatic expansion</strong> — temperature falls from $T_H$ to $T_C$</li>
+      <li><strong>Isothermal compression</strong> at $T_C$ — rejects heat $Q_C$</li>
+      <li><strong>Adiabatic compression</strong> — temperature rises from $T_C$ to $T_H$</li>
+    </ol>
+
+    <div class="key-point">
+      <strong>Second Law of Thermodynamics</strong>
+      It is impossible to convert heat entirely into work in a cyclic process — some heat must always be rejected to a cold reservoir. This is why no real engine can reach 100% efficiency.
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example</div>
+      <p class="example-q">A heat engine operates between 500 K and 300 K. It takes in 2000 J per cycle. Calculate the Carnot efficiency and the maximum work output per cycle.</p>
+      <div class="example-steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content">$\eta_{\text{Carnot}} = 1 - \frac{T_C}{T_H} = 1 - \frac{300}{500} = 0.40$ (40%)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">$W_{\max} = \eta \times Q_H = 0.40 \times 2000 = 800\ \text{J}$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLUID FLOW -->
+  <div class="lesson-section" id="fluids">
+    <h2 class="section-title">Fluid Flow</h2>
+
+    <h3 class="subsection">Viscosity</h3>
+    <p>Viscosity is a fluid's resistance to flow. For a viscous fluid flowing past a surface, there is a velocity gradient and a drag force (Stokes' law for a sphere):</p>
+    <div class="formula-box">
+      $$F = 6\pi\eta r v$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">$F$ = drag force, $\eta$ = dynamic viscosity (Pa s), $r$ = sphere radius, $v$ = velocity.</p>
+    </div>
+
+    <h3 class="subsection">Equation of Continuity</h3>
+    <div class="formula-box">
+      $$A_1 v_1 = A_2 v_2$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">For an incompressible fluid: where the pipe is narrower, the fluid flows faster. $A$ = cross-sectional area, $v$ = flow speed.</p>
+    </div>
+
+    <h3 class="subsection">Bernoulli's Equation</h3>
+    <div class="formula-box">
+      $$p + \frac{1}{2}\rho v^2 + \rho g h = \text{constant}$$
+      <p style="margin:0.5rem 0 0;font-size:0.88rem">Where flow speed is higher, pressure is lower. Explains lift on aircraft wings, flow through constrictions (Venturi effect).</p>
+    </div>
+
+    <div class="key-point">
+      <strong>Laminar vs Turbulent Flow</strong>
+      <strong>Laminar flow</strong>: smooth, orderly layers — occurs at low speeds. <strong>Turbulent flow</strong>: chaotic eddies — occurs above a critical speed. The Reynolds number $Re = \frac{\rho v d}{\eta}$ predicts the transition: $Re &lt; 1000$ laminar, $Re &gt; 2000$ turbulent.
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="lesson-section">
+    <h2 class="section-title">Practice Questions</h2>
+
+    <div class="practice-section" id="practice-a">
+      <div class="practice-header">
+        <div class="practice-title">Level A — Foundation</div>
+        <span class="difficulty-badge diff-a">Foundation</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q1</div><div class="q-text">State the rotational analogue of Newton's second law. Define all symbols used.</div></div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q2</div><div class="q-text">A heat engine takes in 5000 J and rejects 3000 J. Calculate its efficiency.</div></div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q3</div><div class="q-text">State the equation of continuity for fluid flow and explain what it tells us about fluid speed in a narrowing pipe.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-b" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level B — Challenging</div>
+        <span class="difficulty-badge diff-b">Challenging</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q4</div><div class="q-text">A solid cylinder (mass 3.0 kg, radius 0.15 m) is initially at rest. A torque of 2.7 N m is applied for 6.0 s. Calculate the moment of inertia, angular acceleration, and final angular velocity.</div></div>
+        <div class="q-marks">[5 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q5</div><div class="q-text">A Carnot engine operates between 600 K and 400 K. Calculate its efficiency. If the engine produces 3600 J of work per cycle, calculate $Q_H$ and $Q_C$.</div></div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q6</div><div class="q-text">Water flows through a pipe of diameter 4.0 cm at 2.0 m s⁻¹. The pipe narrows to diameter 2.0 cm. Calculate the flow speed in the narrow section.</div></div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-c" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level C — Exam-style</div>
+        <span class="difficulty-badge diff-c">Exam-style</span>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q7</div><div class="q-text">A figure skater spins with arms outstretched, with moment of inertia $4.2\ \text{kg m}^2$ at $2.0\ \text{rad s}^{-1}$. She pulls her arms in, reducing $I$ to $1.4\ \text{kg m}^2$. Calculate her new angular velocity and the change in rotational kinetic energy. Explain why KE changes even though no external torque acts.</div></div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+      <div class="question-item">
+        <div><div class="q-num">Q8</div><div class="q-text">Sketch a $p$–$V$ diagram for the Carnot cycle, labelling all four stages. Explain why the Carnot engine represents the maximum possible efficiency and why no real engine can achieve it.</div></div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

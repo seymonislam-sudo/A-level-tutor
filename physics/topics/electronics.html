@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electronics — AQA Physics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+<style>
+  :root {
+    --bg: #0d0d14; --surface: #16161f; --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1); --text: #f0f0f8; --muted: #a0a0c0;
+    --accent: #f59e0b; --accent-dim: rgba(245,158,11,0.1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px; pointer-events: none; z-index: 0;
+  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.07; pointer-events: none; z-index: 0; }
+  .orb-1 { width: 600px; height: 600px; background: #f59e0b; top: -200px; right: -100px; }
+  .orb-2 { width: 500px; height: 500px; background: #d97706; bottom: -100px; left: -100px; }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: space-between;
+    background: rgba(13,13,20,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  .nav-logo span { color: var(--accent); }
+  .nav-back { color: #d0d0e8; text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent); }
+  .page-header {
+    position: relative; z-index: 1;
+    padding: 8rem 2.5rem 3rem; max-width: 860px; margin: 0 auto;
+    animation: fadeUp 0.6s ease both;
+  }
+  .breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+  .topic-badge {
+    display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(245,158,11,0.3);
+    padding: 0.25rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; letter-spacing: 0.06em;
+  }
+  h1.page-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem;
+  }
+  .page-intro { font-size: 1rem; color: var(--muted); max-width: 600px; margin-bottom: 2rem; }
+  .content { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 2.5rem 8rem; animation: fadeUp 0.6s 0.1s ease both; }
+  .section { margin-bottom: 3.5rem; }
+  .section-title {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: var(--accent); }
+  p { color: var(--muted); margin-bottom: 1rem; font-size: 0.95rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; margin-bottom: 1.25rem; }
+  .formula-box {
+    background: var(--surface2); border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1rem 0;
+    font-family: 'DM Mono', monospace; font-size: 0.9rem;
+  }
+  .formula-box .label { font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; text-align: left; padding: 0.6rem 1rem; border-bottom: 1px solid rgba(245,158,11,0.3); background: var(--surface2); }
+  td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .highlight { color: var(--text); }
+  .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 4px; }
+  /* Questions */
+  .q-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 1rem; }
+  .q-level { font-family: 'DM Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.2rem 0.6rem; border-radius: 4px; display: inline-block; margin-bottom: 0.75rem; }
+  .level-a { background: rgba(52,211,153,0.1); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+  .level-b { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+  .level-c { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+  .q-text { font-size: 0.95rem; color: var(--text); margin-bottom: 0.75rem; line-height: 1.6; }
+  .show-btn {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--accent);
+    background: var(--accent-dim); border: 1px solid rgba(245,158,11,0.3);
+    padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  }
+  .show-btn:hover { background: rgba(245,158,11,0.2); }
+  .answer { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+  .answer.open { display: block; }
+  .answer strong { color: var(--text); }
+  @media (max-width: 768px) {
+    .page-header { padding: 7rem 1.5rem 2rem; }
+    .content { padding: 0 1.5rem 5rem; }
+    nav { padding: 1rem 1.5rem; }
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Physics</a>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Physics</a> / Electronics</div>
+  <div class="topic-badge">Option E · AQA 7408/3E</div>
+  <h1 class="page-title">Electronics</h1>
+  <p class="page-intro">Semiconductor devices, op-amps and feedback circuits — from diodes and transistors through to oscillators and signal processing. The full AQA A Level Electronics option.</p>
+  <div class="tag-row">
+    <span class="tag">Semiconductors</span>
+    <span class="tag">Op-amps</span>
+    <span class="tag">Feedback</span>
+    <span class="tag">Oscillators</span>
+    <span class="tag">Signal processing</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- 1. Semiconductor Devices -->
+  <div class="section">
+    <div class="section-title">// 1 — Semiconductor Devices</div>
+
+    <div class="card">
+      <h2>Discrete Semiconductor Devices</h2>
+      <p>Semiconductors have conductivity between conductors and insulators. Doping introduces free charge carriers: <em>n-type</em> semiconductors have donor atoms (extra electrons); <em>p-type</em> semiconductors have acceptor atoms (extra holes).</p>
+
+      <h3>The p-n Junction Diode</h3>
+      <p>At the junction, electrons diffuse from n to p and holes from p to n, creating a <strong>depletion region</strong> with an internal electric field. This gives a potential barrier (~0.6 V for silicon) opposing further diffusion.</p>
+      <table>
+        <tr><th>Bias</th><th>Depletion region</th><th>Current</th></tr>
+        <tr><td class="highlight">Forward (p+, n−)</td><td>Narrows</td><td>Flows freely above ~0.6 V</td></tr>
+        <tr><td class="highlight">Reverse (p−, n+)</td><td>Widens</td><td>~0 (only tiny leakage)</td></tr>
+        <tr><td class="highlight">Breakdown</td><td>—</td><td>Large current at high reverse voltage</td></tr>
+      </table>
+      <p>The I–V characteristic is exponential for forward bias: $I = I_0(e^{eV/k_BT} - 1)$. In practice the "knee" at ~0.6 V is used.</p>
+
+      <h3>Light-Emitting Diode (LED)</h3>
+      <p>When forward biased, electrons and holes recombine at the junction, releasing energy as photons. The photon energy equals the band-gap energy of the semiconductor:</p>
+      <div class="formula-box">
+        <div class="label">Photon energy from LED</div>
+        $eV = hf = \frac{hc}{\lambda}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">where $V$ is the forward voltage at onset of emission.</p>
+      </div>
+      <p>Different semiconductor materials give different colours (band gaps): GaAs ≈ infrared; GaP ≈ red/green; GaN ≈ blue/white.</p>
+
+      <h3>The npn Transistor as a Switch &amp; Amplifier</h3>
+      <p>A bipolar junction transistor (BJT) has emitter (E), base (B) and collector (C). A small base current $I_B$ controls a much larger collector current $I_C$.</p>
+      <div class="formula-box">
+        <div class="label">Current gain (h<sub>FE</sub> or β)</div>
+        $h_{FE} = \frac{I_C}{I_B}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Typical values: 100–500. Also $I_E = I_B + I_C$.</p>
+      </div>
+      <p>In the <strong>switch mode</strong> the transistor is either fully off (cut-off: $V_{BE} &lt; 0.6\text{ V}$) or fully on (saturation). In <strong>amplifier mode</strong> it operates in the active region, amplifying $I_B$ into $I_C$.</p>
+    </div>
+  </div>
+
+  <!-- 2. Capacitors in Electronic Circuits -->
+  <div class="section">
+    <div class="section-title">// 2 — Capacitors in Electronic Circuits</div>
+
+    <div class="card">
+      <h2>Capacitors and RC Circuits</h2>
+      <p>Capacitors block DC but pass AC — they are used extensively for coupling, smoothing, and filtering.</p>
+
+      <h3>Smoothing a Rectified Supply</h3>
+      <p>A capacitor across a load stores charge during each half-cycle and releases it when the diode is not conducting, smoothing the output. The <strong>ripple voltage</strong> depends on the RC time constant.</p>
+      <div class="formula-box">
+        <div class="label">Approximate ripple voltage</div>
+        $\Delta V \approx \frac{I}{fC} = \frac{V}{fCR}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">where $f$ is the frequency of the rectified supply. Larger $C$ → smaller ripple.</p>
+      </div>
+
+      <h3>RC Time Constant</h3>
+      <div class="formula-box">
+        <div class="label">Charge / discharge equations</div>
+        $V_C = V_0\,e^{-t/RC}$ (discharging) &nbsp;&nbsp; $V_C = V_0(1-e^{-t/RC})$ (charging)
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Time constant $\tau = RC$. After one $\tau$, voltage falls to $\approx 37\%$ of $V_0$.</p>
+      </div>
+
+      <h3>Filters</h3>
+      <table>
+        <tr><th>Filter type</th><th>Circuit</th><th>Passes</th></tr>
+        <tr><td class="highlight">Low-pass</td><td>R in series, C to earth</td><td>Low frequencies (≪ $1/RC$)</td></tr>
+        <tr><td class="highlight">High-pass</td><td>C in series, R to earth</td><td>High frequencies (≫ $1/RC$)</td></tr>
+      </table>
+      <p>The cut-off (−3 dB) frequency is $f_c = \frac{1}{2\pi RC}$. Above/below $f_c$ the output amplitude falls to $1/\sqrt{2}$ of the input.</p>
+    </div>
+  </div>
+
+  <!-- 3. Operational Amplifiers -->
+  <div class="section">
+    <div class="section-title">// 3 — Operational Amplifiers</div>
+
+    <div class="card">
+      <h2>The Ideal Op-Amp</h2>
+      <p>An operational amplifier (op-amp) has two inputs: <strong>inverting (−)</strong> and <strong>non-inverting (+)</strong>. Its output is:</p>
+      <div class="formula-box">
+        <div class="label">Open-loop output</div>
+        $V_{out} = A_{OL}(V_+ - V_-)$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">$A_{OL}$ (open-loop gain) is typically $10^5$–$10^6$. The op-amp saturates at ≈ ±$V_{supply}$ for very small differential inputs.</p>
+      </div>
+
+      <h3>Ideal Op-Amp Properties</h3>
+      <table>
+        <tr><th>Property</th><th>Ideal value</th><th>Real (LM741)</th></tr>
+        <tr><td class="highlight">Open-loop gain $A_{OL}$</td><td>∞</td><td>~$10^5$</td></tr>
+        <tr><td class="highlight">Input impedance</td><td>∞</td><td>~2 MΩ</td></tr>
+        <tr><td class="highlight">Output impedance</td><td>0</td><td>~75 Ω</td></tr>
+        <tr><td class="highlight">Bandwidth</td><td>∞</td><td>Limited by GBP</td></tr>
+      </table>
+
+      <h3>The Golden Rules (for circuits with negative feedback)</h3>
+      <p>When negative feedback is applied:</p>
+      <ol style="color:var(--muted); font-size:0.95rem; padding-left:1.5rem; margin-bottom:1rem;">
+        <li>The two inputs are at the same potential: $V_+ = V_-$ (virtual short)</li>
+        <li>No current enters either input terminal (infinite input impedance)</li>
+      </ol>
+      <p>These rules simplify circuit analysis enormously.</p>
+    </div>
+
+    <div class="card">
+      <h2>Inverting Amplifier</h2>
+      <p>Resistor $R_{in}$ connects the signal to the inverting input; feedback resistor $R_f$ connects the output back to the inverting input. The non-inverting input is grounded.</p>
+      <div class="formula-box">
+        <div class="label">Closed-loop gain</div>
+        $A = -\frac{R_f}{R_{in}}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Negative sign = phase inversion. Virtual earth: $V_- \approx 0$ because $V_+ = 0$.</p>
+      </div>
+      <p><strong>Derivation using virtual earth:</strong> Current through $R_{in}$ is $I = V_{in}/R_{in}$. Since no current enters the op-amp input, the same current flows through $R_f$, giving $V_{out} = -IR_f = -(R_f/R_{in})V_{in}$.</p>
+    </div>
+
+    <div class="card">
+      <h2>Non-Inverting Amplifier</h2>
+      <p>The signal connects to the non-inverting (+) input. $R_f$ and $R_1$ form a voltage-divider feedback network to the inverting input.</p>
+      <div class="formula-box">
+        <div class="label">Closed-loop gain</div>
+        $A = 1 + \frac{R_f}{R_1}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Always $\geq 1$. Output is in phase with input.</p>
+      </div>
+      <p>Setting $R_1 \to \infty$ (open) and $R_f = 0$ gives $A = 1$ — this is the <strong>voltage follower</strong> (buffer), which has very high input impedance and very low output impedance, useful for impedance matching.</p>
+    </div>
+
+    <div class="card">
+      <h2>Comparator (Open-Loop Op-Amp)</h2>
+      <p>Without feedback, the op-amp acts as a comparator. The output swings to $+V_{sat}$ or $-V_{sat}$ depending on the sign of $(V_+ - V_-)$. Used in threshold-detection circuits.</p>
+      <p>Example: light-activated switch — LDR voltage compared to a reference set by a potential divider. When light level falls, output switches, turning on an LED or relay.</p>
+    </div>
+  </div>
+
+  <!-- 4. Negative Feedback & Bandwidth -->
+  <div class="section">
+    <div class="section-title">// 4 — Negative Feedback &amp; Bandwidth</div>
+
+    <div class="card">
+      <h2>Effects of Negative Feedback</h2>
+      <table>
+        <tr><th>Property</th><th>Effect of negative feedback</th></tr>
+        <tr><td class="highlight">Gain</td><td>Reduced and stabilised (set by resistor ratio, not $A_{OL}$)</td></tr>
+        <tr><td class="highlight">Bandwidth</td><td>Increased — gain–bandwidth product is constant</td></tr>
+        <tr><td class="highlight">Distortion</td><td>Reduced</td></tr>
+        <tr><td class="highlight">Input impedance</td><td>Increased (non-inverting) or set by $R_{in}$ (inverting)</td></tr>
+        <tr><td class="highlight">Output impedance</td><td>Decreased</td></tr>
+      </table>
+
+      <h3>Gain–Bandwidth Product (GBP)</h3>
+      <div class="formula-box">
+        <div class="label">Constant for a given op-amp</div>
+        $\text{GBP} = A_{CL} \times f_{-3\text{dB}} = \text{constant}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Higher closed-loop gain → lower bandwidth. Example: GBP = 1 MHz, $A_{CL}$ = 100 → $f_{-3\text{dB}}$ = 10 kHz.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Oscillators -->
+  <div class="section">
+    <div class="section-title">// 5 — Oscillators</div>
+
+    <div class="card">
+      <h2>The Phase-Shift Oscillator</h2>
+      <p>An oscillator is an amplifier with <strong>positive feedback</strong>. Oscillations are sustained when the <strong>Barkhausen criterion</strong> is satisfied:</p>
+      <ol style="color:var(--muted); font-size:0.95rem; padding-left:1.5rem; margin-bottom:1rem;">
+        <li>Loop gain = 1 (amplifier gain × feedback fraction = 1)</li>
+        <li>Total phase shift around the loop = 0° (or 360°)</li>
+      </ol>
+      <p>A <strong>phase-shift oscillator</strong> uses a chain of three RC sections, each providing 60° of phase shift at the oscillation frequency, giving the required 180° (the inverting amplifier provides the other 180°).</p>
+      <div class="formula-box">
+        <div class="label">Oscillation frequency (3-stage RC phase-shift)</div>
+        $f = \frac{1}{2\pi RC\sqrt{6}}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">The amplifier gain must be at least 29 to overcome the attenuation of the RC network.</p>
+      </div>
+
+      <h3>The Wien Bridge Oscillator</h3>
+      <p>Uses a Wien network (series RC + parallel RC) as the positive feedback element. The non-inverting amplifier gain must equal exactly 3 to sustain oscillations.</p>
+      <div class="formula-box">
+        <div class="label">Wien bridge oscillation frequency</div>
+        $f = \frac{1}{2\pi RC}$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Required gain $A = 1 + R_f/R_1 = 3$, so $R_f = 2R_1$.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Output Devices -->
+  <div class="section">
+    <div class="section-title">// 6 — Output Devices &amp; Signal Processing</div>
+
+    <div class="card">
+      <h2>Output Devices</h2>
+
+      <h3>Relays</h3>
+      <p>A relay uses a small control current through an electromagnet to switch a mechanically separate, high-power circuit. A <strong>protection diode</strong> (flyback diode) is connected in reverse-bias across the relay coil to suppress the back-EMF spike when current switches off.</p>
+
+      <h3>Thermistors and LDRs as Sensors</h3>
+      <p>NTC thermistors have resistance that <em>decreases</em> with increasing temperature. LDRs have resistance that decreases with increasing light intensity. Both are used in potential-divider circuits to produce a varying voltage input to a comparator or op-amp.</p>
+
+      <h3>Piezoelectric Transducers</h3>
+      <p>Some crystals (e.g. quartz) generate a voltage when mechanically stressed (piezoelectric effect), and conversely deform when a voltage is applied. Used as sensors (microphones, accelerometers) and actuators (buzzers, ultrasound transducers).</p>
+
+      <h3>Signal-to-Noise Ratio (SNR)</h3>
+      <div class="formula-box">
+        <div class="label">SNR in decibels</div>
+        $\text{SNR (dB)} = 10 \log_{10}\!\left(\frac{P_{signal}}{P_{noise}}\right) = 20 \log_{10}\!\left(\frac{V_{signal}}{V_{noise}}\right)$
+        <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--muted)">Higher SNR = cleaner signal. Amplifying a signal also amplifies noise, so SNR does not improve with amplification.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Questions -->
+  <div class="section">
+    <div class="section-title">// Practice Questions</div>
+
+    <div class="q-block">
+      <span class="q-level level-a">Level A — Foundation</span>
+      <div class="q-text">1. An LED requires a forward voltage of 1.9 V and is connected to a 9 V supply in series with a resistor. Calculate the required resistance if the operating current is 20 mA.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>Voltage across resistor:</strong> $V_R = 9 - 1.9 = 7.1$ V<br>
+        <strong>Resistance:</strong> $R = V_R / I = 7.1 / 0.020 = 355$ Ω<br>
+        Use the nearest standard value (e.g. 360 Ω or 390 Ω).
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-a">Level A — Foundation</span>
+      <div class="q-text">2. An inverting op-amp circuit has $R_{in} = 10\text{ k}\Omega$ and $R_f = 47\text{ k}\Omega$. The input voltage is 0.2 V. Find the output voltage and state the phase relationship with the input.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>Gain:</strong> $A = -R_f/R_{in} = -47/10 = -4.7$<br>
+        <strong>Output:</strong> $V_{out} = -4.7 \times 0.2 = -0.94$ V<br>
+        The output is <strong>180° out of phase</strong> (inverted) relative to the input. The magnitude is 0.94 V.
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-a">Level A — Foundation</span>
+      <div class="q-text">3. State the two "golden rules" used when analysing op-amp circuits with negative feedback.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        1. The voltage at the inverting and non-inverting inputs are equal: $V_+ = V_-$ (the inputs are at a virtual short circuit).<br><br>
+        2. No current flows into either input terminal (the input impedance is infinite).
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-b">Level B — Standard</span>
+      <div class="q-text">4. An op-amp has a gain–bandwidth product of 2.0 MHz. The feedback resistors are set to give a closed-loop gain of 50. (a) Calculate the −3 dB bandwidth. (b) If the gain is reduced to 10, what is the new bandwidth?</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>(a)</strong> $f_{-3\text{dB}} = \text{GBP}/A_{CL} = 2.0 \times 10^6 / 50 = 40\text{ kHz}$<br><br>
+        <strong>(b)</strong> $f_{-3\text{dB}} = 2.0 \times 10^6 / 10 = 200\text{ kHz}$<br>
+        Reducing gain by a factor of 5 increases bandwidth by a factor of 5.
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-b">Level B — Standard</span>
+      <div class="q-text">5. A smoothing capacitor of 470 µF is used with a full-wave rectifier supplying a load of 1.2 kΩ from a 50 Hz AC supply. Estimate the peak-to-peak ripple voltage.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        Full-wave rectifier: frequency of ripple = $2f = 100$ Hz.<br>
+        $\Delta V = \frac{V}{fCR}$. We need $V$; assuming the supply provides $V_{peak} \approx V_0$:<br>
+        $\Delta V = \frac{V_0}{100 \times 470 \times 10^{-6} \times 1200} = \frac{V_0}{56.4}$<br>
+        For example, if $V_0 = 12$ V: $\Delta V \approx 12/56.4 \approx 0.21$ V (peak-to-peak).<br>
+        The formula gives the ripple as a fraction of the supply voltage; the absolute value depends on $V_0$.
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-b">Level B — Standard</span>
+      <div class="q-text">6. A npn transistor has $h_{FE} = 200$. The circuit requires a collector current of 40 mA to drive a relay. (a) What base current is needed? (b) If $V_{BE} = 0.6$ V and the base resistor connects to a 5 V logic output, calculate the base resistor value required.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>(a)</strong> $I_B = I_C / h_{FE} = 40 \times 10^{-3} / 200 = 0.2$ mA = 200 µA<br><br>
+        <strong>(b)</strong> Voltage across $R_B$: $V_{R_B} = 5 - 0.6 = 4.4$ V<br>
+        $R_B = 4.4 / (0.2 \times 10^{-3}) = 22\text{ k}\Omega$
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-c">Level C — Extended</span>
+      <div class="q-text">7. A Wien bridge oscillator uses $R = 8.2\text{ k}\Omega$ and $C = 10\text{ nF}$. (a) Calculate the frequency of oscillation. (b) What closed-loop gain is required and how would you set this using a non-inverting amplifier with $R_1 = 10\text{ k}\Omega$? (c) Explain what happens if the gain is set slightly too high or too low.</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>(a)</strong> $f = \frac{1}{2\pi RC} = \frac{1}{2\pi \times 8200 \times 10 \times 10^{-9}} = \frac{1}{5.15 \times 10^{-4}} \approx 1.94\text{ kHz}$<br><br>
+        <strong>(b)</strong> Required gain $A = 3$. For a non-inverting amplifier: $A = 1 + R_f/R_1$<br>
+        $3 = 1 + R_f/10\text{ k}\Omega \Rightarrow R_f = 20\text{ k}\Omega$<br><br>
+        <strong>(c)</strong> If gain $> 3$: the loop gain exceeds 1, so oscillations grow until the op-amp saturates, producing a clipped (distorted) output. If gain $< 3$: the loop gain is less than 1, oscillations are damped and die away. The gain must equal exactly 3 for sustained, undistorted sinusoidal oscillations.
+      </div>
+    </div>
+
+    <div class="q-block">
+      <span class="q-level level-c">Level C — Extended</span>
+      <div class="q-text">8. An op-amp summing amplifier has three inputs with equal resistors $R_{in} = 10\text{ k}\Omega$ and feedback resistor $R_f = 10\text{ k}\Omega$. The inputs are $V_1 = +1.0$ V, $V_2 = +2.0$ V, $V_3 = -0.5$ V. (a) Derive the general output formula for a summing amplifier. (b) Calculate $V_{out}$. (c) If the op-amp is powered by ±12 V rails, will it saturate?</div>
+      <button class="show-btn" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide answer':'Show answer'">Show answer</button>
+      <div class="answer">
+        <strong>(a)</strong> Virtual earth means $V_- \approx 0$. Total current into the summing junction: $I = V_1/R_{in} + V_2/R_{in} + V_3/R_{in}$. All this current flows through $R_f$:<br>
+        $V_{out} = -R_f\!\left(\frac{V_1}{R_{in}} + \frac{V_2}{R_{in}} + \frac{V_3}{R_{in}}\right) = -\frac{R_f}{R_{in}}(V_1 + V_2 + V_3)$<br><br>
+        <strong>(b)</strong> With equal $R_f = R_{in}$: $V_{out} = -(1.0 + 2.0 - 0.5) = -2.5$ V<br><br>
+        <strong>(c)</strong> $|V_{out}| = 2.5$ V which is much less than 12 V, so the op-amp operates in the linear region and does not saturate.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<script>
+  // Safety: all show/hide handled inline via onclick
+</script>
+</body>
+</html>
