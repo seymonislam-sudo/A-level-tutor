@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Functional Programming — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;white-space:pre}
+  .code-block .kw{color:#93c5fd}
+  .code-block .str{color:#86efac}
+  .code-block .num{color:#fcd34d}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .code-block .fn{color:#c4b5fd}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  ul,ol{padding-left:1.4rem;margin-bottom:1rem;font-size:0.95rem}
+  li{margin-bottom:0.4rem}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+  .compare-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.2rem 1.5rem}
+  .compare-card h4{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--accent);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}.compare-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 13</div>
+  <a href="#paradigms" class="sidebar-link active"><span class="sidebar-num">1</span>Programming Paradigms</a>
+  <a href="#functions" class="sidebar-link"><span class="sidebar-num">2</span>First-Class Functions</a>
+  <a href="#higher-order" class="sidebar-link"><span class="sidebar-num">3</span>Higher-Order Functions</a>
+  <a href="#map-filter" class="sidebar-link"><span class="sidebar-num">4</span>Map, Filter, Reduce</a>
+  <a href="#immutability" class="sidebar-link"><span class="sidebar-num">5</span>Immutability &amp; No Side Effects</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 13</div>
+    <div class="topic-num-badge">TOPIC 13</div>
+    <h1 class="topic-title">Functional Programming</h1>
+    <p class="topic-intro">A programming paradigm that treats computation as the evaluation of mathematical functions. No loops, no mutable state — just functions transforming data. Increasingly important in modern software.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 1</div>
+      <div class="meta-item"><span>Understand</span> &amp; apply</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#paradigms">Programming Paradigms</a></li>
+      <li><a href="#functions">First-Class &amp; Higher-Order Functions</a></li>
+      <li><a href="#higher-order">Function Composition &amp; Partial Application</a></li>
+      <li><a href="#map-filter">Map, Filter &amp; Reduce / Fold</a></li>
+      <li><a href="#immutability">Immutability &amp; No Side Effects</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1: PARADIGMS -->
+  <div class="lesson-section" id="paradigms">
+    <h2 class="section-title">Programming Paradigms</h2>
+    <p>A <strong>programming paradigm</strong> is a style or approach to programming. AQA requires you to understand and contrast three:</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>Imperative / Procedural</h4>
+        <p style="font-size:0.88rem;margin:0">Describes <em>how</em> to do something step by step. Uses variables, loops, and assignment. State changes over time.<br><br>Example: Python with for loops, variables updated in place.</p>
+      </div>
+      <div class="compare-card">
+        <h4>Object-Oriented (OOP)</h4>
+        <p style="font-size:0.88rem;margin:0">Groups data and behaviour into objects. Uses classes, inheritance, encapsulation. State lives inside objects.<br><br>Example: Python classes, Java.</p>
+      </div>
+    </div>
+    <div class="compare-grid" style="grid-template-columns:1fr">
+      <div class="compare-card">
+        <h4>Functional</h4>
+        <p style="font-size:0.88rem;margin:0">Describes <em>what</em> to compute, not how. Built from pure functions with no side effects. No mutable state — data is never changed, only transformed into new data.<br><br>Examples: Haskell (purely functional), Python/JavaScript support functional style.</p>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Key Characteristics of Functional Programming</strong>
+      <ul style="margin-top:0.5rem;margin-bottom:0">
+        <li>Functions are <strong>first-class citizens</strong> — treated like any other value</li>
+        <li><strong>No side effects</strong> — a function only returns a value, never modifies external state</li>
+        <li><strong>Immutability</strong> — data cannot be changed once created</li>
+        <li><strong>Referential transparency</strong> — calling a function with the same inputs always gives the same output</li>
+        <li><strong>No loops</strong> — iteration is replaced with recursion or higher-order functions</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2: FIRST-CLASS FUNCTIONS -->
+  <div class="lesson-section" id="functions">
+    <h2 class="section-title">First-Class Functions</h2>
+    <p>In functional programming, functions are <strong>first-class citizens</strong>. This means a function can be:</p>
+    <ul>
+      <li>Assigned to a variable</li>
+      <li>Passed as an argument to another function</li>
+      <li>Returned as the result of a function</li>
+    </ul>
+
+    <div class="code-block"><span class="cm"># Functions assigned to variables</span>
+<span class="kw">double</span> = <span class="kw">lambda</span> x: x * <span class="num">2</span>
+<span class="kw">square</span> = <span class="kw">lambda</span> x: x ** <span class="num">2</span>
+
+<span class="fn">print</span>(double(<span class="num">5</span>))   <span class="cm"># 10</span>
+<span class="fn">print</span>(square(<span class="num">4</span>))   <span class="cm"># 16</span>
+
+<span class="cm"># Passing a function as an argument</span>
+<span class="kw">def</span> <span class="fn">apply</span>(func, value):
+    <span class="kw">return</span> func(value)
+
+<span class="fn">print</span>(apply(double, <span class="num">7</span>))   <span class="cm"># 14</span>
+<span class="fn">print</span>(apply(square, <span class="num">3</span>))   <span class="cm"># 9</span></div>
+
+    <p>A <strong>lambda</strong> (or anonymous function) is a function defined without a name, typically used when a short function is needed in one place only.</p>
+
+    <div class="code-block"><span class="cm"># Lambda syntax: lambda parameters: expression</span>
+add = <span class="kw">lambda</span> x, y: x + y
+<span class="fn">print</span>(add(<span class="num">3</span>, <span class="num">4</span>))   <span class="cm"># 7</span></div>
+  </div>
+
+  <!-- SECTION 3: HIGHER-ORDER FUNCTIONS -->
+  <div class="lesson-section" id="higher-order">
+    <h2 class="section-title">Higher-Order Functions &amp; Composition</h2>
+    <p>A <strong>higher-order function</strong> is a function that either:</p>
+    <ul>
+      <li>Takes one or more functions as arguments, <strong>or</strong></li>
+      <li>Returns a function as its result</li>
+    </ul>
+
+    <h3 class="subsection">Function Composition</h3>
+    <p>Combining two or more functions so the output of one becomes the input of the next.</p>
+
+    <div class="code-block"><span class="kw">def</span> <span class="fn">compose</span>(f, g):
+    <span class="kw">return lambda</span> x: f(g(x))
+
+double = <span class="kw">lambda</span> x: x * <span class="num">2</span>
+add_one = <span class="kw">lambda</span> x: x + <span class="num">1</span>
+
+double_then_add = compose(add_one, double)
+<span class="fn">print</span>(double_then_add(<span class="num">5</span>))   <span class="cm"># (5 * 2) + 1 = 11</span></div>
+
+    <h3 class="subsection">Partial Application</h3>
+    <p>Creating a new function by fixing some arguments of an existing function. The new function takes fewer arguments.</p>
+
+    <div class="code-block"><span class="kw">from</span> functools <span class="kw">import</span> partial
+
+<span class="kw">def</span> <span class="fn">power</span>(base, exponent):
+    <span class="kw">return</span> base ** exponent
+
+square = partial(power, exponent=<span class="num">2</span>)
+cube   = partial(power, exponent=<span class="num">3</span>)
+
+<span class="fn">print</span>(square(<span class="num">4</span>))   <span class="cm"># 16</span>
+<span class="fn">print</span>(cube(<span class="num">3</span>))     <span class="cm"># 27</span></div>
+
+    <div class="key-point">
+      <strong>Currying vs Partial Application</strong>
+      <strong>Currying</strong> transforms a function of multiple arguments into a chain of single-argument functions: f(a, b) becomes f(a)(b).<br><br>
+      <strong>Partial application</strong> fixes some (not all) arguments of a function, returning a new function.<br><br>
+      AQA expects you to understand both concepts and be able to trace through examples.
+    </div>
+  </div>
+
+  <!-- SECTION 4: MAP FILTER REDUCE -->
+  <div class="lesson-section" id="map-filter">
+    <h2 class="section-title">Map, Filter &amp; Reduce / Fold</h2>
+    <p>These three higher-order functions are the workhorses of functional programming. They replace most loops.</p>
+
+    <h3 class="subsection">Map</h3>
+    <p>Applies a function to every element of a list, returning a new list of the same length.</p>
+    <div class="code-block">numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+
+doubled = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x * <span class="num">2</span>, numbers))
+<span class="fn">print</span>(doubled)   <span class="cm"># [2, 4, 6, 8, 10]</span>
+
+<span class="cm"># Equivalent without map (imperative style):</span>
+<span class="cm"># result = []</span>
+<span class="cm"># for x in numbers:</span>
+<span class="cm">#     result.append(x * 2)</span></div>
+
+    <h3 class="subsection">Filter</h3>
+    <p>Returns a new list containing only the elements for which the function returns True.</p>
+    <div class="code-block">numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]
+
+evens = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: x % <span class="num">2</span> == <span class="num">0</span>, numbers))
+<span class="fn">print</span>(evens)   <span class="cm"># [2, 4, 6]</span></div>
+
+    <h3 class="subsection">Reduce / Fold</h3>
+    <p>Combines all elements of a list into a single value by repeatedly applying a function to a running accumulator.</p>
+    <div class="code-block"><span class="kw">from</span> functools <span class="kw">import</span> reduce
+
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+
+total = reduce(<span class="kw">lambda</span> acc, x: acc + x, numbers)
+<span class="fn">print</span>(total)   <span class="cm"># 15  (1+2+3+4+5)</span>
+
+<span class="cm"># How it works step by step:</span>
+<span class="cm"># acc=1, x=2  →  acc=3</span>
+<span class="cm"># acc=3, x=3  →  acc=6</span>
+<span class="cm"># acc=6, x=4  →  acc=10</span>
+<span class="cm"># acc=10, x=5 →  acc=15</span></div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example — Chaining Map and Filter</div>
+      <p class="example-q">Given a list of numbers, produce a list of the squares of all odd numbers.</p>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">Use filter to keep only odd numbers.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">Use map to square each remaining number.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+<div class="code-block">nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]
+
+odds        = <span class="fn">filter</span>(<span class="kw">lambda</span> x: x % <span class="num">2</span> != <span class="num">0</span>, nums)
+odd_squares = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x ** <span class="num">2</span>, odds))
+
+<span class="fn">print</span>(odd_squares)   <span class="cm"># [1, 9, 25]</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: IMMUTABILITY -->
+  <div class="lesson-section" id="immutability">
+    <h2 class="section-title">Immutability &amp; No Side Effects</h2>
+
+    <h3 class="subsection">Pure Functions</h3>
+    <p>A <strong>pure function</strong> always produces the same output for the same input, and has <strong>no side effects</strong> — it does not modify any external state, print to the screen, write to a file, or change any variable outside itself.</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>Impure (side effects)</h4>
+        <div class="code-block" style="margin:0;font-size:0.78rem">total = <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">add_to_total</span>(x):
+    <span class="kw">global</span> total
+    total += x   <span class="cm"># modifies external state!</span>
+    <span class="kw">return</span> total</div>
+      </div>
+      <div class="compare-card">
+        <h4>Pure (no side effects)</h4>
+        <div class="code-block" style="margin:0;font-size:0.78rem"><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b  <span class="cm"># only uses inputs</span>
+                  <span class="cm"># nothing modified outside</span></div>
+      </div>
+    </div>
+
+    <h3 class="subsection">Immutability</h3>
+    <p>In functional programming, once a variable is assigned a value, it cannot be changed. Instead of modifying data, you create new data.</p>
+
+    <div class="code-block"><span class="cm"># Imperative (mutable) style:</span>
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+numbers.append(<span class="num">4</span>)   <span class="cm"># original list is modified</span>
+
+<span class="cm"># Functional (immutable) style:</span>
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+new_numbers = numbers + [<span class="num">4</span>]   <span class="cm"># original unchanged, new list created</span></div>
+
+    <div class="key-point">
+      <strong>Why Immutability Matters</strong>
+      <ul style="margin-top:0.5rem;margin-bottom:0">
+        <li><strong>Easier to reason about</strong> — data never changes unexpectedly</li>
+        <li><strong>Thread-safe</strong> — no risk of two processes modifying the same data simultaneously</li>
+        <li><strong>Easier to test</strong> — pure functions with same inputs always give same outputs</li>
+        <li><strong>No debugging side effects</strong> — bugs don't hide in global state</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PRACTICE QUESTIONS -->
+  <div class="lesson-section">
+    <h2 class="section-title">Practice Questions</h2>
+
+    <div class="practice-section" id="practice-a">
+      <div class="practice-header">
+        <div class="practice-title">Level A — Foundation</div>
+        <span class="difficulty-badge diff-a">Foundation</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q1</div>
+          <div class="q-text">Define the term "first-class function". Give one example of what it allows you to do that would not be possible if functions were not first-class.</div>
+        </div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q2</div>
+          <div class="q-text">Describe the difference between a pure function and an impure function. Give an example of each.</div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q3</div>
+          <div class="q-text">Trace through the following and state the output:<br><code style="font-family:'DM Mono',monospace;font-size:0.85rem">list(map(lambda x: x + 10, [1, 2, 3, 4]))</code></div>
+        </div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-b" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level B — Intermediate</div>
+        <span class="difficulty-badge diff-b">Intermediate</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q4</div>
+          <div class="q-text">Write a functional programming solution (using map and/or filter) to produce a list of all strings from <code style="font-family:'DM Mono',monospace">["apple","banana","kiwi","cherry","fig"]</code> that have more than 4 characters, converted to uppercase.</div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q5</div>
+          <div class="q-text">Explain what partial application is and give a worked example showing a function with two parameters being partially applied to produce a new single-parameter function.</div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q6</div>
+          <div class="q-text">State two advantages of immutability in functional programming.</div>
+        </div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-c" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level C — Exam Challenge</div>
+        <span class="difficulty-badge diff-c">Challenge</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q7</div>
+          <div class="q-text">Using only <code style="font-family:'DM Mono',monospace">map</code>, <code style="font-family:'DM Mono',monospace">filter</code>, <code style="font-family:'DM Mono',monospace">reduce</code>, and lambda functions (no loops or variables), write code to compute the sum of squares of all even numbers in the list <code style="font-family:'DM Mono',monospace">[1,2,3,4,5,6,7,8]</code>. Show the expected output.</div>
+        </div>
+        <div class="q-marks">[5 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q8</div>
+          <div class="q-text">Compare the functional and object-oriented programming paradigms. In your answer discuss: state management, function purity, code reuse, and a scenario where each paradigm would be more appropriate.</div>
+        </div>
+        <div class="q-marks">[8 marks]</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boolean Algebra & Logic Gates — A Level Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d0d14;--surface:#16161f;--surface2:#1e1e2a;--border:rgba(255,255,255,0.1);--text:#f0f0f8;--muted:#a0a0c0;--accent:#34d399;--accent-dim:rgba(52,211,153,0.1)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+  .orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0}
+  .orb-1{width:600px;height:600px;background:#34d399;top:-200px;right:-100px}
+  .orb-2{width:500px;height:500px;background:#10b981;bottom:-100px;left:-100px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-back{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'DM Mono',monospace;transition:color 0.2s}
+  .nav-back:hover{color:var(--accent)}
+  .layout{display:flex;min-height:100vh;position:relative;z-index:1}
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;width:260px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:2rem 0}
+  .sidebar-title{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;padding:0 1.5rem;margin-bottom:1rem}
+  .sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;text-decoration:none;color:var(--muted);font-size:0.85rem;transition:all 0.2s;border-left:2px solid transparent}
+  .sidebar-link:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+  .sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(52,211,153,0.07)}
+  .sidebar-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:18px;flex-shrink:0}
+  .sidebar-link.active .sidebar-num{color:var(--accent)}
+  .sidebar-divider{height:1px;background:var(--border);margin:1rem 1.5rem}
+  .main{margin-left:260px;padding:5rem 4rem 8rem;flex:1;min-width:0;width:calc(100% - 260px)}
+  .topic-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.4rem}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .topic-num-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(52,211,153,0.25);padding:0.25rem 0.7rem;border-radius:6px;margin-bottom:1rem;letter-spacing:0.06em}
+  h1.topic-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+  .topic-intro{font-size:1rem;color:var(--muted);max-width:600px}
+  .topic-meta-row{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+  .meta-item{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem}
+  .meta-item span{color:var(--accent)}
+  .lesson-section{margin-bottom:3.5rem}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem;padding-top:1rem;display:flex;align-items:center;gap:0.75rem}
+  h2.section-title::before{content:'';display:inline-block;width:4px;height:1.4em;background:var(--accent);border-radius:2px;flex-shrink:0}
+  h3.subsection{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--text)}
+  p{color:var(--text);margin-bottom:1rem;font-size:0.95rem}
+  .key-point{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.9rem}
+  .key-point strong{color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:0.5rem}
+  .code-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.5rem 0;font-family:'DM Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto}
+  .code-block .kw{color:#93c5fd}
+  .code-block .cm{color:var(--muted);font-style:italic}
+  .example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin:1.5rem 0}
+  .example-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem}
+  .example-q{font-size:0.95rem;font-weight:500;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+  .example-steps{display:flex;flex-direction:column;gap:0.8rem}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:0.75rem;align-items:start;font-size:0.9rem}
+  .step-num{width:28px;height:28px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .step-content{color:var(--text)}
+  .reveal-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;margin-top:0.8rem}
+  .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .reveal-content{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .reveal-content.open{display:block}
+  .practice-section{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem}
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .practice-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+  .difficulty-badge{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.25rem 0.7rem;border-radius:6px;text-transform:uppercase;letter-spacing:0.08em}
+  .diff-a{background:rgba(52,211,153,0.12);color:var(--accent);border:1px solid rgba(52,211,153,0.3)}
+  .diff-b{background:rgba(251,191,36,0.12);color:#fcd34d;border:1px solid rgba(251,191,36,0.3)}
+  .diff-c{background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3)}
+  .question-item{padding:1.2rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+  .question-item:last-child{border-bottom:none}
+  .q-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:0.4rem}
+  .q-text{font-size:0.92rem;line-height:1.6}
+  .q-marks{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;margin-top:0.2rem}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+  .toc-title{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+  .toc-list li a{color:var(--muted);text-decoration:none;font-size:0.88rem;display:flex;align-items:center;gap:0.6rem;transition:color 0.2s;padding:0.2rem 0}
+  .toc-list li a:hover{color:var(--accent)}
+  .toc-list li a::before{content:'';width:4px;height:4px;background:var(--muted);border-radius:50%;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+  th{font-family:'DM Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);text-align:left}
+  td{padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text);text-align:left}
+  tr:last-child td{border-bottom:none}
+  .truth-table{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:1.5rem 0}
+  .truth-table table{margin:0}
+  .truth-table th{background:rgba(52,211,153,0.08)}
+  .truth-table td.one{color:var(--accent);font-weight:600;font-family:'DM Mono',monospace}
+  .truth-table td.zero{color:var(--muted);font-family:'DM Mono',monospace}
+  ul,ol{padding-left:1.4rem;margin-bottom:1rem;font-size:0.95rem}
+  li{margin-bottom:0.4rem}
+  .gate-row{display:flex;flex-wrap:wrap;gap:1.5rem;margin:1.5rem 0}
+  .gate-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.2rem 1.5rem;flex:1;min-width:200px}
+  .gate-name{font-family:'DM Mono',monospace;font-size:0.9rem;color:var(--accent);margin-bottom:0.5rem;font-weight:500}
+  .gate-expr{font-family:'DM Mono',monospace;font-size:1rem;color:var(--text);margin-bottom:0.5rem}
+  .gate-desc{font-size:0.85rem;color:var(--muted)}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:5rem 1.5rem 4rem}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Computer Science</a>
+</nav>
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-title">Topic 12</div>
+  <a href="#gates" class="sidebar-link active"><span class="sidebar-num">1</span>Logic Gates</a>
+  <a href="#truth-tables" class="sidebar-link"><span class="sidebar-num">2</span>Truth Tables</a>
+  <a href="#boolean-algebra" class="sidebar-link"><span class="sidebar-num">3</span>Boolean Algebra</a>
+  <a href="#laws" class="sidebar-link"><span class="sidebar-num">4</span>Boolean Laws</a>
+  <a href="#simplification" class="sidebar-link"><span class="sidebar-num">5</span>Simplification</a>
+  <div class="sidebar-divider"></div>
+  <a href="#practice-a" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level A</a>
+  <a href="#practice-b" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level B</a>
+  <a href="#practice-c" class="sidebar-link"><span class="sidebar-num">✦</span>Practice — Level C</a>
+</aside>
+<main class="main">
+  <div class="topic-header">
+    <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Computer Science</a> / Topic 12</div>
+    <div class="topic-num-badge">TOPIC 12</div>
+    <h1 class="topic-title">Boolean Algebra &amp; Logic Gates</h1>
+    <p class="topic-intro">The mathematical foundation of all digital circuits. Learn to construct truth tables, simplify Boolean expressions using algebraic laws, and design logic circuits from specifications.</p>
+    <div class="topic-meta-row">
+      <div class="meta-item"><span>5</span> subtopics</div>
+      <div class="meta-item"><span>AQA</span> Paper 2</div>
+      <div class="meta-item"><span>Design</span> &amp; simplify</div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">// Contents</div>
+    <ul class="toc-list">
+      <li><a href="#gates">Logic Gates</a></li>
+      <li><a href="#truth-tables">Truth Tables</a></li>
+      <li><a href="#boolean-algebra">Boolean Algebra Notation</a></li>
+      <li><a href="#laws">Boolean Laws &amp; Identities</a></li>
+      <li><a href="#simplification">Simplification</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1: LOGIC GATES -->
+  <div class="lesson-section" id="gates">
+    <h2 class="section-title">Logic Gates</h2>
+    <p>A <strong>logic gate</strong> is a physical electronic component that implements a Boolean function. Each gate takes one or more binary inputs (0 or 1) and produces a single binary output.</p>
+
+    <div class="gate-row">
+      <div class="gate-card">
+        <div class="gate-name">AND</div>
+        <div class="gate-expr">A · B &nbsp;or&nbsp; A AND B</div>
+        <div class="gate-desc">Output is 1 only when both inputs are 1.</div>
+      </div>
+      <div class="gate-card">
+        <div class="gate-name">OR</div>
+        <div class="gate-expr">A + B &nbsp;or&nbsp; A OR B</div>
+        <div class="gate-desc">Output is 1 when at least one input is 1.</div>
+      </div>
+      <div class="gate-card">
+        <div class="gate-name">NOT</div>
+        <div class="gate-expr">¬A &nbsp;or&nbsp; NOT A &nbsp;or&nbsp; A'</div>
+        <div class="gate-desc">Inverts the input. 0 becomes 1, 1 becomes 0.</div>
+      </div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-card">
+        <div class="gate-name">NAND</div>
+        <div class="gate-expr">¬(A · B)</div>
+        <div class="gate-desc">NOT AND — output is 0 only when both inputs are 1. A universal gate.</div>
+      </div>
+      <div class="gate-card">
+        <div class="gate-name">NOR</div>
+        <div class="gate-expr">¬(A + B)</div>
+        <div class="gate-desc">NOT OR — output is 1 only when both inputs are 0. Also a universal gate.</div>
+      </div>
+      <div class="gate-card">
+        <div class="gate-name">XOR</div>
+        <div class="gate-expr">A ⊕ B</div>
+        <div class="gate-desc">Exclusive OR — output is 1 when inputs are different.</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <strong>Universal Gates</strong>
+      NAND and NOR are called <em>universal gates</em> because any other logic gate (AND, OR, NOT, XOR) can be built using only NAND gates, or only NOR gates. This is important in chip manufacturing — you only need one type of gate.
+    </div>
+  </div>
+
+  <!-- SECTION 2: TRUTH TABLES -->
+  <div class="lesson-section" id="truth-tables">
+    <h2 class="section-title">Truth Tables</h2>
+    <p>A <strong>truth table</strong> lists every possible combination of inputs and the corresponding output. For <em>n</em> inputs there are 2<sup>n</sup> rows.</p>
+
+    <h3 class="subsection">Basic gate truth tables</h3>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;margin:1.5rem 0">
+      <div class="truth-table">
+        <table>
+          <tr><th>A</th><th>B</th><th>A AND B</th></tr>
+          <tr><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td></tr>
+          <tr><td class="zero">0</td><td class="one">1</td><td class="zero">0</td></tr>
+          <tr><td class="one">1</td><td class="zero">0</td><td class="zero">0</td></tr>
+          <tr><td class="one">1</td><td class="one">1</td><td class="one">1</td></tr>
+        </table>
+      </div>
+      <div class="truth-table">
+        <table>
+          <tr><th>A</th><th>B</th><th>A OR B</th></tr>
+          <tr><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td></tr>
+          <tr><td class="zero">0</td><td class="one">1</td><td class="one">1</td></tr>
+          <tr><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+          <tr><td class="one">1</td><td class="one">1</td><td class="one">1</td></tr>
+        </table>
+      </div>
+      <div class="truth-table">
+        <table>
+          <tr><th>A</th><th>NOT A</th></tr>
+          <tr><td class="zero">0</td><td class="one">1</td></tr>
+          <tr><td class="one">1</td><td class="zero">0</td></tr>
+        </table>
+      </div>
+      <div class="truth-table">
+        <table>
+          <tr><th>A</th><th>B</th><th>A XOR B</th></tr>
+          <tr><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td></tr>
+          <tr><td class="zero">0</td><td class="one">1</td><td class="one">1</td></tr>
+          <tr><td class="one">1</td><td class="zero">0</td><td class="one">1</td></tr>
+          <tr><td class="one">1</td><td class="one">1</td><td class="zero">0</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example — Constructing a Truth Table</div>
+      <p class="example-q">Construct a truth table for the expression: <strong>X = (A OR B) AND (NOT A)</strong></p>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">Identify all inputs: A and B. With 2 inputs, there are 2² = 4 rows.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">Add intermediate columns to break down the expression: compute NOT A and A OR B first, then combine.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="truth-table">
+              <table>
+                <tr><th>A</th><th>B</th><th>NOT A</th><th>A OR B</th><th>X = (A OR B) AND (NOT A)</th></tr>
+                <tr><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td><td class="zero">0</td></tr>
+                <tr><td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="one">1</td><td class="one">1</td></tr>
+                <tr><td class="one">1</td><td class="zero">0</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td></tr>
+                <tr><td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="zero">0</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: BOOLEAN ALGEBRA NOTATION -->
+  <div class="lesson-section" id="boolean-algebra">
+    <h2 class="section-title">Boolean Algebra Notation</h2>
+    <p>Boolean algebra uses standard notation to write logical expressions compactly.</p>
+
+    <div class="truth-table">
+      <table>
+        <tr><th>Operation</th><th>Symbol</th><th>Example</th><th>Meaning</th></tr>
+        <tr><td>AND</td><td style="font-family:'DM Mono',monospace">· &nbsp;or&nbsp; no symbol</td><td style="font-family:'DM Mono',monospace">A · B &nbsp;or&nbsp; AB</td><td>A AND B</td></tr>
+        <tr><td>OR</td><td style="font-family:'DM Mono',monospace">+</td><td style="font-family:'DM Mono',monospace">A + B</td><td>A OR B</td></tr>
+        <tr><td>NOT</td><td style="font-family:'DM Mono',monospace">¬ &nbsp;or&nbsp; overbar &nbsp;or&nbsp; '</td><td style="font-family:'DM Mono',monospace">¬A &nbsp;or&nbsp; A'</td><td>NOT A</td></tr>
+        <tr><td>XOR</td><td style="font-family:'DM Mono',monospace">⊕</td><td style="font-family:'DM Mono',monospace">A ⊕ B</td><td>A XOR B</td></tr>
+      </table>
+    </div>
+
+    <div class="key-point">
+      <strong>Operator Precedence</strong>
+      Like BIDMAS in maths, Boolean algebra has precedence rules:<br><br>
+      1. Brackets first<br>
+      2. NOT (highest precedence among operators)<br>
+      3. AND<br>
+      4. OR (lowest precedence)<br><br>
+      So <code style="font-family:'DM Mono',monospace">A + B · C</code> means <code style="font-family:'DM Mono',monospace">A + (B · C)</code>, not <code style="font-family:'DM Mono',monospace">(A + B) · C</code>.
+    </div>
+  </div>
+
+  <!-- SECTION 4: BOOLEAN LAWS -->
+  <div class="lesson-section" id="laws">
+    <h2 class="section-title">Boolean Laws &amp; Identities</h2>
+    <p>These laws let you manipulate and simplify Boolean expressions. You must know them — they are the tools used in simplification questions.</p>
+
+    <div class="truth-table">
+      <table>
+        <tr><th>Law</th><th>AND form</th><th>OR form</th></tr>
+        <tr><td><strong>Identity</strong></td><td style="font-family:'DM Mono',monospace">A · 1 = A</td><td style="font-family:'DM Mono',monospace">A + 0 = A</td></tr>
+        <tr><td><strong>Null / Domination</strong></td><td style="font-family:'DM Mono',monospace">A · 0 = 0</td><td style="font-family:'DM Mono',monospace">A + 1 = 1</td></tr>
+        <tr><td><strong>Idempotent</strong></td><td style="font-family:'DM Mono',monospace">A · A = A</td><td style="font-family:'DM Mono',monospace">A + A = A</td></tr>
+        <tr><td><strong>Complement</strong></td><td style="font-family:'DM Mono',monospace">A · ¬A = 0</td><td style="font-family:'DM Mono',monospace">A + ¬A = 1</td></tr>
+        <tr><td><strong>Double Negation</strong></td><td colspan="2" style="font-family:'DM Mono',monospace">¬(¬A) = A</td></tr>
+        <tr><td><strong>Commutative</strong></td><td style="font-family:'DM Mono',monospace">A · B = B · A</td><td style="font-family:'DM Mono',monospace">A + B = B + A</td></tr>
+        <tr><td><strong>Associative</strong></td><td style="font-family:'DM Mono',monospace">(A·B)·C = A·(B·C)</td><td style="font-family:'DM Mono',monospace">(A+B)+C = A+(B+C)</td></tr>
+        <tr><td><strong>Distributive</strong></td><td style="font-family:'DM Mono',monospace">A·(B+C) = A·B + A·C</td><td style="font-family:'DM Mono',monospace">A+(B·C) = (A+B)·(A+C)</td></tr>
+        <tr><td><strong>Absorption</strong></td><td style="font-family:'DM Mono',monospace">A·(A+B) = A</td><td style="font-family:'DM Mono',monospace">A + A·B = A</td></tr>
+        <tr><td><strong>De Morgan's</strong></td><td style="font-family:'DM Mono',monospace">¬(A·B) = ¬A + ¬B</td><td style="font-family:'DM Mono',monospace">¬(A+B) = ¬A · ¬B</td></tr>
+      </table>
+    </div>
+
+    <div class="key-point">
+      <strong>De Morgan's Laws — Most Important</strong>
+      De Morgan's laws are the most commonly examined. They convert between AND and OR forms:<br><br>
+      "Break the bar, change the operator"<br><br>
+      ¬(A · B) = ¬A + ¬B &nbsp;&nbsp; (NOT of AND = OR of NOTs)<br>
+      ¬(A + B) = ¬A · ¬B &nbsp;&nbsp; (NOT of OR = AND of NOTs)
+    </div>
+  </div>
+
+  <!-- SECTION 5: SIMPLIFICATION -->
+  <div class="lesson-section" id="simplification">
+    <h2 class="section-title">Simplification</h2>
+    <p>Simplifying Boolean expressions reduces the number of gates needed in a circuit — saving cost, power, and space. Apply the laws step by step, stating which law you use at each stage.</p>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example 1 — Simplification</div>
+      <p class="example-q">Simplify: <strong>A · B + A · ¬B</strong></p>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">Factor out A: &nbsp; A · (B + ¬B) &nbsp; [Distributive law]</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">B + ¬B = 1 &nbsp; [Complement law]</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">A · 1 = <strong>A</strong> &nbsp; [Identity law] ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example 2 — De Morgan's</div>
+      <p class="example-q">Simplify: <strong>¬(¬A · ¬B)</strong></p>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">Apply De Morgan's: ¬(¬A · ¬B) = ¬(¬A) + ¬(¬B)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">Apply Double Negation: = <strong>A + B</strong> ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-label">▶ Worked Example 3 — Multi-step</div>
+      <p class="example-q">Simplify: <strong>A · B + A · B · C + A · ¬B</strong></p>
+      <div class="example-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">Apply Absorption to first two terms: A·B + A·B·C = A·B &nbsp; [A + A·C = A]</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">Expression becomes: A·B + A·¬B</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">Factor out A: A·(B + ¬B) = A·1 = <strong>A</strong> ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE QUESTIONS -->
+  <div class="lesson-section">
+    <h2 class="section-title">Practice Questions</h2>
+
+    <div class="practice-section" id="practice-a">
+      <div class="practice-header">
+        <div class="practice-title">Level A — Foundation</div>
+        <span class="difficulty-badge diff-a">Foundation</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q1</div>
+          <div class="q-text">Draw the truth table for: X = A NAND B. Include a column for A AND B first.</div>
+        </div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q2</div>
+          <div class="q-text">State De Morgan's two laws. Give an example of each.</div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q3</div>
+          <div class="q-text">Evaluate: (1 AND 0) OR (NOT 1). Show your working.</div>
+        </div>
+        <div class="q-marks">[2 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-b" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level B — Intermediate</div>
+        <span class="difficulty-badge diff-b">Intermediate</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q4</div>
+          <div class="q-text">Construct a full truth table for: X = (A · B) + (¬A · C). There are three inputs so 8 rows required.</div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q5</div>
+          <div class="q-text">Simplify the following expression, stating the law used at each step:<br><strong>A + A · B + A · ¬B · C</strong></div>
+        </div>
+        <div class="q-marks">[4 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q6</div>
+          <div class="q-text">Explain why NAND is called a universal gate. How would you construct a NOT gate using only NAND gates?</div>
+        </div>
+        <div class="q-marks">[3 marks]</div>
+      </div>
+    </div>
+
+    <div class="practice-section" id="practice-c" style="margin-top:1.5rem">
+      <div class="practice-header">
+        <div class="practice-title">Level C — Exam Challenge</div>
+        <span class="difficulty-badge diff-c">Challenge</span>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q7</div>
+          <div class="q-text">Simplify fully: <strong>¬(¬A + B) + A · B</strong>. State each law used.</div>
+        </div>
+        <div class="q-marks">[5 marks]</div>
+      </div>
+      <div class="question-item">
+        <div>
+          <div class="q-num">Q8</div>
+          <div class="q-text">A circuit has inputs A, B, C. The output is 1 only when an odd number of inputs are 1. Write a Boolean expression for this circuit and draw the truth table.</div>
+        </div>
+        <div class="q-marks">[6 marks]</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+</body>
+</html>
