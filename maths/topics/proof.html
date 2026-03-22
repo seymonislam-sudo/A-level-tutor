@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proof — A Level Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$', right:'$$', display:true},
+      {left:'$', right:'$', display:false}
+    ]
+  });"></script>
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f8;
+    --muted: #a0a0c0;
+    --nav-link: #d0d0e8;
+    --accent: #60a5fa;
+    --accent-dim: rgba(96,165,250,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .orb { position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.08; pointer-events: none; z-index: 0; }
+  .orb-1 { width: 600px; height: 600px; background: #60a5fa; top: -200px; right: -100px; }
+  .orb-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -100px; left: -100px; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.1rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13,13,20,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  .nav-logo span { color: var(--accent); }
+  .nav-back { color: var(--muted); text-decoration: none; font-size: 0.8rem; font-family: 'DM Mono', monospace; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent); }
+
+  .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+  .sidebar {
+    position: fixed;
+    top: 56px; left: 0; bottom: 0;
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 2rem 0;
+  }
+
+  .sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 1.5rem; margin-bottom: 1rem; }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1.5rem;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(96,165,250,0.07); }
+  .sidebar-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); width: 18px; flex-shrink: 0; }
+  .sidebar-link.active .sidebar-num { color: var(--accent); }
+  .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+
+  .main { margin-left: 260px; padding: 5rem 4rem 8rem; flex: 1; min-width: 0; width: calc(100% - 260px); }
+
+  .topic-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .breadcrumb { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.4rem; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+  .topic-num-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(96,165,250,0.1);
+    border: 1px solid rgba(96,165,250,0.25);
+    padding: 0.25rem 0.7rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  h1.topic-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .topic-intro { font-size: 1rem; color: var(--muted); max-width: 600px; }
+
+  .topic-meta-row { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .meta-item { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+  .meta-item span { color: var(--accent); }
+
+  .lesson-section { margin-bottom: 3.5rem; animation: fadeUp 0.6s ease both; }
+
+  h2.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  h2.section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.4em;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  h3.subsection { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin: 2rem 0 0.8rem; color: var(--text); }
+
+  p { color: var(--text); margin-bottom: 1rem; font-size: 0.95rem; }
+
+  .formula-box {
+    background: var(--accent-dim);
+    border: 1px solid rgba(96,165,250,0.25);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .formula-box::before {
+    content: 'KEY FORMULA';
+    position: absolute;
+    top: -0.6rem; left: 1rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.6rem;
+    border-radius: 4px;
+  }
+  .formula-box .katex-display { margin: 0.5rem 0; }
+
+  .key-point {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+  }
+  .key-point strong { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem; }
+
+  .worked-example {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .worked-example-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .worked-example-header::before { content: '▶'; }
+
+  .example-question { font-weight: 600; margin-bottom: 1.2rem; font-size: 0.95rem; }
+
+  .solution-steps { display: flex; flex-direction: column; gap: 1rem; }
+  .step {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(96,165,250,0.2);
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .step-text { font-size: 0.92rem; }
+
+  /* Difficulty sections */
+  .difficulty-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .diff-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .diff-tab.active { background: var(--accent-dim); border-color: rgba(96,165,250,0.4); color: var(--accent); }
+
+  .practice-grid { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .practice-q {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .practice-q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+    gap: 1rem;
+  }
+
+  .q-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); flex-shrink: 0; }
+  .q-marks { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); flex-shrink: 0; }
+  .q-text { font-size: 0.92rem; margin-bottom: 1rem; }
+
+  .show-answer-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(96,165,250,0.25);
+    border-radius: 6px;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .show-answer-btn:hover { background: rgba(96,165,250,0.15); }
+
+  .answer-box {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .answer-box.visible { display: block; }
+
+  ul, ol { padding-left: 1.4rem; margin-bottom: 1rem; font-size: 0.95rem; }
+  li { margin-bottom: 0.4rem; }
+
+  .proof-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+  }
+  .proof-block .qed {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 5rem 1.5rem 6rem; width: 100%; }
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">Archie's <span>Hub</span></a>
+  <a href="../index.html" class="nav-back">← Mathematics</a>
+</nav>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-title">// Maths Topics</div>
+    <a href="algebra-functions.html" class="sidebar-link"><span class="sidebar-num">01</span>Algebra &amp; Functions</a>
+    <a href="coordinate-geometry.html" class="sidebar-link"><span class="sidebar-num">02</span>Coordinate Geometry</a>
+    <a href="binomial-expansion.html" class="sidebar-link"><span class="sidebar-num">03</span>Binomial Expansion</a>
+    <a href="further-algebra.html" class="sidebar-link"><span class="sidebar-num">04</span>Further Algebra</a>
+    <a href="trigonometry.html" class="sidebar-link"><span class="sidebar-num">05</span>Trigonometry</a>
+    <a href="exponentials-logarithms.html" class="sidebar-link"><span class="sidebar-num">06</span>Exponentials &amp; Logarithms</a>
+    <a href="differentiation.html" class="sidebar-link"><span class="sidebar-num">07</span>Differentiation</a>
+    <a href="integration.html" class="sidebar-link"><span class="sidebar-num">08</span>Integration</a>
+    <a href="vectors.html" class="sidebar-link"><span class="sidebar-num">09</span>Vectors</a>
+    <a href="sequences-series.html" class="sidebar-link"><span class="sidebar-num">10</span>Sequences &amp; Series</a>
+    <a href="numerical-methods.html" class="sidebar-link"><span class="sidebar-num">11</span>Numerical Methods</a>
+    <a href="parametric-equations.html" class="sidebar-link"><span class="sidebar-num">12</span>Parametric Equations</a>
+    <a href="further-differentiation.html" class="sidebar-link"><span class="sidebar-num">13</span>Further Differentiation</a>
+    <a href="further-integration.html" class="sidebar-link"><span class="sidebar-num">14</span>Further Integration</a>
+    <a href="further-trigonometry.html" class="sidebar-link"><span class="sidebar-num">15</span>Further Trigonometry</a>
+    <a href="statistics.html" class="sidebar-link"><span class="sidebar-num">16</span>Statistics</a>
+    <a href="mechanics.html" class="sidebar-link"><span class="sidebar-num">17</span>Mechanics</a>
+    <div class="sidebar-divider"></div>
+    <a href="proof.html" class="sidebar-link active"><span class="sidebar-num">18</span>Proof</a>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <div class="topic-header">
+      <div class="breadcrumb"><a href="../../index.html">Hub</a> / <a href="../index.html">Mathematics</a> / Proof</div>
+      <div class="topic-num-badge">Topic 18</div>
+      <h1 class="topic-title">Proof</h1>
+      <p class="topic-intro">The language of rigorous mathematics. Learn to construct watertight arguments using direct proof, proof by contradiction, proof by exhaustion, and disproof by counterexample.</p>
+      <div class="topic-meta-row">
+        <div class="meta-item"><span>Edexcel</span> specification</div>
+        <div class="meta-item"><span>Year 1</span> content</div>
+        <div class="meta-item"><span>Paper 1</span> &amp; Paper 2</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Types of Proof -->
+    <div class="lesson-section">
+      <h2 class="section-title">Types of Proof</h2>
+      <p>A <strong>proof</strong> is a logical argument that establishes a mathematical statement as true beyond doubt. The four methods you need for A Level are:</p>
+
+      <div class="key-point">
+        <strong>The Four Methods</strong>
+        <ul style="margin-top:0.5rem; margin-bottom:0;">
+          <li><strong>Direct proof</strong> — start from known facts and deduce the result step by step</li>
+          <li><strong>Proof by exhaustion</strong> — check every possible case</li>
+          <li><strong>Proof by contradiction</strong> — assume the opposite is true, derive a contradiction</li>
+          <li><strong>Disproof by counterexample</strong> — find a single example where the statement fails</li>
+        </ul>
+      </div>
+
+      <p>Proofs must use precise mathematical language. Avoid vague words like "obviously" or "clearly" — every step must follow logically from the previous one.</p>
+    </div>
+
+    <!-- Section 2: Direct Proof -->
+    <div class="lesson-section">
+      <h2 class="section-title">Direct Proof</h2>
+      <p>Start with known axioms or given information and apply logical steps until the desired result follows.</p>
+
+      <h3 class="subsection">Useful algebraic identities for direct proof</h3>
+      <p>Let $n$ be an integer. Then:</p>
+      <ul>
+        <li><strong>Even number:</strong> $n = 2k$ for some integer $k$</li>
+        <li><strong>Odd number:</strong> $n = 2k + 1$ for some integer $k$</li>
+        <li><strong>Consecutive integers:</strong> $n,\ n+1,\ n+2, \ldots$</li>
+      </ul>
+
+      <div class="worked-example">
+        <div class="worked-example-header">Worked Example 1 — Direct Proof</div>
+        <p class="example-question">Prove that the sum of two consecutive odd numbers is divisible by 4.</p>
+        <div class="solution-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-text">Let the two consecutive odd numbers be $2k+1$ and $2k+3$ for some integer $k$.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div class="step-text">Their sum is:
+              $$(2k+1)+(2k+3) = 4k+4 = 4(k+1)$$
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div class="step-text">Since $k$ is an integer, $k+1$ is also an integer, so $4(k+1)$ is divisible by 4. $\square$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="worked-example">
+        <div class="worked-example-header">Worked Example 2 — Direct Proof</div>
+        <p class="example-question">Prove that for any integer $n$, $n^2 + n$ is always even.</p>
+        <div class="solution-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-text">Factorise: $n^2 + n = n(n+1)$.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div class="step-text">$n$ and $n+1$ are consecutive integers, so one of them must be even.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div class="step-text">Therefore their product $n(n+1)$ is even. $\square$</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Proof by Exhaustion -->
+    <div class="lesson-section">
+      <h2 class="section-title">Proof by Exhaustion</h2>
+      <p>Check every possible case. Only practical when there are a small, finite number of cases.</p>
+
+      <div class="worked-example">
+        <div class="worked-example-header">Worked Example 3 — Proof by Exhaustion</div>
+        <p class="example-question">Prove that for all integers $n$ with $1 \leq n \leq 4$, $n^2 + n + 41$ is prime.</p>
+        <div class="solution-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-text">
+              Check each case:<br>
+              $n=1$: $1+1+41=43$ ✓ (prime)<br>
+              $n=2$: $4+2+41=47$ ✓ (prime)<br>
+              $n=3$: $9+3+41=53$ ✓ (prime)<br>
+              $n=4$: $16+4+41=61$ ✓ (prime)
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div class="step-text">All four cases yield a prime number. $\square$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <strong>Examiner Note</strong>
+        Proof by exhaustion only works when you can check <em>every</em> case. If asked to prove something for <em>all</em> integers, exhaustion will not work — you need a different method.
+      </div>
+    </div>
+
+    <!-- Section 4: Proof by Contradiction -->
+    <div class="lesson-section">
+      <h2 class="section-title">Proof by Contradiction</h2>
+      <p>Assume the <strong>negation</strong> of what you want to prove. Use logical reasoning to arrive at a statement that is clearly false (a contradiction). This forces the original assumption to be wrong — so the original statement must be true.</p>
+
+      <div class="key-point">
+        <strong>Structure</strong>
+        1. Assume the opposite of what you want to prove.<br>
+        2. Derive logical consequences.<br>
+        3. Reach a contradiction (e.g. a number is both even and odd).<br>
+        4. Conclude the original statement must be true.
+      </div>
+
+      <div class="worked-example">
+        <div class="worked-example-header">Worked Example 4 — Proof by Contradiction</div>
+        <p class="example-question">Prove that $\sqrt{2}$ is irrational.</p>
+        <div class="solution-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-text">Assume for contradiction that $\sqrt{2}$ is rational. Then $\sqrt{2} = \dfrac{p}{q}$ where $p, q$ are integers with no common factors (i.e. the fraction is in lowest terms).</div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div class="step-text">Squaring: $2 = \dfrac{p^2}{q^2}$, so $p^2 = 2q^2$.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div class="step-text">Since $p^2$ is even, $p$ must be even. Write $p = 2m$ for some integer $m$.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <div class="step-text">Substituting: $(2m)^2 = 2q^2 \Rightarrow 4m^2 = 2q^2 \Rightarrow q^2 = 2m^2$. So $q^2$ is even, meaning $q$ is also even.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">5</span>
+            <div class="step-text">But now both $p$ and $q$ are even — contradicting our assumption that $\dfrac{p}{q}$ is in lowest terms. $\square$</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Disproof by Counterexample -->
+    <div class="lesson-section">
+      <h2 class="section-title">Disproof by Counterexample</h2>
+      <p>To disprove a statement, you only need to find <strong>one</strong> example where it fails. A single counterexample is enough — you do not need to show it fails in general.</p>
+
+      <div class="worked-example">
+        <div class="worked-example-header">Worked Example 5 — Disproof by Counterexample</div>
+        <p class="example-question">Disprove the statement: "For all integers $n \geq 1$, $n^2 - n + 41$ is prime."</p>
+        <div class="solution-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-text">Try $n = 41$: $41^2 - 41 + 41 = 41^2 = 1681$.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div class="step-text">$1681 = 41 \times 41$, which is not prime.</div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div class="step-text">Therefore the statement is false. $\square$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <strong>Exam Tip</strong>
+        When disproving, always state clearly what your counterexample is and show explicitly why the statement fails for that value. Don't just say "try $n=41$" — compute the result and state it is not prime.
+      </div>
+    </div>
+
+    <!-- Practice Questions -->
+    <div class="lesson-section">
+      <h2 class="section-title">Practice Questions</h2>
+
+      <div class="difficulty-tabs">
+        <div class="diff-tab active">All Levels</div>
+      </div>
+
+      <div class="practice-grid">
+
+        <!-- Q1 -->
+        <div class="practice-q">
+          <div class="practice-q-header">
+            <span class="q-num">Q1 — Foundation</span>
+            <span class="q-marks">[3 marks]</span>
+          </div>
+          <p class="q-text">Prove that the product of two odd numbers is always odd.</p>
+          <button class="show-answer-btn" onclick="this.nextElementSibling.classList.toggle('visible'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">Show Answer</button>
+          <div class="answer-box">
+            Let the two odd numbers be $2m+1$ and $2n+1$ for integers $m, n$.<br><br>
+            Their product: $(2m+1)(2n+1) = 4mn + 2m + 2n + 1 = 2(2mn+m+n)+1$.<br><br>
+            Since $2mn+m+n$ is an integer, the product is of the form $2k+1$, which is odd. $\square$
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="practice-q">
+          <div class="practice-q-header">
+            <span class="q-num">Q2 — Foundation</span>
+            <span class="q-marks">[2 marks]</span>
+          </div>
+          <p class="q-text">Disprove the statement: "For all integers $n$, $n^2 > n$."</p>
+          <button class="show-answer-btn" onclick="this.nextElementSibling.classList.toggle('visible'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">Show Answer</button>
+          <div class="answer-box">
+            Counterexample: let $n = 0$. Then $n^2 = 0$ and $n = 0$, so $n^2 = n$, not $n^2 > n$.<br><br>
+            (Alternatively, $n = 1$ gives $n^2 = 1 = n$, or any $n$ with $0 \leq n \leq 1$.) The statement is false. $\square$
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="practice-q">
+          <div class="practice-q-header">
+            <span class="q-num">Q3 — Intermediate</span>
+            <span class="q-marks">[4 marks]</span>
+          </div>
+          <p class="q-text">Prove that for any integer $n$, $n^3 - n$ is divisible by 6.</p>
+          <button class="show-answer-btn" onclick="this.nextElementSibling.classList.toggle('visible'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">Show Answer</button>
+          <div class="answer-box">
+            Factorise: $n^3 - n = n(n^2-1) = n(n-1)(n+1) = (n-1)n(n+1)$.<br><br>
+            This is the product of three consecutive integers.<br><br>
+            <strong>Divisible by 2:</strong> Among any three consecutive integers, at least one is even, so the product is even.<br><br>
+            <strong>Divisible by 3:</strong> Among any three consecutive integers, exactly one is divisible by 3.<br><br>
+            Since the product is divisible by both 2 and 3, and $\gcd(2,3)=1$, the product is divisible by $6$. $\square$
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="practice-q">
+          <div class="practice-q-header">
+            <span class="q-num">Q4 — Intermediate</span>
+            <span class="q-marks">[4 marks]</span>
+          </div>
+          <p class="q-text">Prove by contradiction that there is no largest even integer.</p>
+          <button class="show-answer-btn" onclick="this.nextElementSibling.classList.toggle('visible'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">Show Answer</button>
+          <div class="answer-box">
+            Assume for contradiction that there exists a largest even integer, call it $N$.<br><br>
+            Consider $N + 2$. Since $N$ is even, $N = 2k$ for some integer $k$, so $N+2 = 2k+2 = 2(k+1)$, which is also even.<br><br>
+            But $N+2 > N$, contradicting the assumption that $N$ is the largest even integer. $\square$
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="practice-q">
+          <div class="practice-q-header">
+            <span class="q-num">Q5 — STEP-Style</span>
+            <span class="q-marks">[6 marks]</span>
+          </div>
+          <p class="q-text">Prove that $\sqrt{3}$ is irrational. You may assume that if $p^2$ is divisible by 3, then $p$ is divisible by 3.</p>
+          <button class="show-answer-btn" onclick="this.nextElementSibling.classList.toggle('visible'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">Show Answer</button>
+          <div class="answer-box">
+            Assume for contradiction that $\sqrt{3}$ is rational. Write $\sqrt{3} = \dfrac{p}{q}$ in lowest terms (so $\gcd(p,q)=1$).<br><br>
+            Then $3 = \dfrac{p^2}{q^2}$, so $p^2 = 3q^2$.<br><br>
+            Thus $p^2$ is divisible by 3. By the given result, $p$ is divisible by 3. Write $p = 3m$.<br><br>
+            Then $9m^2 = 3q^2 \Rightarrow q^2 = 3m^2$, so $q^2$ is divisible by 3, and hence $q$ is divisible by 3.<br><br>
+            But then both $p$ and $q$ are divisible by 3, contradicting $\gcd(p,q)=1$. Therefore $\sqrt{3}$ is irrational. $\square$
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
